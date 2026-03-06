@@ -8,13 +8,27 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { 
   ArrowRight, CheckCircle, Home, Zap, Clock, Shield, Euro,
-  FileText, Hammer, Key, Phone, Building2, ChevronRight, Building, Landmark, TrendingUp, Settings, LogIn, Gift
+  FileText, Hammer, Key, Phone, Building2, ChevronRight, Building, Landmark, TrendingUp, Settings, LogIn, Gift, Star, Users
 } from "lucide-react";
 import { motion } from "framer-motion";
 import HeroSettingsManager from "../components/admin/HeroSettingsManager";
 import { useLanguage } from "../components/LanguageContext";
 import FloatingHouses from "../components/FloatingHouses";
 import ServiceDetailModal from "../components/ServiceDetailModal";
+
+// Social proof translations
+const socialProofT = {
+  sk: { clients: "spokojných rodín", reviews: "overených recenzií", years: "rokov skúseností", quote1: "Dom sme dostali za 4 mesiace. Všetko vybavili za nás – hypotéka, pozemok aj kolaudácia.", name1: "Mária K., Trnava", quote2: "Konečne firma, ktorá drží slovo. Cena ostala rovnaká od začiatku do konca.", name2: "Peter S., Žilina" },
+  en: { clients: "happy families", reviews: "verified reviews", years: "years of experience", quote1: "We received our house in 4 months. They handled everything – mortgage, land and final approval.", name1: "Maria K., Trnava", quote2: "Finally a company that keeps its word. The price stayed the same from start to finish.", name2: "Peter S., Zilina" },
+  de: { clients: "zufriedene Familien", reviews: "verifizierte Bewertungen", years: "Jahre Erfahrung", quote1: "Wir erhielten unser Haus in 4 Monaten. Sie erledigten alles – Hypothek, Grundstück und Abnahme.", name1: "Maria K., Trnava", quote2: "Endlich eine Firma, die ihr Wort hält. Der Preis blieb von Anfang bis Ende gleich.", name2: "Peter S., Zilina" },
+  fr: { clients: "familles satisfaites", reviews: "avis vérifiés", years: "ans d'expérience", quote1: "Nous avons reçu notre maison en 4 mois. Ils ont tout géré – hypothèque, terrain et réception.", name1: "Maria K., Trnava", quote2: "Enfin une entreprise qui tient sa parole. Le prix est resté le même du début à la fin.", name2: "Peter S., Zilina" },
+  hu: { clients: "elégedett család", reviews: "ellenőrzött vélemény", years: "év tapasztalat", quote1: "4 hónap alatt megkaptuk a házunkat. Mindent elintéztek – jelzálog, telek és engedélyezés.", name1: "Mária K., Nagyszombat", quote2: "Végre egy cég, amely betartja a szavát. Az ár az elejétől a végéig ugyanannyi maradt.", name2: "Péter S., Zsolna" },
+  pl: { clients: "zadowolonych rodzin", reviews: "zweryfikowanych opinii", years: "lat doświadczenia", quote1: "Dom otrzymaliśmy w 4 miesiące. Wszystko załatwili za nas – hipoteka, działka i odbiór.", name1: "Maria K., Trnawa", quote2: "Nareszcie firma, która dotrzymuje słowa. Cena pozostała taka sama od początku do końca.", name2: "Piotr S., Żylina" },
+  uk: { clients: "задоволених сімей", reviews: "перевірених відгуків", years: "років досвіду", quote1: "Будинок отримали за 4 місяці. Все вирішили за нас – іпотека, ділянка та введення в експлуатацію.", name1: "Марія К., Трнава", quote2: "Нарешті компанія, що тримає слово. Ціна залишилася незмінною від початку до кінця.", name2: "Петро С., Жиліна" },
+  sr: { clients: "задовољних породица", reviews: "верификованих рецензија", years: "година искуства", quote1: "Кућу смо добили за 4 месеца. Све су средили уместо нас – хипотека, парцела и колаудација.", name1: "Марија К., Трнава", quote2: "Коначно фирма која одржава реч. Цена је остала иста од почетка до краја.", name2: "Петар С., Жилина" },
+  hr: { clients: "zadovoljnih obitelji", reviews: "verificiranih recenzija", years: "godina iskustva", quote1: "Kuću smo dobili za 4 mjeseca. Sve su sredili umjesto nas – hipoteka, parcela i kolaudacija.", name1: "Marija K., Trnava", quote2: "Konačno tvrtka koja drži riječ. Cijena je ostala ista od početka do kraja.", name2: "Petar S., Žilina" },
+  el: { clients: "ικανοποιημένες οικογένειες", reviews: "επαληθευμένες κριτικές", years: "χρόνια εμπειρίας", quote1: "Πήραμε το σπίτι μας σε 4 μήνες. Τα διαχειρίστηκαν όλα – υποθήκη, οικόπεδο και παραλαβή.", name1: "Μαρία Κ., Τρνάβα", quote2: "Επιτέλους εταιρεία που κρατά το λόγο της. Η τιμή παρέμεινε ίδια από την αρχή έως το τέλος.", name2: "Πέτρος Σ., Ζίλινα" },
+};
 
 // Optimized hero images: WebP format, capped at 1200px wide, q=75
 const DEFAULT_HERO_IMAGES = [
