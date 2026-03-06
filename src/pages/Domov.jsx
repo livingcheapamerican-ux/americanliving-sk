@@ -180,6 +180,7 @@ export default function Domov() {
     },
     { 
       icon: Zap, 
+      nazovKey: 'utilityConnection',
       nazov: t('utilityConnection'),
       popis: t('completeConnection'),
       image: "https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=500&q=80",
