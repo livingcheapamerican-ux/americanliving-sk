@@ -154,6 +154,7 @@ export default function Domov() {
     },
     { 
       icon: Shield, 
+      nazovKey: 'buildingPermitService',
       nazov: t('buildingPermitService'),
       popis: t('weArrangeForYou'),
       image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=500&q=80",
