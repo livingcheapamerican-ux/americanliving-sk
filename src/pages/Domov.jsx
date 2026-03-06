@@ -102,6 +102,7 @@ export default function Domov() {
   const sluzby = [
     { 
       icon: Building2, 
+      nazovKey: 'sellYourProperty',
       nazov: t('sellYourProperty'),
       popis: t('realEstateAgency'),
       image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=500&q=80",

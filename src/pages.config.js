@@ -61,6 +61,7 @@ import AdminGeneratorCenovychPonuk from './pages/AdminGeneratorCenovychPonuk';
 import AdminGeneratorObrazkov from './pages/AdminGeneratorObrazkov';
 import AdminGenerujObrazkyBlogov from './pages/AdminGenerujObrazkyBlogov';
 import AdminGoogleDrive from './pages/AdminGoogleDrive';
+import AdminIntegrationLogs from './pages/AdminIntegrationLogs';
 import AdminMigraciaFotiek from './pages/AdminMigraciaFotiek';
 import AdminMigraciaObrazkov from './pages/AdminMigraciaObrazkov';
 import AdminPixelSettings from './pages/AdminPixelSettings';
@@ -86,7 +87,6 @@ import AutoSEOTrigger from './pages/AutoSEOTrigger';
 import Blog from './pages/Blog';
 import BlogDetail from './pages/BlogDetail';
 import DetailDomu from './pages/DetailDomu';
-import Domov from './pages/Domov';
 import DotaciaAmericana from './pages/DotaciaAmericana';
 import FAQ from './pages/FAQ';
 import GaleriaRealizacii from './pages/GaleriaRealizacii';
@@ -132,7 +132,7 @@ import SrovnaniDomu from './pages/SrovnaniDomu';
 import TestAnalyzaKonfiguratora from './pages/TestAnalyzaKonfiguratora';
 import ZasadyOchranyOsobnychUdajov from './pages/ZasadyOchranyOsobnychUdajov';
 import ZasadyPouzivaniaCookies from './pages/ZasadyPouzivaniaCookies';
-import AdminIntegrationLogs from './pages/AdminIntegrationLogs';
+import Domov from './pages/Domov';
 import __Layout from './Layout.jsx';
 
 
@@ -151,6 +151,7 @@ export const PAGES = {
     "AdminGeneratorObrazkov": AdminGeneratorObrazkov,
     "AdminGenerujObrazkyBlogov": AdminGenerujObrazkyBlogov,
     "AdminGoogleDrive": AdminGoogleDrive,
+    "AdminIntegrationLogs": AdminIntegrationLogs,
     "AdminMigraciaFotiek": AdminMigraciaFotiek,
     "AdminMigraciaObrazkov": AdminMigraciaObrazkov,
     "AdminPixelSettings": AdminPixelSettings,
@@ -176,7 +177,6 @@ export const PAGES = {
     "Blog": Blog,
     "BlogDetail": BlogDetail,
     "DetailDomu": DetailDomu,
-    "Domov": Domov,
     "DotaciaAmericana": DotaciaAmericana,
     "FAQ": FAQ,
     "GaleriaRealizacii": GaleriaRealizacii,
@@ -222,7 +222,7 @@ export const PAGES = {
     "TestAnalyzaKonfiguratora": TestAnalyzaKonfiguratora,
     "ZasadyOchranyOsobnychUdajov": ZasadyOchranyOsobnychUdajov,
     "ZasadyPouzivaniaCookies": ZasadyPouzivaniaCookies,
-    "AdminIntegrationLogs": AdminIntegrationLogs,
+    "Domov": Domov,
 }
 
 export const pagesConfig = {
