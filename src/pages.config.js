@@ -87,6 +87,7 @@ import AutoSEOTrigger from './pages/AutoSEOTrigger';
 import Blog from './pages/Blog';
 import BlogDetail from './pages/BlogDetail';
 import DetailDomu from './pages/DetailDomu';
+import Domov from './pages/Domov';
 import DotaciaAmericana from './pages/DotaciaAmericana';
 import FAQ from './pages/FAQ';
 import GaleriaRealizacii from './pages/GaleriaRealizacii';
@@ -132,7 +133,6 @@ import SrovnaniDomu from './pages/SrovnaniDomu';
 import TestAnalyzaKonfiguratora from './pages/TestAnalyzaKonfiguratora';
 import ZasadyOchranyOsobnychUdajov from './pages/ZasadyOchranyOsobnychUdajov';
 import ZasadyPouzivaniaCookies from './pages/ZasadyPouzivaniaCookies';
-import Domov from './pages/Domov';
 import __Layout from './Layout.jsx';
 
 
@@ -177,6 +177,7 @@ export const PAGES = {
     "Blog": Blog,
     "BlogDetail": BlogDetail,
     "DetailDomu": DetailDomu,
+    "Domov": Domov,
     "DotaciaAmericana": DotaciaAmericana,
     "FAQ": FAQ,
     "GaleriaRealizacii": GaleriaRealizacii,
@@ -222,7 +223,6 @@ export const PAGES = {
     "TestAnalyzaKonfiguratora": TestAnalyzaKonfiguratora,
     "ZasadyOchranyOsobnychUdajov": ZasadyOchranyOsobnychUdajov,
     "ZasadyPouzivaniaCookies": ZasadyPouzivaniaCookies,
-    "Domov": Domov,
 }
 
 export const pagesConfig = {
