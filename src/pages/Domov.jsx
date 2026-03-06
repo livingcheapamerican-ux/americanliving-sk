@@ -103,13 +103,10 @@ export default function Domov() {
     { 
       icon: Building2, 
       nazov: t('sellYourProperty'),
-      nazovKey: 'sellYourProperty',
       popis: t('realEstateAgency'),
       image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=500&q=80",
-      headlineKey: 'serviceHeadline1',
-      bodyKey: 'serviceBody1',
-      headline: t('serviceHeadline1'),
-      body: t('serviceBody1'),
+      headline: "Kapitál pre váš nový domov získame rýchlo a bezpečne.",
+      body: "Aby ste mohli stavať nové, často musíte najprv dobre predať to staré. Postaráme sa o kompletný realitný servis vašej súčasnej nehnuteľnosti. Nastavíme trhovú cenu tak, aby sa predala v ideálnom čase nadväzujúcom na vašu novú výstavbu. Zabezpečíme home staging, profesionálne fotenie, právny servis a prevod peňazí, ktoré plynulo použijeme na financovanie vášho nového projektu.",
       detailImages: [
         "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80",
         "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&q=80"
@@ -118,13 +115,10 @@ export default function Domov() {
     { 
       icon: Home, 
       nazov: t('selectAndBuyLand'),
-      nazovKey: 'selectAndBuyLand',
       popis: t('findIdealLand'),
       image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=500&q=80",
-      headlineKey: 'serviceHeadline2',
-      bodyKey: 'serviceBody2',
-      headline: t('serviceHeadline2'),
-      body: t('serviceBody2'),
+      headline: "Nie každá lúka je vhodný stavebný pozemok.",
+      body: "Nájdeme pre vás pozemok, ktorý nie je len \"pekný\", ale aj \"staviteľný\". Ešte pred kúpou preveríme územný plán, dostupnosť inžinierskych sietí, geologické podložie a orientáciu na svetové strany. Upozorníme vás na skryté vady a právne ťarchy. Vyberáme len také miesta, kde bude výstavba technicky a finančne efektívna.",
       detailImages: [
         "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=80",
         "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80"
@@ -133,13 +127,10 @@ export default function Domov() {
     { 
       icon: TrendingUp, 
       nazov: t('mortgageArrangement'),
-      nazovKey: 'mortgageArrangement',
       popis: t('financialServices'),
       image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=500&q=80",
-      headlineKey: 'serviceHeadline3',
-      bodyKey: 'serviceBody3',
-      headline: t('serviceHeadline3'),
-      body: t('serviceBody3'),
+      headline: "Financovanie výstavby domu nie je bežná hypotéka.",
+      body: "Stavba domu vyžaduje špecifické čerpanie úveru v tranžiach. Naši finanční špecialisti nastavia hypotéku presne na mieru harmonogramu výstavby American Living. Komunikujeme priamo s bankou a znalcami, takže vy nemusíte nosiť faktúry a stresovať sa s uvoľňovaním prostriedkov. Garancia najlepších podmienok na trhu je samozrejmosťou.",
       detailImages: [
         "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&q=80",
         "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&q=80"
@@ -148,13 +139,10 @@ export default function Domov() {
     { 
       icon: FileText, 
       nazov: t('projectDocumentation'),
-      nazovKey: 'projectDocumentation',
       popis: t('completeProject'),
       image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=500&q=80",
-      headlineKey: 'serviceHeadline4',
-      bodyKey: 'serviceBody4',
-      headline: t('serviceHeadline4'),
-      body: t('serviceBody4'),
+      headline: "Dom, ktorý má hlavu a pätu ešte pred prvým výkopom.",
+      body: "Či už chcete upraviť jeden z našich katalógových projektov alebo túžite po unikátnom dizajne na mieru, naši architekti sú vám k dispozícii. Pripravíme kompletnú projektovú dokumentáciu pre stavebné povolenie aj realizáciu. Myslíme na detaily, presvetlenie izieb aj energetickú úspornosť, aby sa vám v dome žilo pohodlne a náklady boli nízke.",
       detailImages: [
         "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800&q=80",
         "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=800&q=80"
@@ -163,13 +151,10 @@ export default function Domov() {
     { 
       icon: Shield, 
       nazov: t('buildingPermitService'),
-      nazovKey: 'buildingPermitService',
       popis: t('weArrangeForYou'),
       image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=500&q=80",
-      headlineKey: 'serviceHeadline5',
-      bodyKey: 'serviceBody5',
-      headline: t('serviceHeadline5'),
-      body: t('serviceBody5'),
+      headline: "Byrokraciu nechajte na nás.",
+      body: "Získanie stavebného povolenia je pre bežného človeka nočnou morou – pre nás je to rutina. Zastúpime vás v celom inžinierskom procese. Obiehame úrady, vybavujeme vyjadrenia dotknutých orgánov, správcov sietí a obce. Vy len počkáte na právoplatné rozhodnutie, s ktorým môžeme začať stavať.",
       detailImages: [
         "https://images.unsplash.com/photo-1521791055366-0d553872125f?w=800&q=80",
         "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&q=80"
@@ -178,13 +163,10 @@ export default function Domov() {
     { 
       icon: Hammer, 
       nazov: t('houseConstruction'),
-      nazovKey: 'houseConstruction',
       popis: t('constructionCompany'),
       image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=500&q=80",
-      headlineKey: 'serviceHeadline6',
-      bodyKey: 'serviceBody6',
-      headline: t('serviceHeadline6'),
-      body: t('serviceBody6'),
+      headline: "Kvalitná realizácia bez skrytých poplatkov.",
+      body: "Realizujeme hrubé stavby, holodomy aj domy na kľúč. Pracujeme s overenými materiálmi a vlastným tímom odborníkov. Garantujeme dodržanie dohodnutého rozpočtu a termínov. Počas výstavby máte k dispozícii stavebný dozor a pravidelné reporty, takže presne vidíte, ako váš nový domov rastie pred očami.",
       detailImages: [
         "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80",
         "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80"
@@ -193,13 +175,10 @@ export default function Domov() {
     { 
       icon: Zap, 
       nazov: t('utilityConnection'),
-      nazovKey: 'utilityConnection',
       popis: t('completeConnection'),
       image: "https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=500&q=80",
-      headlineKey: 'serviceHeadline7',
-      bodyKey: 'serviceBody7',
-      headline: t('serviceHeadline7'),
-      body: t('serviceBody7'),
+      headline: "Aby všetko fungovalo po otočení kohútikom.",
+      body: "Dom bez sietí je len hrubá stavba. Zabezpečíme kompletnú realizáciu prípojok vody, elektriny, plynu a kanalizácie. Riešime výkopy, pokládku, revízne správy aj finálne osadenie meračov. Koordinujeme všetko tak, aby bol dom pripravený na plnohodnotné užívanie.",
       detailImages: [
         "https://images.unsplash.com/photo-1581094271901-8022df4466f9?w=800&q=80",
         "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=800&q=80"
@@ -208,13 +187,10 @@ export default function Domov() {
     { 
       icon: Key, 
       nazov: t('finalApproval'),
-      nazovKey: 'finalApproval',
       popis: t('fromAToZ'),
       image: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=500&q=80",
-      headlineKey: 'serviceHeadline8',
-      bodyKey: 'serviceBody8',
-      headline: t('serviceHeadline8'),
-      body: t('serviceBody8'),
+      headline: "Posledná pečiatka a odovzdanie kľúčov.",
+      body: "Cieľová rovinka. Pripravíme všetky revízie, certifikáty, geometrické plány a dokumenty potrebné ku kolaudačnému konaniu. Zastúpime vás pri miestnom šetrení stavebného úradu. Vám odovzdáme už skolaudovaný dom so súpisným číslom, pripravený na nasťahovanie a prepis energií.",
       detailImages: [
         "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?w=800&q=80",
         "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&q=80"

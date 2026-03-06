@@ -61,7 +61,6 @@ import AdminGeneratorCenovychPonuk from './pages/AdminGeneratorCenovychPonuk';
 import AdminGeneratorObrazkov from './pages/AdminGeneratorObrazkov';
 import AdminGenerujObrazkyBlogov from './pages/AdminGenerujObrazkyBlogov';
 import AdminGoogleDrive from './pages/AdminGoogleDrive';
-import AdminIntegrationLogs from './pages/AdminIntegrationLogs';
 import AdminMigraciaFotiek from './pages/AdminMigraciaFotiek';
 import AdminMigraciaObrazkov from './pages/AdminMigraciaObrazkov';
 import AdminPixelSettings from './pages/AdminPixelSettings';
@@ -133,6 +132,7 @@ import SrovnaniDomu from './pages/SrovnaniDomu';
 import TestAnalyzaKonfiguratora from './pages/TestAnalyzaKonfiguratora';
 import ZasadyOchranyOsobnychUdajov from './pages/ZasadyOchranyOsobnychUdajov';
 import ZasadyPouzivaniaCookies from './pages/ZasadyPouzivaniaCookies';
+import AdminIntegrationLogs from './pages/AdminIntegrationLogs';
 import __Layout from './Layout.jsx';
 
 
@@ -151,7 +151,6 @@ export const PAGES = {
     "AdminGeneratorObrazkov": AdminGeneratorObrazkov,
     "AdminGenerujObrazkyBlogov": AdminGenerujObrazkyBlogov,
     "AdminGoogleDrive": AdminGoogleDrive,
-    "AdminIntegrationLogs": AdminIntegrationLogs,
     "AdminMigraciaFotiek": AdminMigraciaFotiek,
     "AdminMigraciaObrazkov": AdminMigraciaObrazkov,
     "AdminPixelSettings": AdminPixelSettings,
@@ -223,6 +222,7 @@ export const PAGES = {
     "TestAnalyzaKonfiguratora": TestAnalyzaKonfiguratora,
     "ZasadyOchranyOsobnychUdajov": ZasadyOchranyOsobnychUdajov,
     "ZasadyPouzivaniaCookies": ZasadyPouzivaniaCookies,
+    "AdminIntegrationLogs": AdminIntegrationLogs,
 }
 
 export const pagesConfig = {
