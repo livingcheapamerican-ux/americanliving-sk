@@ -416,8 +416,8 @@ export default function DotaciaAmericana() {
                 <div className="flex items-start gap-2">
                   <Zap className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-xs font-black text-blue-800">⚡ {t('energodotaciaTitle')}</p>
-                    <p className="text-xs text-blue-700 mt-0.5">{t('energodotaciaAmbassadorDesc')}</p>
+                    <p className="text-xs font-black text-blue-800">⚡ {energoT.title}</p>
+                    <p className="text-xs text-blue-700 mt-0.5">{energoT.ambassador}</p>
                   </div>
                 </div>
               </div>
