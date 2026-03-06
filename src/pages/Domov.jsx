@@ -193,6 +193,7 @@ export default function Domov() {
     },
     { 
       icon: Key, 
+      nazovKey: 'finalApproval',
       nazov: t('finalApproval'),
       popis: t('fromAToZ'),
       image: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=500&q=80",
