@@ -193,10 +193,13 @@ export default function Domov() {
     { 
       icon: Zap, 
       nazov: t('utilityConnection'),
+      nazovKey: 'utilityConnection',
       popis: t('completeConnection'),
       image: "https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=500&q=80",
-      headline: "Aby všetko fungovalo po otočení kohútikom.",
-      body: "Dom bez sietí je len hrubá stavba. Zabezpečíme kompletnú realizáciu prípojok vody, elektriny, plynu a kanalizácie. Riešime výkopy, pokládku, revízne správy aj finálne osadenie meračov. Koordinujeme všetko tak, aby bol dom pripravený na plnohodnotné užívanie.",
+      headlineKey: 'serviceHeadline7',
+      bodyKey: 'serviceBody7',
+      headline: t('serviceHeadline7'),
+      body: t('serviceBody7'),
       detailImages: [
         "https://images.unsplash.com/photo-1581094271901-8022df4466f9?w=800&q=80",
         "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=800&q=80"
