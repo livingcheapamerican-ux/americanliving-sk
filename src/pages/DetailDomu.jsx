@@ -37,6 +37,7 @@ import ShellInfoBox from "../components/ShellInfoBox";
 import { prostoHouseTranslations } from "../components/translations/ProstoHouseTranslations";
 import ExternalReviews from "../components/ExternalReviews";
 import GaleriaLightbox from "../components/GaleriaLightbox";
+import YoutubePlayer from "../components/YoutubePlayer";
 
 
 export default function DetailDomu() {
