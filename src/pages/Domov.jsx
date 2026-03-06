@@ -115,6 +115,7 @@ export default function Domov() {
     },
     { 
       icon: Home, 
+      nazovKey: 'selectAndBuyLand',
       nazov: t('selectAndBuyLand'),
       popis: t('findIdealLand'),
       image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=500&q=80",
