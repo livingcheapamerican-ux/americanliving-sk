@@ -167,6 +167,7 @@ export default function Domov() {
     },
     { 
       icon: Hammer, 
+      nazovKey: 'houseConstruction',
       nazov: t('houseConstruction'),
       popis: t('constructionCompany'),
       image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=500&q=80",
