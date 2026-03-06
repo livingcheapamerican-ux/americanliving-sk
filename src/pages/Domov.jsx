@@ -178,10 +178,13 @@ export default function Domov() {
     { 
       icon: Hammer, 
       nazov: t('houseConstruction'),
+      nazovKey: 'houseConstruction',
       popis: t('constructionCompany'),
       image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=500&q=80",
-      headline: "Kvalitná realizácia bez skrytých poplatkov.",
-      body: "Realizujeme hrubé stavby, holodomy aj domy na kľúč. Pracujeme s overenými materiálmi a vlastným tímom odborníkov. Garantujeme dodržanie dohodnutého rozpočtu a termínov. Počas výstavby máte k dispozícii stavebný dozor a pravidelné reporty, takže presne vidíte, ako váš nový domov rastie pred očami.",
+      headlineKey: 'serviceHeadline6',
+      bodyKey: 'serviceBody6',
+      headline: t('serviceHeadline6'),
+      body: t('serviceBody6'),
       detailImages: [
         "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80",
         "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80"
