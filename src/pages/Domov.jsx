@@ -44,7 +44,8 @@ export default function Domov() {
   const [showSettings, setShowSettings] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
   const [serviceModalOpen, setServiceModalOpen] = useState(false);
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const sp = socialProofT[language] || socialProofT.sk;
   
   const { data: domy = [] } = useQuery({
     queryKey: ['domy-popularne'],
