@@ -841,23 +841,36 @@ export default function DetailDomu() {
 
             {/* YouTube Video */}
             {dom.youtube_url && (() => {
-              let embedUrl = dom.youtube_url;
               const watchMatch = dom.youtube_url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube(?:-nocookie)?\.com\/embed\/)([A-Za-z0-9_-]{11})/);
-              if (watchMatch) embedUrl = `https://www.youtube.com/embed/${watchMatch[1]}?origin=${encodeURIComponent(window.location.origin)}&rel=0`;
+              const videoId = watchMatch ? watchMatch[1] : null;
+              if (!videoId) return null;
+              const watchUrl = `https://www.youtube.com/watch?v=${videoId}`;
+              const thumbUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
               return (
                 <Card className="p-3 sm:p-4">
                   <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">{t('videoPresentation')}</h3>
-                  <div className="aspect-video rounded-lg overflow-hidden">
-                    <iframe
-                      src={embedUrl}
-                      className="w-full h-full"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      allowFullScreen
-                      referrerPolicy="strict-origin-when-cross-origin"
-                      sandbox="allow-scripts allow-same-origin allow-popups allow-presentation"
-                      title={dom.nazov}
+                  <a
+                    href={watchUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block relative aspect-video rounded-lg overflow-hidden group cursor-pointer"
+                  >
+                    <img
+                      src={thumbUrl}
+                      alt={`Video: ${dom.nazov}`}
+                      className="w-full h-full object-cover"
                     />
-                  </div>
+                    <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors flex items-center justify-center">
+                      <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform">
+                        <svg className="w-7 h-7 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M8 5v14l11-7z"/>
+                        </svg>
+                      </div>
+                    </div>
+                    <div className="absolute bottom-3 left-3 right-3 text-center">
+                      <span className="text-white text-sm font-semibold bg-black/60 px-3 py-1 rounded-full">▶ Pozrieť video na YouTube</span>
+                    </div>
+                  </a>
                 </Card>
               );
             })()}
