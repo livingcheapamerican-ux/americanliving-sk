@@ -342,7 +342,7 @@ export default function SessionRecorder() {
           sessionDbStartTimeRef.current = res.data.session_start_time;
         }
       }).catch(() => {});
-    }, 3000);
+    }, 30000);
   };
 
   // Periodic save every 30 seconds
