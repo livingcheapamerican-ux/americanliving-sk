@@ -16,6 +16,13 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Dom not found' }, { status: 404 });
     }
 
+    // Loop protection: skip if SEO data already matches current dom data (no real change)
+    const expectedTitle = `${dom.nazov} | ${{ 'modularny': 'Modulárny dom', 'montovany': 'Montovaný dom', 'mobilny': 'Mobilný dom' }[dom.typ_domu] || 'Dom'} | American Living`;
+    if (dom.meta_title === expectedTitle && dom.faq_schema_data?.sk && dom.images_seo_map?.sk) {
+      console.log(`⏭️ Skipping ${dom.nazov} - SEO data already up to date (loop protection)`);
+      return Response.json({ success: true, skipped: true, reason: 'seo_already_current' });
+    }
+
     const updateData = {};
 
     // 1. Meta Title
