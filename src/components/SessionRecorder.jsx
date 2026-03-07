@@ -342,12 +342,12 @@ export default function SessionRecorder() {
           sessionDbStartTimeRef.current = res.data.session_start_time;
         }
       }).catch(() => {});
-    }, 30000);
+    }, 300000);
   };
 
-  // Periodic save every 30 seconds
+  // Periodic save every 300 seconds
   useEffect(() => {
-    const interval = setInterval(() => scheduleSave(), 30000);
+    const interval = setInterval(() => scheduleSave(), 300000);
     return () => clearInterval(interval);
   }, []);
 
