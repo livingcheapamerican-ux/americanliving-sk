@@ -271,7 +271,7 @@ export default function SessionRecorder() {
   const scheduleSave = () => {
     if (!sessionIdRef.current) return;
     const now = Date.now();
-    if (now - lastSaveRef.current < 5000 && saveTimeoutRef.current) return;
+    if (now - lastSaveRef.current < 60000 && saveTimeoutRef.current) return;
     if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
 
     saveTimeoutRef.current = setTimeout(() => {

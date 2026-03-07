@@ -161,23 +161,7 @@ Deno.serve(async (req) => {
       }, { status: fbResponse.status });
     }
 
-    // Log success to CAPILog
-    try {
-      await base44.asServiceRole.entities.CAPILog.create({
-        event_name: 'PageView',
-        attempt_method: 'server_side_tracking',
-        success: true,
-        duration_ms: 0,
-        payload_size: JSON.stringify(payload).length,
-        user_data_fields: ['client_ip_address', 'client_user_agent'],
-        event_source_url: event_source_url,
-        total_attempts: 1,
-        timestamp: new Date().toISOString()
-      });
-    } catch (logError) {
-      console.error('Failed to log success:', logError);
-    }
-
+    // Success logging removed to save credits (CAPILog writes cost credits per page view)
     return Response.json({ 
       success: true,
       events_received: result.events_received || 1,
