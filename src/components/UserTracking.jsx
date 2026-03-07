@@ -2,7 +2,6 @@ import { useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { useLocation } from "react-router-dom";
 
-// Generate session ID (stored in sessionStorage)
 const getSessionId = () => {
   let sessionId = sessionStorage.getItem('session_id');
   if (!sessionId) {
@@ -12,7 +11,6 @@ const getSessionId = () => {
   return sessionId;
 };
 
-// Parse UTM parameters from URL
 const getUtmParams = (search) => {
   const params = new URLSearchParams(search);
   return {
@@ -24,19 +22,13 @@ const getUtmParams = (search) => {
   };
 };
 
-// Detect device type
 const getDeviceType = () => {
   const ua = navigator.userAgent;
-  if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
-    return "tablet";
-  }
-  if (/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua)) {
-    return "mobile";
-  }
+  if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) return "tablet";
+  if (/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua)) return "mobile";
   return "desktop";
 };
 
-// Get browser name
 const getBrowser = () => {
   const ua = navigator.userAgent;
   if (ua.includes("Firefox")) return "Firefox";
@@ -46,12 +38,10 @@ const getBrowser = () => {
   return "Other";
 };
 
-// Track event
 export const trackEvent = async (eventType, eventData = {}) => {
   try {
     const utmParams = getUtmParams(window.location.search);
-    
-    await base44.entities.UserEvent.create({
+    await base44.functions.invoke('trackUserEvent', {
       event_type: eventType,
       page_url: window.location.pathname + window.location.search,
       page_title: document.title,
@@ -65,20 +55,17 @@ export const trackEvent = async (eventType, eventData = {}) => {
       language: navigator.language
     });
   } catch (error) {
-    console.error("Failed to track event:", error);
+    // Silently fail - tracking should not disrupt user experience
   }
 };
 
-// Hook for automatic page view tracking
 export default function UserTracking() {
   const location = useLocation();
   const startTime = useRef(Date.now());
 
   useEffect(() => {
-    // Track page view
     trackEvent("page_view");
 
-    // Track time spent on page when leaving
     return () => {
       const timeSpent = Math.round((Date.now() - startTime.current) / 1000);
       trackEvent("page_view", { time_spent: timeSpent });
