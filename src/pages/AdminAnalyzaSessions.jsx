@@ -132,7 +132,7 @@ export default function AdminAnalyzaSessions() {
     },
     initialData: { count: 0, sessions: [] },
     enabled: isAdmin,
-    refetchInterval: 8000, // Update každých 8 sekúnd
+    refetchInterval: 60000, // Update každých 60 sekúnd (optimalizácia kreditov)
     staleTime: 0 // Vždy refetch
   });
 
@@ -141,7 +141,7 @@ export default function AdminAnalyzaSessions() {
     queryFn: () => base44.entities.Dom.list(),
     initialData: [],
     enabled: isAdmin,
-    refetchInterval: 15000
+    staleTime: 5 * 60 * 1000 // Domy sa menia zriedka - cache 5 minút
   });
 
   if (!isAdmin) {

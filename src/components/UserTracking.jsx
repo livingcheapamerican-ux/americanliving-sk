@@ -59,18 +59,8 @@ export const trackEvent = async (eventType, eventData = {}) => {
   }
 };
 
+// UserTracking: page_view events are now handled by SessionRecorder to avoid duplicate backend calls.
+// This component is kept for the exported trackEvent utility used elsewhere (button clicks, etc.)
 export default function UserTracking() {
-  const location = useLocation();
-  const startTime = useRef(Date.now());
-
-  useEffect(() => {
-    trackEvent("page_view");
-
-    return () => {
-      const timeSpent = Math.round((Date.now() - startTime.current) / 1000);
-      trackEvent("page_view", { time_spent: timeSpent });
-    };
-  }, [location.pathname, location.search]);
-
   return null;
 }

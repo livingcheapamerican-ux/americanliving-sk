@@ -125,15 +125,26 @@ export default function SessionRecorder() {
         localStorage.setItem('user_previous_sessions', JSON.stringify(allSessions.slice(-10)));
       } catch (err) {}
 
-      // Fetch location info
-      fetch('https://ipapi.co/json/')
-        .then(res => res.json())
-        .then(data => {
-          if (!sessionIdRef.current) return;
-          base44.functions.invoke('trackUserSession', {
-            action: 'update_location',
-            session_id: sessionIdRef.current,
-            data: {
+      // Fetch location info - cached in localStorage for 24h to avoid repeated calls
+      const cachedLocation = localStorage.getItem('user_location_cache');
+      const cacheTimestamp = localStorage.getItem('user_location_cache_time');
+      const cacheAge = cacheTimestamp ? Date.now() - parseInt(cacheTimestamp) : Infinity;
+      const CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
+
+      if (cachedLocation && cacheAge < CACHE_TTL) {
+        // Use cached location - no external API call needed
+        const data = JSON.parse(cachedLocation);
+        base44.functions.invoke('trackUserSession', {
+          action: 'update_location',
+          session_id: sessionIdRef.current,
+          data
+        }).catch(() => {});
+      } else {
+        fetch('https://ipapi.co/json/')
+          .then(res => res.json())
+          .then(data => {
+            if (!sessionIdRef.current) return;
+            const locationData = {
               ip: data.ip,
               country: data.country_name,
               country_code: data.country_code,
@@ -142,10 +153,18 @@ export default function SessionRecorder() {
               timezone: data.timezone,
               latitude: data.latitude,
               longitude: data.longitude
-            }
-          }).catch(() => {});
-        })
-        .catch(() => {});
+            };
+            // Cache the location for 24h
+            localStorage.setItem('user_location_cache', JSON.stringify(locationData));
+            localStorage.setItem('user_location_cache_time', Date.now().toString());
+            base44.functions.invoke('trackUserSession', {
+              action: 'update_location',
+              session_id: sessionIdRef.current,
+              data: locationData
+            }).catch(() => {});
+          })
+          .catch(() => {});
+      }
     }).catch(() => {
       sessionIdRef.current = null;
       sessionInitializedRef.current = false;
