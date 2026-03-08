@@ -246,6 +246,15 @@ export default function Marketing() {
   }
 
   // Výpočet KPI
+  const todaySessions = React.useMemo(() => {
+    const today = startOfDay(new Date());
+    const todayEnd = endOfDay(new Date());
+    return allSessions.filter(s => {
+      const d = new Date(s.created_date);
+      return d >= today && d <= todayEnd;
+    });
+  }, [allSessions]);
+
   const conversions = allSessions.filter(s => s.conversions?.length > 0).length;
   const conversionRate = allSessions.length > 0 
     ? ((conversions / allSessions.length) * 100).toFixed(2)
