@@ -59,6 +59,8 @@ Deno.serve(async (req) => {
       }
 
       if (needsUpdate) {
+        // 🔧 OPRAVA: Použiť asServiceRole.entities priamo — vyhne sa triggeru entity automácií
+        // (generateBasicSEO, generateProductSchema, flagDomForAEOUpdate spúšťajú sa len cez base44.entities nie asServiceRole)
         await base44.asServiceRole.entities.Dom.update(dom.id, updates);
         optimizedCount++;
       }

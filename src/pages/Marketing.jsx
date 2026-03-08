@@ -107,7 +107,7 @@ export default function Marketing() {
       return analyses[0] || null;
     },
     enabled: isAdmin,
-    refetchInterval: 60000 // každú minútu
+    refetchInterval: 300000 // každých 5 minút (bolo každú minútu)
   });
 
   const runDailyRoutine = useMutation({
@@ -148,20 +148,14 @@ export default function Marketing() {
     });
   };
 
-  // Dnešné sessions (bez admin)
-  const { data: todaySessions = [] } = useQuery({
-    queryKey: ['today-sessions'],
-    queryFn: async () => {
-      const sessions = await base44.entities.UserSession.list('-created_date', 500);
-      const filtered = filterAdminSessions(sessions);
-      const today = new Date();
-      return filtered.filter(s => {
-        const sessionDate = new Date(s.created_date);
-        return sessionDate >= startOfDay(today) && sessionDate <= endOfDay(today);
-      });
-    },
-    enabled: isAdmin
-  });
+  // Dnešné sessions - odvodené z allSessions (bez extra DB volania)
+  const todaySessions = React.useMemo(() => {
+    const today = new Date();
+    return allSessions.filter(s => {
+      const sessionDate = new Date(s.created_date);
+      return sessionDate >= startOfDay(today) && sessionDate <= endOfDay(today);
+    });
+  }, [allSessions]);
 
   // Týždenné dopyty
   const { data: weekDopyty = [] } = useQuery({
@@ -178,14 +172,15 @@ export default function Marketing() {
     enabled: isAdmin
   });
 
-  // Všetky sessions pre výpočty (bez admin)
+  // Všetky sessions pre výpočty (bez admin) - zdieľané pre todaySessions aj allSessions
   const { data: allSessions = [] } = useQuery({
     queryKey: ['all-sessions-marketing'],
     queryFn: async () => {
       const sessions = await base44.entities.UserSession.list('-created_date', 1000);
       return filterAdminSessions(sessions);
     },
-    enabled: isAdmin
+    enabled: isAdmin,
+    staleTime: 120000 // 2 minúty cache
   });
 
   // Marketing insights
@@ -966,7 +961,8 @@ Vráť JSON s "posts" array, "overall_reasoning" a "target_profile_used".`;
               onClick={async () => {
                 toast.info('🧠 Generujem stratégiu...');
                 try {
-                  const sessions = await base44.entities.UserSession.list('-created_date', 500);
+                  // Reuse allSessions namiesto nového DB volania
+                  const sessions = allSessions.length > 0 ? allSessions : await base44.entities.UserSession.list('-created_date', 500);
                   
                   // Agregované štatistiky
                   const stats = {

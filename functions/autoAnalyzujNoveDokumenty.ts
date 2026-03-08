@@ -40,52 +40,64 @@ Deno.serve(async (req) => {
           throw new Error('Neplatná URL obrázka');
         }
 
-        // Generuj popis
-        const popis = await base44.asServiceRole.integrations.Core.InvokeLLM({
-          prompt: `Analyzuj tento obrázok modulárneho domu a vytvor krátky ale informatívny popis:
+        // 🔧 OPRAVA: Zlúčené 2 LLM volania do 1 (ušetrí 50% kreditov na analýzu dokumentov)
+        const kombinovanyVysledok = await base44.asServiceRole.integrations.Core.InvokeLLM({
+          prompt: `Analyzuj tento obrázok modulárneho domu.
 
 Súbor: ${dok.nazov}
 Výrobca: ${dok.vyrobca || 'neznámy'}
 Model: ${dok.model_domu || 'neznámy'}
 
-Vytvor 2-3 vetový popis zahŕňajúci typ obsahu, materiály, farby a hlavné charakteristiky.`,
-          file_urls: [dok.subor_url]
-        });
-
-        // Extrahuj štruktúrované dáta
-        const strukturovaneData = await base44.asServiceRole.integrations.Core.InvokeLLM({
-          prompt: `Analyzuj tento obrázok modulárneho domu a extrahuj štruktúrované informácie s MAXIMÁLNYM DETAILOM o fasáde:
-
-Vráť JSON s týmito poľami (všetky hodnoty sú nepovinné, ak niečo nevidíš, vynechaj to):
-
-ZÁKLADNÉ INFORMÁCIE:
+Vráť JSON s poľami:
+- ai_popis: "2-3 vetový popis zahŕňajúci typ obsahu, materiály, farby a hlavné charakteristiky"
 - typ_obsahu: jeden z "exterier", "interier", "podorys", "detail"
-- specificka_kategoria: text, napr. "celkový pohľad", "detail fasády", "rohový pohľad"
-
-FASÁDA - MATERIÁLY (buď čo najkonkrétnejší):
-- fasada_materialy: pole textov, napr. ["smrekové drevo", "oceľový plech", "silikátová omietka", "cédrové dosky"]
-- fasada_typy_drevin: pole textov s konkrétnymi druhmi dreva, napr. ["smrek", "céder", "modrin", "borovica"]
-- fasada_povrchove_upravy: pole textov, napr. ["morené tmavé", "lakované matné", "impregnované", "neošetrené prírodné", "kefované"]
-- fasada_prvky: pole textov špecifických prvkov, napr. ["vertikálne lamely", "horizontálne obklady", "drevené lišty", "kamenný obklad sokel", "kovové rohy"]
-- fasada_farby: pole textov, napr. ["tmavohnedá", "biela", "sivá", "prírodná", "antracitová"]
-
-OKNÁ A DVERE:
-- okna_typ: text, napr. "plastové", "drevené", "hliníkové", "drevo-hliníkové"
+- specificka_kategoria: text
+- fasada_materialy: pole textov
+- fasada_typy_drevin: pole textov
+- fasada_povrchove_upravy: pole textov
+- fasada_prvky: pole textov
+- fasada_farby: pole textov
+- okna_typ: text
 - okna_farba: text
 - dvere_typ: text
 - dvere_farba: text
-
-STRECHA:
-- strecha_typ: text, napr. "plechová falcovaná", "škridlová", "plochá", "sedlová"
+- strecha_typ: text
 - strecha_farba: text
-- strecha_material: text, napr. "titánzinkový plech", "oceľová škridla", "betónová škridla"
-
-STAV A KVALITA:
+- strecha_material: text
 - stav_fasady: jeden z "výborný", "dobrý", "potrebuje údržbu"
-- spravny_vyrobca: text (potvrď alebo oprav)
-- spravny_model: text (potvrď alebo oprav)`,
+- spravny_vyrobca: text
+- spravny_model: text`,
           file_urls: [dok.subor_url],
           response_json_schema: {
+            type: "object",
+            properties: {
+              ai_popis: { type: "string" },
+              typ_obsahu: { type: "string" },
+              specificka_kategoria: { type: "string" },
+              fasada_materialy: { type: "array", items: { type: "string" } },
+              fasada_typy_drevin: { type: "array", items: { type: "string" } },
+              fasada_povrchove_upravy: { type: "array", items: { type: "string" } },
+              fasada_prvky: { type: "array", items: { type: "string" } },
+              fasada_farby: { type: "array", items: { type: "string" } },
+              okna_typ: { type: "string" },
+              okna_farba: { type: "string" },
+              dvere_typ: { type: "string" },
+              dvere_farba: { type: "string" },
+              strecha_typ: { type: "string" },
+              strecha_farba: { type: "string" },
+              strecha_material: { type: "string" },
+              stav_fasady: { type: "string" },
+              spravny_vyrobca: { type: "string" },
+              spravny_model: { type: "string" }
+            }
+          }
+        });
+
+        const popis = kombinovanyVysledok.ai_popis || '';
+        const strukturovaneData = kombinovanyVysledok;
+
+        // (zachovaný pôvodný kód pre kompatibilitu - len dummy pre response_json_schema nižšie)
+        const _dummySchemaRef = {
             type: "object",
             properties: {
               typ_obsahu: { type: "string" },
