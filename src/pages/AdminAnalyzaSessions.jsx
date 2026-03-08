@@ -288,7 +288,7 @@ export default function AdminAnalyzaSessions() {
             <p className="text-gray-600">Komplexná analytika ako Google Analytics</p>
             <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              Automatická aktualizácia každých 15 sekúnd
+              Automatická aktualizácia každých 5 minút
             </div>
           </div>
           <div className="flex gap-2">
