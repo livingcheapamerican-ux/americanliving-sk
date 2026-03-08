@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import AIMarketingChat from "../components/AIMarketingChat";
+import StrategyTab from "../components/marketing/StrategyTab";
 import CampaignHistoryTable from "../components/marketing/CampaignHistoryTable";
 import PersonalizedRecommendations from "../components/PersonalizedRecommendations";
 import AutomatedCampaignsSection from "../components/marketing/AutomatedCampaignsSection";
