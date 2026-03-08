@@ -63,14 +63,14 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Loguj batch
+    // Loguj batch - každá fotka je LLM volanie (3 kredity)
     if (processed > 0) {
       await base44.functions.invoke('logIntegrationCall', {
         function_name: 'monthlyImageSEOBatch',
-        integration_type: 'GenerateImage',
+        integration_type: 'InvokeLLM',
         trigger: 'automation_scheduled',
         status: processed > 0 ? 'success' : 'failed',
-        estimated_credits: processed * 1,
+        estimated_credits: processed * 3,
         details: `Processed ${processed} images, ${failed} failed`
       }).catch(err => console.error('Log error:', err));
     }

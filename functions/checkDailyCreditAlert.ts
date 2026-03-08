@@ -14,7 +14,7 @@ Deno.serve(async (req) => {
       config_key: 'credit_daily_limit'
     });
     
-    const dailyLimit = configs[0]?.config_value?.limit || 500;
+    const dailyLimit = configs[0]?.config_value?.limit || 100;
 
     // Načítaj záznamy z dnešného dňa
     const today = startOfDay(new Date());
