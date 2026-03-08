@@ -96,31 +96,6 @@ Vráť JSON s poľami:
         const popis = kombinovanyVysledok.ai_popis || '';
         const strukturovaneData = kombinovanyVysledok;
 
-        // (zachovaný pôvodný kód pre kompatibilitu - len dummy pre response_json_schema nižšie)
-        const _dummySchemaRef = {
-            type: "object",
-            properties: {
-              typ_obsahu: { type: "string" },
-              specificka_kategoria: { type: "string" },
-              fasada_materialy: { type: "array", items: { type: "string" } },
-              fasada_typy_drevin: { type: "array", items: { type: "string" } },
-              fasada_povrchove_upravy: { type: "array", items: { type: "string" } },
-              fasada_prvky: { type: "array", items: { type: "string" } },
-              fasada_farby: { type: "array", items: { type: "string" } },
-              okna_typ: { type: "string" },
-              okna_farba: { type: "string" },
-              dvere_typ: { type: "string" },
-              dvere_farba: { type: "string" },
-              strecha_typ: { type: "string" },
-              strecha_farba: { type: "string" },
-              strecha_material: { type: "string" },
-              stav_fasady: { type: "string" },
-              spravny_vyrobca: { type: "string" },
-              spravny_model: { type: "string" }
-            }
-          }
-        });
-
         // Vypočítaj novú cestu
         let typPriecinok = '';
         if (strukturovaneData.typ_obsahu === 'exterier') typPriecinok = '/exterier';
