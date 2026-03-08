@@ -100,6 +100,17 @@ Deno.serve(async (req) => {
         results.optimized++;
         console.log(`✅ Optimized: ${altText}`);
 
+        // Loguj spotrebu kreditov
+        await base44.functions.invoke('logIntegrationCall', {
+          function_name: 'optimizeImageSEO',
+          integration_type: 'InvokeLLM',
+          entity_name,
+          entity_id,
+          trigger: 'user_action',
+          status: 'success',
+          estimated_credits: 1
+        }).catch(err => console.error('Log error:', err));
+
       } catch (error) {
         results.failed++;
         results.errors.push(`Image ${imageUrl}: ${error.message}`);

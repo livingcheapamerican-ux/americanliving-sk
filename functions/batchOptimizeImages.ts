@@ -111,6 +111,21 @@ Deno.serve(async (req) => {
       images_seo_map: seoMapMultiLang
     });
 
+    // Loguj spotrebu kreditov (počet obrázkov × 10 jazykov × 1 kredit)
+    const totalLLMCalls = imageUrls.length * TARGET_LANGUAGES.length;
+    if (totalLLMCalls > 0) {
+      await base44.functions.invoke('logIntegrationCall', {
+        function_name: 'batchOptimizeImages',
+        integration_type: 'InvokeLLM',
+        entity_name: 'Dom',
+        entity_id: domId,
+        trigger: 'user_action',
+        status: 'success',
+        estimated_credits: totalLLMCalls,
+        details: `${imageUrls.length} images × ${TARGET_LANGUAGES.length} languages`
+      }).catch(err => console.error('Log error:', err));
+    }
+
     report.dom_processed = 1;
     console.log(`✅ Dom updated: ${dom.nazov} with multi-language SEO map`);
 

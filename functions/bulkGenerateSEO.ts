@@ -110,15 +110,27 @@ Deno.serve(async (req) => {
       }
     }
 
+    // Loguj batch
+    if (successCount > 0) {
+     await base44.asServiceRole.functions.invoke('logIntegrationCall', {
+       function_name: 'bulkGenerateSEO',
+       integration_type: 'Other',
+       trigger: 'user_action',
+       status: successCount > 0 ? 'success' : 'failed',
+       estimated_credits: 0,
+       details: `Processed ${successCount} houses, ${errorCount} failed`
+     }).catch(err => console.error('Log error:', err));
+    }
+
     return Response.json({
-      success: true,
-      message: `Bulk SEO generation completed`,
-      summary: {
-        total: domy.length,
-        success: successCount,
-        errors: errorCount
-      },
-      results
+     success: true,
+     message: `Bulk SEO generation completed`,
+     summary: {
+       total: domy.length,
+       success: successCount,
+       errors: errorCount
+     },
+     results
     });
 
   } catch (error) {

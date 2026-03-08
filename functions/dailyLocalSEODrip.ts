@@ -69,6 +69,18 @@ Deno.serve(async (req) => {
       results.push({ city: mesto, status: 'success', credits_used: 0 });
     }
 
+    // Loguj batch (bez kredítov - text generácia)
+    if (results.length > 0) {
+      await base44.functions.invoke('logIntegrationCall', {
+        function_name: 'dailyLocalSEODrip',
+        integration_type: 'Other',
+        trigger: 'automation_scheduled',
+        status: 'success',
+        estimated_credits: 0,
+        details: `Processed ${results.length} locations (0-credit mode)`
+      }).catch(err => console.error('Log error:', err));
+    }
+
     return Response.json({
       success: true,
       processed: results.length,
