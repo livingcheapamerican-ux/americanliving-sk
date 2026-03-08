@@ -6,12 +6,17 @@ import { createPageUrl } from "@/utils";
 import { motion } from "framer-motion";
 import { Home } from "lucide-react";
 
-export default function FloatingHouses({ side = "left" }) {
-  const { data: allDomy = [] } = useQuery({
+// FloatingHouses prijíma domy ako prop aby sa vyhlo duplicitnému DB volaniu
+export default function FloatingHouses({ side = "left", domy: domyProp }) {
+  // Fallback: ak nie sú domy ako prop, načítaj ich (pre použitie mimo Domov.jsx)
+  const { data: fetchedDomy = [] } = useQuery({
     queryKey: ['domy-floating-public'],
     queryFn: () => base44.entities.Dom.filter({ verejny: true }),
     staleTime: 300000,
+    enabled: !domyProp, // načítaj len ak nie sú domy ako prop
   });
+
+  const allDomy = domyProp || fetchedDomy;
 
   // Len verejné domy od Ticabhouse a Prosto House s titulnou fotkou (bez mobilných domov)
   const domy = useMemo(() => {
