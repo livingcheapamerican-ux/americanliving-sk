@@ -1589,20 +1589,7 @@ ${i + 1}. ${action.title} [${action.priority.toUpperCase()}]
 
           {/* KARTA B: Stratégia a Mozog */}
           <TabsContent value="strategy">
-            <div className="space-y-8">
-              {/* Kreatívne Štúdio */}
-              <Card className="bg-gradient-to-br from-pink-900 to-purple-900 text-white border-none shadow-2xl">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-2xl">
-                    <Lightbulb className="w-8 h-8" />
-                    💡 Kreatívne Štúdio
-                  </CardTitle>
-                  <p className="text-pink-200">Idea → Hotový produkčný plán</p>
-                  <div className="mt-2 flex items-center gap-2">
-                    <Badge className="bg-yellow-400 text-yellow-900">gemini-1.5-pro</Badge>
-                    <Badge className="bg-cyan-400 text-cyan-900">Production Ready</Badge>
-                  </div>
-                </CardHeader>
+            <StrategyTabPlaceholder />
                 <CardContent>
                   <div className="space-y-4">
                     <div>
