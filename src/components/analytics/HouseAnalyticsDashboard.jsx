@@ -33,10 +33,10 @@ export default function HouseAnalyticsDashboard({ sessions, domy }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("visits");
   
-  // Live indicator - aktualizovať každých 30 sekúnd
+  // Live indicator - aktualizovať každých 5 minút (300s)
   const [, setRefreshTick] = useState(0);
   React.useEffect(() => {
-    const interval = setInterval(() => setRefreshTick(t => t + 1), 30000);
+    const interval = setInterval(() => setRefreshTick(t => t + 1), 300000);
     return () => clearInterval(interval);
   }, []);
 

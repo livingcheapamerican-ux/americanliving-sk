@@ -16,7 +16,23 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Dom not found' }, { status: 404 });
     }
 
-    // Loop protection: skip if SEO data already matches current dom data (no real change)
+    // Loop protection: skip if this update was triggered by SEO/AEO writes (only meta fields changed)
+    const payload = await req.json().catch(() => ({}));
+    const eventType = payload?.event?.type;
+    const oldData = payload?.old_data;
+    const newData = payload?.data;
+
+    // If update event - check if only meta/SEO fields changed (skip to prevent loop)
+    if (eventType === 'update' && oldData && newData) {
+      const realContentFields = ['nazov', 'vyrobca', 'typ_domu', 'zakladna_cena', 'zastavana_plocha', 'uzitkova_plocha', 'pocet_izieb', 'hlavny_obrazok', 'zakladna_konfiguracia_obrazok', 'galeria', 'podorys_2d', 'podorys_3d', 'popis'];
+      const hasRealChange = realContentFields.some(f => JSON.stringify(oldData[f]) !== JSON.stringify(newData[f]));
+      if (!hasRealChange) {
+        console.log(`⏭️ Skipping generateBasicSEO for ${newData?.nazov} - only meta fields changed (loop protection)`);
+        return Response.json({ success: true, skipped: true, reason: 'only_meta_changed' });
+      }
+    }
+
+    // Loop protection: skip if SEO data already matches current dom data
     const expectedTitle = `${dom.nazov} | ${{ 'modularny': 'Modulárny dom', 'montovany': 'Montovaný dom', 'mobilny': 'Mobilný dom' }[dom.typ_domu] || 'Dom'} | American Living`;
     if (dom.meta_title === expectedTitle && dom.faq_schema_data?.sk && dom.images_seo_map?.sk) {
       console.log(`⏭️ Skipping ${dom.nazov} - SEO data already up to date (loop protection)`);

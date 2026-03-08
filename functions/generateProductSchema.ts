@@ -12,15 +12,14 @@ Deno.serve(async (req) => {
 
     const domId = event.entity_id;
 
-    // For updates: check if price or name changed
+    // For updates: check if relevant fields changed (prevent loop from own writes)
     if (event.type === 'update' && old_data && data) {
-      const priceChanged = old_data.zakladna_cena !== data.zakladna_cena;
-      const nameChanged = old_data.nazov !== data.nazov;
-      
-      if (!priceChanged && !nameChanged) {
+      const realContentFields = ['nazov', 'zakladna_cena', 'vyrobca', 'hlavny_obrazok', 'popis', 'zastavana_plocha', 'uzitkova_plocha', 'pocet_izieb'];
+      const hasRealChange = realContentFields.some(f => JSON.stringify(old_data[f]) !== JSON.stringify(data[f]));
+      if (!hasRealChange) {
         return Response.json({ 
           skipped: true, 
-          reason: 'Price and name unchanged',
+          reason: 'No relevant content fields changed (loop protection)',
           entity_id: domId 
         });
       }

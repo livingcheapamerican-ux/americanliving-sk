@@ -60,7 +60,10 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Content changed - flag for AEO update
+    // Content changed - flag for AEO update ONLY if not already flagged (prevents loop)
+    if (data.aeo_update_pending === true) {
+      return Response.json({ skipped: true, reason: 'Already flagged for AEO update', entity_id: domId });
+    }
     await base44.asServiceRole.entities.Dom.update(domId, {
       aeo_update_pending: true
     });
