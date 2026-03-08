@@ -34,10 +34,7 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import { sk } from "date-fns/locale";
-import AnalyticsDashboard from "../components/analytics/AnalyticsDashboard";
-import HouseAnalyticsDashboard from "../components/analytics/HouseAnalyticsDashboard";
 import OnlineVisitorsMap from "../components/analytics/OnlineVisitorsMap";
-import VisitorSegments from "../components/analytics/VisitorSegments";
 
 export default function AdminAnalyzaSessions() {
   const [filterEmail, setFilterEmail] = useState("");
