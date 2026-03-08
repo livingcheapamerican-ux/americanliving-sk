@@ -899,16 +899,16 @@ export default function Katalog() {
                     <Input
                       type="number"
                       min={0}
-                      max={200}
+                      max={500}
                       step={5}
                       value={plocharozsah[1]}
                       onChange={(e) => setPlocharozsah([0, Number(e.target.value)])}
                       className="h-7 text-xs"
-                    />
+                      />
                   </div>
                   <Slider
                     min={0}
-                    max={200}
+                    max={500}
                     step={5}
                     value={[plocharozsah[1]]}
                     onValueChange={([val]) => setPlocharozsah([0, val])}
@@ -916,12 +916,12 @@ export default function Katalog() {
                   />
                   <div className="flex justify-between text-[10px] text-gray-500 mt-1">
                     <span>0 m²</span>
-                    <span>200 m²</span>
+                    <span>500 m²</span>
                   </div>
-                </div>
+                  </div>
 
-                {/* Úžitková plocha */}
-                <div className="hidden sm:block bg-purple-50 border border-purple-200 rounded-lg p-3">
+                  {/* Úžitková plocha */}
+                  <div className="hidden sm:block bg-purple-50 border border-purple-200 rounded-lg p-3">
                   <label className="block text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
                     <Square className="w-3 h-3 text-purple-600" />
                     {t('usableAreaFilter')}
@@ -931,16 +931,16 @@ export default function Katalog() {
                     <Input
                       type="number"
                       min={0}
-                      max={200}
+                      max={500}
                       step={5}
                       value={uzitkovaRozsah[1]}
                       onChange={(e) => setUzitkovaRozsah([0, Number(e.target.value)])}
                       className="h-7 text-xs"
-                    />
+                      />
                   </div>
                   <Slider
                     min={0}
-                    max={200}
+                    max={500}
                     step={5}
                     value={[uzitkovaRozsah[1]]}
                     onValueChange={([val]) => setUzitkovaRozsah([0, val])}
@@ -948,9 +948,9 @@ export default function Katalog() {
                   />
                   <div className="flex justify-between text-[10px] text-gray-500 mt-1">
                     <span>0 m²</span>
-                    <span>200 m²</span>
+                    <span>500 m²</span>
                   </div>
-                </div>
+                  </div>
 
                 {/* Pokročilé filtre */}
                 {showAdvancedFilters && (
@@ -993,8 +993,8 @@ export default function Katalog() {
                     setKategoriaFilter("vsetky");
                     setVyrobcaFilter([]);
                     setTypFilter([]);
-                    setPlocharozsah([0, 200]);
-                    setUzitkovaRozsah([0, 200]);
+                    setPlocharozsah([0, 500]);
+                    setUzitkovaRozsah([0, 500]);
                     setHladanie("");
                     setHladanieInput("");
                     setCenoveRozpatie([0, 300000]);
