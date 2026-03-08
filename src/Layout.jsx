@@ -364,6 +364,11 @@ function LayoutContent({ children }) {
                     <Users className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                   </Button>
                 </Link>
+                <Link to={createPageUrl("AdminCreditMonitor")}>
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Credit Monitor">
+                    <Zap className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
+                  </Button>
+                </Link>
                 <Link to={createPageUrl("AdminPixelSettings")}>
                   <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminMetaPixel')}>
                     <Settings className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
