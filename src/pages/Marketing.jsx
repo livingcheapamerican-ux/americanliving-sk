@@ -1727,55 +1727,10 @@ ${i + 1}. ${action.title} [${action.priority.toUpperCase()}]
                     )}
                   </div>
                 </CardContent>
-              </Card>
-              {/* Deep Think Strategist - SKRYTÉ (nefunkčné - funkcia vymazaná) */}
-              <Card className="bg-gradient-to-br from-purple-900 to-indigo-900 text-white border-none shadow-2xl" style={{ display: 'none' }}>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-2xl">
-                    <Brain className="w-8 h-8" />
-                    🧠 Deep Think Strategist
-                  </CardTitle>
-                  <p className="text-purple-200">AI analýza všetkých dát → Konkrétne odporúčania</p>
-                  <div className="mt-2 flex items-center gap-2">
-                    <Badge className="bg-yellow-400 text-yellow-900">gemini-1.5-pro</Badge>
-                    <Badge className="bg-pink-400 text-pink-900">Chain of Thought</Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <Button
-                    onClick={runDeepThinkStrategist}
-                    disabled={loadingBriefing}
-                    size="lg"
-                    className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-gray-900 font-bold text-lg mb-6"
-                  >
-                    {loadingBriefing ? (
-                      <>
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-900 mr-2"></div>
-                        Deep Reasoning prebieha...
-                      </>
-                    ) : (
-                      <>
-                        <Rocket className="w-5 h-5 mr-2" />
-                        🚀 Spustiť Deep Think Analýzu
-                      </>
-                    )}
-                  </Button>
-                  
-                  {strategicBriefing && (
-                    <div className="bg-white text-gray-900 p-6 rounded-lg">
-                      <h3 className="font-bold text-xl mb-4 text-purple-900">📋 Denný Strategický Brífing</h3>
-                      <div className="prose prose-sm max-w-none">
-                        <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed">
-                          {strategicBriefing}
-                        </pre>
-                      </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+                </Card>
 
-              {/* Analýza Dopytov */}
-              {clientConcerns && (
+                {/* Analýza Dopytov */}
+                {clientConcerns && (
                 <Card className="border-orange-300 bg-gradient-to-br from-orange-50 to-yellow-50">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
