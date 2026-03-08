@@ -351,34 +351,7 @@ export default function AdminAnalyzaSessions() {
           </div>
         </div>
 
-        <Tabs defaultValue="houses" className="mb-6">
-          <TabsList className="grid w-full max-w-4xl grid-cols-4">
-            <TabsTrigger value="houses">🏠 Analytika Domov</TabsTrigger>
-            <TabsTrigger value="segments">🧠 Segmenty</TabsTrigger>
-            <TabsTrigger value="dashboard">📈 Dashboard</TabsTrigger>
-            <TabsTrigger value="sessions">🔍 Sessions</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="houses">
-            <HouseAnalyticsDashboard sessions={filteredSessions} domy={domy} />
-          </TabsContent>
-
-          <TabsContent value="segments">
-            <VisitorSegments 
-              sessions={filteredSessions} 
-              domy={domy}
-              onSegmentSelect={(segmentKey) => {
-                setSelectedSegment(segmentKey);
-                // TODO: Apply segment filter
-              }}
-            />
-          </TabsContent>
-
-          <TabsContent value="dashboard">
-            <AnalyticsDashboard sessions={filteredSessions} />
-          </TabsContent>
-
-          <TabsContent value="sessions">
+        <div className="mb-6">
             {/* Stats Cards */}
             <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4 mb-6">
           <Card className="p-4">
