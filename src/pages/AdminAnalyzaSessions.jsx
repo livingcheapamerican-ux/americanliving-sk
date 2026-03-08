@@ -1612,8 +1612,7 @@ export default function AdminAnalyzaSessions() {
             )
           )}
         </div>
-          </TabsContent>
-        </Tabs>
+        </div>
 
         {/* Online Visitors Map Modal */}
         {showMapModal && (
