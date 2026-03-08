@@ -246,7 +246,7 @@ export default function Marketing() {
   }
 
   // Výpočet KPI
-  const todaySessions = React.useMemo(() => {
+  const todaySessions = useMemo(() => {
     const today = startOfDay(new Date());
     const todayEnd = endOfDay(new Date());
     return allSessions.filter(s => {
