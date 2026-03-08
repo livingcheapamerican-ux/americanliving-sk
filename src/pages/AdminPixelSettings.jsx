@@ -152,6 +152,78 @@ export default function AdminPixelSettings() {
                 <strong>⚠️ Dôležité:</strong> Po uložení obnovte stránku (F5) pre aktiváciu Meta Pixelu.
               </p>
             </div>
+
+            {/* Manual test button */}
+            <Button
+              onClick={async () => {
+                setTestingEvent(true);
+                try {
+                  if (window.fbq) {
+                    window.fbq('track', 'Lead');
+                    toast.success('✅ Test Lead event odoslaný cez Pixel!');
+                  } else {
+                    toast.error('❌ Pixel nie je inicializovaný — obnovte stránku');
+                  }
+                  await base44.functions.invoke('sendCAPIEvent', {
+                    event_name: 'Lead',
+                    event_source_url: window.location.href,
+                    user_data: { client_user_agent: navigator.userAgent }
+                  });
+                  toast.success('✅ Test Lead event odoslaný cez CAPI!');
+                  queryClient.invalidateQueries({ queryKey: ['capi-logs'] });
+                } catch (e) {
+                  toast.error('CAPI chyba: ' + e.message);
+                } finally {
+                  setTestingEvent(false);
+                }
+              }}
+              disabled={testingEvent}
+              variant="outline"
+              className="w-full border-orange-300 text-orange-700 hover:bg-orange-50"
+            >
+              {testingEvent ? (
+                <><div className="animate-spin rounded-full h-4 w-4 border-b-2 border-orange-600 mr-2"></div>Odosielam test...</>
+              ) : (
+                <><Zap className="w-4 h-4 mr-2" />Odoslať testovací Lead event</>
+              )}
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* CAPI Log */}
+        <Card className="mt-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Activity className="w-5 h-5 text-purple-600" />
+              Posledné CAPI udalosti ({capiLogs.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {capiLogs.length === 0 ? (
+              <p className="text-gray-500 text-sm text-center py-4">Zatiaľ žiadne udalosti</p>
+            ) : (
+              <div className="space-y-2">
+                {capiLogs.map((log) => (
+                  <div key={log.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border text-sm">
+                    <div className="flex items-center gap-2">
+                      {log.success ? (
+                        <CheckCircle className="w-4 h-4 text-green-600" />
+                      ) : (
+                        <XCircle className="w-4 h-4 text-red-600" />
+                      )}
+                      <Badge className={log.success ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}>
+                        {log.event_name}
+                      </Badge>
+                      <span className="text-gray-600 text-xs">{log.attempt_method}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                      <span>{log.duration_ms}ms</span>
+                      <span>{format(new Date(log.created_date), 'dd.MM HH:mm', { locale: sk })}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
