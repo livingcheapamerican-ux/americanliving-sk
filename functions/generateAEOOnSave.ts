@@ -59,6 +59,16 @@ Deno.serve(async (req) => {
 
     console.log(`[${entity_name}] Generating AEO for ID: ${entity_id}`);
 
+    // Loguj pred AI volaním
+    const logPromise = base44.functions.invoke('logIntegrationCall', {
+      function_name: 'generateAEOOnSave',
+      integration_type: 'InvokeLLM',
+      entity_name,
+      entity_id,
+      trigger: 'automation_entity',
+      estimated_credits: 3
+    }).catch(err => console.error('Log error:', err));
+
     // Vygeneruj AI zhrnutie a FAQ
     const response = await base44.integrations.Core.InvokeLLM({
       prompt: `Vytvor: a) 1-vetné zhrnutie max 300 znakov. b) 3-5 relevantných FAQ otázok a odpovedí v JSON formáte s polom 'faqs'. Otázky musia byť prirodzené a často kladené v tejto oblasti. Text: ${contentForAnalysis}`,
