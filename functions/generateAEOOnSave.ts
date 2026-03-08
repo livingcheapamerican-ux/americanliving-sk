@@ -17,6 +17,17 @@ Deno.serve(async (req) => {
     let shouldGenerate = false;
     let contentForAnalysis = '';
 
+    // Globálna ochrana pred slučkou pre update eventy
+    if (type === 'update' && old_data && data) {
+      const aeoMetaFields = ['ai_summary', 'faq_schema_data', 'geo_context_keywords', 'meta_title', 'meta_description', 'product_schema_json', 'images_seo_map', 'aeo_update_pending'];
+      const contentKeys = Object.keys(data).filter(k => !aeoMetaFields.includes(k));
+      const hasRealChange = contentKeys.some(k => JSON.stringify(old_data[k]) !== JSON.stringify(data[k]));
+      if (!hasRealChange) {
+        console.log(`⏭️ generateAEOOnSave: skipping ${data.nazov || entity_id} - only meta/SEO fields changed (loop protection)`);
+        return Response.json({ success: true, generated: false, reason: 'only_meta_changed_loop_protection' });
+      }
+    }
+
     if (entity_name === 'Dom') {
       // faq_schema_data je multi-language: { sk: { faqs: [...] }, en: {...} }
       const hasEmptyFAQ = !data.faq_schema_data?.sk?.faqs || data.faq_schema_data.sk.faqs.length === 0;
