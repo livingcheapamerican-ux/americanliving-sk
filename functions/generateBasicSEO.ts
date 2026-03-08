@@ -6,23 +6,15 @@ Deno.serve(async (req) => {
     const payload = await req.json();
     
     const domId = payload.event?.entity_id;
-    if (!domId) {
-      return Response.json({ error: 'Missing entity_id' }, { status: 400 });
-    }
-
-    // Načítaj dom
-    const dom = await base44.asServiceRole.entities.Dom.get(domId);
-    if (!dom) {
-      return Response.json({ error: 'Dom not found' }, { status: 404 });
-    }
-
-    // Loop protection: skip if this update was triggered by SEO/AEO writes (only meta fields changed)
-    const payload = await req.json().catch(() => ({}));
     const eventType = payload?.event?.type;
     const oldData = payload?.old_data;
     const newData = payload?.data;
 
-    // If update event - check if only meta/SEO fields changed (skip to prevent loop)
+    if (!domId) {
+      return Response.json({ error: 'Missing entity_id' }, { status: 400 });
+    }
+
+    // Loop protection: skip if only meta/SEO fields changed (prevent write loop)
     if (eventType === 'update' && oldData && newData) {
       const realContentFields = ['nazov', 'vyrobca', 'typ_domu', 'zakladna_cena', 'zastavana_plocha', 'uzitkova_plocha', 'pocet_izieb', 'hlavny_obrazok', 'zakladna_konfiguracia_obrazok', 'galeria', 'podorys_2d', 'podorys_3d', 'popis'];
       const hasRealChange = realContentFields.some(f => JSON.stringify(oldData[f]) !== JSON.stringify(newData[f]));
@@ -30,6 +22,12 @@ Deno.serve(async (req) => {
         console.log(`⏭️ Skipping generateBasicSEO for ${newData?.nazov} - only meta fields changed (loop protection)`);
         return Response.json({ success: true, skipped: true, reason: 'only_meta_changed' });
       }
+    }
+
+    // Načítaj dom
+    const dom = await base44.asServiceRole.entities.Dom.get(domId);
+    if (!dom) {
+      return Response.json({ error: 'Dom not found' }, { status: 404 });
     }
 
     // Loop protection: skip if SEO data already matches current dom data
