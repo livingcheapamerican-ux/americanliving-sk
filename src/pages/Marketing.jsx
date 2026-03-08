@@ -148,15 +148,6 @@ export default function Marketing() {
     });
   };
 
-  // Dnešné sessions - odvodené z allSessions (bez extra DB volania)
-  const todaySessions = React.useMemo(() => {
-    const today = new Date();
-    return allSessions.filter(s => {
-      const sessionDate = new Date(s.created_date);
-      return sessionDate >= startOfDay(today) && sessionDate <= endOfDay(today);
-    });
-  }, [allSessions]);
-
   // Týždenné dopyty
   const { data: weekDopyty = [] } = useQuery({
     queryKey: ['week-dopyty'],
