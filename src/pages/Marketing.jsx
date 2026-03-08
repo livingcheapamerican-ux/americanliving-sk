@@ -1590,7 +1590,10 @@ ${i + 1}. ${action.title} [${action.priority.toUpperCase()}]
 
           {/* KARTA B: Stratégia a Mozog */}
           <TabsContent value="strategy">
-            <StrategyTabPlaceholder />
+            <StrategyTab rawIdea={rawIdea} setRawIdea={setRawIdea} creativeProject={creativeProject} loadingCreative={loadingCreative} improveIdea={improveIdea} driveLink={driveLink} setDriveLink={setDriveLink} savingDriveLink={savingDriveLink} saveDriveLink={saveDriveLink} assets={assets} clientConcerns={clientConcerns} strategicBriefing={strategicBriefing} loadingBriefing={loadingBriefing} runDeepThinkStrategist={runDeepThinkStrategist} newKnowHow={newKnowHow} setNewKnowHow={setNewKnowHow} saveKnowHow={saveKnowHow} brainRules={brainRules} commentsInput={commentsInput} setCommentsInput={setCommentsInput} campaignNameInput={campaignNameInput} setCampaignNameInput={setCampaignNameInput} commentsAnalysis={commentsAnalysis} loadingComments={loadingComments} analyzeComments={analyzeComments} campaigns={campaigns} newCompetitor={newCompetitor} setNewCompetitor={setNewCompetitor} saveCompetitor={saveCompetitor} competitors={competitors} loadingCompetitors={loadingCompetitors} findCompetitors={findCompetitors} />
+          </TabsContent>
+
+          {/* REMOVED PLACEHOLDER_MARKER */}
                 <CardContent>
                   <div className="space-y-4">
                     <div>
