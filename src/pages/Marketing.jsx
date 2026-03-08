@@ -1595,17 +1595,7 @@ ${i + 1}. ${action.title} [${action.priority.toUpperCase()}]
 
           {/* REMOVED PLACEHOLDER_MARKER */}
                 <CardContent>
-                  <div className="space-y-4">
-                    <div>
-                      <Label className="text-white text-lg mb-2 block">Váš surový nápad</Label>
-                      <Textarea
-                        value={rawIdea}
-                        onChange={(e) => setRawIdea(e.target.value)}
-                        placeholder="Napr. 'Chcem natočiť video o kuchyni v dome Fjord'"
-                        rows={3}
-                        className="text-gray-900"
-                      />
-                    </div>
+                  <div className="space-y-4-BOGUS">
                     <Button
                       onClick={improveIdea}
                       disabled={loadingCreative}
