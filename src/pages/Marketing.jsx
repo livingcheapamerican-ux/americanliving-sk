@@ -230,22 +230,9 @@ export default function Marketing() {
     enabled: isAdmin
   });
 
-  // Vypočítať celkové API costs zo všetkých AI interakcií
-  const totalApiCost = React.useMemo(() => {
-    return marketingHistory.reduce((sum, record) => {
-      const cost = record.data?.api_call_duration_ms 
-        ? (record.data.estimated_cost_eur || 0)
-        : 0;
-      return sum + parseFloat(cost || 0);
-    }, 0);
-  }, [marketingHistory]);
+  const totalApiCost = React.useMemo(() => marketingHistory.reduce((sum, r) => sum + parseFloat(r.data?.estimated_cost_eur || 0), 0), [marketingHistory]);
 
-  // Load existing drive link
-  React.useEffect(() => {
-    if (assets.length > 0) {
-      setDriveLink(assets[0].link);
-    }
-  }, [assets]);
+  React.useEffect(() => { if (assets.length > 0) setDriveLink(assets[0].link); }, [assets]);
 
   if (!isAdmin) {
     return (
