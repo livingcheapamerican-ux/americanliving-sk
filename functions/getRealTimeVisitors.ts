@@ -10,9 +10,14 @@ Deno.serve(async (req) => {
     }
 
     // Načítaj iba aktívne sessions (is_active = true)
-    const activeSessions = await base44.asServiceRole.entities.UserSession.filter({
+    let activeSessions = await base44.asServiceRole.entities.UserSession.filter({
       is_active: true
     });
+
+    // Zabezpeč že activeSessions je vždy pole
+    if (!Array.isArray(activeSessions)) {
+      activeSessions = [];
+    }
 
     // Filter sessions ktoré mali aktivitu za posledných 5 minút
     const now = new Date();

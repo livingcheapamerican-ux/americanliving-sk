@@ -132,8 +132,8 @@ export default function AdminAnalyzaSessions() {
     },
     initialData: { count: 0, sessions: [] },
     enabled: isAdmin,
-    refetchInterval: 60000, // Update každých 60 sekúnd (optimalizácia kreditov)
-    staleTime: 0 // Vždy refetch
+    refetchInterval: 300000, // Update každých 5 minút (optimalizácia kreditov)
+    staleTime: 240000
   });
 
   const { data: domy = [] } = useQuery({
