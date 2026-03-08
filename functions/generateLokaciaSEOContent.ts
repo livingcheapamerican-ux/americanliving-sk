@@ -59,6 +59,17 @@ Deno.serve(async (req) => {
       meta_description: metaDescription
     });
 
+    // Loguj
+    await base44.functions.invoke('logIntegrationCall', {
+      function_name: 'generateLokaciaSEOContent',
+      integration_type: 'Other',
+      entity_name: 'LokaciaSEO',
+      entity_id,
+      trigger: 'automation_entity',
+      status: 'success',
+      estimated_credits: 0
+    }).catch(err => console.error('Log error:', err));
+
     console.log(`✅ 0-credit SEO content generated for: ${mesto}`);
 
     return Response.json({

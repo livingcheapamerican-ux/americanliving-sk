@@ -53,6 +53,18 @@ Deno.serve(async (req) => {
       }
     }
 
+    // Loguj batch
+    if (processed > 0) {
+      await base44.functions.invoke('logIntegrationCall', {
+        function_name: 'nightlyAEOBatchProcess',
+        integration_type: 'InvokeLLM',
+        trigger: 'automation_scheduled',
+        status: processed > 0 ? 'success' : 'failed',
+        estimated_credits: processed * 3,
+        details: `Processed ${processed} Dom records, ${failed} failed`
+      }).catch(err => console.error('Log error:', err));
+    }
+
     console.log(`🌙 Batch complete: ${processed} processed, ${failed} failed`);
 
     return Response.json({

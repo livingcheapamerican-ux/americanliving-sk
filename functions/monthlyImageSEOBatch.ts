@@ -63,6 +63,18 @@ Deno.serve(async (req) => {
       }
     }
 
+    // Loguj batch
+    if (processed > 0) {
+      await base44.functions.invoke('logIntegrationCall', {
+        function_name: 'monthlyImageSEOBatch',
+        integration_type: 'GenerateImage',
+        trigger: 'automation_scheduled',
+        status: processed > 0 ? 'success' : 'failed',
+        estimated_credits: processed * 1,
+        details: `Processed ${processed} images, ${failed} failed`
+      }).catch(err => console.error('Log error:', err));
+    }
+
     console.log(`📸 Monthly Image SEO Batch complete: ${processed} processed, ${failed} failed`);
 
     return Response.json({ success: true, processed, failed });
