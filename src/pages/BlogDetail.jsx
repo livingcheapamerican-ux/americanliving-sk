@@ -167,7 +167,7 @@ export default function BlogDetail() {
                 }
               })()}
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 break-words">
               {getTranslatedField(post, 'nazov')}
             </h1>
             <p className="text-xl text-gray-600 mb-6">

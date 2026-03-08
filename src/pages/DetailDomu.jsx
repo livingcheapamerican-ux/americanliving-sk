@@ -620,9 +620,9 @@ export default function DetailDomu() {
             </div>
           </div>
           {/* Názov domu - mobilné zobrazenie */}
-          <h1 className="lg:hidden text-lg font-bold text-primary mt-2">
+          <h2 className="lg:hidden text-lg font-bold text-primary mt-2">
             {dom.nazov}
-          </h1>
+          </h2>
         </div>
       </div>
 
@@ -1240,7 +1240,7 @@ export default function DetailDomu() {
                   {dom.typ_domu === 'modularny' ? t('modular') : dom.typ_domu === 'montovany' ? t('prefab') : t('mobile')}
                 </Badge>
               </div>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary mb-2 sm:mb-3">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary mb-2 sm:mb-3 break-words">
                 {dom.nazov}
               </h1>
               <p className="text-base sm:text-lg font-semibold text-primary mb-3">{t('ceilingHeight270A0')}</p>

@@ -32,6 +32,10 @@ function LayoutContent({ children }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { t, language, setLanguage } = useLanguage();
 
+  // Noindex meta tag for admin/internal pages
+  const noindexPaths = ['/AIMarketingInsights', '/AdminCennik', '/AutoSEOTrigger', '/AdminAnalyzaSessions', '/Admin', '/Test', '/Auto', '/Regeneruj'];
+  const shouldNoindex = noindexPaths.some(path => location.pathname.startsWith(path));
+
   // Dynamic canonical for current page
   useEffect(() => {
     const canonical = window.location.href;
@@ -164,6 +168,9 @@ function LayoutContent({ children }) {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Helmet>
+        {shouldNoindex && <meta name="robots" content="noindex, nofollow" />}
+      </Helmet>
       <style>{`
         :root {
           --primary: #FF0000;

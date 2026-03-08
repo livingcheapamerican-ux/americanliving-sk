@@ -44,6 +44,9 @@ Deno.serve(async (req) => {
       xml += `  </url>\n`;
     }
     
+    // Noindex prefixes to exclude
+    const noindexPrefixes = ['/AIMarketingInsights', '/AdminCennik', '/AutoSEOTrigger', '/AdminAnalyzaSessions', '/Admin', '/Test', '/Auto', '/Regeneruj'];
+    
     // Domy
     for (const dom of domy) {
       xml += `  <url>\n`;
@@ -54,10 +57,14 @@ Deno.serve(async (req) => {
       xml += `  </url>\n`;
     }
     
-    // Blogy
+    // Blogy (filter out noindex pages)
     for (const blog of blogs) {
+      const blogPath = `/blog/${blog.slug}`;
+      const isNoindex = noindexPrefixes.some(prefix => blogPath.startsWith(prefix));
+      if (isNoindex) continue;
+      
       xml += `  <url>\n`;
-      xml += `    <loc>${baseUrl}/blog/${blog.slug}</loc>\n`;
+      xml += `    <loc>${baseUrl}${blogPath}</loc>\n`;
       xml += `    <changefreq>monthly</changefreq>\n`;
       xml += `    <priority>0.7</priority>\n`;
       xml += `    <lastmod>${blog.updated_date?.split('T')[0] || new Date().toISOString().split('T')[0]}</lastmod>\n`;
