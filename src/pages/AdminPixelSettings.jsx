@@ -21,6 +21,13 @@ export default function AdminPixelSettings() {
     queryFn: () => base44.auth.me()
   });
 
+  const { data: capiLogs = [] } = useQuery({
+    queryKey: ['capi-logs'],
+    queryFn: () => base44.entities.CAPILog.list('-created_date', 20),
+    enabled: user?.role === 'admin',
+    refetchInterval: 30000
+  });
+
   const { data: config } = useQuery({
     queryKey: ['app-config-meta-pixel'],
     queryFn: async () => {
