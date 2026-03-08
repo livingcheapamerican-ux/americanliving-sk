@@ -5,8 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Settings, Save, Shield } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Settings, Save, Shield, Zap, CheckCircle, XCircle, Activity } from "lucide-react";
 import { toast } from "sonner";
+import { format } from "date-fns";
+import { sk } from "date-fns/locale";
 
 export default function AdminPixelSettings() {
   const [pixelId, setPixelId] = useState("");
