@@ -55,6 +55,13 @@ export default function Domov() {
     },
   });
 
+  // Načítaj verejné domy pre FloatingHouses — zdieľaný query s FloatingHouses komponentom
+  const { data: verejneDomy = [] } = useQuery({
+    queryKey: ['domy-floating-public'],
+    queryFn: () => base44.entities.Dom.filter({ verejny: true }),
+    staleTime: 300000,
+  });
+
   const { data: user } = useQuery({
     queryKey: ['current-user'],
     queryFn: () => base44.auth.me().catch(() => null)
@@ -289,8 +296,8 @@ export default function Domov() {
           type="image/webp"
         />
       </Helmet>
-      <FloatingHouses side="left" />
-      <FloatingHouses side="right" />
+      <FloatingHouses side="left" domy={verejneDomy} />
+      <FloatingHouses side="right" domy={verejneDomy} />
       {/* Admin Login Box - zobrazí sa len pre neprihlásených */}
       {!user && (
         <div className="hidden md:block fixed bottom-6 left-6 z-50">
