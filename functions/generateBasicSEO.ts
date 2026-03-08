@@ -16,7 +16,7 @@ Deno.serve(async (req) => {
 
     // Loop protection: skip if only meta/SEO fields changed (prevent write loop)
     if (eventType === 'update' && oldData && newData) {
-      const realContentFields = ['nazov', 'vyrobca', 'typ_domu', 'zakladna_cena', 'zastavana_plocha', 'uzitkova_plocha', 'pocet_izieb', 'hlavny_obrazok', 'zakladna_konfiguracia_obrazok', 'galeria', 'podorys_2d', 'podorys_3d', 'popis'];
+      const realContentFields = ['nazov', 'vyrobca', 'typ_domu', 'zakladna_cena', 'zastavana_plocha', 'uzitkova_plocha', 'pocet_izieb', 'hlavny_obrazok', 'zakladna_konfiguracia_obrazok', 'galeria', 'podorys_2d', 'podorys_3d', 'popis', 'rozmery', 'kategoria', 'celorocny'];
       const hasRealChange = realContentFields.some(f => JSON.stringify(oldData[f]) !== JSON.stringify(newData[f]));
       if (!hasRealChange) {
         console.log(`⏭️ Skipping generateBasicSEO for ${newData?.nazov} - only meta fields changed (loop protection)`);
@@ -24,8 +24,11 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Načítaj dom
-    const dom = await base44.asServiceRole.entities.Dom.get(domId);
+    // Použi newData z payload ak je k dispozícii (šetrí DB read)
+    let dom = newData || null;
+    if (!dom) {
+      dom = await base44.asServiceRole.entities.Dom.get(domId);
+    }
     if (!dom) {
       return Response.json({ error: 'Dom not found' }, { status: 404 });
     }

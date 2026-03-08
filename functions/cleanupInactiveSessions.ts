@@ -41,14 +41,18 @@ Deno.serve(async (req) => {
 
     console.log(`🔄 Marking ${staleSessionIds.length} sessions as inactive`);
 
-    // Bulk update - nastav is_active na false a end_time
+    // Parallel update - nastav is_active na false a end_time (nie sequential for loop)
     let updatedCount = 0;
-    for (const sessionId of staleSessionIds) {
-      await base44.asServiceRole.entities.UserSession.update(sessionId, {
-        is_active: false,
-        end_time: now.toISOString()
-      });
-      updatedCount++;
+    if (staleSessionIds.length > 0) {
+      await Promise.all(
+        staleSessionIds.map(sessionId =>
+          base44.asServiceRole.entities.UserSession.update(sessionId, {
+            is_active: false,
+            end_time: now.toISOString()
+          })
+        )
+      );
+      updatedCount = staleSessionIds.length;
     }
 
     console.log(`✅ Cleanup complete: ${updatedCount} sessions marked inactive`);

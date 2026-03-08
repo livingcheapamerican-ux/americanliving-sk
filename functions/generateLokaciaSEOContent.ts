@@ -17,8 +17,9 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Missing entity_id' }, { status: 400 });
     }
 
-    // Loop protection: skip if content already exists and is substantial
-    if (data.content && data.content.length > 100 && data.meta_title) {
+    // Loop protection: skip if content OR unikany_text_o_lokalite already exists and is substantial
+    if ((data.content && data.content.length > 100 && data.meta_title) ||
+        (data.unikany_text_o_lokalite && data.unikany_text_o_lokalite.length > 100 && data.meta_title)) {
       console.log(`⏭️ Skipping ${mesto} - content already exists (loop protection)`);
       return Response.json({ success: true, skipped: true, reason: 'content_exists' });
     }

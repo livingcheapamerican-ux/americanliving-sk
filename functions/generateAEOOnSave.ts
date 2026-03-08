@@ -18,7 +18,8 @@ Deno.serve(async (req) => {
     let contentForAnalysis = '';
 
     if (entity_name === 'Dom') {
-      const hasEmptyFAQ = !data.faq_schema_data || !data.faq_schema_data.faqs || data.faq_schema_data.faqs.length === 0;
+      // faq_schema_data je multi-language: { sk: { faqs: [...] }, en: {...} }
+      const hasEmptyFAQ = !data.faq_schema_data?.sk?.faqs || data.faq_schema_data.sk.faqs.length === 0;
       const hasEmptySummary = !data.ai_summary || data.ai_summary.trim().length === 0;
       const textChanged = type === 'create' || 
         (old_data && (old_data.popis !== data.popis || old_data.nazov !== data.nazov));
@@ -72,10 +73,14 @@ Deno.serve(async (req) => {
       }
     });
 
-    // Ulož do entity
+    // Ulož do entity - faq_schema_data musí byť multi-language formát { sk: { faqs: [...] } }
+    const faqData = response.faq_schema_data?.faqs
+      ? { sk: { faqs: response.faq_schema_data.faqs } }
+      : (response.faq_schema_data || { sk: { faqs: [] } });
+
     const updateData = {
       ai_summary: (response.ai_summary || '').substring(0, 300),
-      faq_schema_data: response.faq_schema_data || { faqs: [] }
+      faq_schema_data: faqData
     };
 
     // Pridaj geo_context_keywords
