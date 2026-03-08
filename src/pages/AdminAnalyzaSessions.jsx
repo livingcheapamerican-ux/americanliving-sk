@@ -46,7 +46,6 @@ export default function AdminAnalyzaSessions() {
   const [sortBy, setSortBy] = useState("created_date");
   const [showMapModal, setShowMapModal] = useState(false);
   const [hideAdminSessions, setHideAdminSessions] = useState(true);
-  const [selectedSegment, setSelectedSegment] = useState(null);
   const [groupByVisitor, setGroupByVisitor] = useState(false);
 
   // Admin IP adresy na vylúčenie
