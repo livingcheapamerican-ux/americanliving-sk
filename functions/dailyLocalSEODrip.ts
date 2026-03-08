@@ -7,7 +7,11 @@ Deno.serve(async (req) => {
     // Find pending LokaciaSEO records - ones without content yet
     const allRecords = await base44.asServiceRole.entities.LokaciaSEO.list();
     const pendingRecords = allRecords
-      .filter(record => !record.content || record.content.length < 100)
+      .filter(record => 
+        // Preskočiť záznamy kde už existuje obsah (content ALEBO unikany_text_o_lokalite)
+        (!record.content || record.content.length < 100) &&
+        (!record.unikany_text_o_lokalite || record.unikany_text_o_lokalite.length < 100)
+      )
       .slice(0, 5); // Process up to 5 per run (0 credits each)
 
     if (pendingRecords.length === 0) {

@@ -42,7 +42,8 @@ Deno.serve(async (req) => {
       }
     } 
     else if (entity_name === 'BlogPost') {
-      const hasEmptyFAQ = !data.faq_schema_data || !data.faq_schema_data.faqs || data.faq_schema_data.faqs.length === 0;
+      // BlogPost faq_schema_data je tiež multi-language
+      const hasEmptyFAQ = !data.faq_schema_data?.sk?.faqs || data.faq_schema_data.sk.faqs.length === 0;
       const textChanged = type === 'create' || 
         (old_data && (old_data.perex !== data.perex || old_data.obsah !== data.obsah || old_data.nazov !== data.nazov));
       
