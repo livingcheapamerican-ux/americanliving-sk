@@ -13,6 +13,7 @@ import { sk } from "date-fns/locale";
 
 export default function AdminPixelSettings() {
   const [pixelId, setPixelId] = useState("");
+  const [testingEvent, setTestingEvent] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
