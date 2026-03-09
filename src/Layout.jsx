@@ -876,6 +876,44 @@ function LayoutContent({ children }) {
         <LanguageProvider>
         <Helmet>
           <meta name="google-site-verification" content="p_fzn0ka1UdLRjOaJT0uTEVpjZiW6b2RU9NYMM8RYno" />
+          <script type="application/ld+json">{JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Organization",
+                "@id": "https://www.americanliving.sk/#organization",
+                "name": "American Living",
+                "url": "https://www.americanliving.sk",
+                "logo": {
+                  "@type": "ImageObject",
+                  "url": "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/0a055b39a_AmericanLiving.png",
+                  "width": 400,
+                  "height": 100
+                },
+                "contactPoint": {
+                  "@type": "ContactPoint",
+                  "telephone": "+421-905-138-124",
+                  "contactType": "sales",
+                  "availableLanguage": ["Slovak", "English", "Hungarian", "Polish"]
+                },
+                "email": "info@americanliving.sk",
+                "telephone": "+421905138124",
+                "sameAs": []
+              },
+              {
+                "@type": "WebSite",
+                "@id": "https://www.americanliving.sk/#website",
+                "url": "https://www.americanliving.sk",
+                "name": "American Living – modulárne a montované domy",
+                "publisher": { "@id": "https://www.americanliving.sk/#organization" },
+                "potentialAction": {
+                  "@type": "SearchAction",
+                  "target": "https://www.americanliving.sk/Katalog?q={search_term_string}",
+                  "query-input": "required name=search_term_string"
+                }
+              }
+            ]
+          })}</script>
         </Helmet>
         <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
         <LayoutContent>{children}</LayoutContent>
