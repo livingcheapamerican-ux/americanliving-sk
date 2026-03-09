@@ -178,10 +178,11 @@ export default function SessionRecorder() {
     const referrerDomain = referrerUrl !== 'direct' ? (() => { try { return new URL(referrerUrl).hostname; } catch { return referrerUrl; } })() : 'direct';
 
     if (!base44.functions || typeof base44.functions.invoke !== 'function') {
-      console.warn('base44.functions.invoke not available');
+      console.error('[SessionRecorder] base44.functions.invoke not available');
       return;
     }
 
+    console.log('[SessionRecorder] Calling trackUserSession with action: create');
     base44.functions.invoke('trackUserSession', {
       action: 'create',
       session_id: newSessionId,
