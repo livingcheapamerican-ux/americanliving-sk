@@ -31,11 +31,16 @@ Deno.serve(async (req) => {
       { url: '/odporucanie-domov', priority: '0.8', changefreq: 'weekly' }
     ];
     
+    // Noindex prefixes to exclude - definované pred všetkými slučkami
+    const noindexPrefixes = ['/AIMarketingInsights', '/AdminCennik', '/AutoSEOTrigger', '/AdminAnalyzaSessions', '/Admin', '/Test', '/Auto', '/Regeneruj', '/Marketing', '/SEODashboard', '/SEOEditor', '/SocialMediaDashboard', '/SrovnaniDomu', '/GrantovaKampan'];
+
     let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
     xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
     
-    // Statické stránky
+    // Statické stránky (s filtrom noindex)
     for (const page of staticPages) {
+      const isNoindex = noindexPrefixes.some(prefix => page.url.startsWith(prefix));
+      if (isNoindex) continue;
       xml += `  <url>\n`;
       xml += `    <loc>${baseUrl}${page.url}</loc>\n`;
       xml += `    <changefreq>${page.changefreq}</changefreq>\n`;
@@ -44,11 +49,9 @@ Deno.serve(async (req) => {
       xml += `  </url>\n`;
     }
     
-    // Noindex prefixes to exclude
-    const noindexPrefixes = ['/AIMarketingInsights', '/AdminCennik', '/AutoSEOTrigger', '/AdminAnalyzaSessions', '/Admin', '/Test', '/Auto', '/Regeneruj'];
-    
-    // Domy
+    // Domy (verejny: true je už zaistené DB filterom vyššie, ale pridáme aj explicitnú kontrolu)
     for (const dom of domy) {
+      if (!dom.verejny) continue;
       xml += `  <url>\n`;
       xml += `    <loc>${baseUrl}/detail-domu?id=${dom.id}</loc>\n`;
       xml += `    <changefreq>weekly</changefreq>\n`;
