@@ -295,6 +295,20 @@ export default function Domov() {
           fetchpriority="high"
           type="image/webp"
         />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "@id": "https://www.americanliving.sk/#webpage",
+          "url": "https://www.americanliving.sk",
+          "name": "American Living – modulárne, montované a mobilné domy na Slovensku",
+          "description": "Predaj a výstavba modulárnych, montovaných a mobilných domov. Prosto House, Ticab house, JAK Modules. Ceny od výrobcu, A0 energetická trieda, celoročné bývanie.",
+          "isPartOf": { "@id": "https://www.americanliving.sk/#website" },
+          "about": { "@id": "https://www.americanliving.sk/#organization" },
+          "breadcrumb": {
+            "@type": "BreadcrumbList",
+            "itemListElement": [{ "@type": "ListItem", "position": 1, "name": "Domov", "item": "https://www.americanliving.sk" }]
+          }
+        })}</script>
       </Helmet>
       <FloatingHouses side="left" domy={verejneDomy} />
       <FloatingHouses side="right" domy={verejneDomy} />
