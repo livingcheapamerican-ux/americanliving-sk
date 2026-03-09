@@ -375,9 +375,9 @@ export default function SessionRecorder() {
     saveTimeoutRef.current = setTimeout(() => doSave(), 30000); // 30 sekúnd
   };
 
-  // Periodic save every 300 seconds
+  // Periodic save every 60 seconds
   useEffect(() => {
-    const interval = setInterval(() => scheduleSave(), 300000);
+    const interval = setInterval(() => doSave(), 60000);
     return () => clearInterval(interval);
   }, []);
 
