@@ -70,14 +70,18 @@ export default function DetailDomu() {
     queryFn: () => base44.entities.ExternalReview.list()
   });
 
+  const organizationId = "https://www.americanliving.sk/#organization";
+
   // MUST be at top level before any conditional returns
   const faqSchemaData = React.useMemo(() => {
     if (!dom?.faq_schema_data) return null;
     const langFaq = dom.faq_schema_data[language] || dom.faq_schema_data['sk'] || dom.faq_schema_data;
     if (!langFaq?.faqs || langFaq.faqs.length === 0) return null;
+    const productId = `${window.location.origin}${window.location.pathname}${dom.slug ? `?slug=${dom.slug}` : `?id=${dom.id}`}#product`;
     return {
       "@context": "https://schema.org",
       "@type": "FAQPage",
+      "about": { "@id": productId },
       "mainEntity": langFaq.faqs.map(item => ({
         "@type": "Question",
         "name": item.otazka,
