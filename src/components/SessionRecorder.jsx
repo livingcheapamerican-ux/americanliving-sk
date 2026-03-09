@@ -193,7 +193,21 @@ export default function SessionRecorder() {
     if (!sessionIdRef.current) return;
     const currentPage = window.location.pathname + window.location.search;
 
-    if (lastPageRef.current && pageStartTimeRef.current) scheduleSave();
+    // Save the PREVIOUS page's data before switching
+    if (lastPageRef.current && pageStartTimeRef.current) {
+      const prevPage = lastPageRef.current;
+      const timeSpent = Math.round((Date.now() - pageStartTimeRef.current) / 1000);
+      const prevPageEntry = {
+        page_url: prevPage,
+        page_title: document.title,
+        page_name_sk: PAGE_NAMES_MAP[prevPage.split('?')[0]] || prevPage,
+        timestamp: new Date(pageStartTimeRef.current).toISOString(),
+        time_spent_seconds: timeSpent,
+        scroll_depth_percentage: scrollDepthRef.current[prevPage] || 0,
+        exit_type: 'navigation'
+      };
+      doSave(prevPageEntry);
+    }
 
     lastPageRef.current = currentPage;
     pageStartTimeRef.current = Date.now();
