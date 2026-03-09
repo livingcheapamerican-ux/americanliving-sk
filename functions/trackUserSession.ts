@@ -7,17 +7,38 @@ Deno.serve(async (req) => {
     const { action, session_id, data } = body;
 
     if (action === 'create') {
+      console.log('[trackUserSession] Creating session:', session_id);
       const session = await base44.entities.UserSession.create(data);
-      return Response.json({ success: true, data: session });
+      console.log('[trackUserSession] Session created:', session.id);
+      return Response.json({ 
+        success: true, 
+        data: {
+          id: session.id,
+          session_id: session.session_id,
+          session_start_time: session.start_time,
+          ...session
+        }
+      });
     }
 
     if (action === 'update') {
+      console.log('[trackUserSession] Updating session:', session_id);
       const existing = await base44.entities.UserSession.filter({ session_id });
       if (existing.length === 0) {
+        console.warn('[trackUserSession] Session not found:', session_id);
         return Response.json({ error: 'Session not found' }, { status: 404 });
       }
       const updated = await base44.entities.UserSession.update(existing[0].id, data);
-      return Response.json({ success: true, data: updated });
+      console.log('[trackUserSession] Session updated');
+      return Response.json({ 
+        success: true, 
+        data: {
+          id: updated.id,
+          session_id: updated.session_id,
+          session_start_time: updated.start_time,
+          ...updated
+        }
+      });
     }
 
     if (action === 'update_location') {
