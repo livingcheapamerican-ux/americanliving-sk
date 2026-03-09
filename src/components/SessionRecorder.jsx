@@ -123,12 +123,17 @@ export default function SessionRecorder() {
       language_changes: languageChangesRef.current,
       engagement_score: Math.min(100, Math.round((currentDuration / 60) * 10 + (clicksRef.current.length) * 2 + maxScroll / 2)),
       session_tags: tags,
-      language: localStorage.getItem('language') || 'sk',
+      language: localStorageAvailableRef.current ? localStorage.getItem('language') || 'sk' : 'sk',
       last_activity: new Date().toISOString(),
       current_page: currentPage,
       is_active: true,
       _new_page_entry: newPageEntry
     };
+
+    if (!base44.functions || typeof base44.functions.invoke !== 'function') {
+      console.warn('base44.functions.invoke not available, skipping save');
+      return;
+    }
 
     base44.functions.invoke('trackUserSession', {
       action: 'update',
