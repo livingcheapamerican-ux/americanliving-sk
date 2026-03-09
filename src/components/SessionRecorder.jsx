@@ -163,6 +163,8 @@ export default function SessionRecorder() {
     // Set pageStartTime immediately so first page is tracked from the start
     pageStartTimeRef.current = Date.now();
     lastPageRef.current = window.location.pathname + window.location.search;
+    
+    console.log('[SessionRecorder] Initializing session:', newSessionId);
 
     const previousSessions = localStorageAvailableRef.current ? localStorage.getItem('user_previous_sessions') : null;
     const isReturning = !!previousSessions;
