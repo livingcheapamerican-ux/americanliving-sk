@@ -399,15 +399,32 @@ export default function SessionRecorder() {
       const timeSpent = Math.round((Date.now() - pageStartTimeRef.current) / 1000);
       const startTime = sessionDbStartTimeRef.current || sessionStartRef.current;
       const duration = startTime ? Math.round((Date.now() - new Date(startTime).getTime()) / 1000) : 0;
+      const scrollValues = Object.values(scrollDepthRef.current);
+      const maxScroll = scrollValues.length > 0 ? Math.max(...scrollValues) : 0;
+      const currentPage = window.location.pathname + window.location.search;
 
-      // Use sendBeacon for reliable fire-and-forget on unload
+      const finalPageEntry = {
+        page_url: currentPage,
+        page_title: document.title,
+        page_name_sk: PAGE_NAMES_MAP[window.location.pathname] || document.title,
+        timestamp: new Date(pageStartTimeRef.current).toISOString(),
+        time_spent_seconds: timeSpent,
+        scroll_depth_percentage: scrollDepthRef.current[currentPage] || 0,
+        exit_type: 'exit'
+      };
+
       const payload = JSON.stringify({
         action: 'update',
         session_id: sessionIdRef.current,
         data: {
           end_time: new Date().toISOString(),
           is_active: false,
-          duration_seconds: duration
+          duration_seconds: duration,
+          mouse_movements: mouseMovementsRef.current,
+          scroll_depth: { max_percentage: maxScroll, depths_per_page: scrollDepthRef.current },
+          clicks: clicksRef.current,
+          engagement_score: Math.min(100, Math.round((duration / 60) * 10 + (clicksRef.current.length) * 2 + maxScroll / 2)),
+          _new_page_entry: finalPageEntry
         }
       });
       navigator.sendBeacon
