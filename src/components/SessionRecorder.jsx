@@ -90,7 +90,7 @@ export default function SessionRecorder() {
     const scrollValues = Object.values(scrollDepthRef.current);
     const maxScroll = scrollValues.length > 0 ? Math.max(...scrollValues) : 0;
 
-    const previousSessions = localStorage.getItem('user_previous_sessions');
+    const previousSessions = localStorageAvailableRef.current ? localStorage.getItem('user_previous_sessions') : null;
     const tags = [];
     if (currentDuration < 10) tags.push('odrazeny');
     else if (currentDuration > 300) tags.push('velmi_zaujaty');
