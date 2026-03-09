@@ -140,19 +140,23 @@ export default function SessionRecorder() {
     };
 
     if (!base44.functions || typeof base44.functions.invoke !== 'function') {
-      console.warn('base44.functions.invoke not available, skipping save');
+      console.warn('[SessionRecorder] base44.functions.invoke not available, skipping save');
       return;
     }
 
+    console.log('[SessionRecorder] Sending update to trackUserSession');
     base44.functions.invoke('trackUserSession', {
       action: 'update',
       session_id: sessionIdRef.current,
       data: updates
     }).then((res) => {
+      console.log('[SessionRecorder] Update response:', res);
       if (res?.data?.session_start_time) {
         sessionDbStartTimeRef.current = res.data.session_start_time;
       }
-    }).catch(() => {});
+    }).catch((err) => {
+      console.error('[SessionRecorder] Update failed:', err);
+    });
   }
 
   function scheduleSave() {
