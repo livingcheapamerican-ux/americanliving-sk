@@ -159,7 +159,7 @@ export default function SessionRecorder() {
     pageStartTimeRef.current = Date.now();
     lastPageRef.current = window.location.pathname + window.location.search;
 
-    const previousSessions = localStorage.getItem('user_previous_sessions');
+    const previousSessions = localStorageAvailableRef.current ? localStorage.getItem('user_previous_sessions') : null;
     const isReturning = !!previousSessions;
     const urlParams = new URLSearchParams(window.location.search);
     const utmParams = {
@@ -169,6 +169,11 @@ export default function SessionRecorder() {
     };
     const referrerUrl = document.referrer || 'direct';
     const referrerDomain = referrerUrl !== 'direct' ? (() => { try { return new URL(referrerUrl).hostname; } catch { return referrerUrl; } })() : 'direct';
+
+    if (!base44.functions || typeof base44.functions.invoke !== 'function') {
+      console.warn('base44.functions.invoke not available');
+      return;
+    }
 
     base44.functions.invoke('trackUserSession', {
       action: 'create',
