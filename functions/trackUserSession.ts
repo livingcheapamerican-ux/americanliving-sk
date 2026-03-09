@@ -42,17 +42,43 @@ Deno.serve(async (req) => {
     }
 
     if (action === 'update_location') {
+      console.log('[trackUserSession] Updating location for session:', session_id);
       const existing = await base44.entities.UserSession.filter({ session_id });
       if (existing.length === 0) {
+        console.warn('[trackUserSession] Session not found for location update:', session_id);
         return Response.json({ error: 'Session not found' }, { status: 404 });
       }
       const updated = await base44.entities.UserSession.update(existing[0].id, { location_info: data });
-      return Response.json({ success: true, data: updated });
+      console.log('[trackUserSession] Location updated');
+      return Response.json({ 
+        success: true, 
+        data: {
+          id: updated.id,
+          session_id: updated.session_id,
+          session_start_time: updated.start_time,
+          ...updated
+        }
+      });
     }
 
     if (action === 'get') {
-      const session = await base44.entities.UserSession.filter({ session_id });
-      return Response.json({ success: true, data: session[0] || null });
+      console.log('[trackUserSession] Getting session:', session_id);
+      const sessions = await base44.entities.UserSession.filter({ session_id });
+      const session = sessions[0] || null;
+      if (session) {
+        console.log('[trackUserSession] Session found');
+        return Response.json({ 
+          success: true, 
+          data: {
+            id: session.id,
+            session_id: session.session_id,
+            session_start_time: session.start_time,
+            ...session
+          }
+        });
+      }
+      console.warn('[trackUserSession] Session not found:', session_id);
+      return Response.json({ success: true, data: null });
     }
 
     return Response.json({ error: 'Invalid action' }, { status: 400 });
