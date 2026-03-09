@@ -40,6 +40,18 @@ const getDeviceInfo = () => {
   };
 };
 
+// Test if localStorage is available (fails in incognito mode)
+const isLocalStorageAvailable = () => {
+  try {
+    const test = '__localStorage_test__';
+    localStorage.setItem(test, test);
+    localStorage.removeItem(test);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
 export default function SessionRecorder() {
   const location = useLocation();
   const sessionIdRef = useRef(null);
@@ -59,6 +71,7 @@ export default function SessionRecorder() {
   const languageChangesRef = useRef([]);
   const saveTimeoutRef = useRef(null);
   const sessionDbStartTimeRef = useRef(null);
+  const localStorageAvailableRef = useRef(isLocalStorageAvailable());
 
   const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ['current-user'],
