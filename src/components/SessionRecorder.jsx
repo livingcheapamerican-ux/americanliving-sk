@@ -287,81 +287,78 @@ export default function SessionRecorder() {
     };
   }, [location.pathname, user]);
 
+  const PAGE_NAMES_MAP = {
+    '/': 'Domovská stránka', '/katalog': 'Katalóg domov', '/detail-domu': 'Detail domu',
+    '/konfigurator': 'Konfigurátor', '/kontakt': 'Kontakt', '/o-nas': 'O nás',
+    '/blog': 'Blog', '/faq': 'Často kladené otázky', '/odporucanie-domov': 'AI Odporúčania domov'
+  };
+
+  const doSave = (capturedPageEntry = null) => {
+    if (!sessionIdRef.current) return;
+
+    const currentPage = window.location.pathname + window.location.search;
+    const timeOnCurrentPage = pageStartTimeRef.current ? Math.round((Date.now() - pageStartTimeRef.current) / 1000) : 0;
+    const startTime = sessionDbStartTimeRef.current || sessionStartRef.current;
+    const currentDuration = startTime ? Math.round((Date.now() - new Date(startTime).getTime()) / 1000) : 0;
+    const scrollValues = Object.values(scrollDepthRef.current);
+    const maxScroll = scrollValues.length > 0 ? Math.max(...scrollValues) : 0;
+
+    const previousSessions = localStorage.getItem('user_previous_sessions');
+    const tags = [];
+    if (currentDuration < 10) tags.push('odrazeny');
+    else if (currentDuration > 300) tags.push('velmi_zaujaty');
+    else if (currentDuration > 60) tags.push('zaujaty');
+    if (previousSessions) tags.push('vracajuci_sa');
+    if (formInteractionsRef.current.some(f => f.completed)) tags.push('konvertoval');
+    if (configuratorInteractionsRef.current.length > 5) tags.push('pouzivatel_konfiguratora');
+
+    const newPageEntry = capturedPageEntry || {
+      page_url: currentPage,
+      page_title: document.title,
+      page_name_sk: PAGE_NAMES_MAP[window.location.pathname] || document.title,
+      timestamp: new Date(pageStartTimeRef.current || Date.now()).toISOString(),
+      time_spent_seconds: timeOnCurrentPage,
+      scroll_depth_percentage: scrollDepthRef.current[currentPage] || 0,
+      exit_type: 'active'
+    };
+
+    const updates = {
+      duration_seconds: currentDuration,
+      mouse_movements: mouseMovementsRef.current,
+      mouse_heatmap_data: mouseHeatmapRef.current,
+      scroll_depth: { max_percentage: maxScroll, depths_per_page: scrollDepthRef.current },
+      scroll_events: scrollEventsRef.current,
+      clicks: clicksRef.current,
+      form_interactions: formInteractionsRef.current,
+      configurator_interactions: configuratorInteractionsRef.current,
+      dom_interactions: domInteractionsRef.current,
+      errors_encountered: errorsRef.current,
+      language_changes: languageChangesRef.current,
+      engagement_score: Math.min(100, Math.round((currentDuration / 60) * 10 + (clicksRef.current.length) * 2 + maxScroll / 2)),
+      session_tags: tags,
+      language: localStorage.getItem('language') || 'sk',
+      last_activity: new Date().toISOString(),
+      current_page: currentPage,
+      is_active: true,
+      _new_page_entry: newPageEntry
+    };
+
+    base44.functions.invoke('trackUserSession', {
+      action: 'update',
+      session_id: sessionIdRef.current,
+      data: updates
+    }).then((res) => {
+      lastSaveRef.current = Date.now();
+      if (res?.data?.session_start_time) {
+        sessionDbStartTimeRef.current = res.data.session_start_time;
+      }
+    }).catch(() => {});
+  };
+
   const scheduleSave = () => {
     if (!sessionIdRef.current) return;
-    const now = Date.now();
-    if (now - lastSaveRef.current < 300000 && saveTimeoutRef.current) return;
     if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
-
-    saveTimeoutRef.current = setTimeout(() => {
-      if (!sessionIdRef.current) return;
-
-      const currentPage = window.location.pathname + window.location.search;
-      const timeOnCurrentPage = pageStartTimeRef.current ? Math.round((Date.now() - pageStartTimeRef.current) / 1000) : 0;
-      const startTime = sessionDbStartTimeRef.current || sessionStartRef.current;
-      const currentDuration = startTime ? Math.round((Date.now() - new Date(startTime).getTime()) / 1000) : 0;
-      const scrollValues = Object.values(scrollDepthRef.current);
-      const maxScroll = scrollValues.length > 0 ? Math.max(...scrollValues) : 0;
-
-      const pageNamesMap = {
-        '/': 'Domovská stránka', '/katalog': 'Katalóg domov', '/detail-domu': 'Detail domu',
-        '/konfigurator': 'Konfigurátor', '/kontakt': 'Kontakt', '/o-nas': 'O nás',
-        '/blog': 'Blog', '/faq': 'Často kladené otázky', '/odporucanie-domov': 'AI Odporúčania domov'
-      };
-      const slovakPageName = pageNamesMap[window.location.pathname] || document.title;
-
-      const previousSessions = localStorage.getItem('user_previous_sessions');
-      const tags = [];
-      if (currentDuration < 10) tags.push('odrazeny');
-      else if (currentDuration > 300) tags.push('velmi_zaujaty');
-      else if (currentDuration > 60) tags.push('zaujaty');
-      if (previousSessions) tags.push('vracajuci_sa');
-      if (formInteractionsRef.current.some(f => f.completed)) tags.push('konvertoval');
-      if (configuratorInteractionsRef.current.length > 5) tags.push('pouzivatel_konfiguratora');
-
-      // Build page entry
-      const newPageEntry = {
-        page_url: currentPage,
-        page_title: document.title,
-        page_name_sk: slovakPageName,
-        timestamp: new Date(pageStartTimeRef.current).toISOString(),
-        time_spent_seconds: timeOnCurrentPage,
-        scroll_depth_percentage: scrollDepthRef.current[currentPage] || 0,
-        exit_type: 'active'
-      };
-
-      const updates = {
-        duration_seconds: currentDuration,
-        mouse_movements: mouseMovementsRef.current,
-        mouse_heatmap_data: mouseHeatmapRef.current,
-        scroll_depth: { max_percentage: maxScroll, depths_per_page: scrollDepthRef.current },
-        scroll_events: scrollEventsRef.current,
-        clicks: clicksRef.current,
-        form_interactions: formInteractionsRef.current,
-        configurator_interactions: configuratorInteractionsRef.current,
-        dom_interactions: domInteractionsRef.current,
-        errors_encountered: errorsRef.current,
-        language_changes: languageChangesRef.current,
-        engagement_score: Math.min(100, Math.round((currentDuration / 60) * 10 + (clicksRef.current.length) * 2 + maxScroll / 2)),
-        session_tags: tags,
-        language: localStorage.getItem('language') || 'sk',
-        last_activity: new Date().toISOString(),
-        current_page: currentPage,
-        is_active: true,
-        _new_page_entry: newPageEntry
-      };
-
-      base44.functions.invoke('trackUserSession', {
-        action: 'update',
-        session_id: sessionIdRef.current,
-        data: updates
-      }).then((res) => {
-        lastSaveRef.current = Date.now();
-        if (res?.data?.session_start_time) {
-          sessionDbStartTimeRef.current = res.data.session_start_time;
-        }
-      }).catch(() => {});
-    }, 300000);
+    saveTimeoutRef.current = setTimeout(() => doSave(), 30000); // 30 sekúnd
   };
 
   // Periodic save every 300 seconds
