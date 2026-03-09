@@ -205,7 +205,8 @@ export default function SessionRecorder() {
         engagement_score: 0, is_active: true,
         session_tags: isReturning ? ['vracajuci_sa'] : []
       }
-    }).then(() => {
+    }).then((res) => {
+      console.log('[SessionRecorder] Session created successfully:', res);
       if (!sessionIdRef.current) return;
       sessionDbStartTimeRef.current = sessionStartRef.current;
 
