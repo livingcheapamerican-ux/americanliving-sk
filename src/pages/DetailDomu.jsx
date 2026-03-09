@@ -163,9 +163,11 @@ export default function DetailDomu() {
     if (relevantReviews.length === 0) return null;
     const totalRating = relevantReviews.reduce((sum, r) => sum + (r.rating || 5), 0);
     const avgRating = (totalRating / relevantReviews.length).toFixed(1);
+    const productId = `${window.location.origin}${window.location.pathname}${dom.slug ? `?slug=${dom.slug}` : `?id=${dom.id}`}#product`;
     return {
       "@context": "https://schema.org",
       "@type": "Product",
+      "@id": productId,
       "name": dom.nazov,
       "aggregateRating": {
         "@type": "AggregateRating",
