@@ -201,11 +201,13 @@ export default function SessionRecorder() {
       if (!sessionIdRef.current) return;
       sessionDbStartTimeRef.current = sessionStartRef.current;
 
-      try {
-        const allSessions = JSON.parse(previousSessions || '[]');
-        allSessions.push(newSessionId);
-        localStorage.setItem('user_previous_sessions', JSON.stringify(allSessions.slice(-10)));
-      } catch (err) {}
+      if (localStorageAvailableRef.current) {
+        try {
+          const allSessions = JSON.parse(previousSessions || '[]');
+          allSessions.push(newSessionId);
+          localStorage.setItem('user_previous_sessions', JSON.stringify(allSessions.slice(-10)));
+        } catch (err) {}
+      }
 
       // Fetch location - cached 24h
       const cachedLocation = localStorage.getItem('user_location_cache');
