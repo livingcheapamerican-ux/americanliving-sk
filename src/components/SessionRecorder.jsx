@@ -250,7 +250,8 @@ export default function SessionRecorder() {
 
       // Save initial page entry after 5s so we have real time data
       setTimeout(() => doSave(), 5000);
-    }).catch(() => {
+    }).catch((err) => {
+      console.error('[SessionRecorder] Failed to create session:', err);
       sessionIdRef.current = null;
       sessionInitializedRef.current = false;
     });
