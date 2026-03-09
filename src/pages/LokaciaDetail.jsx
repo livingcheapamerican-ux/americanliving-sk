@@ -88,10 +88,32 @@ export default function LokaciaDetail() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Helmet>
-        <title>{lokacia.meta_title}</title>
-        <meta name="description" content={lokacia.meta_description} />
-        <meta property="og:title" content={lokacia.meta_title} />
-        <meta property="og:description" content={lokacia.meta_description} />
+        <title>{lokacia.meta_title || `Modulárne a montované domy ${lokacia.nazov_mesta} | American Living`}</title>
+        <meta name="description" content={lokacia.meta_description || `Modulárne, montované a mobilné domy v okolí ${lokacia.nazov_mesta}. Kvalitné domy za najlepšie ceny. Bezplatná konzultácia.`} />
+        <meta property="og:title" content={lokacia.meta_title || lokacia.nazov_mesta} />
+        <meta property="og:description" content={lokacia.meta_description || ''} />
+        <link rel="canonical" href={`https://www.americanliving.sk/lokalita/${lokacia.slug}`} />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "@id": `https://www.americanliving.sk/lokalita/${lokacia.slug}#webpage`,
+          "url": `https://www.americanliving.sk/lokalita/${lokacia.slug}`,
+          "name": lokacia.meta_title || `Domy ${lokacia.nazov_mesta}`,
+          "description": lokacia.meta_description || '',
+          "isPartOf": { "@id": "https://www.americanliving.sk/#website" },
+          "about": {
+            "@type": "LocalBusiness",
+            "@id": "https://www.americanliving.sk/#organization",
+            "name": "American Living",
+            "url": "https://www.americanliving.sk",
+            "telephone": "+421905138124",
+            "email": "info@americanliving.sk",
+            "areaServed": {
+              "@type": "City",
+              "name": lokacia.nazov_mesta
+            }
+          }
+        })}</script>
       </Helmet>
 
       {/* Back Button */}
@@ -153,7 +175,7 @@ export default function LokaciaDetail() {
                       <div className="w-full h-48 bg-gray-200 overflow-hidden">
                         <img
                          src={dom.hlavny_obrazok}
-                         alt={`${dom.nazov} – ${dom.typ_domu === 'modularny' ? 'modulárny dom' : dom.typ_domu === 'montovany' ? 'montovaný dom' : 'mobilný dom'} ${lokacia.nazov_mesta}`}
+                         alt={`${dom.nazov} - ${dom.vyrobca} - ${lokacia.nazov_mesta}`}
                          className="w-full h-full object-cover hover:scale-105 transition-transform"
                         />
                       </div>
