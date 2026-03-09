@@ -1383,12 +1383,12 @@ export default function DetailDomu() {
                 </div>
               )}
               
-              <div className="grid grid-cols-2 gap-2 sm:gap-3">
+              <dl className="grid grid-cols-2 gap-2 sm:gap-3">
                 <div className="flex items-center gap-2">
                   <Home className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                   <div>
-                    <p className="text-xs text-gray-500">{t('manufacturer')}</p>
-                    <p className="text-sm sm:text-base font-bold text-primary">{dom.vyrobca}</p>
+                    <dt className="text-xs text-gray-500">{t('manufacturer')}</dt>
+                    <dd className="text-sm sm:text-base font-bold text-primary">{dom.vyrobca}</dd>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -1400,18 +1400,18 @@ export default function DetailDomu() {
                                               <Boxes className="w-4 h-4 sm:w-5 sm:h-5 text-accent" />
                                             )}
                     <div>
-                      <p className="text-xs text-gray-500">{t('houseType')}</p>
-                      <p className="text-sm sm:text-base font-bold text-primary">
+                      <dt className="text-xs text-gray-500">{t('houseType')}</dt>
+                      <dd className="text-sm sm:text-base font-bold text-primary">
                         {dom.typ_domu === 'modularny' ? t('modular') : dom.typ_domu === 'montovany' ? t('prefab') : t('mobile')}
-                      </p>
+                      </dd>
                     </div>
                   </div>
                 {dom.pocet_modulov && (
                   <div className="flex items-center gap-2">
                     <Boxes className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
                     <div>
-                      <p className="text-xs text-gray-500">Moduly</p>
-                      <p className="text-sm sm:text-base font-bold text-primary">{dom.pocet_modulov}</p>
+                      <dt className="text-xs text-gray-500">Moduly</dt>
+                      <dd className="text-sm sm:text-base font-bold text-primary">{dom.pocet_modulov}</dd>
                     </div>
                   </div>
                 )}
@@ -1419,24 +1419,24 @@ export default function DetailDomu() {
                   <div className="flex items-center gap-2">
                     <Grid2x2 className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                     <div>
-                      <p className="text-xs text-gray-500">{t('rooms')}</p>
-                      <p className="text-sm sm:text-base font-bold text-primary">{dom.pocet_izieb}</p>
+                      <dt className="text-xs text-gray-500">{t('rooms')}</dt>
+                      <dd className="text-sm sm:text-base font-bold text-primary">{dom.pocet_izieb}</dd>
                     </div>
                   </div>
                 )}
                 <div className="flex items-center gap-2">
                     <div className="w-5 h-3 sm:w-6 sm:h-4 border-2 border-primary rounded-sm" />
                     <div>
-                      <p className="text-xs text-gray-500">{t('builtArea')}</p>
-                    <p className="text-sm sm:text-base font-bold text-primary">{dom.zastavana_plocha} m²</p>
+                      <dt className="text-xs text-gray-500">{t('builtArea')}</dt>
+                    <dd className="text-sm sm:text-base font-bold text-primary">{dom.zastavana_plocha} m²</dd>
                   </div>
                 </div>
                 {dom.uzitkova_plocha && (
                   <div className="flex items-center gap-2">
                     <Maximize2 className="w-4 h-4 sm:w-5 sm:h-5 text-accent" />
                     <div>
-                      <p className="text-xs text-gray-500">{t('usableArea')}</p>
-                      <p className="text-sm sm:text-base font-bold text-primary">{dom.uzitkova_plocha} m²</p>
+                      <dt className="text-xs text-gray-500">{t('usableArea')}</dt>
+                      <dd className="text-sm sm:text-base font-bold text-primary">{dom.uzitkova_plocha} m²</dd>
                     </div>
                   </div>
                 )}
@@ -1444,8 +1444,8 @@ export default function DetailDomu() {
                   <div className="flex items-center gap-2">
                     <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
                     <div>
-                      <p className="text-xs text-gray-500">{t('energyClass')}</p>
-                      <p className="text-sm sm:text-base font-bold text-primary">A0</p>
+                      <dt className="text-xs text-gray-500">{t('energyClass')}</dt>
+                      <dd className="text-sm sm:text-base font-bold text-primary">A0</dd>
                       {isTicabhouse && (
                         <p className="text-xs text-gray-500 mt-1">{t('a0CertificateOption')}</p>
                       )}
@@ -1460,12 +1460,12 @@ export default function DetailDomu() {
                   <div className="flex items-center gap-2">
                     <Landmark className="w-4 h-4 sm:w-5 sm:h-5 text-teal-600" />
                     <div>
-                      <p className="text-xs text-gray-500">Terasa</p>
-                      <p className="text-sm sm:text-base font-bold text-primary">{dom.terasa_plocha} m²</p>
+                      <dt className="text-xs text-gray-500">Terasa</dt>
+                      <dd className="text-sm sm:text-base font-bold text-primary">{dom.terasa_plocha} m²</dd>
                     </div>
                   </div>
                 )}
-              </div>
+              </dl>
             </Card>
 
             {/* Obrázok základnej konfigurácie - pre Prosto House - hneď pod parametre */}
