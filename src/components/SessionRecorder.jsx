@@ -209,32 +209,34 @@ export default function SessionRecorder() {
         } catch (err) {}
       }
 
-      // Fetch location - cached 24h
-      const cachedLocation = localStorage.getItem('user_location_cache');
-      const cacheTimestamp = localStorage.getItem('user_location_cache_time');
-      const cacheAge = cacheTimestamp ? Date.now() - parseInt(cacheTimestamp) : Infinity;
+      // Fetch location - cached 24h (only if localStorage available)
+      if (localStorageAvailableRef.current) {
+        const cachedLocation = localStorage.getItem('user_location_cache');
+        const cacheTimestamp = localStorage.getItem('user_location_cache_time');
+        const cacheAge = cacheTimestamp ? Date.now() - parseInt(cacheTimestamp) : Infinity;
 
-      if (cachedLocation && cacheAge < 86400000) {
-        base44.functions.invoke('trackUserSession', {
-          action: 'update_location', session_id: sessionIdRef.current,
-          data: JSON.parse(cachedLocation)
-        }).catch(() => {});
-      } else {
-        fetch('https://ipapi.co/json/')
-          .then(r => r.json())
-          .then(data => {
-            if (!sessionIdRef.current) return;
-            const locationData = {
-              ip: data.ip, country: data.country_name, country_code: data.country_code,
-              region: data.region, city: data.city, timezone: data.timezone,
-              latitude: data.latitude, longitude: data.longitude
-            };
-            localStorage.setItem('user_location_cache', JSON.stringify(locationData));
-            localStorage.setItem('user_location_cache_time', Date.now().toString());
-            base44.functions.invoke('trackUserSession', {
-              action: 'update_location', session_id: sessionIdRef.current, data: locationData
-            }).catch(() => {});
+        if (cachedLocation && cacheAge < 86400000) {
+          base44.functions.invoke('trackUserSession', {
+            action: 'update_location', session_id: sessionIdRef.current,
+            data: JSON.parse(cachedLocation)
           }).catch(() => {});
+        } else {
+          fetch('https://ipapi.co/json/')
+            .then(r => r.json())
+            .then(data => {
+              if (!sessionIdRef.current) return;
+              const locationData = {
+                ip: data.ip, country: data.country_name, country_code: data.country_code,
+                region: data.region, city: data.city, timezone: data.timezone,
+                latitude: data.latitude, longitude: data.longitude
+              };
+              localStorage.setItem('user_location_cache', JSON.stringify(locationData));
+              localStorage.setItem('user_location_cache_time', Date.now().toString());
+              base44.functions.invoke('trackUserSession', {
+                action: 'update_location', session_id: sessionIdRef.current, data: locationData
+              }).catch(() => {});
+            }).catch(() => {});
+        }
       }
 
       // Save initial page entry after 5s so we have real time data
