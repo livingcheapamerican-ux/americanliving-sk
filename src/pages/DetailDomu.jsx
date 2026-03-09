@@ -103,11 +103,12 @@ export default function DetailDomu() {
       : {
           "@context": "https://schema.org",
           "@type": "Product",
+          "@id": `${canonicalUrl}#product`,
           "name": dom.nazov,
           "description": metaDescription,
           "image": [dom.hlavny_obrazok, ...(dom.galeria || [])].filter(Boolean),
           "brand": { "@type": "Brand", "name": dom.vyrobca },
-          "manufacturer": { "@type": "Organization", "name": dom.vyrobca },
+          "manufacturer": { "@type": "Organization", "@id": organizationId, "name": "American Living" },
           "offers": {
             "@type": "Offer",
             "url": canonicalUrl,
@@ -115,7 +116,7 @@ export default function DetailDomu() {
             "price": dom.zakladna_cena,
             "priceValidUntil": new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0],
             "availability": "https://schema.org/InStock",
-            "seller": { "@type": "Organization", "name": "American Living", "url": "https://americanliving.sk" }
+            "seller": { "@type": "Organization", "@id": organizationId, "name": "American Living", "url": "https://americanliving.sk" }
           }
         };
 
