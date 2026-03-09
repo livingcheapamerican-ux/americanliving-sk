@@ -326,6 +326,7 @@ export default function SessionRecorder() {
         x_position: e.clientX, y_position: e.clientY,
         element_id: e.target.id || '', element_class: e.target.className || ''
       });
+      console.log('[SessionRecorder] Click tracked, total clicks:', clicksRef.current.length);
       scheduleSave();
     };
 
