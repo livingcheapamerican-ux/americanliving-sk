@@ -87,6 +87,15 @@ export default function SessionRecorder() {
     const timeOnCurrentPage = pageStartTimeRef.current ? Math.round((Date.now() - pageStartTimeRef.current) / 1000) : 0;
     const startTime = sessionDbStartTimeRef.current || sessionStartRef.current;
     const currentDuration = startTime ? Math.round((Date.now() - new Date(startTime).getTime()) / 1000) : 0;
+    
+    console.log('[SessionRecorder] doSave called:', {
+      sessionId: sessionIdRef.current,
+      timeOnCurrentPage,
+      currentDuration,
+      clicksCount: clicksRef.current.length,
+      mouseMovements: mouseMovementsRef.current,
+      page: currentPage
+    });
     const scrollValues = Object.values(scrollDepthRef.current);
     const maxScroll = scrollValues.length > 0 ? Math.max(...scrollValues) : 0;
 
