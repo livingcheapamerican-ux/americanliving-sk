@@ -28,7 +28,26 @@ Deno.serve(async (req) => {
         console.warn('[trackUserSession] Session not found:', session_id);
         return Response.json({ error: 'Session not found' }, { status: 404 });
       }
-      const updated = await base44.entities.UserSession.update(existing[0].id, data);
+
+      // Handle _new_page_entry - append to pages_visited array
+      const updateData = { ...data };
+      if (updateData._new_page_entry) {
+        const newPageEntry = updateData._new_page_entry;
+        delete updateData._new_page_entry;
+        const existingPages = existing[0].pages_visited || [];
+        // Check if page already exists (same URL and timestamp), avoid duplicates
+        const isDuplicate = existingPages.some(p => 
+          p.page_url === newPageEntry.page_url && p.timestamp === newPageEntry.timestamp
+        );
+        if (!isDuplicate) {
+          updateData.pages_visited = [...existingPages, newPageEntry];
+          console.log('[trackUserSession] Appending page entry:', newPageEntry.page_url, 'total pages:', updateData.pages_visited.length);
+        } else {
+          console.log('[trackUserSession] Duplicate page entry, skipping');
+        }
+      }
+
+      const updated = await base44.entities.UserSession.update(existing[0].id, updateData);
       console.log('[trackUserSession] Session updated');
       return Response.json({ 
         success: true, 
