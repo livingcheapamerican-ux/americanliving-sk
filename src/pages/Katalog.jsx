@@ -398,7 +398,7 @@ export default function Katalog() {
   }, [vybraneNaSrovnanie]);
 
   const domy = Array.isArray(allDomy) ? allDomy : [];
-  const verejneDomy = domy.filter((d) => d.verejny === true || d.verejny === undefined);
+  const verejneDomy = domy.filter((d) => d.verejny !== false);
   const skryteDomy = domy.filter((d) => d.verejny === false);
   const rodinneDomy = verejneDomy.filter((d) => d.kategoria === "rodinne_domy");
   const mobilneDomy = verejneDomy.filter((d) => d.kategoria === "mobilne_domy");
