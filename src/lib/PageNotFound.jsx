@@ -1,12 +1,33 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Helmet } from 'react-helmet-async';
+import { useEffect } from 'react';
 
 
 export default function PageNotFound({}) {
     const location = useLocation();
+    const navigate = useNavigate();
     const pageName = location.pathname.substring(1);
+
+    // Auto-redirect: ak pathname vyzerá ako slug domu (napr. /zre-prosthouse), 
+    // skús nájsť dom v databáze a presmeruj na DetailDomu?slug=...
+    const potentialSlug = pageName.toLowerCase().replace(/\//g, '');
+    const { data: domBySlug } = useQuery({
+        queryKey: ['dom-by-slug-404', potentialSlug],
+        queryFn: async () => {
+            if (!potentialSlug || potentialSlug.length < 3) return null;
+            const results = await base44.entities.Dom.filter({ slug: potentialSlug });
+            return results[0] || null;
+        },
+        enabled: !!potentialSlug && potentialSlug.length >= 3
+    });
+
+    useEffect(() => {
+        if (domBySlug) {
+            navigate(`/DetailDomu?slug=${domBySlug.slug}`, { replace: true });
+        }
+    }, [domBySlug, navigate]);
 
     const { data: authData, isFetched } = useQuery({
         queryKey: ['user'],
