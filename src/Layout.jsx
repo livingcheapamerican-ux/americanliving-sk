@@ -863,9 +863,7 @@ function LayoutContent({ children }) {
       <CookieConsentBanner />
       <SessionRecorder />
 
-      <div className="hidden md:block">
-        <Chatbot />
-      </div>
+      <Chatbot />
       </div>
       );
       }
