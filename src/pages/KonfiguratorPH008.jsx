@@ -472,6 +472,16 @@ export default function KonfiguratorPH008() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-40 md:pb-8">
+      <style>{`
+        @media (max-width: 768px) {
+          [data-chatbot-button], 
+          .chatbot-trigger,
+          button[aria-label*="chat"],
+          button[aria-label*="Chat"] {
+            bottom: 90px !important;
+          }
+        }
+      `}</style>
 
       {/* ── Hlavička ── */}
       <div className="bg-white border-b shadow-sm sticky top-0 z-30">
