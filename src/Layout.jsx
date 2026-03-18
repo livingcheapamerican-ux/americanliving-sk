@@ -503,16 +503,30 @@ function LayoutContent({ children }) {
             )}
             </div>
 
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-4 hover:bg-gray-100 rounded-lg min-w-[56px] min-h-[56px] flex items-center justify-center active:bg-gray-200"
-            >
-              {mobileMenuOpen ? (
-                <X className="w-7 h-7 text-primary" />
-              ) : (
-                <Menu className="w-7 h-7 text-primary" />
-              )}
-            </button>
+            <div className="lg:hidden flex items-center gap-1">
+              {/* Mobile AI Chatbot Button */}
+              <button
+                onClick={() => {
+                  // Trigger chatbot open - dispatch custom event
+                  window.dispatchEvent(new CustomEvent('openChatbot'));
+                }}
+                className="p-3 hover:bg-gray-100 rounded-lg min-w-[44px] min-h-[44px] flex items-center justify-center active:bg-gray-200 relative"
+                aria-label="AI Chatbot"
+              >
+                <MessageCircle className="w-6 h-6 text-red-600" />
+                <span className="absolute top-1 right-1 w-3 h-3 bg-gradient-to-br from-cyan-500 to-purple-600 rounded-full text-[7px] font-bold text-white flex items-center justify-center">AI</span>
+              </button>
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="p-4 hover:bg-gray-100 rounded-lg min-w-[56px] min-h-[56px] flex items-center justify-center active:bg-gray-200"
+              >
+                {mobileMenuOpen ? (
+                  <X className="w-7 h-7 text-primary" />
+                ) : (
+                  <Menu className="w-7 h-7 text-primary" />
+                )}
+              </button>
+            </div>
           </div>
 
           {mobileMenuOpen && (
