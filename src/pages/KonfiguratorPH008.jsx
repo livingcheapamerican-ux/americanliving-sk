@@ -675,7 +675,7 @@ export default function KonfiguratorPH008() {
             </div>
             <div className="text-2xl font-black text-gray-900 leading-tight">{totalPrice.toLocaleString()} €</div>
             <div className={`text-[11px] font-bold mt-0.5 ${isA0Compliant ? 'text-green-600' : 'text-blue-600'}`}>
-              {isA0Compliant ? '✓ A0 certifikát' : 'Rekreačná stavba'}
+              {isA0Compliant ? `✓ ${t('meetsA0Cert')}` : t('recreationalUse')}
             </div>
           </button>
           <button
