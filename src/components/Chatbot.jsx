@@ -45,6 +45,12 @@ export default function Chatbot() {
     }
   }, [isOpen, isMinimized]);
 
+  useEffect(() => {
+    const handler = () => setIsOpen(true);
+    window.addEventListener('openChatbot', handler);
+    return () => window.removeEventListener('openChatbot', handler);
+  }, []);
+
   const initConversation = async () => {
     try {
       const conversation = await base44.agents.createConversation({
