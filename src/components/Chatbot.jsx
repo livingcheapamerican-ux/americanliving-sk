@@ -24,6 +24,7 @@ const QUICK_QUESTIONS = [
 const KONFIGA_LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/1a73e4a6c_Konfigaeu.jpg";
 
 export default function Chatbot() {
+  const isKonfigurator = window.location.pathname.toLowerCase().includes('konfigurator');
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [conversationId, setConversationId] = useState(null);
