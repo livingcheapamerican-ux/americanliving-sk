@@ -158,7 +158,7 @@ export default function Chatbot() {
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            className={`fixed right-4 sm:right-6 z-40 ${isKonfigurator ? 'bottom-36 sm:bottom-8' : 'bottom-6 sm:bottom-8'} ${!isKonfigurator ? 'hidden sm:block' : ''}`}
+            className={`fixed right-4 sm:right-6 z-40 bottom-6 sm:bottom-8 ${!isKonfigurator ? 'hidden sm:flex' : 'flex'}`}
           >
             <button
               onClick={() => setIsOpen(true)}
