@@ -60,6 +60,7 @@ export default function Domov() {
   const [serviceModalOpen, setServiceModalOpen] = useState(false);
   const { t, language } = useLanguage();
   const sp = socialProofT[language] || socialProofT.sk;
+  const dv = dotaciaVerifyT[language] || dotaciaVerifyT.sk;
   
   const { data: domy = [] } = useQuery({
     queryKey: ['domy-popularne'],
