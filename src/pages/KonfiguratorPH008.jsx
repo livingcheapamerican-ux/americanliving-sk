@@ -471,7 +471,7 @@ export default function KonfiguratorPH008() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-32 md:pb-8">
+    <div className="min-h-screen bg-gray-50 pb-40 md:pb-8">
 
       {/* ── Hlavička ── */}
       <div className="bg-white border-b shadow-sm sticky top-0 z-30">
@@ -657,8 +657,8 @@ export default function KonfiguratorPH008() {
       </div>
 
       {/* ── Fixný mobilný panel ── */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-gray-200 z-40 md:hidden shadow-[0_-4px_20px_-4px_rgba(0,0,0,0.12)]">
-        <div className="px-4 pt-3 pb-5 flex items-center gap-3">
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-gray-200 z-50 md:hidden shadow-[0_-4px_20px_-4px_rgba(0,0,0,0.12)]">
+        <div className="px-4 pt-3 pb-8 flex items-center gap-3">
           <button onClick={() => setMobileSummaryOpen(true)} className="flex-1 text-left">
             <div className="text-[11px] text-gray-500 font-medium flex items-center gap-1">
               {t('totalWithVAT')} <Eye className="w-3 h-3 text-gray-400" />
