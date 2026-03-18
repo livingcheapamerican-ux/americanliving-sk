@@ -95,6 +95,7 @@ import GaleriaRealizacii from './pages/GaleriaRealizacii';
 import GrantovaKampan from './pages/GrantovaKampan';
 import Home from './pages/Home';
 import InteraktivnyKonfigurator from './pages/InteraktivnyKonfigurator';
+import Kalkulacka from './pages/Kalkulacka';
 import Katalog from './pages/Katalog';
 import KatalogDomkiZGor from './pages/KatalogDomkiZGor';
 import KatalogMobilneDomy from './pages/KatalogMobilneDomy';
@@ -186,6 +187,7 @@ export const PAGES = {
     "GrantovaKampan": GrantovaKampan,
     "Home": Home,
     "InteraktivnyKonfigurator": InteraktivnyKonfigurator,
+    "Kalkulacka": Kalkulacka,
     "Katalog": Katalog,
     "KatalogDomkiZGor": KatalogDomkiZGor,
     "KatalogMobilneDomy": KatalogMobilneDomy,

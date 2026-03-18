@@ -566,8 +566,8 @@ export default function Domov() {
                   className="hover:opacity-90 text-white font-black w-full sm:w-auto text-xl sm:text-3xl md:text-5xl px-6 sm:px-20 py-6 sm:py-12 shadow-2xl border-4 border-white relative overflow-hidden group transition-all"
                 >
                   <div className="flex flex-col items-center relative z-10">
-                    <span className="text-white drop-shadow-lg text-base sm:text-3xl md:text-4xl">OVERENIE nároku na</span>
-                    <span className="text-white text-xl sm:text-4xl md:text-5xl drop-shadow-lg mt-1">DOTÁCIU</span>
+                    <span className="text-white drop-shadow-lg text-base sm:text-3xl md:text-4xl">{t('dotaciaVerifyLine1')}</span>
+                    <span className="text-white text-xl sm:text-4xl md:text-5xl drop-shadow-lg mt-1">{t('dotaciaVerifyLine2')}</span>
                   </div>
                   <motion.div
                     animate={{ scale: [1, 1.1, 1] }}
