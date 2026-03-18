@@ -969,10 +969,11 @@ Deno.serve(async (req) => {
 
               const rowClass = item.selected ? 'selected-row' : 'not-selected-row';
               const baseClass = isBase ? 'base-row' : rowClass;
+              const translatedItemName = translateItemName(item.name, langCode);
 
               return `
                 <tr class="${baseClass}">
-                  <td>${isBase ? '<strong>' + item.name + '</strong>' : item.name}</td>
+                  <td>${isBase ? '<strong>' + translatedItemName + '</strong>' : translatedItemName}</td>
                   <td style="text-align: right;">${isBase ? '<strong>' + formatPrice(item.price) + '</strong>' : (item.selected ? formatPrice(item.price) : '—')}</td>
                 </tr>
               `;
