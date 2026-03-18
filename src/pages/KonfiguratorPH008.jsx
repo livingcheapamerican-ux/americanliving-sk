@@ -650,7 +650,7 @@ export default function KonfiguratorPH008() {
               <div className="text-4xl font-black">{totalPrice.toLocaleString()} €</div>
             </div>
             <div className={`px-3 py-1.5 rounded-full text-xs font-bold ${isA0Compliant ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'}`}>
-              {isA0Compliant ? 'A0 certifikát' : 'Rekreačná stavba'}
+              {isA0Compliant ? t('meetsA0Cert') : t('recreationalUse')}
             </div>
           </div>
           <div className="p-4">
