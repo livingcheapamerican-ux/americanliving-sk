@@ -229,39 +229,40 @@ const ConfiguratorTile = ({ label, price, description, selected, onClick, isA0, 
   return (
     <button
       onClick={onClick}
-      className={`relative flex flex-col items-start p-6 rounded-2xl border-2 transition-all duration-300 w-full text-left active:scale-[0.98] hover:shadow-md ${
+      className={`relative flex flex-col items-start p-4 rounded-2xl border-2 transition-all duration-300 w-full text-left active:scale-[0.98] hover:shadow-md ${
         selected
           ? `border-${colors.accent}-600 bg-gradient-to-br ${colors.selectedBg} shadow-lg ring-2 ring-${colors.accent}-400 ring-offset-1`
           : `${colors.border} bg-gradient-to-br ${colors.bg} hover:border-${colors.accent}-300 hover:shadow-md`
       }`}
     >
-      <div className="flex justify-between w-full items-start mb-2">
-        <div className="flex items-center gap-2 flex-wrap pr-4">
-            <span className={`font-bold text-base md:text-lg ${selected ? 'text-indigo-900' : 'text-gray-900'}`}>{label}</span>
-            {isA0 && <span className="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-green-200">A0</span>}
-        </div>
-        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${selected ? 'border-indigo-600 bg-indigo-600 scale-110' : 'border-gray-300'}`}>
+      <div className="flex items-start w-full gap-3 mb-1">
+        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5 transition-all ${selected ? 'border-indigo-600 bg-indigo-600 scale-110' : 'border-gray-300'}`}>
           {selected && <Check className="w-4 h-4 text-white" />}
         </div>
-      </div>
-      {description && <p className="text-sm text-gray-500 mb-3 font-medium leading-tight">{description}</p>}
-      
-      <div className="flex items-center gap-2">
-        {isAdmin && onPriceChange ? (
-          <div className="flex items-center gap-1 bg-white border border-indigo-200 rounded px-1 py-0.5 z-10" onClick={(e) => e.stopPropagation()}>
-             <span className="text-xs text-gray-400">€</span>
-             <input 
-               type="number" 
-               value={price} 
-               onChange={(e) => onPriceChange(Number(e.target.value))}
-               className="w-20 text-sm font-bold text-indigo-700 outline-none"
-             />
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className={`font-bold text-sm md:text-base ${selected ? 'text-indigo-900' : 'text-gray-900'}`}>{label}</span>
+            {isA0 && <span className="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-green-200">A0</span>}
           </div>
-        ) : (
-          <span className={`text-sm font-semibold ${selected ? 'text-indigo-700' : 'text-gray-400'}`}>
-            {price === 0 ? 'V cene' : `+${price.toLocaleString()} €`}
-          </span>
-        )}
+          {description && <p className="text-xs text-gray-500 mt-0.5 font-medium leading-tight">{description}</p>}
+        </div>
+        <div className="flex-shrink-0">
+          {isAdmin && onPriceChange ? (
+            <div className="flex items-center gap-1 bg-white border border-indigo-200 rounded px-1 py-0.5 z-10" onClick={(e) => e.stopPropagation()}>
+               <span className="text-xs text-gray-400">€</span>
+               <input 
+                 type="number" 
+                 value={price} 
+                 onChange={(e) => onPriceChange(Number(e.target.value))}
+                 className="w-16 text-sm font-bold text-indigo-700 outline-none"
+               />
+            </div>
+          ) : (
+            <span className={`text-sm font-semibold whitespace-nowrap ${selected ? 'text-indigo-700' : 'text-gray-400'}`}>
+              {price === 0 ? 'V cene' : `+${price.toLocaleString()} €`}
+            </span>
+          )}
+        </div>
       </div>
     </button>
   );
