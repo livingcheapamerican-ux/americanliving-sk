@@ -16,6 +16,20 @@ import { useLanguage } from "../components/LanguageContext";
 import FloatingHouses from "../components/FloatingHouses";
 import ServiceDetailModal from "../components/ServiceDetailModal";
 
+// Dotacia verify banner translations
+const dotaciaVerifyT = {
+  sk: { line1: "OVERENIE nároku na", line2: "DOTÁCIU" },
+  en: { line1: "CHECK YOUR ELIGIBILITY FOR A", line2: "GRANT" },
+  de: { line1: "ANSPRUCH PRÜFEN AUF", line2: "FÖRDERUNG" },
+  fr: { line1: "VÉRIFIER L'ÉLIGIBILITÉ À LA", line2: "SUBVENTION" },
+  hu: { line1: "JOGOSULTSÁG ELLENŐRZÉSE A", line2: "DOTÁCIÓRA" },
+  pl: { line1: "SPRAWDŹ UPRAWNIENIA DO", line2: "DOTACJI" },
+  uk: { line1: "ПЕРЕВІРТЕ ПРАВО НА", line2: "ДОТАЦІЮ" },
+  sr: { line1: "ПРОВЕРИТЕ ПРАВО НА", line2: "ДОТАЦИЈУ" },
+  hr: { line1: "PROVJERITE PRAVO NA", line2: "DOTACIJU" },
+  el: { line1: "ΕΛΕΓΞΤΕ ΤΟ ΔΙΚΑΙΩΜΑ ΣΑΣ ΓΙΑ", line2: "ΕΠΙΔΟΤΗΣΗ" },
+};
+
 // Social proof translations
 const socialProofT = {
   sk: { clients: "spokojných rodín", reviews: "overených recenzií", years: "rokov skúseností", quote1: "Dom sme dostali za 4 mesiace. Všetko vybavili za nás – hypotéka, pozemok aj kolaudácia.", name1: "Mária K., Trnava", quote2: "Konečne firma, ktorá drží slovo. Cena ostala rovnaká od začiatku do konca.", name2: "Peter S., Žilina" },
