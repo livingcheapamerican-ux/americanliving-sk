@@ -659,6 +659,142 @@ Deno.serve(async (req) => {
     const langCode = language || 'sk';
     const dateLocale = langCode === 'en' ? 'en-US' : langCode === 'de' ? 'de-DE' : langCode === 'fr' ? 'fr-FR' : langCode === 'hu' ? 'hu-HU' : langCode === 'pl' ? 'pl-PL' : langCode === 'uk' ? 'uk-UA' : langCode === 'sr' ? 'sr-RS' : langCode === 'hr' ? 'hr-HR' : langCode === 'el' ? 'el-GR' : 'sk-SK';
 
+    // Preklad názvov položiek z konfiguratora
+    const itemNameTranslations = {
+      // Montáž
+      "Bez montáže (Svojpomocne)": { en: "Without assembly (Self-assembly)", de: "Ohne Montage (Selbstmontage)", fr: "Sans montage (Auto-assemblage)", hu: "Összeszerelés nélkül (Önálló)", pl: "Bez montażu (Samodzielnie)", uk: "Без монтажу (Самостійно)", sr: "Без монтаже (Самостално)", hr: "Bez montaže (Samostalno)", el: "Χωρίς συναρμολόγηση (Αυτόματη)" },
+      "Bez montáže": { en: "Without assembly", de: "Ohne Montage", fr: "Sans montage", hu: "Összeszerelés nélkül", pl: "Bez montażu", uk: "Без монтажу", sr: "Без монтаже", hr: "Bez montaže", el: "Χωρίς συναρμολόγηση" },
+      "S montážou": { en: "With assembly", de: "Mit Montage", fr: "Avec montage", hu: "Összeszereléssel", pl: "Z montażem", uk: "З монтажем", sr: "Са монтажом", hr: "S montažom", el: "Με συναρμολόγηση" },
+      // Predĺženie
+      "+1,2 m": { en: "+1.2 m", de: "+1,2 m", fr: "+1,2 m", hu: "+1,2 m", pl: "+1,2 m", uk: "+1,2 м", sr: "+1,2 м", hr: "+1,2 m", el: "+1,2 μ" },
+      // Izolácia
+      "Celoročná 150 mm": { en: "Year-round 150 mm", de: "Ganzjährig 150 mm", fr: "Toute l'année 150 mm", hu: "Egész éves 150 mm", pl: "Całoroczna 150 mm", uk: "Цілорічна 150 мм", sr: "Целогодишња 150 мм", hr: "Cjelogodišnja 150 mm", el: "Ολόχρονη 150 mm" },
+      "Zvýšená 200 mm": { en: "Enhanced 200 mm", de: "Erhöht 200 mm", fr: "Améliorée 200 mm", hu: "Fokozott 200 mm", pl: "Podwyższona 200 mm", uk: "Підвищена 200 мм", sr: "Повећана 200 мм", hr: "Pojačana 200 mm", el: "Βελτιωμένη 200 mm" },
+      "Prémium 250 mm": { en: "Premium 250 mm", de: "Premium 250 mm", fr: "Premium 250 mm", hu: "Prémium 250 mm", pl: "Premium 250 mm", uk: "Преміум 250 мм", sr: "Премијум 250 мм", hr: "Premium 250 mm", el: "Premium 250 mm" },
+      "Extra 300 mm": { en: "Extra 300 mm", de: "Extra 300 mm", fr: "Extra 300 mm", hu: "Extra 300 mm", pl: "Extra 300 mm", uk: "Екстра 300 мм", sr: "Екстра 300 мм", hr: "Extra 300 mm", el: "Extra 300 mm" },
+      // Základy
+      "Bez základov": { en: "Without foundations", de: "Ohne Fundament", fr: "Sans fondations", hu: "Alap nélkül", pl: "Bez fundamentów", uk: "Без фундаменту", sr: "Без темеља", hr: "Bez temelja", el: "Χωρίς θεμέλια" },
+      "Pilóty/Pätky": { en: "Pillars/Footings", de: "Pfähle/Sockel", fr: "Pieux/Semelles", hu: "Pilóták/Talpak", pl: "Pale/Stopy", uk: "Палі/Підошви", sr: "Пилоти/Стопе", hr: "Piloti/Stopice", el: "Πάσσαλοι/Θεμέλια" },
+      "Základová doska": { en: "Foundation slab", de: "Fundamentplatte", fr: "Dalle de fondation", hu: "Alaplemez", pl: "Płyta fundamentowa", uk: "Фундаментна плита", sr: "Темељна плоча", hr: "Temeljna ploča", el: "Θεμελιακή πλάκα" },
+      "Pásové základy": { en: "Strip foundations", de: "Streifenfundament", fr: "Fondations filantes", hu: "Sávos alap", pl: "Ławy fundamentowe", uk: "Стрічковий фундамент", sr: "Трачни темељи", hr: "Trakasti temelji", el: "Ταινιωτά θεμέλια" },
+      // Dvere
+      "Štandard": { en: "Standard", de: "Standard", fr: "Standard", hu: "Alap", pl: "Standard", uk: "Стандарт", sr: "Стандард", hr: "Standard", el: "Τυπικό" },
+      "Kovové s 2 zámkami": { en: "Metal with 2 locks", de: "Metall mit 2 Schlössern", fr: "Métal avec 2 serrures", hu: "Fém 2 zárral", pl: "Metalowe z 2 zamkami", uk: "Металеві з 2 замками", sr: "Метална са 2 браве", hr: "Metalna s 2 brave", el: "Μεταλλική με 2 κλειδαριές" },
+      "Plastovo-kovové": { en: "Plastic-metal", de: "Kunststoff-Metall", fr: "Plastique-métal", hu: "Műanyag-fém", pl: "Plastikowo-metalowe", uk: "Пластово-металеві", sr: "Пластично-метална", hr: "Plastično-metalna", el: "Πλαστικό-μεταλλικό" },
+      // Fasáda
+      "Štandardná": { en: "Standard", de: "Standard", fr: "Standard", hu: "Alap", pl: "Standardowa", uk: "Стандартна", sr: "Стандардна", hr: "Standardna", el: "Τυπική" },
+      "Šúchaná fasáda": { en: "Stucco facade", de: "Putzfassade", fr: "Façade enduite", hu: "Vakolatfasáda", pl: "Tynkowa fasada", uk: "Штукатурний фасад", sr: "Жбукана фасада", hr: "Žbukana fasada", el: "Σοβαντισμένη πρόσοψη" },
+      // Interiér
+      "Bez interiéru": { en: "Without interior", de: "Ohne Innenausbau", fr: "Sans intérieur", hu: "Belső nélkül", pl: "Bez wykończenia", uk: "Без інтер'єру", sr: "Без ентеријера", hr: "Bez interijera", el: "Χωρίς εσωτερικό" },
+      "Drevo": { en: "Wood", de: "Holz", fr: "Bois", hu: "Fa", pl: "Drewno", uk: "Дерево", sr: "Дрво", hr: "Drvo", el: "Ξύλο" },
+      "Sadrokartón": { en: "Drywall", de: "Trockenbau", fr: "Placo-plâtre", hu: "Gipszkarton", pl: "Płyta gipsowo-kartonowa", uk: "Гіпсокартон", sr: "Гипс-картон", hr: "Gips-karton", el: "Γυψοσανίδα" },
+      // Addons
+      "Elektroinštalácia": { en: "Electrical installation", de: "Elektroinstallation", fr: "Installation électrique", hu: "Elektromos szerelés", pl: "Instalacja elektryczna", uk: "Електромонтаж", sr: "Електроинсталација", hr: "Elektroinstalacija", el: "Ηλεκτρολογική εγκατάσταση" },
+      "Voda a kanalizácia": { en: "Water and drainage", de: "Wasser und Kanalisation", fr: "Eau et assainissement", hu: "Víz és csatorna", pl: "Woda i kanalizacja", uk: "Вода та каналізація", sr: "Вода и канализација", hr: "Voda i kanalizacija", el: "Νερό και αποχέτευση" },
+      "Sanita": { en: "Sanitary", de: "Sanitär", fr: "Sanitaire", hu: "Szaniter", pl: "Sanitarny", uk: "Сантехніка", sr: "Санитарије", hr: "Sanitarija", el: "Υγιεινή" },
+      "Bojler": { en: "Boiler", de: "Boiler", fr: "Chaudière", hu: "Bojler", pl: "Bojler", uk: "Бойлер", sr: "Бојлер", hr: "Bojler", el: "Λέβητας" },
+      "Tepelné čerpadlo": { en: "Heat pump", de: "Wärmepumpe", fr: "Pompe à chaleur", hu: "Hőszivattyú", pl: "Pompa ciepła", uk: "Тепловий насос", sr: "Топлотна пумпа", hr: "Toplinska pumpa", el: "Αντλία θερμότητας" },
+      "Rekuperácia": { en: "Recuperation", de: "Rekuperation", fr: "Récupération", hu: "Rekuperáció", pl: "Rekuperacja", uk: "Рекуперація", sr: "Рекуперација", hr: "Rekuperacija", el: "Ανάκτηση" },
+      "Laminátové podlahy": { en: "Laminate floors", de: "Laminatböden", fr: "Parquet stratifié", hu: "Laminált padló", pl: "Podłogi laminowane", uk: "Ламінатні підлоги", sr: "Ламинатни подови", hr: "Laminatni podovi", el: "Δάπεδα laminate" },
+      "Podlahové kúrenie": { en: "Floor heating", de: "Fußbodenheizung", fr: "Chauffage au sol", hu: "Padlófűtés", pl: "Ogrzewanie podłogowe", uk: "Підлогове опалення", sr: "Подно грејање", hr: "Podno grijanje", el: "Υποδαπέδια θέρμανση" },
+      "Laminácia okien": { en: "Window lamination", de: "Fensterlaminierung", fr: "Laminage des fenêtres", hu: "Ablak laminálás", pl: "Laminowanie okien", uk: "Ламінування вікон", sr: "Ламинација прозора", hr: "Laminacija prozora", el: "Επικάλυψη παραθύρων" },
+      "Tónované sklá": { en: "Tinted glass", de: "Getöntes Glas", fr: "Verre teinté", hu: "Sötétített üveg", pl: "Przyciemniane szyby", uk: "Тоновані скла", sr: "Тонирано стакло", hr: "Tonirano staklo", el: "Σκούρα τζάμια" },
+      "Prípojky sietí": { en: "Network connections", de: "Netzanschlüsse", fr: "Connexions réseau", hu: "Hálózati csatlakozások", pl: "Przyłącza sieci", uk: "Підключення мереж", sr: "Прикључци мрежа", hr: "Priključci mreža", el: "Συνδέσεις δικτύου" },
+      "Inžiniering": { en: "Engineering", de: "Engineering", fr: "Ingénierie", hu: "Mérnöki tervezés", pl: "Inżyniering", uk: "Інжиніринг", sr: "Инжењеринг", hr: "Inženjering", el: "Μηχανική" },
+      "Projektant": { en: "Architect/Designer", de: "Planer", fr: "Concepteur", hu: "Tervező", pl: "Projektant", uk: "Проектант", sr: "Пројектант", hr: "Projektant", el: "Σχεδιαστής" },
+      "Revízie": { en: "Revisions", de: "Revisionen", fr: "Révisions", hu: "Felülvizsgálatok", pl: "Przeglądy", uk: "Ревізії", sr: "Ревизије", hr: "Revizije", el: "Αναθεωρήσεις" },
+    };
+
+    // Funkcia na preloženie názvu položky
+    const translateItemName = (name, lang) => {
+      if (lang === 'sk') return name;
+      
+      // Skús priamy preklad
+      if (itemNameTranslations[name]?.[lang]) return itemNameTranslations[name][lang];
+      
+      // Skús preložiť prefix "Montáž: ...", "Izolácia: ...", atď.
+      const prefixMap = {
+        'sk': { montaz: 'Montáž', izolacia: 'Izolácia', zaklady: 'Základy', vstupneDvere: 'Vstupné dvere', fasada: 'Fasáda', interier: 'Interiér', predlzenie: 'Predĺženie' },
+        'en': { montaz: 'Assembly', izolacia: 'Insulation', zaklady: 'Foundations', vstupneDvere: 'Entry doors', fasada: 'Facade', interier: 'Interior', predlzenie: 'Extension' },
+        'de': { montaz: 'Montage', izolacia: 'Isolierung', zaklady: 'Fundament', vstupneDvere: 'Eingangstür', fasada: 'Fassade', interier: 'Innenausbau', predlzenie: 'Verlängerung' },
+        'fr': { montaz: 'Montage', izolacia: 'Isolation', zaklady: 'Fondations', vstupneDvere: 'Porte d\'entrée', fasada: 'Façade', interier: 'Intérieur', predlzenie: 'Extension' },
+        'hu': { montaz: 'Összeszerelés', izolacia: 'Szigetelés', zaklady: 'Alapozás', vstupneDvere: 'Bejárati ajtó', fasada: 'Homlokzat', interier: 'Belső tér', predlzenie: 'Meghosszabbítás' },
+        'pl': { montaz: 'Montaż', izolacia: 'Izolacja', zaklady: 'Fundamenty', vstupneDvere: 'Drzwi wejściowe', fasada: 'Fasada', interier: 'Wnętrze', predlzenie: 'Przedłużenie' },
+        'uk': { montaz: 'Монтаж', izolacia: 'Ізоляція', zaklady: 'Фундаменти', vstupneDvere: 'Вхідні двері', fasada: 'Фасад', interier: 'Інтер\'єр', predlzenie: 'Подовження' },
+        'sr': { montaz: 'Монтажа', izolacia: 'Изолација', zaklady: 'Темељи', vstupneDvere: 'Улазна врата', fasada: 'Фасада', interier: 'Ентеријер', predlzenie: 'Продужење' },
+        'hr': { montaz: 'Montaža', izolacia: 'Izolacija', zaklady: 'Temelji', vstupneDvere: 'Ulazna vrata', fasada: 'Fasada', interier: 'Enterijer', predlzenie: 'Produženje' },
+        'el': { montaz: 'Συναρμολόγηση', izolacia: 'Μόνωση', zaklady: 'Θεμέλια', vstupneDvere: 'Εξώπορτα', fasada: 'Πρόσοψη', interier: 'Εσωτερικό', predlzenie: 'Επέκταση' },
+      };
+
+      const prefixes = prefixMap[lang] || prefixMap['sk'];
+      const skPrefixes = prefixMap['sk'];
+
+      // Izolácia: ...
+      if (name.startsWith('Izolácia: ')) {
+        const val = name.replace('Izolácia: ', '');
+        const translatedVal = itemNameTranslations[val]?.[lang] || val;
+        return `${prefixes.izolacia}: ${translatedVal}`;
+      }
+      // Montáž: ...
+      if (name.startsWith('Montáž: ')) {
+        const val = name.replace('Montáž: ', '');
+        const translatedVal = itemNameTranslations[val]?.[lang] || val;
+        return `${prefixes.montaz}: ${translatedVal}`;
+      }
+      // Základy: ...
+      if (name.startsWith('Základy: ')) {
+        const val = name.replace('Základy: ', '');
+        const translatedVal = itemNameTranslations[val]?.[lang] || val;
+        return `${prefixes.zaklady}: ${translatedVal}`;
+      }
+      // Vstupné dvere: ...
+      if (name.startsWith('Vstupné dvere: ')) {
+        const val = name.replace('Vstupné dvere: ', '');
+        const translatedVal = itemNameTranslations[val]?.[lang] || val;
+        return `${prefixes.vstupneDvere}: ${translatedVal}`;
+      }
+      // Fasáda: ...
+      if (name.startsWith('Fasáda: ')) {
+        const val = name.replace('Fasáda: ', '');
+        const translatedVal = itemNameTranslations[val]?.[lang] || val;
+        return `${prefixes.fasada}: ${translatedVal}`;
+      }
+      // Interiér: ...
+      if (name.startsWith('Interiér: ')) {
+        const val = name.replace('Interiér: ', '');
+        const translatedVal = itemNameTranslations[val]?.[lang] || val;
+        return `${prefixes.interier}: ${translatedVal}`;
+      }
+      // Predĺženie: ...
+      if (name.startsWith('Predĺženie: ')) {
+        const val = name.replace('Predĺženie: ', '');
+        return `${prefixes.predlzenie}: ${val}`;
+      }
+      // Okná s počtom ks - Strešné okná (2 ks)
+      const windowMap = {
+        'sk': { streskne: 'Strešné okná', fixne: 'Fixné okná', vyklopneBig: 'Výklopné okná veľké', vyklopneSmall: 'Výklopné okná malé', intDvere: 'Interiérové dvere', ks: 'ks' },
+        'en': { streskne: 'Roof windows', fixne: 'Fixed windows', vyklopneBig: 'Tilt windows large', vyklopneSmall: 'Tilt windows small', intDvere: 'Interior doors', ks: 'pcs' },
+        'de': { streskne: 'Dachfenster', fixne: 'Festverglasung', vyklopneBig: 'Kippfenster groß', vyklopneSmall: 'Kippfenster klein', intDvere: 'Innentüren', ks: 'Stk' },
+        'fr': { streskne: 'Fenêtres de toit', fixne: 'Fenêtres fixes', vyklopneBig: 'Fenêtres oscillo-battantes grandes', vyklopneSmall: 'Fenêtres oscillo-battantes petites', intDvere: 'Portes intérieures', ks: 'pcs' },
+        'hu': { streskne: 'Tetőablakok', fixne: 'Fix ablakok', vyklopneBig: 'Billenő ablakok nagy', vyklopneSmall: 'Billenő ablakok kis', intDvere: 'Belső ajtók', ks: 'db' },
+        'pl': { streskne: 'Okna dachowe', fixne: 'Okna stałe', vyklopneBig: 'Okna uchylne duże', vyklopneSmall: 'Okna uchylne małe', intDvere: 'Drzwi wewnętrzne', ks: 'szt' },
+        'uk': { streskne: 'Дахові вікна', fixne: 'Фіксовані вікна', vyklopneBig: 'Відкидні вікна великі', vyklopneSmall: 'Відкидні вікна малі', intDvere: 'Міжкімнатні двері', ks: 'шт' },
+        'sr': { streskne: 'Крoвни прозори', fixne: 'Фиксни прозори', vyklopneBig: 'Откидни прозори велики', vyklopneSmall: 'Откидни прозори мали', intDvere: 'Унутрашња врата', ks: 'ком' },
+        'hr': { streskne: 'Krovni prozori', fixne: 'Fiksni prozori', vyklopneBig: 'Nagibni prozori veliki', vyklopneSmall: 'Nagibni prozori mali', intDvere: 'Unutarnja vrata', ks: 'kom' },
+        'el': { streskne: 'Παράθυρα οροφής', fixne: 'Σταθερά παράθυρα', vyklopneBig: 'Ανακλινόμενα παράθυρα μεγάλα', vyklopneSmall: 'Ανακλινόμενα παράθυρα μικρά', intDvere: 'Εσωτερικές πόρτες', ks: 'τεμ' },
+      };
+      const wm = windowMap[lang] || windowMap['sk'];
+      const countMatch = name.match(/\((\d+) ks\)$/);
+      const count = countMatch ? countMatch[1] : '';
+      if (name.startsWith('Strešné okná')) return `${wm.streskne} (${count} ${wm.ks})`;
+      if (name.startsWith('Fixné okná')) return `${wm.fixne} (${count} ${wm.ks})`;
+      if (name.startsWith('Výklopné okná veľké')) return `${wm.vyklopneBig} (${count} ${wm.ks})`;
+      if (name.startsWith('Výklopné okná malé')) return `${wm.vyklopneSmall} (${count} ${wm.ks})`;
+      if (name.startsWith('Interiérové dvere')) return `${wm.intDvere} (${count} ${wm.ks})`;
+      
+      return name; // fallback - ponechaj pôvodný text
+    };
+
     // HTML email
     const htmlEmail = `
 <!DOCTYPE html>
