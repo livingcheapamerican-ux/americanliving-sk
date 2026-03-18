@@ -492,7 +492,7 @@ export default function KonfiguratorPH008() {
           </div>
           <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold ${isA0Compliant ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
             {isA0Compliant ? <CheckCircle className="w-3.5 h-3.5" /> : <Info className="w-3.5 h-3.5" />}
-            {isA0Compliant ? 'A0 certifikát' : 'Rekreačná stavba'}
+            {isA0Compliant ? t('meetsA0Cert') : t('recreationalUse')}
           </div>
         </div>
       </div>
