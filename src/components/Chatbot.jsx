@@ -140,7 +140,7 @@ export default function Chatbot() {
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            className={`fixed right-4 z-40 ${isKonfigurator ? 'bottom-24 sm:bottom-8' : 'bottom-6 sm:bottom-8'} sm:right-6`}
+            className={`fixed right-4 sm:right-6 z-40 ${isKonfigurator ? 'bottom-24 sm:bottom-8' : 'bottom-6 sm:bottom-8'}`}
           >
             <button
               onClick={() => setIsOpen(true)}
@@ -166,7 +166,7 @@ export default function Chatbot() {
             initial={{ opacity: 0, y: 80, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 80, scale: 0.95 }}
-            className="fixed bottom-4 right-2 left-2 sm:left-auto sm:bottom-6 sm:right-4 z-40 sm:w-[420px]"
+            className={`fixed right-2 left-2 sm:left-auto sm:right-4 z-40 sm:w-[420px] ${isKonfigurator ? 'bottom-24 sm:bottom-6' : 'bottom-4 sm:bottom-6'}`}
           >
             <Card className="flex flex-col shadow-2xl border border-gray-200 overflow-hidden" style={{ height: isMinimized ? 'auto' : 'min(600px, calc(100dvh - 100px))' }}>
               {/* Header */}
