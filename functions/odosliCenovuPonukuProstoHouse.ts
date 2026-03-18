@@ -556,8 +556,8 @@ Deno.serve(async (req) => {
     } = payload;
 
     // Načítaj dom
-    const domy = await base44.asServiceRole.entities.Dom.list();
-    const dom = domy.find(d => d.id === dom_id);
+    const domy = await base44.asServiceRole.entities.Dom.filter({ id: dom_id });
+    const dom = domy[0];
 
     if (!dom) {
       return Response.json({ error: 'Dom nenájdený' }, { status: 404 });
