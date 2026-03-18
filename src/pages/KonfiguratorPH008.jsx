@@ -96,35 +96,35 @@ const HOUSE_PH008 = {
 const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmin, onPriceChange }) => (
   <button
     onClick={onClick}
-    className={`relative flex items-center justify-between p-4 rounded-xl border-2 transition-all w-full text-left active:scale-[0.98] ${
+    className={`relative flex flex-col p-3 rounded-xl border-2 transition-all w-full text-left active:scale-[0.98] gap-2 ${
       selected
         ? 'border-red-500 bg-red-50 shadow-sm'
         : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm'
     }`}
   >
-    <div className="flex items-center gap-3 flex-1 min-w-0">
-      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${selected ? 'border-red-500 bg-red-500' : 'border-gray-300'}`}>
+    <div className="flex items-start gap-3">
+      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all mt-0.5 ${selected ? 'border-red-500 bg-red-500' : 'border-gray-300'}`}>
         {selected && <Check className="w-3 h-3 text-white" />}
       </div>
-      <div className="min-w-0">
+      <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
           <span className={`font-semibold text-sm ${selected ? 'text-red-900' : 'text-gray-800'}`}>{label}</span>
           {isA0 && <span className="bg-green-100 text-green-700 text-[10px] font-bold px-1.5 py-0.5 rounded-full">A0</span>}
         </div>
         {description && <p className="text-xs text-gray-500 mt-0.5 leading-tight">{description}</p>}
       </div>
-    </div>
-    <div className="ml-3 flex-shrink-0">
-      {isAdmin && onPriceChange ? (
-        <div className="flex items-center gap-1 bg-white border border-red-200 rounded px-1 py-0.5" onClick={e => e.stopPropagation()}>
-          <span className="text-xs text-gray-400">€</span>
-          <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-16 text-sm font-bold text-red-600 outline-none" />
-        </div>
-      ) : (
-        <span className={`text-sm font-bold whitespace-nowrap ${selected ? 'text-red-600' : 'text-gray-400'}`}>
-          {price === 0 ? 'V cene' : `+${price.toLocaleString()} €`}
-        </span>
-      )}
+      <div className="flex-shrink-0">
+        {isAdmin && onPriceChange ? (
+          <div className="flex items-center gap-1 bg-white border border-red-200 rounded px-1 py-0.5" onClick={e => e.stopPropagation()}>
+            <span className="text-xs text-gray-400">€</span>
+            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-16 text-sm font-bold text-red-600 outline-none" />
+          </div>
+        ) : (
+          <span className={`text-sm font-bold whitespace-nowrap ${selected ? 'text-red-600' : 'text-gray-400'}`}>
+            {price === 0 ? 'V cene' : `+${price.toLocaleString()} €`}
+          </span>
+        )}
+      </div>
     </div>
   </button>
 );
