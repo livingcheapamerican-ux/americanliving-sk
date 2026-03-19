@@ -284,12 +284,18 @@ export default function KonfiguratorPH002() {
           <AddonRow label={t('financing')} price={0} checked={financing} onChange={() => setFinancing(!financing)} t={t} />
         </AccordionSection>
 
-        <div className="hidden md:block bg-white rounded-2xl border-2 border-gray-200 overflow-hidden">
-          <div className="bg-gray-900 text-white p-5 flex items-center justify-between">
-            <div><div className="text-xs text-gray-400 uppercase tracking-wide mb-1">{t('totalWithVAT')}</div><div className="text-4xl font-black">{totalPrice.toLocaleString()} €</div></div>
-            <div className={`px-3 py-1.5 rounded-full text-xs font-bold ${isA0Compliant ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'}`}>{isA0Compliant ? t('meetsA0Cert') : t('recreationalUse')}</div>
-          </div>
-          <div className="p-4"><button onClick={() => setModalOpen(true)} className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-2 text-base shadow-md active:scale-[0.98]"><Send className="w-5 h-5" />{t('sendQuote')}</button></div>
+        <div className="hidden md:block">
+          <ProstoHouseSummary
+            house={HOUSE_PH002} t={t} isA0Compliant={isA0Compliant} totalPrice={totalPrice} onSendQuote={() => setModalOpen(true)}
+            mountingIdx={mountingIdx} extensionIdx={0} insulationIdx={insulationIdx} foundationIdx={foundationIdx}
+            interiorIdx={interiorIdx} doorsIdx={doorsIdx} facadeIdx={facadeIdx}
+            electricity={electricity} water={water} sanita={sanita} boiler={boiler}
+            heatPump={heatPump} recuperation={recuperation} windowLamination={windowLamination} windowTint={windowTint}
+            roofWindows={roofWindows} fixWindows={fixWindows} tiltWindowsBig={tiltWindowsBig} tiltWindowsSmall={tiltWindowsSmall}
+            interiorDoorsCount={interiorDoorsCount} laminateFloors={laminateFloors} floorHeating={floorHeating}
+            networks={networks} engineering={engineering} projectant={projectant} revision={revision}
+            getPrice={getPrice}
+          />
         </div>
       </div>
 
