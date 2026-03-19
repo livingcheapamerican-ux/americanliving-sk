@@ -228,35 +228,8 @@ function LayoutContent({ children }) {
       >
         <div className="container mx-auto px-1 sm:px-4 py-0.5 sm:py-0.5">
           <div className="flex items-center justify-between gap-1 sm:gap-2">
-            {/* Mobile - Language Dropdown */}
-            <div className="sm:hidden">
-              <Popover>
-                <PopoverTrigger asChild>
-                  <button className="flex items-center gap-1 px-2 py-1 rounded-md bg-primary text-white hover:bg-primary/90 transition-all">
-                    <span className="text-lg">{AVAILABLE_LANGUAGES.find(l => l.code === language)?.flag}</span>
-                    <ChevronDown className="w-3 h-3" />
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent className="w-48 p-1">
-                  <div className="grid gap-1">
-                    {AVAILABLE_LANGUAGES.map((lang) => (
-                      <button
-                        key={lang.code}
-                        onClick={() => setLanguage(lang.code)}
-                        className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all text-left ${
-                          language === lang.code
-                            ? 'bg-primary text-white'
-                            : 'hover:bg-gray-100'
-                        }`}
-                      >
-                        <span className="text-xl">{lang.flag}</span>
-                        <span>{lang.name}</span>
-                      </button>
-                    ))}
-                  </div>
-                </PopoverContent>
-              </Popover>
-            </div>
+            {/* Mobile - placeholder for layout balance */}
+            <div className="sm:hidden w-8" />
 
             <div className="flex-1 flex items-center justify-center sm:justify-start gap-1 sm:gap-2">
               <Link to={createPageUrl("Domov")} className="group">
