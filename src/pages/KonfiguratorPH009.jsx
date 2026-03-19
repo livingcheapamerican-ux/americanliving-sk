@@ -1095,15 +1095,19 @@ export default function KonfiguratorPH009() {
   return (
     <div className="min-h-screen pb-40 md:pb-0 bg-gray-50/50">
       <div className="bg-white border-b sticky top-0 z-30 shadow-sm backdrop-blur-md bg-white/90">
-        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="w-10"></div>
-          
-          <div className="text-center">
-            <h1 className="text-lg font-bold text-gray-900 leading-none">{HOUSE_PH009.name}</h1>
-            <p className="text-xs text-gray-500 mt-1 font-medium">{STEPS[activeStep].title} ({activeStep + 1}/{STEPS.length})</p>
+        <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-sm font-bold text-gray-900 leading-tight">{HOUSE_PH009.name}</h1>
+            <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+              <span className="text-xs text-gray-500">{STEPS[activeStep].title} ({activeStep + 1}/{STEPS.length})</span>
+              <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold ${isA0Compliant ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
+                {isA0Compliant ? <CheckCircle className="w-3 h-3" /> : <Info className="w-3 h-3" />}
+                {isA0Compliant ? t('meetsA0Cert') : t('recreationalUse')}
+              </div>
+            </div>
           </div>
           
-          <div className="w-24 flex justify-end items-center gap-2">
+          <div className="flex items-center gap-2">
              <div className="hidden md:flex gap-1">
                {STEPS.map((_, i) => (
                  <div key={i} className={`w-2 h-2 rounded-full ${i === activeStep ? 'bg-indigo-600' : i < activeStep ? 'bg-indigo-200' : 'bg-gray-200'}`} />
