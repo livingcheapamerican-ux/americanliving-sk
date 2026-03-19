@@ -5,6 +5,7 @@ import { Home, Check, Info, Send, X, Thermometer, Zap, Layout, Hammer, CheckCirc
 import { useLanguage } from '../components/LanguageContext';
 import { prostoHouseTranslations } from '../components/translations/ProstoHouseTranslations';
 import ProstoHousePriceSaver from '../components/ProstoHousePriceSaver';
+import ProstoHouseSummary from '../components/konfigurator/ProstoHouseSummary';
 
 const HOUSE_PH004 = {
   "id": "nord", "name": "Nord 103 (PH-004)", "basePrice": 49500,

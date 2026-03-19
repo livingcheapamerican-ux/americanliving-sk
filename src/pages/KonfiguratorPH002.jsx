@@ -5,6 +5,7 @@ import { Home, Check, Info, Send, X, Thermometer, Zap, Layout, Hammer, CheckCirc
 import { useLanguage } from '../components/LanguageContext';
 import { prostoHouseTranslations } from '../components/translations/ProstoHouseTranslations';
 import ProstoHousePriceSaver from '../components/ProstoHousePriceSaver';
+import ProstoHouseSummary from '../components/konfigurator/ProstoHouseSummary';
 
 const HOUSE_PH002 = {
   "id": "fjord", "name": "Fjord 130 (PH-002)", "basePrice": 59000,

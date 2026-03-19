@@ -5,6 +5,7 @@ import { Home, Check, Info, Send, X, Thermometer, Zap, Layout, Hammer, CheckCirc
 import { useLanguage } from '../components/LanguageContext';
 import { prostoHouseTranslations } from '../components/translations/ProstoHouseTranslations';
 import ProstoHousePriceSaver from '../components/ProstoHousePriceSaver';
+import ProstoHouseSummary from '../components/konfigurator/ProstoHouseSummary';
 
 const HOUSE_PH003 = {
   "id": "flat-house-1-5", "name": "Flat House 15 108 (PH-003)", "basePrice": 44900,

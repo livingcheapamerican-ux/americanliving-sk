@@ -5,6 +5,7 @@ import { Home, Check, Info, Send, X, Thermometer, Zap, Layout, Hammer, CheckCirc
 import { useLanguage } from '../components/LanguageContext';
 import { prostoHouseTranslations } from '../components/translations/ProstoHouseTranslations';
 import ProstoHousePriceSaver from '../components/ProstoHousePriceSaver';
+import ProstoHouseSummary from '../components/konfigurator/ProstoHouseSummary';
 
 const HOUSE_PH005 = {
   "id": "barn-double", "name": "Barn Double 72 (PH-005)", "basePrice": 36900,

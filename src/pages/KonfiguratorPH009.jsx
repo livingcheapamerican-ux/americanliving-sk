@@ -5,6 +5,7 @@ import { Home, Check, Info, Send, X, Thermometer, Zap, Layout, Hammer, CheckCirc
 import { useLanguage } from '../components/LanguageContext';
 import { prostoHouseTranslations } from '../components/translations/ProstoHouseTranslations';
 import ProstoHousePriceSaver from '../components/ProstoHousePriceSaver';
+import ProstoHouseSummary from '../components/konfigurator/ProstoHouseSummary';
 
 const HOUSE_PH009 = {
   "id": "flat-small", "name": "Flat Small 41 (PH-009)", "basePrice": 19500,
