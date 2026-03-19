@@ -476,14 +476,17 @@ export default function KonfiguratorPH008() {
 
       {/* ── Hlavička ── */}
       <div className="bg-white border-b shadow-sm sticky top-0 z-30">
-        <div className="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between gap-2">
+        <div className="max-w-3xl mx-auto px-4 py-2 flex items-center justify-between gap-2">
+          {/* Názov + badge na mobile: 2 riadky */}
           <div className="flex-1 min-w-0">
-            <h1 className="text-base font-bold text-gray-900 leading-none truncate">{HOUSE_PH008.name}</h1>
-            <p className="text-xs text-gray-500 mt-0.5">Konfigurátor</p>
-          </div>
-          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold flex-shrink-0 ${isA0Compliant ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
-            {isA0Compliant ? <CheckCircle className="w-3.5 h-3.5" /> : <Info className="w-3.5 h-3.5" />}
-            {isA0Compliant ? t('meetsA0Cert') : t('recreationalUse')}
+            <h1 className="text-sm font-bold text-gray-900 leading-tight">{HOUSE_PH008.name}</h1>
+            <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+              <span className="text-xs text-gray-500">Konfigurátor</span>
+              <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold ${isA0Compliant ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
+                {isA0Compliant ? <CheckCircle className="w-3 h-3" /> : <Info className="w-3 h-3" />}
+                {isA0Compliant ? t('meetsA0Cert') : t('recreationalUse')}
+              </div>
+            </div>
           </div>
           {/* Chatbot trigger - mobile only */}
           <button
