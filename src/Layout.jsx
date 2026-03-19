@@ -477,12 +477,36 @@ function LayoutContent({ children }) {
             </div>
 
             <div className="lg:hidden flex items-center gap-1">
+              {/* Mobile - Language Dropdown */}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button className="flex items-center gap-1 px-2 py-1.5 rounded-md bg-primary text-white hover:bg-primary/90 transition-all min-w-[44px] min-h-[44px] justify-center">
+                    <span className="text-lg">{AVAILABLE_LANGUAGES.find(l => l.code === language)?.flag}</span>
+                    <ChevronDown className="w-3 h-3" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-48 p-1" align="end">
+                  <div className="grid gap-1">
+                    {AVAILABLE_LANGUAGES.map((lang) => (
+                      <button
+                        key={lang.code}
+                        onClick={() => setLanguage(lang.code)}
+                        className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all text-left ${
+                          language === lang.code
+                            ? 'bg-primary text-white'
+                            : 'hover:bg-gray-100'
+                        }`}
+                      >
+                        <span className="text-xl">{lang.flag}</span>
+                        <span>{lang.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </PopoverContent>
+              </Popover>
               {/* Mobile AI Chatbot Button */}
               <button
-                onClick={() => {
-                  // Trigger chatbot open - dispatch custom event
-                  window.dispatchEvent(new CustomEvent('openChatbot'));
-                }}
+                onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))}
                 className="p-3 hover:bg-gray-100 rounded-lg min-w-[44px] min-h-[44px] flex items-center justify-center active:bg-gray-200 relative"
                 aria-label="AI Chatbot"
               >
