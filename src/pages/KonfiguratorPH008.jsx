@@ -486,15 +486,24 @@ export default function KonfiguratorPH008() {
 
       {/* ── Hlavička ── */}
       <div className="bg-white border-b shadow-sm sticky top-0 z-30">
-        <div className="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
-          <div>
-            <h1 className="text-base font-bold text-gray-900 leading-none">{HOUSE_PH008.name}</h1>
+        <div className="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between gap-2">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-base font-bold text-gray-900 leading-none truncate">{HOUSE_PH008.name}</h1>
             <p className="text-xs text-gray-500 mt-0.5">Konfigurátor</p>
           </div>
-          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold ${isA0Compliant ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
+          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold flex-shrink-0 ${isA0Compliant ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
             {isA0Compliant ? <CheckCircle className="w-3.5 h-3.5" /> : <Info className="w-3.5 h-3.5" />}
             {isA0Compliant ? t('meetsA0Cert') : t('recreationalUse')}
           </div>
+          {/* Chatbot trigger - mobile only */}
+          <button
+            onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))}
+            className="md:hidden flex-shrink-0 relative p-2 rounded-lg hover:bg-gray-100 active:bg-gray-200"
+            aria-label="AI Chatbot"
+          >
+            <MessageCircle className="w-6 h-6 text-red-600" />
+            <span className="absolute top-1 right-1 w-3 h-3 bg-gradient-to-br from-cyan-500 to-purple-600 rounded-full text-[7px] font-bold text-white flex items-center justify-center">AI</span>
+          </button>
         </div>
       </div>
 
