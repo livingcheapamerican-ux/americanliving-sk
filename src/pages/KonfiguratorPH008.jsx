@@ -190,24 +190,24 @@ const CounterRow = ({ label, price, value, onChange, isAdmin, onPriceChange }) =
   </div>
 );
 
-const AccordionSection = ({ id, title, icon: Icon, openId, setOpenId, children, badge }) => {
+const AccordionSection = ({ id, title, icon: Icon, openId, setOpenId, children, badge, isDone }) => {
   const isOpen = openId === id;
   return (
-    <div className={`rounded-2xl border-2 overflow-hidden transition-all duration-200 ${isOpen ? 'border-red-200 shadow-md' : 'border-gray-200'}`}>
+    <div className={`rounded-2xl border-2 overflow-hidden transition-all duration-200 ${isOpen ? 'border-red-200 shadow-md' : isDone ? 'border-green-200' : 'border-gray-200'}`}>
       <button
         onClick={() => setOpenId(isOpen ? null : id)}
-        className={`w-full flex items-center justify-between p-4 md:p-5 text-left transition-colors ${isOpen ? 'bg-red-50' : 'bg-white hover:bg-gray-50'}`}
+        className={`w-full flex items-center justify-between p-4 md:p-5 text-left transition-colors ${isOpen ? 'bg-red-50' : isDone ? 'bg-green-50 hover:bg-green-100' : 'bg-white hover:bg-gray-50'}`}
       >
         <div className="flex items-center gap-3">
-          <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${isOpen ? 'bg-red-600 text-white' : 'bg-gray-100 text-gray-500'}`}>
-            <Icon className="w-5 h-5" />
+          <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${isOpen ? 'bg-red-600 text-white' : isDone ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-500'}`}>
+            {isDone && !isOpen ? <Check className="w-5 h-5" /> : <Icon className="w-5 h-5" />}
           </div>
           <div>
-            <span className={`font-bold text-base ${isOpen ? 'text-red-900' : 'text-gray-800'}`}>{title}</span>
-            {badge && <div className="text-xs text-gray-500 mt-0.5">{badge}</div>}
+            <span className={`font-bold text-base ${isOpen ? 'text-red-900' : isDone ? 'text-green-800' : 'text-gray-800'}`}>{title}</span>
+            {badge && <div className="text-xs text-gray-500 mt-0.5 truncate max-w-[200px] md:max-w-xs">{badge}</div>}
           </div>
         </div>
-        {isOpen ? <ChevronUp className="w-5 h-5 text-red-500 flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />}
+        {isOpen ? <ChevronUp className="w-5 h-5 text-red-500 flex-shrink-0" /> : <ChevronDown className={`w-5 h-5 flex-shrink-0 ${isDone ? 'text-green-400' : 'text-gray-400'}`} />}
       </button>
       {isOpen && (
         <div className="p-4 md:p-5 border-t border-red-100 bg-white space-y-3">
