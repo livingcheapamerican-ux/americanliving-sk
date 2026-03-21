@@ -700,7 +700,7 @@ export default function KonfiguratorPH008() {
         {/* ── Služby ── */}
         <AccordionSection id="services" title={t('services')} icon={FileText} openId={openSection} setOpenId={handleSectionOpen}
           isDone={visitedSections.has('services') && openSection !== 'services'}>
-          <SectionLabel label="Dokumentácia a inžiniering" color="gray" />
+          <SectionLabel label={t('documentation')} color="gray" />
           <AddonRow label={t('projectant')} price={getPrice('addon', 'projectant', HOUSE_PH008.addons.projectant)} checked={projectant} onChange={() => setProjectant(!projectant)} locked={typStavby === 'rodinny_dom'} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'projectant', p)} t={t} />
           <AddonRow label={t('engineering')} description={t('engineeringDesc')} price={getPrice('addon', 'engineering', HOUSE_PH008.addons.engineering)} checked={engineering} onChange={() => setEngineering(!engineering)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'engineering', p)} t={t} />
           <AddonRow label={t('revisions')} price={getPrice('addon', 'revision', HOUSE_PH008.addons.revision)} checked={revision} onChange={() => {}} disabled={true} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'revision', p)} t={t} />
