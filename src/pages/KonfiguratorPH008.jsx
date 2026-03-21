@@ -712,6 +712,14 @@ export default function KonfiguratorPH008() {
           <AddonRow label={t('financing')} price={0} checked={financing} onChange={() => setFinancing(!financing)} t={t} />
         </AccordionSection>
 
+        {/* ── Fotogaléria + Pôdorysy ── */}
+        {domFromDb && (
+          <AccordionSection id="galeria" title="Fotogaléria & Pôdorysy" icon={Eye} openId={openSection} setOpenId={handleSectionOpen}
+            badge="Fotky exteriéru, interiéru · 2D/3D pôdorysy">
+            <KonfiguratorGaleria dom={domFromDb} facadeIdx={facadeIdx} interiorIdx={interiorIdx} />
+          </AccordionSection>
+        )}
+
         {/* ── Súhrn ceny (desktop) ── */}
         <div className="hidden md:block">
           <ProstoHouseSummary
