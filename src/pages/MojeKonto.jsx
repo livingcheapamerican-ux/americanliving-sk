@@ -2,23 +2,16 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
-import { FileText, MessageCircle, Calendar, Home, ChevronRight, Plus, Clock, CheckCircle, AlertCircle, XCircle, Star } from 'lucide-react';
+import { FileText, MessageCircle, Calendar, Home, ChevronRight, Plus, Clock, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-
-const STATUS_CONFIG = {
-  ulozena: { label: 'Uložená', color: 'bg-gray-100 text-gray-700', icon: Clock },
-  odoslana_na_posudenie: { label: 'Odoslaná na posúdenie', color: 'bg-blue-100 text-blue-700', icon: Clock },
-  cakajuca_na_vyjadrenie: { label: 'Čaká na vyjadrenie', color: 'bg-yellow-100 text-yellow-700', icon: Clock },
-  schvalena_adminom: { label: 'Schválená', color: 'bg-green-100 text-green-700', icon: CheckCircle },
-  s_komentarmi_admina: { label: 'S komentármi', color: 'bg-orange-100 text-orange-700', icon: AlertCircle },
-  zamietnuta_adminom: { label: 'Zamietnutá', color: 'bg-red-100 text-red-700', icon: XCircle },
-  akceptovana_klientom: { label: 'Akceptovaná', color: 'bg-emerald-100 text-emerald-700', icon: CheckCircle },
-  odmietnuta_klientom: { label: 'Odmietnutá klientom', color: 'bg-gray-100 text-gray-500', icon: XCircle },
-};
+import { useLanguage } from '../components/LanguageContext';
+import { useAccountT } from '../components/translations/AccountTranslations';
 
 export default function MojeKonto() {
   const [activeTab, setActiveTab] = useState('ponuky');
+  const { language } = useLanguage();
+  const t = useAccountT(language);
 
   const { data: user } = useQuery({
     queryKey: ['current-user'],
@@ -37,21 +30,32 @@ export default function MojeKonto() {
     enabled: !!user?.id
   });
 
+  const STATUS_CONFIG = {
+    ulozena: { label: t('statusUlozena'), color: 'bg-gray-100 text-gray-700', icon: Clock },
+    odoslana_na_posudenie: { label: t('statusOdoslanaNaPosudenie'), color: 'bg-blue-100 text-blue-700', icon: Clock },
+    cakajuca_na_vyjadrenie: { label: t('statusCakajucaNaVyjadrenie'), color: 'bg-yellow-100 text-yellow-700', icon: Clock },
+    schvalena_adminom: { label: t('statusSchvalenaAdminom'), color: 'bg-green-100 text-green-700', icon: CheckCircle },
+    s_komentarmi_admina: { label: t('statusSKomentarmiAdmina'), color: 'bg-orange-100 text-orange-700', icon: AlertCircle },
+    zamietnuta_adminom: { label: t('statusZamietnutaAdminom'), color: 'bg-red-100 text-red-700', icon: XCircle },
+    akceptovana_klientom: { label: t('statusAkceptovanaKlientom'), color: 'bg-emerald-100 text-emerald-700', icon: CheckCircle },
+    odmietnuta_klientom: { label: t('statusOdmietnutaKlientom'), color: 'bg-gray-100 text-gray-500', icon: XCircle },
+  };
+
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center p-8">
           <div className="w-16 h-16 border-4 border-red-200 border-t-red-600 rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-gray-500">Načítavam...</p>
+          <p className="text-gray-500">{t('loading')}</p>
         </div>
       </div>
     );
   }
 
   const tabs = [
-    { id: 'ponuky', label: 'Moje ponuky', icon: FileText, count: savedQuotes.length },
-    { id: 'chat', label: 'Podpora', icon: MessageCircle },
-    { id: 'konzultacie', label: 'Konzultácie', icon: Calendar, count: consultations.length },
+    { id: 'ponuky', label: t('tabMyQuotes'), icon: FileText, count: savedQuotes.length },
+    { id: 'chat', label: t('tabSupport'), icon: MessageCircle },
+    { id: 'konzultacie', label: t('tabConsultations'), icon: Calendar, count: consultations.length },
   ];
 
   return (
@@ -73,17 +77,17 @@ export default function MojeKonto() {
           <div className="grid grid-cols-3 gap-4 mt-6">
             <div className="bg-white/10 rounded-xl p-4 text-center">
               <div className="text-2xl font-bold">{savedQuotes.length}</div>
-              <div className="text-xs text-gray-400 mt-1">Uložených ponúk</div>
+              <div className="text-xs text-gray-400 mt-1">{t('savedQuotesCount')}</div>
             </div>
             <div className="bg-white/10 rounded-xl p-4 text-center">
               <div className="text-2xl font-bold">
                 {savedQuotes.filter(q => q.status === 'schvalena_adminom').length}
               </div>
-              <div className="text-xs text-gray-400 mt-1">Schválených</div>
+              <div className="text-xs text-gray-400 mt-1">{t('approvedCount')}</div>
             </div>
             <div className="bg-white/10 rounded-xl p-4 text-center">
               <div className="text-2xl font-bold">{consultations.length}</div>
-              <div className="text-xs text-gray-400 mt-1">Konzultácií</div>
+              <div className="text-xs text-gray-400 mt-1">{t('consultationsCount')}</div>
             </div>
           </div>
         </div>
@@ -121,24 +125,24 @@ export default function MojeKonto() {
         {activeTab === 'ponuky' && (
           <div>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-gray-900">Moje uložené ponuky</h2>
+              <h2 className="text-lg font-bold text-gray-900">{t('myQuotesTitle')}</h2>
               <Link to="/Katalog">
                 <Button size="sm" className="bg-red-600 hover:bg-red-700 text-white gap-2">
                   <Plus className="w-4 h-4" />
-                  Nová konfigurácia
+                  {t('newConfiguration')}
                 </Button>
               </Link>
             </div>
 
             {isLoading ? (
-              <div className="text-center py-12 text-gray-400">Načítavam...</div>
+              <div className="text-center py-12 text-gray-400">{t('loadingQuotes')}</div>
             ) : savedQuotes.length === 0 ? (
               <div className="text-center py-16 bg-white rounded-2xl border border-dashed border-gray-300">
                 <Home className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                <p className="text-gray-500 font-medium">Zatiaľ nemáte žiadne uložené ponuky</p>
-                <p className="text-gray-400 text-sm mt-1 mb-4">Nakonfigurujte si dom a uložte ho sem</p>
+                <p className="text-gray-500 font-medium">{t('noQuotesTitle')}</p>
+                <p className="text-gray-400 text-sm mt-1 mb-4">{t('noQuotesDesc')}</p>
                 <Link to="/Katalog">
-                  <Button className="bg-red-600 hover:bg-red-700 text-white">Prejsť do katalógu</Button>
+                  <Button className="bg-red-600 hover:bg-red-700 text-white">{t('goToCatalog')}</Button>
                 </Link>
               </div>
             ) : (
@@ -165,7 +169,7 @@ export default function MojeKonto() {
                               {quote.celkova_cena?.toLocaleString()} €
                             </p>
                             <p className="text-xs text-gray-400 mt-1">
-                              Uložené: {new Date(quote.created_date).toLocaleDateString('sk-SK')}
+                              {t('savedOn')} {new Date(quote.created_date).toLocaleDateString('sk-SK')}
                             </p>
                           </div>
                           <div className="flex flex-col items-end gap-2">
@@ -188,11 +192,10 @@ export default function MojeKonto() {
                           </div>
                         </div>
 
-                        {/* Admin komentár upozornenie */}
                         {quote.status === 's_komentarmi_admina' && (
                           <div className="mt-3 bg-orange-50 border border-orange-200 rounded-lg px-3 py-2 text-xs text-orange-700 flex items-center gap-2">
                             <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
-                            Váš poradca pridal komentár k tejto ponuke
+                            {t('adminCommentAlert')}
                           </div>
                         )}
                       </div>
@@ -207,10 +210,8 @@ export default function MojeKonto() {
         {/* TAB: Chat / Podpora */}
         {activeTab === 'chat' && (
           <div className="bg-white rounded-2xl border border-gray-200 p-6">
-            <h2 className="text-lg font-bold text-gray-900 mb-2">Podpora</h2>
-            <p className="text-gray-500 text-sm mb-6">
-              Máte otázky ohľadom domov, konfigurátorov alebo procesu? Sme tu pre vás.
-            </p>
+            <h2 className="text-lg font-bold text-gray-900 mb-2">{t('supportTitle')}</h2>
+            <p className="text-gray-500 text-sm mb-6">{t('supportDesc')}</p>
             <div className="grid gap-4 sm:grid-cols-2">
               <button
                 onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))}
@@ -220,8 +221,8 @@ export default function MojeKonto() {
                   <MessageCircle className="w-6 h-6 text-white" />
                 </div>
                 <div className="text-center">
-                  <div className="font-bold text-gray-900 group-hover:text-red-600">AI Chatbot</div>
-                  <div className="text-xs text-gray-500 mt-1">Okamžité odpovede 24/7</div>
+                  <div className="font-bold text-gray-900 group-hover:text-red-600">{t('aiChatbot')}</div>
+                  <div className="text-xs text-gray-500 mt-1">{t('instantAnswers')}</div>
                 </div>
               </button>
               <button
@@ -232,8 +233,8 @@ export default function MojeKonto() {
                   <Calendar className="w-6 h-6 text-white" />
                 </div>
                 <div className="text-center">
-                  <div className="font-bold text-gray-900 group-hover:text-blue-600">Živá podpora</div>
-                  <div className="text-xs text-gray-500 mt-1">Rezervovať termín hovoru</div>
+                  <div className="font-bold text-gray-900 group-hover:text-blue-600">{t('liveSupport')}</div>
+                  <div className="text-xs text-gray-500 mt-1">{t('bookCallSlot')}</div>
                 </div>
               </button>
             </div>
@@ -242,14 +243,14 @@ export default function MojeKonto() {
 
         {/* TAB: Konzultácie */}
         {activeTab === 'konzultacie' && (
-          <ConsultationTab user={user} consultations={consultations} />
+          <ConsultationTab user={user} consultations={consultations} t={t} />
         )}
       </div>
     </div>
   );
 }
 
-function ConsultationTab({ user, consultations }) {
+function ConsultationTab({ user, consultations, t }) {
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ typ: 'video_hovor', pozadovany_termin: '', telefon: '', poznamka: '' });
   const [saving, setSaving] = useState(false);
@@ -268,27 +269,34 @@ function ConsultationTab({ user, consultations }) {
     window.location.reload();
   };
 
+  const consultationStatusLabel = (status) => {
+    if (status === 'nova') return t('consultationStatusNova');
+    if (status === 'potvrdena') return t('consultationStatusPotvrdena');
+    if (status === 'zrusena') return t('consultationStatusZrusena');
+    return t('consultationStatusDokoncena');
+  };
+
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold text-gray-900">Konzultácie</h2>
+        <h2 className="text-lg font-bold text-gray-900">{t('consultationsTitle')}</h2>
         <Button onClick={() => setShowForm(true)} className="bg-red-600 hover:bg-red-700 text-white gap-2">
           <Plus className="w-4 h-4" />
-          Rezervovať termín
+          {t('bookSlot')}
         </Button>
       </div>
 
       {showForm && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl">
-            <h3 className="text-lg font-bold mb-4">Rezervácia konzultácie</h3>
+            <h3 className="text-lg font-bold mb-4">{t('bookConsultation')}</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Typ konzultácie</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('consultationType')}</label>
                 <div className="grid grid-cols-2 gap-2">
                   {[
-                    { value: 'video_hovor', label: '📹 Video hovor' },
-                    { value: 'telefonicky_hovor', label: '📞 Telefonát' }
+                    { value: 'video_hovor', label: t('videoCall') },
+                    { value: 'telefonicky_hovor', label: t('phoneCall') }
                   ].map(opt => (
                     <button
                       key={opt.value}
@@ -304,7 +312,7 @@ function ConsultationTab({ user, consultations }) {
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Preferovaný termín</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('preferredTime')}</label>
                 <input
                   type="datetime-local"
                   required
@@ -314,7 +322,7 @@ function ConsultationTab({ user, consultations }) {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Telefónne číslo</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('phoneNumber')}</label>
                 <input
                   type="tel"
                   value={form.telefon}
@@ -324,21 +332,21 @@ function ConsultationTab({ user, consultations }) {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Poznámka (voliteľné)</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('note')}</label>
                 <textarea
                   value={form.poznamka}
                   onChange={e => setForm({ ...form, poznamka: e.target.value })}
                   rows={2}
-                  placeholder="O čom by ste sa chceli porozprávať?"
+                  placeholder={t('notePlaceholder')}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-400 outline-none resize-none"
                 />
               </div>
               <div className="flex gap-2">
                 <button type="button" onClick={() => setShowForm(false)} className="flex-1 border border-gray-300 rounded-lg py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50">
-                  Zrušiť
+                  {t('cancel')}
                 </button>
                 <button type="submit" disabled={saving} className="flex-1 bg-red-600 hover:bg-red-700 text-white rounded-lg py-2.5 text-sm font-bold disabled:opacity-50">
-                  {saving ? 'Ukladám...' : 'Rezervovať'}
+                  {saving ? t('bookingInProgress') : t('book')}
                 </button>
               </div>
             </form>
@@ -349,10 +357,10 @@ function ConsultationTab({ user, consultations }) {
       {consultations.length === 0 ? (
         <div className="text-center py-16 bg-white rounded-2xl border border-dashed border-gray-300">
           <Calendar className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-500 font-medium">Zatiaľ nemáte žiadne konzultácie</p>
-          <p className="text-gray-400 text-sm mt-1 mb-4">Rezervujte si termín hovoru s naším poradcom</p>
+          <p className="text-gray-500 font-medium">{t('noConsultationsTitle')}</p>
+          <p className="text-gray-400 text-sm mt-1 mb-4">{t('noConsultationsDesc')}</p>
           <Button onClick={() => setShowForm(true)} className="bg-red-600 hover:bg-red-700 text-white">
-            Rezervovať termín
+            {t('bookSlot')}
           </Button>
         </div>
       ) : (
@@ -362,7 +370,7 @@ function ConsultationTab({ user, consultations }) {
               <div className="flex items-center justify-between">
                 <div>
                   <div className="font-semibold text-gray-900">
-                    {c.typ === 'video_hovor' ? '📹 Video hovor' : '📞 Telefonát'}
+                    {c.typ === 'video_hovor' ? t('videoCall') : t('phoneCall')}
                   </div>
                   <div className="text-sm text-gray-500 mt-0.5">
                     {new Date(c.pozadovany_termin).toLocaleString('sk-SK')}
@@ -375,7 +383,7 @@ function ConsultationTab({ user, consultations }) {
                   c.status === 'dokoncena' ? 'bg-gray-100 text-gray-600' :
                   'bg-yellow-100 text-yellow-700'
                 }`}>
-                  {c.status === 'nova' ? 'Nová' : c.status === 'potvrdena' ? 'Potvrdená' : c.status === 'zrusena' ? 'Zrušená' : 'Dokončená'}
+                  {consultationStatusLabel(c.status)}
                 </span>
               </div>
             </div>
