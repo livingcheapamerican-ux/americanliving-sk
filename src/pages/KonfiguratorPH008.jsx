@@ -722,7 +722,7 @@ export default function KonfiguratorPH008() {
         )}
 
         {/* ── Súhrn ceny (desktop) ── */}
-        <div className="hidden md:block">
+        <div className="hidden md:block space-y-3">
           <ProstoHouseSummary
             house={HOUSE_PH008} t={t} isA0Compliant={isA0Compliant} totalPrice={totalPrice} onSendQuote={() => setModalOpen(true)}
             mountingIdx={mountingIdx} extensionIdx={extensionIdx} insulationIdx={insulationIdx} foundationIdx={foundationIdx}
@@ -733,6 +733,13 @@ export default function KonfiguratorPH008() {
             interiorDoorsCount={interiorDoorsCount} laminateFloors={laminateFloors} floorHeating={floorHeating}
             networks={networks} engineering={engineering} projectant={projectant} revision={revision}
             getPrice={getPrice}
+          />
+          <SaveQuoteButton
+            domNazov={HOUSE_PH008.name}
+            domKod="PH-008"
+            domId={domIdFromUrl}
+            celkovaCena={totalPrice}
+            konfiguratorData={{ mountingIdx, extensionIdx, insulationIdx, foundationIdx, interiorIdx, doorsIdx, facadeIdx, electricity, water, sanita, boiler, heatPump, recuperation, windowLamination, windowTint, roofWindows, fixWindows, tiltWindowsBig, tiltWindowsSmall, interiorDoorsCount, laminateFloors, floorHeating, networks, engineering, projectant, revision, typStavby }}
           />
         </div>
 
