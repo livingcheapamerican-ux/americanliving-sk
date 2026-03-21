@@ -25,8 +25,6 @@ import { useLanguage } from '../components/LanguageContext';
 import { prostoHouseTranslations } from '../components/translations/ProstoHouseTranslations';
 import ProstoHousePriceSaver from '../components/ProstoHousePriceSaver';
 import ProstoHouseSummary from '../components/konfigurator/ProstoHouseSummary';
-import KonfiguratorGaleria from '../components/konfigurator/KonfiguratorGaleria';
-import A0StatusBar from '../components/konfigurator/A0StatusBar';
 
 const HOUSE_PH008 = {
   "id": "barn",
@@ -189,39 +187,28 @@ const CounterRow = ({ label, price, value, onChange, isAdmin, onPriceChange }) =
   </div>
 );
 
-const AccordionSection = ({ id, title, icon: Icon, openId, setOpenId, children, badge, sectionPrice, isDone }) => {
+const AccordionSection = ({ id, title, icon: Icon, openId, setOpenId, children, badge }) => {
   const isOpen = openId === id;
   return (
-    <div className={`rounded-2xl border-2 overflow-hidden transition-all duration-200 ${isOpen ? 'border-red-200 shadow-md' : isDone ? 'border-green-200' : 'border-gray-200'}`}>
+    <div className={`rounded-2xl border-2 overflow-hidden transition-all duration-200 ${isOpen ? 'border-red-200 shadow-md' : 'border-gray-200'}`}>
       <button
         onClick={() => setOpenId(isOpen ? null : id)}
-        className={`w-full flex items-center justify-between p-4 md:p-5 text-left transition-colors ${isOpen ? 'bg-red-50' : isDone ? 'bg-green-50 hover:bg-green-100' : 'bg-white hover:bg-gray-50'}`}
+        className={`w-full flex items-center justify-between p-4 md:p-5 text-left transition-colors ${isOpen ? 'bg-red-50' : 'bg-white hover:bg-gray-50'}`}
       >
         <div className="flex items-center gap-3">
-          <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${isOpen ? 'bg-red-600 text-white' : isDone ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-500'}`}>
-            {isDone && !isOpen ? <Check className="w-5 h-5" /> : <Icon className="w-5 h-5" />}
+          <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${isOpen ? 'bg-red-600 text-white' : 'bg-gray-100 text-gray-500'}`}>
+            <Icon className="w-5 h-5" />
           </div>
-          <div className="flex-1 min-w-0">
-            <span className={`font-bold text-base ${isOpen ? 'text-red-900' : isDone ? 'text-green-900' : 'text-gray-800'}`}>{title}</span>
-            {badge && <div className="text-xs text-gray-500 mt-0.5 truncate">{badge}</div>}
+          <div>
+            <span className={`font-bold text-base ${isOpen ? 'text-red-900' : 'text-gray-800'}`}>{title}</span>
+            {badge && <div className="text-xs text-gray-500 mt-0.5">{badge}</div>}
           </div>
         </div>
-        <div className="flex items-center gap-2 flex-shrink-0">
-          {sectionPrice > 0 && !isOpen && (
-            <span className="text-xs font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-full">+{sectionPrice.toLocaleString()} €</span>
-          )}
-          {isOpen ? <ChevronUp className="w-5 h-5 text-red-500" /> : <ChevronDown className="w-5 h-5 text-gray-400" />}
-        </div>
+        {isOpen ? <ChevronUp className="w-5 h-5 text-red-500 flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />}
       </button>
       {isOpen && (
         <div className="p-4 md:p-5 border-t border-red-100 bg-white space-y-3">
           {children}
-          {sectionPrice > 0 && (
-            <div className="mt-2 pt-3 border-t border-gray-100 flex justify-between items-center">
-              <span className="text-xs text-gray-500 font-medium">Táto sekcia spolu:</span>
-              <span className="text-sm font-black text-red-600">+{sectionPrice.toLocaleString()} €</span>
-            </div>
-          )}
         </div>
       )}
     </div>
@@ -377,58 +364,6 @@ export default function KonfiguratorPH008() {
     const currentInsulation = HOUSE_PH008.options.insulation[insulationIdx];
     return currentInsulation.label.includes('250 mm') && heatPump && recuperation && projectant;
   }, [insulationIdx, heatPump, recuperation, projectant]);
-
-  // Ceny jednotlivých sekcií pre vizuálny sumár
-  const structurePrice = useMemo(() => {
-    let p = 0;
-    p += getPrice('mounting', mountingIdx, HOUSE_PH008.options.mounting[mountingIdx].price);
-    p += getPrice('extension', extensionIdx, HOUSE_PH008.options.extension[extensionIdx].price);
-    p += getPrice('foundation', foundationIdx, HOUSE_PH008.options.foundation[foundationIdx].price);
-    p += roofWindows * getPrice('addon', 'roofWindow', HOUSE_PH008.addons.roofWindow);
-    p += fixWindows * getPrice('addon', 'fixWindow', HOUSE_PH008.addons.fixWindow);
-    p += tiltWindowsBig * getPrice('addon', 'tiltWindowBig', HOUSE_PH008.addons.tiltWindowBig);
-    p += tiltWindowsSmall * getPrice('addon', 'tiltWindowSmall', HOUSE_PH008.addons.tiltWindowSmall);
-    return p;
-  }, [mountingIdx, extensionIdx, foundationIdx, roofWindows, fixWindows, tiltWindowsBig, tiltWindowsSmall, customPrices]);
-
-  const exteriorPrice = useMemo(() => {
-    let p = 0;
-    p += getPrice('insulation', insulationIdx, HOUSE_PH008.options.insulation[insulationIdx].price);
-    p += getPrice('facade', facadeIdx, HOUSE_PH008.options.facade[facadeIdx].price);
-    p += getPrice('doors', doorsIdx, HOUSE_PH008.options.doors[doorsIdx].price);
-    return p;
-  }, [insulationIdx, facadeIdx, doorsIdx, customPrices]);
-
-  const interiorPrice = useMemo(() => {
-    let p = 0;
-    p += getPrice('interior', interiorIdx, HOUSE_PH008.options.interior[interiorIdx].price);
-    p += interiorDoorsCount * getPrice('addon', 'interiorDoor', HOUSE_PH008.addons.interiorDoor);
-    if (windowLamination) p += getPrice('addon', 'windowLamination', HOUSE_PH008.addons.windowLamination);
-    if (windowTint) p += getPrice('addon', 'windowTint', HOUSE_PH008.addons.windowTint);
-    if (laminateFloors) p += getPrice('addon', 'laminateFloors', HOUSE_PH008.addons.laminateFloors);
-    if (floorHeating) p += getPrice('addon', 'floorHeating', HOUSE_PH008.addons.floorHeating);
-    return p;
-  }, [interiorIdx, interiorDoorsCount, windowLamination, windowTint, laminateFloors, floorHeating, customPrices]);
-
-  const techPrice = useMemo(() => {
-    let p = 0;
-    if (electricity) p += getPrice('addon', 'electricity', HOUSE_PH008.addons.electricity);
-    if (water) p += getPrice('addon', 'water', HOUSE_PH008.addons.water);
-    if (sanita) p += getPrice('addon', 'sanita', HOUSE_PH008.addons.sanita);
-    if (boiler) p += getPrice('addon', 'boiler', HOUSE_PH008.addons.boiler);
-    if (heatPump) p += getPrice('addon', 'heatPump', HOUSE_PH008.addons.heatPump);
-    if (recuperation) p += getPrice('addon', 'recuperation', HOUSE_PH008.addons.recuperation);
-    return p;
-  }, [electricity, water, sanita, boiler, heatPump, recuperation, customPrices]);
-
-  const servicesPrice = useMemo(() => {
-    let p = 0;
-    if (networks) p += getPrice('addon', 'networks', HOUSE_PH008.addons.networks);
-    if (engineering) p += getPrice('addon', 'engineering', HOUSE_PH008.addons.engineering);
-    if (projectant) p += getPrice('addon', 'projectant', HOUSE_PH008.addons.projectant);
-    if (revision) p += getPrice('addon', 'revision', HOUSE_PH008.addons.revision);
-    return p;
-  }, [networks, engineering, projectant, revision, customPrices]);
 
   const totalPrice = useMemo(() => {
     let total = HOUSE_PH008.basePrice;
@@ -590,23 +525,17 @@ export default function KonfiguratorPH008() {
               <span className="text-sm font-bold text-center leading-tight">{t('familyHouseA0')}</span>
             </button>
           </div>
+          {isA0Compliant && (
+            <div className="mt-3 p-3 bg-green-50 rounded-xl border border-green-200 flex items-center gap-2 text-xs text-green-700 font-medium">
+              <CheckCircle className="w-4 h-4 flex-shrink-0" />
+              {t('meetsA0CertDesc')}
+            </div>
+          )}
         </div>
-
-        <A0StatusBar
-          isA0Compliant={isA0Compliant}
-          insulationIdx={insulationIdx}
-          heatPump={heatPump}
-          recuperation={recuperation}
-          projectant={projectant}
-          typStavby={typStavby}
-          t={t}
-        />
 
         {/* ── Hrubá stavba ── */}
         <AccordionSection id="structure" title={t('roughConstruction')} icon={Hammer} openId={openSection} setOpenId={setOpenSection}
-          badge={`${HOUSE_PH008.options.mounting[mountingIdx].label} · ${HOUSE_PH008.options.foundation[foundationIdx].label} · ${HOUSE_PH008.options.extension[extensionIdx].label}`}
-          sectionPrice={structurePrice}
-          isDone={mountingIdx !== undefined}>
+          badge={`${HOUSE_PH008.options.mounting[mountingIdx].label} · ${HOUSE_PH008.options.foundation[foundationIdx].label} · ${HOUSE_PH008.options.extension[extensionIdx].label}`}>
           
           <SectionLabel label={t('shellAssembly')} color="orange" />
           {HOUSE_PH008.options.mounting.map((opt, i) => {
@@ -633,9 +562,7 @@ export default function KonfiguratorPH008() {
 
         {/* ── Exteriér ── */}
         <AccordionSection id="exterior" title={t('stepExterior')} icon={Thermometer} openId={openSection} setOpenId={setOpenSection}
-          badge={`${HOUSE_PH008.options.insulation[insulationIdx].label} · ${HOUSE_PH008.options.facade[facadeIdx].label} · ${HOUSE_PH008.options.doors[doorsIdx].label}`}
-          sectionPrice={exteriorPrice}
-          isDone={true}>
+          badge={`${HOUSE_PH008.options.insulation[insulationIdx].label} · ${HOUSE_PH008.options.facade[facadeIdx].label} · ${HOUSE_PH008.options.doors[doorsIdx].label}`}>
 
           <SectionLabel label={t('insulationType')} color="blue" />
           {HOUSE_PH008.options.insulation.map((opt, i) => {
@@ -673,9 +600,7 @@ export default function KonfiguratorPH008() {
 
         {/* ── Interiér ── */}
         <AccordionSection id="interior" title={t('interior')} icon={Layout} openId={openSection} setOpenId={setOpenSection}
-          badge={HOUSE_PH008.options.interior[interiorIdx].label}
-          sectionPrice={interiorPrice}
-          isDone={interiorIdx > 0 || laminateFloors || floorHeating}>
+          badge={HOUSE_PH008.options.interior[interiorIdx].label}>
 
           <SectionLabel label={t('interiorFinish')} color="emerald" />
           {HOUSE_PH008.options.interior.map((opt, i) => {
