@@ -775,7 +775,9 @@ export const prostoHouseTranslations = {
     "hydroInsulation": "hidroizolációs fólia",
     "thermalInsulation": "hőszigetelés, 150-300 mm falak, 250 mm tető",
     "vaporBarrier": "páragát",
-    "roughFloor": "durva OSB lappadló (lehetőség Anhidrit padlóra váltani)"
+    "roughFloor": "durva OSB lappadló (lehetőség Anhidrit padlóra váltani)",
+    "photoGalleryAndFloorPlans": "Fotógaléria & Alaprajzok",
+    "photoGalleryBadge": "Külső, belső fotók · 2D/3D alaprajzok"
   },
   "pl": {
     "selectProjectType": "Kliknij na typ budynku, aby uruchomić konfigurator",
