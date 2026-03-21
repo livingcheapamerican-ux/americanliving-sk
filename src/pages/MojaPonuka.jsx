@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link, useParams } from 'react-router-dom';
 import {
   ArrowLeft, FileText, Upload, MessageCircle, Calendar, CheckCircle,
   AlertCircle, Clock, XCircle, Send, MapPin, Paperclip, Download,
-  ChevronDown, User, Shield
+  User, Shield
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
@@ -57,7 +57,6 @@ export default function MojaPonuka() {
     enabled: !!id
   });
 
-  // Chat konverzácia
   const [conversation, setConversation] = useState(null);
   const [messages, setMessages] = useState([]);
   const [chatInput, setChatInput] = useState('');
@@ -76,17 +75,6 @@ export default function MojaPonuka() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
-
-  const initChat = async () => {
-    const conv = await base44.agents.createConversation({
-      agent_name: 'american_living_assistant',
-      metadata: { user_id: user.id, saved_quote_id: id, dom_nazov: quote?.dom_nazov }
-    });
-    await base44.entities.SavedQuote.update(id, { conversation_id: conv.id });
-    setConversation(conv);
-    setMessages(conv.messages || []);
-    queryClient.invalidateQueries({ queryKey: ['saved-quote', id] });
-  };
 
   const sendMessage = async () => {
     if (!chatInput.trim() || chatLoading) return;
@@ -191,6 +179,9 @@ export default function MojaPonuka() {
     { id: 'komentare', label: 'Komentáre', icon: MessageCircle },
   ];
 
+  // Detekcia PH-008 ponuky — podľa dom_kod alebo dom_nazov
+  const isPH008 = quote.dom_kod === 'PH-008' || (quote.dom_nazov || '').includes('PH-008') || (quote.dom_nazov || '').includes('Barn 48');
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -210,24 +201,15 @@ export default function MojaPonuka() {
                 <StatusIcon className="w-4 h-4" />
                 {statusCfg.label}
               </span>
-              {/* Klientské akcie */}
               {!isAdmin && quote.status === 'ulozena' && (
-                <Button
-                  size="sm"
-                  onClick={() => changeStatus('odoslana_na_posudenie')}
-                  className="bg-blue-600 hover:bg-blue-700 text-white text-xs"
-                >
+                <Button size="sm" onClick={() => changeStatus('odoslana_na_posudenie')} className="bg-blue-600 hover:bg-blue-700 text-white text-xs">
                   Odoslať na posúdenie
                 </Button>
               )}
               {!isAdmin && quote.status === 'schvalena_adminom' && (
                 <div className="flex gap-2">
-                  <Button size="sm" onClick={() => changeStatus('akceptovana_klientom')} className="bg-green-600 hover:bg-green-700 text-white text-xs">
-                    Akceptovať
-                  </Button>
-                  <Button size="sm" onClick={() => changeStatus('odmietnuta_klientom')} variant="outline" className="text-xs">
-                    Odmietnuť
-                  </Button>
+                  <Button size="sm" onClick={() => changeStatus('akceptovana_klientom')} className="bg-green-600 hover:bg-green-700 text-white text-xs">Akceptovať</Button>
+                  <Button size="sm" onClick={() => changeStatus('odmietnuta_klientom')} variant="outline" className="text-xs">Odmietnuť</Button>
                 </div>
               )}
             </div>
@@ -261,13 +243,14 @@ export default function MojaPonuka() {
         {/* TAB: Detail */}
         {activeTab === 'detail' && (
           <div className="space-y-4">
-            {/* Konfigurácia – PH-008 dostane plnú súhrnnú tabuľku */}
+
+            {/* Konfigurácia – PH-008 dostane pekný súhrn, ostatné raw tabuľku */}
             {quote.konfigurator_data && (
-              quote.dom_kod === 'PH-008' ? (
+              isPH008 ? (
                 <PH008QuoteSummary
                   konfiguratorData={quote.konfigurator_data}
                   celkovaCena={quote.celkova_cena}
-                  language={quote.konfigurator_data?.language || 'sk'}
+                  language={quote.konfigurator_data.language || 'sk'}
                 />
               ) : (
                 <div className="bg-white rounded-2xl border border-gray-200 p-6">
@@ -312,11 +295,9 @@ export default function MojaPonuka() {
                     <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
                       quote.uzemny_plan.analyza_status === 'dokoncena' ? 'bg-green-100 text-green-700' :
                       quote.uzemny_plan.analyza_status === 'v_procese' ? 'bg-blue-100 text-blue-700' :
-                      quote.uzemny_plan.analyza_status === 'cakajuca' ? 'bg-yellow-100 text-yellow-700' :
-                      'bg-gray-100 text-gray-500'
+                      'bg-yellow-100 text-yellow-700'
                     }`}>
-                      {quote.uzemny_plan.analyza_status === 'nevyziadana' ? 'Nevyžiadaná' :
-                       quote.uzemny_plan.analyza_status === 'cakajuca' ? 'Čaká na kontrolu' :
+                      {quote.uzemny_plan.analyza_status === 'cakajuca' ? 'Čaká na kontrolu' :
                        quote.uzemny_plan.analyza_status === 'v_procese' ? 'V procese' : 'Dokončená'}
                     </span>
                   </div>
@@ -366,17 +347,12 @@ export default function MojaPonuka() {
                     <input ref={uzemnyFileRef} type="file" accept=".pdf,.png,.jpg,.jpeg" className="hidden"
                       onChange={e => saveUzemnyPlan(e.target.files[0])} />
                     <div className="flex gap-2">
-                      <button
-                        onClick={() => saveUzemnyPlan(null)}
-                        disabled={savingUzemny}
-                        className="flex-1 bg-gray-900 text-white rounded-lg py-2 text-sm font-medium hover:bg-gray-800 disabled:opacity-50"
-                      >
+                      <button onClick={() => saveUzemnyPlan(null)} disabled={savingUzemny}
+                        className="flex-1 bg-gray-900 text-white rounded-lg py-2 text-sm font-medium hover:bg-gray-800 disabled:opacity-50">
                         {savingUzemny ? 'Ukladám...' : 'Uložiť údaje'}
                       </button>
-                      <button
-                        onClick={() => uzemnyFileRef.current?.click()}
-                        className="px-4 bg-gray-100 text-gray-700 rounded-lg py-2 text-sm hover:bg-gray-200"
-                      >
+                      <button onClick={() => uzemnyFileRef.current?.click()}
+                        className="px-4 bg-gray-100 text-gray-700 rounded-lg py-2 text-sm hover:bg-gray-200">
                         + súbor
                       </button>
                     </div>
@@ -403,22 +379,17 @@ export default function MojaPonuka() {
               </div>
               <div>
                 <input ref={fileInputRef} type="file" className="hidden" onChange={e => uploadDocument(e.target.files[0])} />
-                <Button
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={uploadingDoc}
-                  className="bg-red-600 hover:bg-red-700 text-white gap-2 text-sm"
-                >
+                <Button onClick={() => fileInputRef.current?.click()} disabled={uploadingDoc}
+                  className="bg-red-600 hover:bg-red-700 text-white gap-2 text-sm">
                   <Upload className="w-4 h-4" />
                   {uploadingDoc ? 'Nahrávam...' : 'Nahrať dokument'}
                 </Button>
               </div>
             </div>
-
             {(!quote.dokumenty || quote.dokumenty.length === 0) ? (
               <div className="text-center py-12 border-2 border-dashed border-gray-200 rounded-xl">
                 <FileText className="w-10 h-10 text-gray-300 mx-auto mb-3" />
                 <p className="text-gray-500">Zatiaľ neboli nahrané žiadne dokumenty</p>
-                <p className="text-xs text-gray-400 mt-1">Zmluvy, stavebné povolenia, plány...</p>
               </div>
             ) : (
               <div className="space-y-2">
@@ -455,7 +426,6 @@ export default function MojaPonuka() {
                 <div className="text-xs text-gray-400">Opýtajte sa na technické detaily, konfiguráciu alebo proces</div>
               </div>
             </div>
-
             <div className="flex-1 overflow-y-auto p-4 space-y-3">
               {messages.length === 0 && (
                 <div className="text-center py-8 text-gray-400">
@@ -463,23 +433,17 @@ export default function MojaPonuka() {
                   <p className="text-sm">Začnite konverzáciu – opýtajte sa na čokoľvek</p>
                   <div className="flex flex-wrap gap-2 justify-center mt-4">
                     {['Aké sú technické parametre?', 'Ako dlho trvá výstavba?', 'Čo je zahrnuté v cene?'].map(q => (
-                      <button key={q} onClick={() => setChatInput(q)} className="text-xs bg-gray-100 hover:bg-red-50 hover:text-red-600 border border-gray-200 rounded-full px-3 py-1.5 transition-colors">
-                        {q}
-                      </button>
+                      <button key={q} onClick={() => setChatInput(q)} className="text-xs bg-gray-100 hover:bg-red-50 hover:text-red-600 border border-gray-200 rounded-full px-3 py-1.5 transition-colors">{q}</button>
                     ))}
                   </div>
                 </div>
               )}
               {messages.filter(m => m.role !== 'system').map((msg, i) => (
                 <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm ${
-                    msg.role === 'user' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-800'
-                  }`}>
+                  <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm ${msg.role === 'user' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-800'}`}>
                     {msg.role === 'assistant' ? (
                       <ReactMarkdown className="prose prose-sm max-w-none text-sm">{msg.content}</ReactMarkdown>
-                    ) : (
-                      <p>{msg.content}</p>
-                    )}
+                    ) : <p>{msg.content}</p>}
                   </div>
                 </div>
               ))}
@@ -496,22 +460,13 @@ export default function MojaPonuka() {
               )}
               <div ref={messagesEndRef} />
             </div>
-
             <div className="p-3 border-t border-gray-100">
               <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={chatInput}
-                  onChange={e => setChatInput(e.target.value)}
+                <input type="text" value={chatInput} onChange={e => setChatInput(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendMessage()}
                   placeholder="Napíšte správu..."
-                  className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-red-400 outline-none"
-                />
-                <Button
-                  onClick={sendMessage}
-                  disabled={chatLoading || !chatInput.trim()}
-                  className="bg-red-600 hover:bg-red-700 text-white px-4 rounded-xl"
-                >
+                  className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-red-400 outline-none" />
+                <Button onClick={sendMessage} disabled={chatLoading || !chatInput.trim()} className="bg-red-600 hover:bg-red-700 text-white px-4 rounded-xl">
                   <Send className="w-4 h-4" />
                 </Button>
               </div>
@@ -524,7 +479,6 @@ export default function MojaPonuka() {
           <div className="space-y-4">
             <div className="bg-white rounded-2xl border border-gray-200 p-6">
               <h3 className="font-bold text-gray-900 mb-4">Časová os komentárov</h3>
-
               {comments.length === 0 ? (
                 <div className="text-center py-8 text-gray-400">
                   <MessageCircle className="w-8 h-8 mx-auto mb-2 opacity-30" />
@@ -534,9 +488,7 @@ export default function MojaPonuka() {
                 <div className="space-y-4">
                   {comments.map(c => (
                     <div key={c.id} className={`flex gap-3 ${c.is_admin_comment ? 'flex-row-reverse' : ''}`}>
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                        c.is_admin_comment ? 'bg-red-600' : 'bg-gray-200'
-                      }`}>
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${c.is_admin_comment ? 'bg-red-600' : 'bg-gray-200'}`}>
                         {c.is_admin_comment ? <Shield className="w-4 h-4 text-white" /> : <User className="w-4 h-4 text-gray-600" />}
                       </div>
                       <div className={`flex-1 max-w-[80%] ${c.is_admin_comment ? 'items-end' : 'items-start'} flex flex-col gap-1`}>
@@ -545,9 +497,7 @@ export default function MojaPonuka() {
                           {c.is_admin_comment && <span className="text-xs bg-red-100 text-red-600 px-1.5 py-0.5 rounded-full">Poradca</span>}
                           <span className="text-xs text-gray-400">{new Date(c.created_date).toLocaleString('sk-SK')}</span>
                         </div>
-                        <div className={`px-4 py-3 rounded-2xl text-sm ${
-                          c.is_admin_comment ? 'bg-red-50 border border-red-200 text-gray-800' : 'bg-gray-100 text-gray-800'
-                        }`}>
+                        <div className={`px-4 py-3 rounded-2xl text-sm ${c.is_admin_comment ? 'bg-red-50 border border-red-200 text-gray-800' : 'bg-gray-100 text-gray-800'}`}>
                           {c.comment_text}
                         </div>
                       </div>
@@ -556,22 +506,12 @@ export default function MojaPonuka() {
                 </div>
               )}
             </div>
-
-            {/* Pridať komentár */}
             <div className="bg-white rounded-2xl border border-gray-200 p-4">
               <div className="flex gap-2">
-                <textarea
-                  value={newComment}
-                  onChange={e => setNewComment(e.target.value)}
-                  placeholder="Napíšte komentár k tejto ponuke..."
-                  rows={2}
-                  className="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-red-400 outline-none resize-none"
-                />
-                <Button
-                  onClick={addComment}
-                  disabled={!newComment.trim()}
-                  className="bg-red-600 hover:bg-red-700 text-white px-4 self-end rounded-xl"
-                >
+                <textarea value={newComment} onChange={e => setNewComment(e.target.value)}
+                  placeholder="Napíšte komentár k tejto ponuke..." rows={2}
+                  className="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-red-400 outline-none resize-none" />
+                <Button onClick={addComment} disabled={!newComment.trim()} className="bg-red-600 hover:bg-red-700 text-white px-4 self-end rounded-xl">
                   <Send className="w-4 h-4" />
                 </Button>
               </div>
@@ -598,13 +538,9 @@ function QuoteNoteEditor({ quoteId, initialNote }) {
 
   return (
     <div className="space-y-2">
-      <textarea
-        value={note}
-        onChange={e => setNote(e.target.value)}
-        placeholder="Sem si napíšte poznámku k tejto ponuke..."
-        rows={3}
-        className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-red-400 outline-none resize-none"
-      />
+      <textarea value={note} onChange={e => setNote(e.target.value)}
+        placeholder="Sem si napíšte poznámku k tejto ponuke..." rows={3}
+        className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-red-400 outline-none resize-none" />
       <Button onClick={save} disabled={saving} size="sm" className="bg-gray-900 hover:bg-gray-800 text-white">
         {saving ? 'Ukladám...' : 'Uložiť poznámku'}
       </Button>
