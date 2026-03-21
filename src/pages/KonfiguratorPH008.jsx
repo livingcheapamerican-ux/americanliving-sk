@@ -25,6 +25,8 @@ import { useLanguage } from '../components/LanguageContext';
 import { prostoHouseTranslations } from '../components/translations/ProstoHouseTranslations';
 import ProstoHousePriceSaver from '../components/ProstoHousePriceSaver';
 import ProstoHouseSummary from '../components/konfigurator/ProstoHouseSummary';
+import KonfiguratorGaleria from '../components/konfigurator/KonfiguratorGaleria';
+import A0StatusBar from '../components/konfigurator/A0StatusBar';
 
 const HOUSE_PH008 = {
   "id": "barn",
