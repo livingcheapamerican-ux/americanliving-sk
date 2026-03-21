@@ -585,7 +585,8 @@ export default function KonfiguratorPH008() {
         </AccordionSection>
 
         {/* ── Exteriér ── */}
-        <AccordionSection id="exterior" title={t('stepExterior')} icon={Thermometer} openId={openSection} setOpenId={setOpenSection}
+        <AccordionSection id="exterior" title={t('stepExterior')} icon={Thermometer} openId={openSection} setOpenId={handleSectionOpen}
+          isDone={visitedSections.has('exterior') && openSection !== 'exterior'}
           badge={`${HOUSE_PH008.options.insulation[insulationIdx].label} · ${HOUSE_PH008.options.facade[facadeIdx].label} · ${HOUSE_PH008.options.doors[doorsIdx].label}`}>
 
           <SectionLabel label={t('insulationType')} color="blue" />
