@@ -739,7 +739,7 @@ export default function KonfiguratorPH008() {
             domKod="PH-008"
             domId={domIdFromUrl}
             celkovaCena={totalPrice}
-            konfiguratorData={{ mountingIdx, extensionIdx, insulationIdx, foundationIdx, interiorIdx, doorsIdx, facadeIdx, electricity, water, sanita, boiler, heatPump, recuperation, windowLamination, windowTint, roofWindows, fixWindows, tiltWindowsBig, tiltWindowsSmall, interiorDoorsCount, laminateFloors, floorHeating, networks, engineering, projectant, revision, typStavby }}
+            konfiguratorData={{ mountingIdx, extensionIdx, insulationIdx, foundationIdx, interiorIdx, doorsIdx, facadeIdx, electricity, water, sanita, boiler, heatPump, recuperation, windowLamination, windowTint, roofWindows, fixWindows, tiltWindowsBig, tiltWindowsSmall, interiorDoorsCount, laminateFloors, floorHeating, networks, engineering, projectant, revision, typStavby, language }}
           />
         </div>
 
@@ -762,7 +762,7 @@ export default function KonfiguratorPH008() {
             domKod="PH-008"
             domId={domIdFromUrl}
             celkovaCena={totalPrice}
-            konfiguratorData={{ mountingIdx, extensionIdx, insulationIdx, foundationIdx, interiorIdx, doorsIdx, facadeIdx, electricity, water, sanita, boiler, heatPump, recuperation, windowLamination, windowTint, roofWindows, fixWindows, tiltWindowsBig, tiltWindowsSmall, interiorDoorsCount, laminateFloors, floorHeating, networks, engineering, projectant, revision, typStavby }}
+            konfiguratorData={{ mountingIdx, extensionIdx, insulationIdx, foundationIdx, interiorIdx, doorsIdx, facadeIdx, electricity, water, sanita, boiler, heatPump, recuperation, windowLamination, windowTint, roofWindows, fixWindows, tiltWindowsBig, tiltWindowsSmall, interiorDoorsCount, laminateFloors, floorHeating, networks, engineering, projectant, revision, typStavby, language }}
           />
           <button
             onClick={() => setModalOpen(true)}
