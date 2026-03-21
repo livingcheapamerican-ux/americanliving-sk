@@ -141,6 +141,8 @@ function LayoutContent({ children }) {
     { name: t('about'), path: createPageUrl("ONas"), icon: Info },
     { name: t('blog'), path: createPageUrl("Blog"), icon: BlogIcon },
     { name: t('contact'), path: createPageUrl("Kontakt"), icon: Phone },
+    // Moje Konto – zatiaľ len pre adminov
+    ...(isAdmin || user?.super_admin ? [{ name: '👤 Moje Konto', path: '/MojeKonto', icon: Users, isMyAccount: true }] : []),
   ];
 
   const adminNavItems = isAdmin ? [
