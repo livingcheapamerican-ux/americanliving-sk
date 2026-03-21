@@ -28,6 +28,7 @@ import ProstoHouseSummary from '../components/konfigurator/ProstoHouseSummary';
 import SectionPriceSummary from '../components/konfigurator/SectionPriceSummary';
 import A0StatusHint from '../components/konfigurator/A0StatusHint';
 import KonfiguratorGaleria from '../components/konfigurator/KonfiguratorGaleria';
+import SaveQuoteButton from '../components/SaveQuoteButton';
 
 const HOUSE_PH008 = {
   "id": "barn",
