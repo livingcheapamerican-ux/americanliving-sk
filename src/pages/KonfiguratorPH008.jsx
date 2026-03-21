@@ -534,12 +534,15 @@ export default function KonfiguratorPH008() {
               <span className="text-sm font-bold text-center leading-tight">{t('familyHouseA0')}</span>
             </button>
           </div>
-          {isA0Compliant && (
-            <div className="mt-3 p-3 bg-green-50 rounded-xl border border-green-200 flex items-center gap-2 text-xs text-green-700 font-medium">
-              <CheckCircle className="w-4 h-4 flex-shrink-0" />
-              {t('meetsA0CertDesc')}
-            </div>
-          )}
+          <A0StatusHint
+            isA0Compliant={isA0Compliant}
+            insulationIdx={insulationIdx}
+            heatPump={heatPump}
+            recuperation={recuperation}
+            projectant={projectant}
+            onGoToSection={handleSectionOpen}
+            t={t}
+          />
         </div>
 
         {/* ── Hrubá stavba ── */}
