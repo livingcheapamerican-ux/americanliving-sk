@@ -332,6 +332,12 @@ export default function KonfiguratorPH008() {
   const [modalOpen, setModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [mobileSummaryOpen, setMobileSummaryOpen] = useState(false);
+  const [visitedSections, setVisitedSections] = useState(new Set(['structure']));
+
+  const handleSectionOpen = (id) => {
+    setOpenSection(id);
+    if (id) setVisitedSections(prev => new Set([...prev, id]));
+  };
 
   useEffect(() => {
     if (domFromDb?.konfigurator_custom_ceny_prosto_house?.['ph008']) {
