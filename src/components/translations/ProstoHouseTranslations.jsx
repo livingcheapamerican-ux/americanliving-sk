@@ -619,7 +619,9 @@ export const prostoHouseTranslations = {
     "hydroInsulation": "film d'hydro-isolation",
     "thermalInsulation": "isolation thermique, 150 à 300 mm murs, 250 mm toit",
     "vaporBarrier": "pare-vapeur",
-    "roughFloor": "plancher brut en panneaux OSB (option de changement pour sol Anhydrite)"
+    "roughFloor": "plancher brut en panneaux OSB (option de changement pour sol Anhydrite)",
+    "photoGalleryAndFloorPlans": "Galerie photo & Plans",
+    "photoGalleryBadge": "Photos extérieur, intérieur · Plans 2D/3D"
   },
   "hu": {
     "selectProjectType": "Kattintson az épülettípusra a konfigurátor indításához",
