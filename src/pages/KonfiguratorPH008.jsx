@@ -747,7 +747,7 @@ export default function KonfiguratorPH008() {
 
       {/* ── Fixný mobilný panel ── */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-gray-200 z-50 md:hidden shadow-[0_-4px_20px_-4px_rgba(0,0,0,0.12)]">
-        <div className="px-4 py-2 flex items-center gap-3">
+        <div className="px-4 py-2 flex items-center gap-2">
           <button onClick={() => setMobileSummaryOpen(true)} className="flex-1 text-left">
             <div className="text-[11px] text-gray-500 font-medium flex items-center gap-1">
               {t('totalWithVAT')} <Eye className="w-3 h-3 text-gray-400" />
@@ -757,9 +757,16 @@ export default function KonfiguratorPH008() {
               {isA0Compliant ? `✓ ${t('meetsA0Cert')}` : t('recreationalUse')}
             </div>
           </button>
+          <SaveQuoteButton
+            domNazov={HOUSE_PH008.name}
+            domKod="PH-008"
+            domId={domIdFromUrl}
+            celkovaCena={totalPrice}
+            konfiguratorData={{ mountingIdx, extensionIdx, insulationIdx, foundationIdx, interiorIdx, doorsIdx, facadeIdx, electricity, water, sanita, boiler, heatPump, recuperation, windowLamination, windowTint, roofWindows, fixWindows, tiltWindowsBig, tiltWindowsSmall, interiorDoorsCount, laminateFloors, floorHeating, networks, engineering, projectant, revision, typStavby }}
+          />
           <button
             onClick={() => setModalOpen(true)}
-            className="flex-shrink-0 bg-red-600 hover:bg-red-700 text-white font-bold px-5 py-3 rounded-xl flex items-center gap-2 shadow-lg active:scale-95 transition-all"
+            className="flex-shrink-0 bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-3 rounded-xl flex items-center gap-2 shadow-lg active:scale-95 transition-all"
           >
             <Send className="w-4 h-4" />
             <span className="text-sm">{t('sendQuote')}</span>
