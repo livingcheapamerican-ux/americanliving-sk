@@ -151,7 +151,9 @@ export const prostoHouseTranslations = {
     "hydroInsulation": "hydroizolačná fólia",
     "thermalInsulation": "tepelná izolácia, 150 až 300 mm steny, 250 mm strecha",
     "vaporBarrier": "parozábrana",
-    "roughFloor": "hrubá podlaha z OSB dosiek ( možnosť zmeny za Anhydritovú podlahu )"
+    "roughFloor": "hrubá podlaha z OSB dosiek ( možnosť zmeny za Anhydritovú podlahu )",
+    "photoGalleryAndFloorPlans": "Fotogaléria & Pôdorysy",
+    "photoGalleryBadge": "Fotky exteriéru, interiéru · 2D/3D pôdorysy"
   },
   "en": {
     "selectProjectType": "Click on the building type to start the configurator",
