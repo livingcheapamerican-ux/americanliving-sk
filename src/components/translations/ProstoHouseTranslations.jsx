@@ -463,7 +463,9 @@ export const prostoHouseTranslations = {
     "hydroInsulation": "Hydroisolationsfolie",
     "thermalInsulation": "Wärmedämmung, 150 bis 300 mm Wände, 250 mm Dach",
     "vaporBarrier": "Dampfsperre",
-    "roughFloor": "Rohboden aus OSB-Platten (Option auf Anhydritboden)"
+    "roughFloor": "Rohboden aus OSB-Platten (Option auf Anhydritboden)",
+    "photoGalleryAndFloorPlans": "Fotogalerie & Grundrisse",
+    "photoGalleryBadge": "Außen-, Innenfotos · 2D/3D-Grundrisse"
   },
   "fr": {
     "selectProjectType": "Cliquez sur le type de bâtiment pour démarrer le configurateur",
