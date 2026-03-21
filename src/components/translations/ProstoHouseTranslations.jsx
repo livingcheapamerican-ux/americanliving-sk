@@ -1087,7 +1087,9 @@ export const prostoHouseTranslations = {
     "hydroInsulation": "гідроізоляційна плівка",
     "thermalInsulation": "теплоізоляція, 150-300 мм стіни, 250 мм дах",
     "vaporBarrier": "пароізоляція",
-    "roughFloor": "чорнова підлога з OSB-плит (можливість заміни на ангідритну підлогу)"
+    "roughFloor": "чорнова підлога з OSB-плит (можливість заміни на ангідритну підлогу)",
+    "photoGalleryAndFloorPlans": "Фотогалерея & Плани",
+    "photoGalleryBadge": "Фото екстер'єру, інтер'єру · 2D/3D плани"
   },
   "sr": {
     "selectProjectType": "Кликните на тип зграде да покренете конфигуратор",
