@@ -714,8 +714,8 @@ export default function KonfiguratorPH008() {
 
         {/* ── Fotogaléria + Pôdorysy ── */}
         {domFromDb && (
-          <AccordionSection id="galeria" title="Fotogaléria & Pôdorysy" icon={Eye} openId={openSection} setOpenId={handleSectionOpen}
-            badge="Fotky exteriéru, interiéru · 2D/3D pôdorysy">
+          <AccordionSection id="galeria" title={t('photoGalleryAndFloorPlans')} icon={Eye} openId={openSection} setOpenId={handleSectionOpen}
+            badge={t('photoGalleryBadge')}>
             <KonfiguratorGaleria dom={domFromDb} facadeIdx={facadeIdx} interiorIdx={interiorIdx} />
           </AccordionSection>
         )}
