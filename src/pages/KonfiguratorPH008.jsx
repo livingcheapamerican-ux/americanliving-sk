@@ -378,6 +378,58 @@ export default function KonfiguratorPH008() {
     return currentInsulation.label.includes('250 mm') && heatPump && recuperation && projectant;
   }, [insulationIdx, heatPump, recuperation, projectant]);
 
+  // Ceny jednotlivých sekcií pre vizuálny sumár
+  const structurePrice = useMemo(() => {
+    let p = 0;
+    p += getPrice('mounting', mountingIdx, HOUSE_PH008.options.mounting[mountingIdx].price);
+    p += getPrice('extension', extensionIdx, HOUSE_PH008.options.extension[extensionIdx].price);
+    p += getPrice('foundation', foundationIdx, HOUSE_PH008.options.foundation[foundationIdx].price);
+    p += roofWindows * getPrice('addon', 'roofWindow', HOUSE_PH008.addons.roofWindow);
+    p += fixWindows * getPrice('addon', 'fixWindow', HOUSE_PH008.addons.fixWindow);
+    p += tiltWindowsBig * getPrice('addon', 'tiltWindowBig', HOUSE_PH008.addons.tiltWindowBig);
+    p += tiltWindowsSmall * getPrice('addon', 'tiltWindowSmall', HOUSE_PH008.addons.tiltWindowSmall);
+    return p;
+  }, [mountingIdx, extensionIdx, foundationIdx, roofWindows, fixWindows, tiltWindowsBig, tiltWindowsSmall, customPrices]);
+
+  const exteriorPrice = useMemo(() => {
+    let p = 0;
+    p += getPrice('insulation', insulationIdx, HOUSE_PH008.options.insulation[insulationIdx].price);
+    p += getPrice('facade', facadeIdx, HOUSE_PH008.options.facade[facadeIdx].price);
+    p += getPrice('doors', doorsIdx, HOUSE_PH008.options.doors[doorsIdx].price);
+    return p;
+  }, [insulationIdx, facadeIdx, doorsIdx, customPrices]);
+
+  const interiorPrice = useMemo(() => {
+    let p = 0;
+    p += getPrice('interior', interiorIdx, HOUSE_PH008.options.interior[interiorIdx].price);
+    p += interiorDoorsCount * getPrice('addon', 'interiorDoor', HOUSE_PH008.addons.interiorDoor);
+    if (windowLamination) p += getPrice('addon', 'windowLamination', HOUSE_PH008.addons.windowLamination);
+    if (windowTint) p += getPrice('addon', 'windowTint', HOUSE_PH008.addons.windowTint);
+    if (laminateFloors) p += getPrice('addon', 'laminateFloors', HOUSE_PH008.addons.laminateFloors);
+    if (floorHeating) p += getPrice('addon', 'floorHeating', HOUSE_PH008.addons.floorHeating);
+    return p;
+  }, [interiorIdx, interiorDoorsCount, windowLamination, windowTint, laminateFloors, floorHeating, customPrices]);
+
+  const techPrice = useMemo(() => {
+    let p = 0;
+    if (electricity) p += getPrice('addon', 'electricity', HOUSE_PH008.addons.electricity);
+    if (water) p += getPrice('addon', 'water', HOUSE_PH008.addons.water);
+    if (sanita) p += getPrice('addon', 'sanita', HOUSE_PH008.addons.sanita);
+    if (boiler) p += getPrice('addon', 'boiler', HOUSE_PH008.addons.boiler);
+    if (heatPump) p += getPrice('addon', 'heatPump', HOUSE_PH008.addons.heatPump);
+    if (recuperation) p += getPrice('addon', 'recuperation', HOUSE_PH008.addons.recuperation);
+    return p;
+  }, [electricity, water, sanita, boiler, heatPump, recuperation, customPrices]);
+
+  const servicesPrice = useMemo(() => {
+    let p = 0;
+    if (networks) p += getPrice('addon', 'networks', HOUSE_PH008.addons.networks);
+    if (engineering) p += getPrice('addon', 'engineering', HOUSE_PH008.addons.engineering);
+    if (projectant) p += getPrice('addon', 'projectant', HOUSE_PH008.addons.projectant);
+    if (revision) p += getPrice('addon', 'revision', HOUSE_PH008.addons.revision);
+    return p;
+  }, [networks, engineering, projectant, revision, customPrices]);
+
   const totalPrice = useMemo(() => {
     let total = HOUSE_PH008.basePrice;
     total += getPrice('mounting', mountingIdx, HOUSE_PH008.options.mounting[mountingIdx].price);
