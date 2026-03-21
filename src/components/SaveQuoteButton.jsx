@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Bookmark, BookmarkCheck, LogIn } from 'lucide-react';
 import { toast } from 'sonner';
-import { Link } from 'react-router-dom';
+import { useLanguage } from './LanguageContext';
+import { useAccountT } from './translations/AccountTranslations';
 
 /**
  * Tlačidlo "Uložiť do môjho konta" pre konfigurátor
@@ -12,6 +13,9 @@ import { Link } from 'react-router-dom';
 export default function SaveQuoteButton({ domNazov, domKod, domId, celkovaCena, konfiguratorData }) {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+
+  const { language } = useLanguage();
+  const t = useAccountT(language);
 
   const { data: user } = useQuery({
     queryKey: ['current-user'],
@@ -40,10 +44,10 @@ export default function SaveQuoteButton({ domNazov, domKod, domId, celkovaCena, 
     });
     setSaving(false);
     setSaved(true);
-    toast.success('✓ Ponuka uložená do vášho konta', {
-      description: 'Nájdete ju v sekcii Moje Konto',
+    toast.success(t('quoteSavedTitle'), {
+      description: t('quoteSavedDesc'),
       action: {
-        label: 'Zobraziť',
+        label: t('show'),
         onClick: () => window.location.href = '/MojeKonto'
       }
     });
@@ -57,7 +61,7 @@ export default function SaveQuoteButton({ domNazov, domKod, domId, celkovaCena, 
         className="flex items-center gap-2 px-4 py-3 border-2 border-gray-300 hover:border-gray-400 rounded-xl text-sm font-medium text-gray-600 hover:text-gray-800 transition-all"
       >
         <LogIn className="w-4 h-4" />
-        Uložiť do konta
+        {t('saveToAccountShort')}
       </button>
     );
   }
@@ -75,17 +79,17 @@ export default function SaveQuoteButton({ domNazov, domKod, domId, celkovaCena, 
       {saved ? (
         <>
           <BookmarkCheck className="w-4 h-4" />
-          Uložené v konte
+          {t('savedInAccount')}
         </>
       ) : saving ? (
         <>
           <div className="w-4 h-4 border-2 border-gray-400 border-t-gray-700 rounded-full animate-spin" />
-          Ukladám...
+          {t('saving')}
         </>
       ) : (
         <>
           <Bookmark className="w-4 h-4" />
-          Uložiť do môjho konta
+          {t('saveToAccount')}
         </>
       )}
     </button>
