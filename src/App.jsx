@@ -10,6 +10,9 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import Kalkulacka from './pages/Kalkulacka';
+import MojeKonto from './pages/MojeKonto';
+import MojaPonuka from './pages/MojaPonuka';
+import AdminMojeKonto from './pages/AdminMojeKonto';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
