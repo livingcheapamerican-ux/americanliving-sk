@@ -1399,7 +1399,9 @@ export const prostoHouseTranslations = {
     "hydroInsulation": "hidroizolacijska folija",
     "thermalInsulation": "toplinska izolacija, 150-300 mm zidovi, 250 mm krov",
     "vaporBarrier": "parna barijera",
-    "roughFloor": "gruби pod od OSB ploča (mogućnost promjene na anhidritni pod)"
+    "roughFloor": "gruби pod od OSB ploča (mogućnost promjene na anhidritni pod)",
+    "photoGalleryAndFloorPlans": "Foto galerija & Tlocrti",
+    "photoGalleryBadge": "Fotografije eksterijera, interijera · 2D/3D tlocrti"
   },
   "el": {
     "selectProjectType": "Κάντε κλικ στον τύπο κτιρίου για να ξεκινήσετε τον διαμορφωτή",
