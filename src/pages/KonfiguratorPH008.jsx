@@ -571,6 +571,17 @@ export default function KonfiguratorPH008() {
             const descs = { 0: t('noFoundationsDesc'), 1: t('pilotsFootingsDesc'), 2: t('foundationSlabDesc'), 3: t('stripFoundationsDesc') };
             return <OptionCard key={i} label={labels[i] || opt.label} price={getPrice('foundation', i, opt.price)} description={descs[i] || opt.description} selected={foundationIdx === i} onClick={() => setFoundationIdx(i)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('foundation', i, p)} />;
           })}
+
+          <SectionPriceSummary
+            items={[
+              ...(mountingIdx > 0 ? [{ label: `${t('assemblyItem')}: ${HOUSE_PH008.options.mounting[mountingIdx].label}`, price: getPrice('mounting', mountingIdx, HOUSE_PH008.options.mounting[mountingIdx].price) }] : []),
+              ...(extensionIdx > 0 ? [{ label: `Predĺženie: ${HOUSE_PH008.options.extension[extensionIdx].label}`, price: getPrice('extension', extensionIdx, HOUSE_PH008.options.extension[extensionIdx].price) }] : []),
+              ...(foundationIdx > 0 ? [{ label: `${t('foundationsItem')}: ${HOUSE_PH008.options.foundation[foundationIdx].label}`, price: getPrice('foundation', foundationIdx, HOUSE_PH008.options.foundation[foundationIdx].price) }] : []),
+              ...(!mountingIdx && !extensionIdx && !foundationIdx ? [{ label: 'Základná konfigurácia (v cene)', price: 0 }] : []),
+            ]}
+            onNextSection={() => handleSectionOpen('exterior')}
+            nextLabel={t('stepExterior')}
+          />
         </AccordionSection>
 
         {/* ── Exteriér ── */}
