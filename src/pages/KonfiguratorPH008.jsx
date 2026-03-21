@@ -681,10 +681,25 @@ export default function KonfiguratorPH008() {
           <SectionLabel label={t('a0Standard')} color="green" />
           <AddonRow label={t('heatPump')} price={getPrice('addon', 'heatPump', HOUSE_PH008.addons.heatPump)} checked={heatPump} onChange={() => setHeatPump(!heatPump)} locked={typStavby === 'rodinny_dom'} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'heatPump', p)} t={t} />
           <AddonRow label={t('recuperation')} price={getPrice('addon', 'recuperation', HOUSE_PH008.addons.recuperation)} checked={recuperation} onChange={() => setRecuperation(!recuperation)} locked={typStavby === 'rodinny_dom'} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'recuperation', p)} t={t} />
+
+          <SectionPriceSummary
+            items={[
+              ...(electricity ? [{ label: t('electricalInstallation'), price: getPrice('addon', 'electricity', HOUSE_PH008.addons.electricity) }] : []),
+              ...(water ? [{ label: t('waterAndDrainage'), price: getPrice('addon', 'water', HOUSE_PH008.addons.water) }] : []),
+              ...(sanita ? [{ label: t('sanitaryComplete'), price: getPrice('addon', 'sanita', HOUSE_PH008.addons.sanita) }] : []),
+              ...(boiler ? [{ label: t('boilerItem'), price: getPrice('addon', 'boiler', HOUSE_PH008.addons.boiler) }] : []),
+              ...(heatPump ? [{ label: t('heatPumpItem'), price: getPrice('addon', 'heatPump', HOUSE_PH008.addons.heatPump) }] : []),
+              ...(recuperation ? [{ label: t('recuperationItem'), price: getPrice('addon', 'recuperation', HOUSE_PH008.addons.recuperation) }] : []),
+              ...(!electricity && !water && !sanita && !boiler && !heatPump && !recuperation ? [{ label: 'Bez technológií', price: 0 }] : []),
+            ]}
+            onNextSection={() => handleSectionOpen('services')}
+            nextLabel={t('services')}
+          />
         </AccordionSection>
 
         {/* ── Služby ── */}
-        <AccordionSection id="services" title={t('services')} icon={FileText} openId={openSection} setOpenId={setOpenSection}>
+        <AccordionSection id="services" title={t('services')} icon={FileText} openId={openSection} setOpenId={handleSectionOpen}
+          isDone={visitedSections.has('services') && openSection !== 'services'}>
           <SectionLabel label="Dokumentácia a inžiniering" color="gray" />
           <AddonRow label={t('projectant')} price={getPrice('addon', 'projectant', HOUSE_PH008.addons.projectant)} checked={projectant} onChange={() => setProjectant(!projectant)} locked={typStavby === 'rodinny_dom'} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'projectant', p)} t={t} />
           <AddonRow label={t('engineering')} description={t('engineeringDesc')} price={getPrice('addon', 'engineering', HOUSE_PH008.addons.engineering)} checked={engineering} onChange={() => setEngineering(!engineering)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'engineering', p)} t={t} />
