@@ -633,7 +633,9 @@ export default function KonfiguratorPH008() {
 
         {/* ── Exteriér ── */}
         <AccordionSection id="exterior" title={t('stepExterior')} icon={Thermometer} openId={openSection} setOpenId={setOpenSection}
-          badge={`${HOUSE_PH008.options.insulation[insulationIdx].label} · ${HOUSE_PH008.options.facade[facadeIdx].label} · ${HOUSE_PH008.options.doors[doorsIdx].label}`}>
+          badge={`${HOUSE_PH008.options.insulation[insulationIdx].label} · ${HOUSE_PH008.options.facade[facadeIdx].label} · ${HOUSE_PH008.options.doors[doorsIdx].label}`}
+          sectionPrice={exteriorPrice}
+          isDone={true}>
 
           <SectionLabel label={t('insulationType')} color="blue" />
           {HOUSE_PH008.options.insulation.map((opt, i) => {
