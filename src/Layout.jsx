@@ -33,7 +33,7 @@ function LayoutContent({ children }) {
   const { t, language, setLanguage } = useLanguage();
 
   // Noindex meta tag for admin/internal pages
-  const noindexPaths = ['/AIMarketingInsights', '/AdminCennik', '/AutoSEOTrigger', '/AdminAnalyzaSessions', '/Admin', '/Test', '/Auto', '/Regeneruj'];
+  const noindexPaths = ['/AIMarketingInsights', '/AdminCennik', '/AutoSEOTrigger', '/AdminAnalyzaSessions', '/Admin', '/Test', '/Auto', '/Regeneruj', '/MojeKonto', '/MojaPonuka', '/AdminMojeKonto'];
   const shouldNoindex = noindexPaths.some(path => location.pathname.startsWith(path));
 
   // Dynamic canonical for current page
