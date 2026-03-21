@@ -653,10 +653,25 @@ export default function KonfiguratorPH008() {
           <AddonRow label={t('tintedGlass')} price={getPrice('addon', 'windowTint', HOUSE_PH008.addons.windowTint)} checked={windowTint} onChange={() => setWindowTint(!windowTint)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'windowTint', p)} t={t} />
           <AddonRow label={t('laminateFloors')} price={getPrice('addon', 'laminateFloors', HOUSE_PH008.addons.laminateFloors)} checked={laminateFloors} onChange={() => setLaminateFloors(!laminateFloors)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'laminateFloors', p)} t={t} />
           <AddonRow label={t('floorHeating')} price={getPrice('addon', 'floorHeating', HOUSE_PH008.addons.floorHeating)} checked={floorHeating} onChange={() => setFloorHeating(!floorHeating)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'floorHeating', p)} t={t} />
+
+          <SectionPriceSummary
+            items={[
+              ...(interiorIdx > 0 ? [{ label: `Interiér: ${HOUSE_PH008.options.interior[interiorIdx].label}`, price: getPrice('interior', interiorIdx, HOUSE_PH008.options.interior[interiorIdx].price) }] : []),
+              ...(interiorDoorsCount > 0 ? [{ label: `Interiérové dvere (${interiorDoorsCount} ks)`, price: interiorDoorsCount * getPrice('addon', 'interiorDoor', HOUSE_PH008.addons.interiorDoor) }] : []),
+              ...(windowLamination ? [{ label: t('windowLaminationItem'), price: getPrice('addon', 'windowLamination', HOUSE_PH008.addons.windowLamination) }] : []),
+              ...(windowTint ? [{ label: t('tintedGlassItem'), price: getPrice('addon', 'windowTint', HOUSE_PH008.addons.windowTint) }] : []),
+              ...(laminateFloors ? [{ label: t('laminateFloorsItem'), price: getPrice('addon', 'laminateFloors', HOUSE_PH008.addons.laminateFloors) }] : []),
+              ...(floorHeating ? [{ label: t('floorHeatingItem'), price: getPrice('addon', 'floorHeating', HOUSE_PH008.addons.floorHeating) }] : []),
+              ...(!interiorIdx && !interiorDoorsCount && !windowLamination && !windowTint && !laminateFloors && !floorHeating ? [{ label: 'Bez doplnkov interiéru', price: 0 }] : []),
+            ]}
+            onNextSection={() => handleSectionOpen('tech')}
+            nextLabel={t('technologies')}
+          />
         </AccordionSection>
 
         {/* ── Technológie ── */}
-        <AccordionSection id="tech" title={t('technologies')} icon={Zap} openId={openSection} setOpenId={setOpenSection}>
+        <AccordionSection id="tech" title={t('technologies')} icon={Zap} openId={openSection} setOpenId={handleSectionOpen}
+          isDone={visitedSections.has('tech') && openSection !== 'tech'}>
           <SectionLabel label="Rozvody" color="gray" />
           <AddonRow label={t('electricalWiring')} price={getPrice('addon', 'electricity', HOUSE_PH008.addons.electricity)} checked={electricity} onChange={() => setElectricity(!electricity)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'electricity', p)} t={t} />
           <AddonRow label={t('waterDrainage')} price={getPrice('addon', 'water', HOUSE_PH008.addons.water)} checked={water} onChange={() => setWater(!water)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'water', p)} t={t} />
