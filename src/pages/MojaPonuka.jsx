@@ -10,6 +10,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import ReactMarkdown from 'react-markdown';
+import QuoteConfigSummary from '../components/QuoteConfigSummary';
 
 const STATUS_CONFIG = {
   ulozena: { label: 'Uložená', color: 'bg-gray-100 text-gray-700', icon: Clock },
