@@ -1555,6 +1555,8 @@ export const prostoHouseTranslations = {
     "hydroInsulation": "υδρομονωτική μεμβράνη",
     "thermalInsulation": "θερμομόνωση, 150-300 mm τοίχοι, 250 mm οροφή",
     "vaporBarrier": "φράγμα ατμών",
-    "roughFloor": "τραχύ πάτωμα από πλάκες OSB (δυνατότητα αλλαγής σε Ανυδρίτη δάπεδο)"
+    "roughFloor": "τραχύ πάτωμα από πλάκες OSB (δυνατότητα αλλαγής σε Ανυδρίτη δάπεδο)",
+    "photoGalleryAndFloorPlans": "Φωτογκαλερί & Κατόψεις",
+    "photoGalleryBadge": "Φωτογραφίες εξωτερικού, εσωτερικού · 2D/3D κατόψεις"
   }
 };
