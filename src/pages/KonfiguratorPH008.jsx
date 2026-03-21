@@ -604,7 +604,9 @@ export default function KonfiguratorPH008() {
 
         {/* ── Hrubá stavba ── */}
         <AccordionSection id="structure" title={t('roughConstruction')} icon={Hammer} openId={openSection} setOpenId={setOpenSection}
-          badge={`${HOUSE_PH008.options.mounting[mountingIdx].label} · ${HOUSE_PH008.options.foundation[foundationIdx].label} · ${HOUSE_PH008.options.extension[extensionIdx].label}`}>
+          badge={`${HOUSE_PH008.options.mounting[mountingIdx].label} · ${HOUSE_PH008.options.foundation[foundationIdx].label} · ${HOUSE_PH008.options.extension[extensionIdx].label}`}
+          sectionPrice={structurePrice}
+          isDone={mountingIdx !== undefined}>
           
           <SectionLabel label={t('shellAssembly')} color="orange" />
           {HOUSE_PH008.options.mounting.map((opt, i) => {
