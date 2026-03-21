@@ -261,20 +261,11 @@ export default function MojaPonuka() {
         {/* TAB: Detail */}
         {activeTab === 'detail' && (
           <div className="space-y-4">
-            {/* Konfigurácia */}
+            {/* Konfigurácia – súhrnná tabuľka */}
             {quote.konfigurator_data && (
               <div className="bg-white rounded-2xl border border-gray-200 p-6">
                 <h3 className="font-bold text-gray-900 mb-4">Konfigurácia</h3>
-                <div className="grid sm:grid-cols-2 gap-3">
-                  {Object.entries(quote.konfigurator_data).map(([key, val]) => (
-                    typeof val !== 'object' && (
-                      <div key={key} className="flex justify-between text-sm py-2 border-b border-gray-50">
-                        <span className="text-gray-500">{key}</span>
-                        <span className="font-medium text-gray-900">{String(val)}</span>
-                      </div>
-                    )
-                  ))}
-                </div>
+                <QuoteConfigSummary quote={quote} />
               </div>
             )}
 
