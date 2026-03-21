@@ -621,10 +621,21 @@ export default function KonfiguratorPH008() {
               <CounterRow key={idx} label={item.l} price={item.p} value={item.v} onChange={item.s} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', item.k, p)} />
             ))}
           </div>
+
+          <SectionPriceSummary
+            items={[
+              { label: `Izolácia: ${HOUSE_PH008.options.insulation[insulationIdx].label}`, price: getPrice('insulation', insulationIdx, HOUSE_PH008.options.insulation[insulationIdx].price) },
+              { label: `Fasáda: ${HOUSE_PH008.options.facade[facadeIdx].label}`, price: getPrice('facade', facadeIdx, HOUSE_PH008.options.facade[facadeIdx].price) },
+              { label: `Dvere: ${HOUSE_PH008.options.doors[doorsIdx].label}`, price: getPrice('doors', doorsIdx, HOUSE_PH008.options.doors[doorsIdx].price) },
+            ]}
+            onNextSection={() => handleSectionOpen('interior')}
+            nextLabel={t('interior')}
+          />
         </AccordionSection>
 
         {/* ── Interiér ── */}
-        <AccordionSection id="interior" title={t('interior')} icon={Layout} openId={openSection} setOpenId={setOpenSection}
+        <AccordionSection id="interior" title={t('interior')} icon={Layout} openId={openSection} setOpenId={handleSectionOpen}
+          isDone={visitedSections.has('interior') && openSection !== 'interior'}
           badge={HOUSE_PH008.options.interior[interiorIdx].label}>
 
           <SectionLabel label={t('interiorFinish')} color="emerald" />
