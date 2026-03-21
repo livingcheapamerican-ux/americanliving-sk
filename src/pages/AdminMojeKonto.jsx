@@ -5,8 +5,9 @@ import { Link } from 'react-router-dom';
 import {
   Users, FileText, MessageCircle, Calendar, Search, Filter,
   ChevronRight, CheckCircle, AlertCircle, Clock, XCircle,
-  Eye, Shield, Home, TrendingUp
+  Eye, Shield, Home, TrendingUp, BarChart2
 } from 'lucide-react';
+import QuoteDashboardAnalytics from '@/components/admin/QuoteDashboardAnalytics';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
@@ -76,6 +77,7 @@ export default function AdminMojeKonto() {
 
   const tabs = [
     { id: 'prehled', label: 'Prehľad', icon: TrendingUp },
+    { id: 'analytika', label: 'Analytika', icon: BarChart2 },
     { id: 'ponuky', label: `Ponuky (${allQuotes.length})`, icon: FileText },
     { id: 'konzultacie', label: `Konzultácie (${consultations.filter(c => c.status === 'nova').length})`, icon: Calendar },
     { id: 'uzivatelia', label: `Používatelia (${allUsers.length})`, icon: Users },
@@ -141,6 +143,15 @@ export default function AdminMojeKonto() {
               </div>
             )}
           </div>
+        )}
+
+        {/* TAB: Analytika */}
+        {activeTab === 'analytika' && (
+          <QuoteDashboardAnalytics
+            allQuotes={allQuotes}
+            consultations={consultations}
+            allUsers={allUsers}
+          />
         )}
 
         {/* TAB: Ponuky */}
