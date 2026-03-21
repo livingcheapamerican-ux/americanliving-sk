@@ -307,7 +307,9 @@ export const prostoHouseTranslations = {
     "hydroInsulation": "hydro-insulation foil",
     "thermalInsulation": "thermal insulation, 150 to 300 mm walls, 250 mm roof",
     "vaporBarrier": "vapor barrier",
-    "roughFloor": "rough OSB floor boards (option to change to Anhydrite floor)"
+    "roughFloor": "rough OSB floor boards (option to change to Anhydrite floor)",
+    "photoGalleryAndFloorPlans": "Photo Gallery & Floor Plans",
+    "photoGalleryBadge": "Exterior, interior photos · 2D/3D floor plans"
   },
   "de": {
     "selectProjectType": "Klicken Sie auf den Gebäudetyp, um den Konfigurator zu starten",
