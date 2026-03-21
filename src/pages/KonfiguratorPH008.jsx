@@ -673,7 +673,9 @@ export default function KonfiguratorPH008() {
 
         {/* ── Interiér ── */}
         <AccordionSection id="interior" title={t('interior')} icon={Layout} openId={openSection} setOpenId={setOpenSection}
-          badge={HOUSE_PH008.options.interior[interiorIdx].label}>
+          badge={HOUSE_PH008.options.interior[interiorIdx].label}
+          sectionPrice={interiorPrice}
+          isDone={interiorIdx > 0 || laminateFloors || floorHeating}>
 
           <SectionLabel label={t('interiorFinish')} color="emerald" />
           {HOUSE_PH008.options.interior.map((opt, i) => {
