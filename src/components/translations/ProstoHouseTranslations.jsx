@@ -931,7 +931,9 @@ export const prostoHouseTranslations = {
     "hydroInsulation": "folia hydroizolacyjna",
     "thermalInsulation": "izolacja cieplna, 150 do 300 mm ściany, 250 mm dach",
     "vaporBarrier": "paroizolacja",
-    "roughFloor": "surowa podłoga z płyt OSB (możliwość zmiany na podłogę anhydrytową)"
+    "roughFloor": "surowa podłoga z płyt OSB (możliwość zmiany na podłogę anhydrytową)",
+    "photoGalleryAndFloorPlans": "Galeria zdjęć & Rzuty",
+    "photoGalleryBadge": "Zdjęcia zewnętrzne, wewnętrzne · Rzuty 2D/3D"
   },
   "uk": {
     "selectProjectType": "Натисніть на тип будівлі, щоб запустити конфігуратор",
