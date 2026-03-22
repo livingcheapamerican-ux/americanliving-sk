@@ -29,7 +29,9 @@ Deno.serve(async (req) => {
       user = null;
     }
 
-    const { dom, konfiguraciaData, klientData } = await req.json();
+    const { dom, konfiguraciaData, klientData, language = 'sk' } = await req.json();
+    const lang = language || 'sk';
+    const dateLocale = lang === 'en' ? 'en-US' : lang === 'de' ? 'de-DE' : lang === 'fr' ? 'fr-FR' : lang === 'hu' ? 'hu-HU' : lang === 'pl' ? 'pl-PL' : lang === 'uk' ? 'uk-UA' : lang === 'sr' ? 'sr-RS' : lang === 'hr' ? 'hr-HR' : lang === 'el' ? 'el-GR' : 'sk-SK';
 
     // Načítaj nastavenie cenovej ponuky
     const nastavenia = await base44.asServiceRole.entities.NastavenieCenovejPonuky.list();
