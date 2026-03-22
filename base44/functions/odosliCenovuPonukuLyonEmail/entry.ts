@@ -71,8 +71,8 @@ Deno.serve(async (req) => {
 
     const isA0 = isA0Configuration();
     const typStavby = konfiguraciaData.ucel === "rodinny" && isA0 
-      ? "Rodinný dom A0" 
-      : "Rekreačná stavba";
+      ? t(lang, 'familyHouse')
+      : t(lang, 'recreational');
 
     const formatPrice = (price) => {
       const num = typeof price === 'number' ? price : parseFloat(price);
