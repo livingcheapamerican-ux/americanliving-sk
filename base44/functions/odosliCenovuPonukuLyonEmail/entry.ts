@@ -309,7 +309,7 @@ Deno.serve(async (req) => {
 
       <!-- Vybraný model -->
       <div class="section">
-        <h2 class="section-title">Vybraný model domu</h2>
+        <h2 class="section-title">${t(lang, 'model')}</h2>
         
         <div class="image-container">
           <img src="${getDisplayImage()}" alt="${dom?.nazov || 'Dom'}" style="max-height: 400px; object-fit: contain; background: #f9fafb;">
@@ -322,45 +322,45 @@ Deno.serve(async (req) => {
             <div class="info-value" style="font-size: 18px;">${dom?.nazov || 'Lyon 50m²'}</div>
           </div>
           <div class="info-item">
-            <div class="info-label">Výrobca:</div>
+            <div class="info-label">${t(lang, 'manufacturer')}</div>
             <div class="info-value">${dom?.vyrobca || 'Ticab house'}</div>
           </div>
           <div class="info-item">
-            <div class="info-label">Typ domu:</div>
+            <div class="info-label">${t(lang, 'houseType')}</div>
             <div class="info-value">${dom?.typ_domu || 'Modulárny dom'}</div>
           </div>
           ${dom?.pocet_modulov ? `
           <div class="info-item">
-            <div class="info-label">Počet modulov:</div>
+            <div class="info-label">${t(lang, 'modules')}</div>
             <div class="info-value">${dom.pocet_modulov}</div>
           </div>
           ` : ''}
           ${dom?.pocet_izieb ? `
           <div class="info-item">
-            <div class="info-label">Počet izieb:</div>
+            <div class="info-label">${t(lang, 'rooms')}</div>
             <div class="info-value">max. ${dom.pocet_izieb}</div>
           </div>
           ` : ''}
           <div class="info-item">
-            <div class="info-label">Zastavaná plocha:</div>
+            <div class="info-label">${t(lang, 'area')}</div>
             <div class="info-value">${dom?.zastavana_plocha || 50} m²</div>
           </div>
           ${dom?.uzitkova_plocha ? `
           <div class="info-item">
-            <div class="info-label">Úžitková plocha:</div>
+            <div class="info-label">${t(lang, 'usable')}</div>
             <div class="info-value">${dom.uzitkova_plocha} m²</div>
           </div>
           ` : ''}
           ${dom?.terasa_plocha ? `
           <div class="info-item">
-            <div class="info-label">Terasa:</div>
+            <div class="info-label">${t(lang, 'terrace')}</div>
             <div class="info-value">${dom.terasa_plocha} m²</div>
           </div>
           ` : ''}
         </div>
 
         <div class="${isA0 ? 'badge' : 'badge blue'}" style="display: block; text-align: center; margin-top: 15px;">
-          Typ stavby: ${typStavby}
+          ${t(lang, 'buildingType')} ${typStavby}
         </div>
       </div>
 
