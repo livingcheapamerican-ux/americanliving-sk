@@ -811,7 +811,8 @@ export const prostoHouseTranslations = {
     "basicConfigIncluded": "Alap konfiguráció (benne van)",
     "noInteriorAddons": "Nincs belső kiegészítő",
     "noTechnologies": "Nincs technológia",
-    "configuratorLabel": "Konfigurátor"
+    "configuratorLabel": "Konfigurátor",
+    "includedInPrice": "Az árban"
   },
   "pl": {
     "selectProjectType": "Kliknij na typ budynku, aby uruchomić konfigurator",
