@@ -1169,6 +1169,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
                   const response = await base44.functions.invoke('odosliCenovuPonukuLyonEmail', {
                     dom,
                     klientData: contactData,
+                    language,
                     konfiguraciaData: {
                       ucel, izolaciaStien, izolaciaPodlahy, izolaciaStropu, tepelneCerpadlo,
                       rekuperacia, pripravaNaRekuperaciu, podlahovoKurenie, pripravaNaKrb,
