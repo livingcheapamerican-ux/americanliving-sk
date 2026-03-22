@@ -283,23 +283,23 @@ Deno.serve(async (req) => {
       <!-- Klient info -->
       ${klientData.meno ? `
       <div class="section">
-        <h2 class="section-title">Pre klienta</h2>
+        <h2 class="section-title">${t(lang, 'forClient')}</h2>
         <div class="info-grid">
           <div class="info-item">
-            <div class="info-label">Meno:</div>
+            <div class="info-label">${t(lang, 'name')}</div>
             <div class="info-value">${klientData.meno}</div>
           </div>
           <div class="info-item">
-            <div class="info-label">Email:</div>
+            <div class="info-label">${t(lang, 'email')}</div>
             <div class="info-value">${klientData.email}</div>
           </div>
           <div class="info-item">
-            <div class="info-label">Telefón:</div>
+            <div class="info-label">${t(lang, 'phone')}</div>
             <div class="info-value">${klientData.telefon}</div>
           </div>
           ${klientData.obec ? `
           <div class="info-item">
-            <div class="info-label">Obec:</div>
+            <div class="info-label">${t(lang, 'city')}</div>
             <div class="info-value">${klientData.obec}</div>
           </div>
           ` : ''}
