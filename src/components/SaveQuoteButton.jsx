@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
-import { Bookmark, BookmarkCheck, LogIn } from 'lucide-react';
+import { BookmarkCheck, LogIn, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from './LanguageContext';
 import { useAccountT } from './translations/AccountTranslations';
@@ -58,10 +58,24 @@ export default function SaveQuoteButton({ domNazov, domKod, domId, celkovaCena, 
     return (
       <button
         onClick={() => base44.auth.redirectToLogin(window.location.pathname)}
-        className="flex items-center gap-2 px-4 py-3 border-2 border-gray-300 hover:border-gray-400 rounded-xl text-sm font-medium text-gray-600 hover:text-gray-800 transition-all"
+        className="flex items-center gap-2 px-4 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-sm font-bold transition-all shadow-md hover:shadow-lg active:scale-95"
       >
-        <LogIn className="w-4 h-4" />
-        {t('saveToAccountShort')}
+        <LogIn className="w-4 h-4 flex-shrink-0" />
+        <span className="hidden sm:inline">{t('saveToAccountShort')}</span>
+        <span className="sm:hidden">Uložiť</span>
+      </button>
+    );
+  }
+
+  if (saved) {
+    return (
+      <button
+        disabled
+        className="flex items-center gap-2 px-4 py-3 bg-green-500 text-white rounded-xl text-sm font-bold shadow-md"
+      >
+        <BookmarkCheck className="w-4 h-4 flex-shrink-0 animate-bounce" />
+        <span className="hidden sm:inline">Uložené ✓</span>
+        <span className="sm:hidden">✓</span>
       </button>
     );
   }
@@ -69,27 +83,26 @@ export default function SaveQuoteButton({ domNazov, domKod, domId, celkovaCena, 
   return (
     <button
       onClick={handleSave}
-      disabled={saving || saved}
-      className={`flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium transition-all border-2 ${
-        saved
-          ? 'bg-green-50 border-green-300 text-green-700'
-          : 'bg-white border-gray-300 hover:border-red-400 hover:bg-red-50 hover:text-red-600 text-gray-700'
-      } disabled:opacity-70`}
+      disabled={saving}
+      className="relative flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-bold transition-all shadow-md hover:shadow-lg active:scale-95 overflow-hidden
+        bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white
+        disabled:opacity-70 disabled:cursor-not-allowed"
     >
-      {saved ? (
+      {/* Pulse ring animation */}
+      {!saving && (
+        <span className="absolute inset-0 rounded-xl animate-ping bg-amber-400 opacity-20 pointer-events-none" />
+      )}
+
+      {saving ? (
         <>
-          <BookmarkCheck className="w-4 h-4" />
-          {t('savedInAccount')}
-        </>
-      ) : saving ? (
-        <>
-          <div className="w-4 h-4 border-2 border-gray-400 border-t-gray-700 rounded-full animate-spin" />
-          {t('saving')}
+          <div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin flex-shrink-0" />
+          <span className="hidden sm:inline">Ukladám...</span>
         </>
       ) : (
         <>
-          <Bookmark className="w-4 h-4" />
-          {t('saveToAccount')}
+          <Save className="w-4 h-4 flex-shrink-0" />
+          <span className="hidden sm:inline">Uložiť do konta</span>
+          <span className="sm:hidden">Uložiť</span>
         </>
       )}
     </button>
