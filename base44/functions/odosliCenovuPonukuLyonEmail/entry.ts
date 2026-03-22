@@ -266,9 +266,9 @@ Deno.serve(async (req) => {
       <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/0a055b39a_AmericanLiving.png" alt="American Living" style="height: 60px; margin-bottom: 15px;">
       <div class="header-info">
         <div>
-          <h1>CENOVÁ PONUKA</h1>
-          <p style="margin: 5px 0;">Číslo ponuky: <strong>${cisloPonuky}</strong></p>
-          <p style="margin: 5px 0;">Dátum: ${new Date().toLocaleDateString('sk-SK')}</p>
+          <h1>${t(lang, 'quote')}</h1>
+          <p style="margin: 5px 0;">${t(lang, 'quoteNo')} <strong>${cisloPonuky}</strong></p>
+          <p style="margin: 5px 0;">${t(lang, 'date')} ${new Date().toLocaleDateString(dateLocale)}</p>
         </div>
         <div class="company-info">
           <strong style="font-size: 14px;">American Living</strong><br>
