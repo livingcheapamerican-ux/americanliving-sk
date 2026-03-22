@@ -6,10 +6,6 @@ import { toast } from 'sonner';
 import { useLanguage } from './LanguageContext';
 import { useAccountT } from './translations/AccountTranslations';
 
-/**
- * Tlačidlo "Uložiť do môjho konta" pre konfigurátor
- * Props: domNazov, domKod, domId, celkovaCena, konfiguratorData
- */
 export default function SaveQuoteButton({ domNazov, domKod, domId, celkovaCena, konfiguratorData }) {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -61,7 +57,7 @@ export default function SaveQuoteButton({ domNazov, domKod, domId, celkovaCena, 
         className="flex items-center gap-2 px-4 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-sm font-bold transition-all shadow-md hover:shadow-lg active:scale-95"
       >
         <LogIn className="w-4 h-4 flex-shrink-0" />
-        <span className="hidden sm:inline">{t('saveToAccountShort')}</span>
+        <span className="hidden sm:inline">Uložiť cenovú ponuku do konta</span>
         <span className="sm:hidden">Uložiť</span>
       </button>
     );
@@ -88,7 +84,6 @@ export default function SaveQuoteButton({ domNazov, domKod, domId, celkovaCena, 
         bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white
         disabled:opacity-70 disabled:cursor-not-allowed"
     >
-      {/* Pulse ring animation */}
       {!saving && (
         <span className="absolute inset-0 rounded-xl animate-ping bg-amber-400 opacity-20 pointer-events-none" />
       )}
@@ -101,7 +96,7 @@ export default function SaveQuoteButton({ domNazov, domKod, domId, celkovaCena, 
       ) : (
         <>
           <Save className="w-4 h-4 flex-shrink-0" />
-          <span className="hidden sm:inline">Uložiť do konta</span>
+          <span className="hidden sm:inline">Uložiť cenovú ponuku do konta</span>
           <span className="sm:hidden">Uložiť</span>
         </>
       )}
