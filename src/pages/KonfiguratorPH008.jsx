@@ -492,7 +492,7 @@ export default function KonfiguratorPH008() {
           <div className="flex-1 min-w-0">
             <h1 className="text-sm font-bold text-gray-900 leading-tight">{HOUSE_PH008.name}</h1>
             <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-              <span className="text-xs text-gray-500">Konfigurátor</span>
+              <span className="text-xs text-gray-500">{t('configuratorLabel')}</span>
               <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold ${isA0Compliant ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
                 {isA0Compliant ? <CheckCircle className="w-3 h-3" /> : <Info className="w-3 h-3" />}
                 {isA0Compliant ? t('meetsA0Cert') : t('recreationalUse')}
@@ -578,7 +578,7 @@ export default function KonfiguratorPH008() {
               ...(mountingIdx > 0 ? [{ label: `${t('assemblyItem')}: ${HOUSE_PH008.options.mounting[mountingIdx].label}`, price: getPrice('mounting', mountingIdx, HOUSE_PH008.options.mounting[mountingIdx].price) }] : []),
               ...(extensionIdx > 0 ? [{ label: `Predĺženie: ${HOUSE_PH008.options.extension[extensionIdx].label}`, price: getPrice('extension', extensionIdx, HOUSE_PH008.options.extension[extensionIdx].price) }] : []),
               ...(foundationIdx > 0 ? [{ label: `${t('foundationsItem')}: ${HOUSE_PH008.options.foundation[foundationIdx].label}`, price: getPrice('foundation', foundationIdx, HOUSE_PH008.options.foundation[foundationIdx].price) }] : []),
-              ...(!mountingIdx && !extensionIdx && !foundationIdx ? [{ label: 'Základná konfigurácia (v cene)', price: 0 }] : []),
+              ...(!mountingIdx && !extensionIdx && !foundationIdx ? [{ label: t('basicConfigIncluded'), price: 0 }] : []),
             ]}
             onNextSection={() => handleSectionOpen('exterior')}
             nextLabel={t('stepExterior')}
@@ -649,7 +649,7 @@ export default function KonfiguratorPH008() {
           <SectionLabel label={t('interiorDoorsCount')} color="gray" />
           <CounterRow label={t('interiorDoorsCount')} price={getPrice('addon', 'interiorDoor', HOUSE_PH008.addons.interiorDoor)} value={interiorDoorsCount} onChange={setInteriorDoorsCount} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'interiorDoor', p)} />
 
-          <SectionLabel label="Doplnky interiéru" color="gray" />
+          <SectionLabel label={t('interiorAddons')} color="gray" />
           <AddonRow label={t('windowLamination')} price={getPrice('addon', 'windowLamination', HOUSE_PH008.addons.windowLamination)} checked={windowLamination} onChange={() => setWindowLamination(!windowLamination)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'windowLamination', p)} t={t} />
           <AddonRow label={t('tintedGlass')} price={getPrice('addon', 'windowTint', HOUSE_PH008.addons.windowTint)} checked={windowTint} onChange={() => setWindowTint(!windowTint)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'windowTint', p)} t={t} />
           <AddonRow label={t('laminateFloors')} price={getPrice('addon', 'laminateFloors', HOUSE_PH008.addons.laminateFloors)} checked={laminateFloors} onChange={() => setLaminateFloors(!laminateFloors)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'laminateFloors', p)} t={t} />
@@ -663,7 +663,7 @@ export default function KonfiguratorPH008() {
               ...(windowTint ? [{ label: t('tintedGlassItem'), price: getPrice('addon', 'windowTint', HOUSE_PH008.addons.windowTint) }] : []),
               ...(laminateFloors ? [{ label: t('laminateFloorsItem'), price: getPrice('addon', 'laminateFloors', HOUSE_PH008.addons.laminateFloors) }] : []),
               ...(floorHeating ? [{ label: t('floorHeatingItem'), price: getPrice('addon', 'floorHeating', HOUSE_PH008.addons.floorHeating) }] : []),
-              ...(!interiorIdx && !interiorDoorsCount && !windowLamination && !windowTint && !laminateFloors && !floorHeating ? [{ label: 'Bez doplnkov interiéru', price: 0 }] : []),
+              ...(!interiorIdx && !interiorDoorsCount && !windowLamination && !windowTint && !laminateFloors && !floorHeating ? [{ label: t('noInteriorAddons'), price: 0 }] : []),
             ]}
             onNextSection={() => handleSectionOpen('tech')}
             nextLabel={t('technologies')}
@@ -673,7 +673,7 @@ export default function KonfiguratorPH008() {
         {/* ── Technológie ── */}
         <AccordionSection id="tech" title={t('technologies')} icon={Zap} openId={openSection} setOpenId={handleSectionOpen}
           isDone={visitedSections.has('tech') && openSection !== 'tech'}>
-          <SectionLabel label="Rozvody" color="gray" />
+          <SectionLabel label={t('pipes')} color="gray" />
           <AddonRow label={t('electricalWiring')} price={getPrice('addon', 'electricity', HOUSE_PH008.addons.electricity)} checked={electricity} onChange={() => setElectricity(!electricity)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'electricity', p)} t={t} />
           <AddonRow label={t('waterDrainage')} price={getPrice('addon', 'water', HOUSE_PH008.addons.water)} checked={water} onChange={() => setWater(!water)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'water', p)} t={t} />
           <AddonRow label={t('sanitary')} price={getPrice('addon', 'sanita', HOUSE_PH008.addons.sanita)} checked={sanita} onChange={() => setSanita(!sanita)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'sanita', p)} t={t} />
@@ -691,7 +691,7 @@ export default function KonfiguratorPH008() {
               ...(boiler ? [{ label: t('boilerItem'), price: getPrice('addon', 'boiler', HOUSE_PH008.addons.boiler) }] : []),
               ...(heatPump ? [{ label: t('heatPumpItem'), price: getPrice('addon', 'heatPump', HOUSE_PH008.addons.heatPump) }] : []),
               ...(recuperation ? [{ label: t('recuperationItem'), price: getPrice('addon', 'recuperation', HOUSE_PH008.addons.recuperation) }] : []),
-              ...(!electricity && !water && !sanita && !boiler && !heatPump && !recuperation ? [{ label: 'Bez technológií', price: 0 }] : []),
+              ...(!electricity && !water && !sanita && !boiler && !heatPump && !recuperation ? [{ label: t('noTechnologies'), price: 0 }] : []),
             ]}
             onNextSection={() => handleSectionOpen('services')}
             nextLabel={t('services')}
