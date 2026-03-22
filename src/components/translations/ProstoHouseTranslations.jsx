@@ -1463,7 +1463,8 @@ export const prostoHouseTranslations = {
     "basicConfigIncluded": "Osnovna konfiguracija (u cijeni)",
     "noInteriorAddons": "Bez dodataka interijera",
     "noTechnologies": "Bez tehnologija",
-    "configuratorLabel": "Konfigurator"
+    "configuratorLabel": "Konfigurator",
+    "includedInPrice": "U cijeni"
   },
   "el": {
     "selectProjectType": "Κάντε κλικ στον τύπο κτιρίου για να ξεκινήσετε τον διαμορφωτή",
