@@ -1300,7 +1300,8 @@ export const prostoHouseTranslations = {
     "basicConfigIncluded": "Основна конфигурација (у цени)",
     "noInteriorAddons": "Без додатака ентеријера",
     "noTechnologies": "Без технологија",
-    "configuratorLabel": "Конфигуратор"
+    "configuratorLabel": "Конфигуратор",
+    "includedInPrice": "У цени"
   },
   "hr": {
     "selectProjectType": "Kliknite na tip zgrade za pokretanje konfiguratora",
