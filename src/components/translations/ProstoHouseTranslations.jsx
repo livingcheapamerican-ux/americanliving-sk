@@ -159,7 +159,8 @@ export const prostoHouseTranslations = {
     "basicConfigIncluded": "Základná konfigurácia (v cene)",
     "noInteriorAddons": "Bez doplnkov interiéru",
     "noTechnologies": "Bez technológií",
-    "configuratorLabel": "Konfigurátor"
+    "configuratorLabel": "Konfigurátor",
+    "includedInPrice": "V cene"
   },
   "en": {
     "selectProjectType": "Click on the building type to start the configurator",
