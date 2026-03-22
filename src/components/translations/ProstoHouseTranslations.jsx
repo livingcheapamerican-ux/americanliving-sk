@@ -322,7 +322,8 @@ export const prostoHouseTranslations = {
     "basicConfigIncluded": "Basic configuration (included)",
     "noInteriorAddons": "No interior extras",
     "noTechnologies": "No technologies",
-    "configuratorLabel": "Configurator"
+    "configuratorLabel": "Configurator",
+    "includedInPrice": "Included"
   },
   "de": {
     "selectProjectType": "Klicken Sie auf den Gebäudetyp, um den Konfigurator zu starten",
