@@ -648,7 +648,8 @@ export const prostoHouseTranslations = {
     "basicConfigIncluded": "Configuration de base (incluse)",
     "noInteriorAddons": "Pas d'extras intérieurs",
     "noTechnologies": "Pas de technologies",
-    "configuratorLabel": "Configurateur"
+    "configuratorLabel": "Configurateur",
+    "includedInPrice": "Inclus"
   },
   "hu": {
     "selectProjectType": "Kattintson az épülettípusra a konfigurátor indításához",
