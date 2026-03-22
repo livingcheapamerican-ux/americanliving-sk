@@ -73,7 +73,7 @@ function SummaryRow({ label, price, included }) {
     <div className="flex justify-between items-center py-2 border-b border-gray-50 last:border-0">
       <span className="text-sm text-gray-700">{label}</span>
       <span className={`text-sm font-bold whitespace-nowrap ${included ? 'text-gray-400' : 'text-gray-900'}`}>
-        {included ? '✓ V cene' : `+${price.toLocaleString()} €`}
+        {included ? `✓ ${t('includedInPrice')}` : `+${price.toLocaleString()} €`}
       </span>
     </div>
   );
@@ -131,7 +131,7 @@ export default function PH008QuoteSummary({ konfiguratorData, celkovaCena, langu
       rows: [
         { label: HOUSE_PH008.name, price: HOUSE_PH008.basePrice, included: false, always: true },
         { label: `${t('assemblyItem') || 'Montáž'}: ${opt('mounting', mountingIdx).label}`, price: opt('mounting', mountingIdx).price, included: mountingIdx === 0, always: true },
-        ...(extensionIdx > 0 ? [{ label: `Predĺženie: ${opt('extension', extensionIdx).label}`, price: opt('extension', extensionIdx).price }] : []),
+        ...(extensionIdx > 0 ? [{ label: `${t('extensionItem')}: ${opt('extension', extensionIdx).label}`, price: opt('extension', extensionIdx).price }] : []),
         { label: `${t('insulationItem') || 'Izolácia'}: ${opt('insulation', insulationIdx).label}`, price: opt('insulation', insulationIdx).price, included: insulationIdx === 0, always: true },
         ...(foundationIdx > 0 ? [{ label: `${t('foundationsItem') || 'Základy'}: ${opt('foundation', foundationIdx).label}`, price: opt('foundation', foundationIdx).price }] : []),
         { label: `${t('doorsItem') || 'Vstupné dvere'}: ${opt('doors', doorsIdx).label}`, price: opt('doors', doorsIdx).price, included: doorsIdx === 0, always: true },
