@@ -1137,7 +1137,8 @@ export const prostoHouseTranslations = {
     "basicConfigIncluded": "Базова конфігурація (включено)",
     "noInteriorAddons": "Без доповнень інтер'єру",
     "noTechnologies": "Без технологій",
-    "configuratorLabel": "Конфігуратор"
+    "configuratorLabel": "Конфігуратор",
+    "includedInPrice": "У ціні"
   },
   "sr": {
     "selectProjectType": "Кликните на тип зграде да покренете конфигуратор",
