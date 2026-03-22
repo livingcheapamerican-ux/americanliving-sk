@@ -211,11 +211,11 @@ Deno.serve(async (req) => {
     // Vytvor HTML email
     const htmlEmail = `
 <!DOCTYPE html>
-<html lang="sk">
+<html lang="${lang}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cenová ponuka ${cisloPonuky}</title>
+  <title>${t(lang, 'quote')} ${cisloPonuky}</title>
   <style>
     body { margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f5f5f5; }
     .container { max-width: 800px; margin: 0 auto; background-color: #ffffff; }
