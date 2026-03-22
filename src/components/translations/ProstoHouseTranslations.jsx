@@ -974,7 +974,8 @@ export const prostoHouseTranslations = {
     "basicConfigIncluded": "Podstawowa konfiguracja (w cenie)",
     "noInteriorAddons": "Bez dodatków wnętrza",
     "noTechnologies": "Bez technologii",
-    "configuratorLabel": "Konfigurator"
+    "configuratorLabel": "Konfigurator",
+    "includedInPrice": "W cenie"
   },
   "uk": {
     "selectProjectType": "Натисніть на тип будівлі, щоб запустити конфігуратор",
