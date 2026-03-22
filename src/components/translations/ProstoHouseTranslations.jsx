@@ -1626,6 +1626,7 @@ export const prostoHouseTranslations = {
     "basicConfigIncluded": "Βασική διαμόρφωση (συμπεριλαμβάνεται)",
     "noInteriorAddons": "Χωρίς εξτρά εσωτερικού",
     "noTechnologies": "Χωρίς τεχνολογίες",
-    "configuratorLabel": "Διαμορφωτής"
+    "configuratorLabel": "Διαμορφωτής",
+    "includedInPrice": "Συμπεριλαμβάνεται"
   }
 };
