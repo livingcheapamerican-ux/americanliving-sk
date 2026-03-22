@@ -153,7 +153,13 @@ export const prostoHouseTranslations = {
     "vaporBarrier": "parozábrana",
     "roughFloor": "hrubá podlaha z OSB dosiek ( možnosť zmeny za Anhydritovú podlahu )",
     "photoGalleryAndFloorPlans": "Fotogaléria & Pôdorysy",
-    "photoGalleryBadge": "Fotky exteriéru, interiéru · 2D/3D pôdorysy"
+    "photoGalleryBadge": "Fotky exteriéru, interiéru · 2D/3D pôdorysy",
+    "interiorAddons": "Doplnky interiéru",
+    "pipes": "Rozvody",
+    "basicConfigIncluded": "Základná konfigurácia (v cene)",
+    "noInteriorAddons": "Bez doplnkov interiéru",
+    "noTechnologies": "Bez technológií",
+    "configuratorLabel": "Konfigurátor"
   },
   "en": {
     "selectProjectType": "Click on the building type to start the configurator",
@@ -309,7 +315,13 @@ export const prostoHouseTranslations = {
     "vaporBarrier": "vapor barrier",
     "roughFloor": "rough OSB floor boards (option to change to Anhydrite floor)",
     "photoGalleryAndFloorPlans": "Photo Gallery & Floor Plans",
-    "photoGalleryBadge": "Exterior, interior photos · 2D/3D floor plans"
+    "photoGalleryBadge": "Exterior, interior photos · 2D/3D floor plans",
+    "interiorAddons": "Interior extras",
+    "pipes": "Piping",
+    "basicConfigIncluded": "Basic configuration (included)",
+    "noInteriorAddons": "No interior extras",
+    "noTechnologies": "No technologies",
+    "configuratorLabel": "Configurator"
   },
   "de": {
     "selectProjectType": "Klicken Sie auf den Gebäudetyp, um den Konfigurator zu starten",
@@ -465,7 +477,13 @@ export const prostoHouseTranslations = {
     "vaporBarrier": "Dampfsperre",
     "roughFloor": "Rohboden aus OSB-Platten (Option auf Anhydritboden)",
     "photoGalleryAndFloorPlans": "Fotogalerie & Grundrisse",
-    "photoGalleryBadge": "Außen-, Innenfotos · 2D/3D-Grundrisse"
+    "photoGalleryBadge": "Außen-, Innenfotos · 2D/3D-Grundrisse",
+    "interiorAddons": "Innenextras",
+    "pipes": "Leitungen",
+    "basicConfigIncluded": "Grundkonfiguration (inklusive)",
+    "noInteriorAddons": "Keine Innenextras",
+    "noTechnologies": "Keine Technologien",
+    "configuratorLabel": "Konfigurator"
   },
   "fr": {
     "selectProjectType": "Cliquez sur le type de bâtiment pour démarrer le configurateur",
@@ -621,7 +639,13 @@ export const prostoHouseTranslations = {
     "vaporBarrier": "pare-vapeur",
     "roughFloor": "plancher brut en panneaux OSB (option de changement pour sol Anhydrite)",
     "photoGalleryAndFloorPlans": "Galerie photo & Plans",
-    "photoGalleryBadge": "Photos extérieur, intérieur · Plans 2D/3D"
+    "photoGalleryBadge": "Photos extérieur, intérieur · Plans 2D/3D",
+    "interiorAddons": "Extras intérieurs",
+    "pipes": "Canalisations",
+    "basicConfigIncluded": "Configuration de base (incluse)",
+    "noInteriorAddons": "Pas d'extras intérieurs",
+    "noTechnologies": "Pas de technologies",
+    "configuratorLabel": "Configurateur"
   },
   "hu": {
     "selectProjectType": "Kattintson az épülettípusra a konfigurátor indításához",
@@ -777,7 +801,13 @@ export const prostoHouseTranslations = {
     "vaporBarrier": "páragát",
     "roughFloor": "durva OSB lappadló (lehetőség Anhidrit padlóra váltani)",
     "photoGalleryAndFloorPlans": "Fotógaléria & Alaprajzok",
-    "photoGalleryBadge": "Külső, belső fotók · 2D/3D alaprajzok"
+    "photoGalleryBadge": "Külső, belső fotók · 2D/3D alaprajzok",
+    "interiorAddons": "Belső kiegészítők",
+    "pipes": "Csővezetékek",
+    "basicConfigIncluded": "Alap konfiguráció (benne van)",
+    "noInteriorAddons": "Nincs belső kiegészítő",
+    "noTechnologies": "Nincs technológia",
+    "configuratorLabel": "Konfigurátor"
   },
   "pl": {
     "selectProjectType": "Kliknij na typ budynku, aby uruchomić konfigurator",
@@ -933,7 +963,13 @@ export const prostoHouseTranslations = {
     "vaporBarrier": "paroizolacja",
     "roughFloor": "surowa podłoga z płyt OSB (możliwość zmiany na podłogę anhydrytową)",
     "photoGalleryAndFloorPlans": "Galeria zdjęć & Rzuty",
-    "photoGalleryBadge": "Zdjęcia zewnętrzne, wewnętrzne · Rzuty 2D/3D"
+    "photoGalleryBadge": "Zdjęcia zewnętrzne, wewnętrzne · Rzuty 2D/3D",
+    "interiorAddons": "Dodatki wnętrza",
+    "pipes": "Instalacje",
+    "basicConfigIncluded": "Podstawowa konfiguracja (w cenie)",
+    "noInteriorAddons": "Bez dodatków wnętrza",
+    "noTechnologies": "Bez technologii",
+    "configuratorLabel": "Konfigurator"
   },
   "uk": {
     "selectProjectType": "Натисніть на тип будівлі, щоб запустити конфігуратор",
@@ -1089,7 +1125,13 @@ export const prostoHouseTranslations = {
     "vaporBarrier": "пароізоляція",
     "roughFloor": "чорнова підлога з OSB-плит (можливість заміни на ангідритну підлогу)",
     "photoGalleryAndFloorPlans": "Фотогалерея & Плани",
-    "photoGalleryBadge": "Фото екстер'єру, інтер'єру · 2D/3D плани"
+    "photoGalleryBadge": "Фото екстер'єру, інтер'єру · 2D/3D плани",
+    "interiorAddons": "Доповнення інтер'єру",
+    "pipes": "Розводка",
+    "basicConfigIncluded": "Базова конфігурація (включено)",
+    "noInteriorAddons": "Без доповнень інтер'єру",
+    "noTechnologies": "Без технологій",
+    "configuratorLabel": "Конфігуратор"
   },
   "sr": {
     "selectProjectType": "Кликните на тип зграде да покренете конфигуратор",
@@ -1245,7 +1287,13 @@ export const prostoHouseTranslations = {
     "vaporBarrier": "парна баријера",
     "roughFloor": "груби под од ОСБ плоча (могућност промене на анхидритни под)",
     "photoGalleryAndFloorPlans": "Фотогалерија & Основе",
-    "photoGalleryBadge": "Фотографије екстеријера, ентеријера · 2D/3D основе"
+    "photoGalleryBadge": "Фотографије екстеријера, ентеријера · 2D/3D основе",
+    "interiorAddons": "Додатни ентеријер",
+    "pipes": "Инсталације",
+    "basicConfigIncluded": "Основна конфигурација (у цени)",
+    "noInteriorAddons": "Без додатака ентеријера",
+    "noTechnologies": "Без технологија",
+    "configuratorLabel": "Конфигуратор"
   },
   "hr": {
     "selectProjectType": "Kliknite na tip zgrade za pokretanje konfiguratora",
@@ -1401,7 +1449,13 @@ export const prostoHouseTranslations = {
     "vaporBarrier": "parna barijera",
     "roughFloor": "gruби pod od OSB ploča (mogućnost promjene na anhidritni pod)",
     "photoGalleryAndFloorPlans": "Foto galerija & Tlocrti",
-    "photoGalleryBadge": "Fotografije eksterijera, interijera · 2D/3D tlocrti"
+    "photoGalleryBadge": "Fotografije eksterijera, interijera · 2D/3D tlocrti",
+    "interiorAddons": "Dodaci interijera",
+    "pipes": "Instalacije",
+    "basicConfigIncluded": "Osnovna konfiguracija (u cijeni)",
+    "noInteriorAddons": "Bez dodataka interijera",
+    "noTechnologies": "Bez tehnologija",
+    "configuratorLabel": "Konfigurator"
   },
   "el": {
     "selectProjectType": "Κάντε κλικ στον τύπο κτιρίου για να ξεκινήσετε τον διαμορφωτή",
@@ -1557,6 +1611,12 @@ export const prostoHouseTranslations = {
     "vaporBarrier": "φράγμα ατμών",
     "roughFloor": "τραχύ πάτωμα από πλάκες OSB (δυνατότητα αλλαγής σε Ανυδρίτη δάπεδο)",
     "photoGalleryAndFloorPlans": "Φωτογκαλερί & Κατόψεις",
-    "photoGalleryBadge": "Φωτογραφίες εξωτερικού, εσωτερικού · 2D/3D κατόψεις"
+    "photoGalleryBadge": "Φωτογραφίες εξωτερικού, εσωτερικού · 2D/3D κατόψεις",
+    "interiorAddons": "Εξτρά εσωτερικού",
+    "pipes": "Σωληνώσεις",
+    "basicConfigIncluded": "Βασική διαμόρφωση (συμπεριλαμβάνεται)",
+    "noInteriorAddons": "Χωρίς εξτρά εσωτερικού",
+    "noTechnologies": "Χωρίς τεχνολογίες",
+    "configuratorLabel": "Διαμορφωτής"
   }
 };
