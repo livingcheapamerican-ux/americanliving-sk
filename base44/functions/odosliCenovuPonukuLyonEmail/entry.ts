@@ -367,24 +367,24 @@ Deno.serve(async (req) => {
       <!-- Pôdorysy -->
       ${(dom?.podorys_2d || dom?.podorys_3d) ? `
       <div class="section">
-        <h2 class="section-title">Pôdorysy</h2>
+        <h2 class="section-title">${t(lang, 'floorPlans')}</h2>
         <div class="gallery">
           ${dom?.podorys_2d ? `
           <div class="gallery-item">
             <div style="position: relative;">
-              <img src="${dom.podorys_2d}" alt="2D pôdorys" style="height: 300px; object-fit: contain; background: #f9fafb; width: 100%;">
+              <img src="${dom.podorys_2d}" alt="${t(lang, 'plan2d')}" style="height: 300px; object-fit: contain; background: #f9fafb; width: 100%;">
               <div class="watermark">American Living</div>
             </div>
-            <div class="gallery-caption">2D pôdorys</div>
+            <div class="gallery-caption">${t(lang, 'plan2d')}</div>
           </div>
           ` : ''}
           ${dom?.podorys_3d ? `
           <div class="gallery-item">
             <div style="position: relative;">
-              <img src="${dom.podorys_3d}" alt="3D pôdorys" style="height: 300px; object-fit: contain; background: #f9fafb; width: 100%;">
+              <img src="${dom.podorys_3d}" alt="${t(lang, 'plan3d')}" style="height: 300px; object-fit: contain; background: #f9fafb; width: 100%;">
               <div class="watermark">American Living</div>
             </div>
-            <div class="gallery-caption">3D pôdorys</div>
+            <div class="gallery-caption">${t(lang, 'plan3d')}</div>
           </div>
           ` : ''}
         </div>
