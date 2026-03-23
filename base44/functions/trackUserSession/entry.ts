@@ -1,10 +1,45 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
 
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const body = await req.json();
     const { action, session_id, data } = body;
+
+    if (action === 'diagnostics') {
+      console.log('[trackUserSession] Running diagnostics...');
+      // Get last 10 sessions sorted by created_date
+      const sessions = await base44.asServiceRole.entities.UserSession.list('-created_date', 10);
+      const now = new Date();
+      const twoHoursAgo = new Date(now - 2 * 60 * 60 * 1000);
+      const oneDayAgo = new Date(now - 24 * 60 * 60 * 1000);
+      const twoDaysAgo = new Date(now - 48 * 60 * 60 * 1000);
+
+      const diagnostics = {
+        total_sessions_checked: sessions.length,
+        latest_session_created_at: sessions[0]?.created_date || null,
+        latest_session_start_time: sessions[0]?.start_time || null,
+        minutes_since_last_session: sessions[0]?.created_date 
+          ? Math.round((now - new Date(sessions[0].created_date)) / 60000) 
+          : null,
+        sessions_last_2h: sessions.filter(s => new Date(s.created_date) > twoHoursAgo).length,
+        sessions_last_24h: sessions.filter(s => new Date(s.created_date) > oneDayAgo).length,
+        sessions_last_48h: sessions.filter(s => new Date(s.created_date) > twoDaysAgo).length,
+        recent_sessions: sessions.slice(0, 5).map(s => ({
+          session_id: s.session_id,
+          created_date: s.created_date,
+          start_time: s.start_time,
+          user_email: s.user_email,
+          is_active: s.is_active,
+          duration_seconds: s.duration_seconds,
+          pages_count: (s.pages_visited || []).length
+        })),
+        sdk_version: '0.8.21',
+        server_time: now.toISOString()
+      };
+      console.log('[trackUserSession] Diagnostics:', JSON.stringify(diagnostics));
+      return Response.json({ success: true, diagnostics });
+    }
 
     if (action === 'create') {
       console.log('[trackUserSession] Creating session:', session_id);
@@ -35,7 +70,6 @@ Deno.serve(async (req) => {
         const newPageEntry = updateData._new_page_entry;
         delete updateData._new_page_entry;
         const existingPages = existing[0].pages_visited || [];
-        // Check if page already exists (same URL and timestamp), avoid duplicates
         const isDuplicate = existingPages.some(p => 
           p.page_url === newPageEntry.page_url && p.timestamp === newPageEntry.timestamp
         );
