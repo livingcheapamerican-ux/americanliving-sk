@@ -399,7 +399,7 @@ export default function SessionRecorder() {
       document.removeEventListener('focus', handleFormFocus, true);
       document.removeEventListener('submit', handleFormSubmit, true);
     };
-  }, [location.pathname, user]);
+  }, [location.pathname, location.search, user]);
 
   // Periodic save every 60 seconds
   useEffect(() => {
