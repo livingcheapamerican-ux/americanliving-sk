@@ -330,14 +330,17 @@ export default function SessionRecorder() {
     };
 
     const handleClick = (e) => {
+      // element_class must be a string (SVG elements return SVGAnimatedString object)
+      const rawClass = e.target.className;
+      const elementClass = typeof rawClass === 'string' ? rawClass : (rawClass?.baseVal || '');
       clicksRef.current.push({
-        element: e.target.tagName,
+        element: e.target.tagName || '',
         text: e.target.textContent?.substring(0, 100) || '',
         timestamp: new Date().toISOString(),
         page_url: currentPage,
         page_name_sk: PAGE_NAMES_MAP[window.location.pathname] || document.title,
         x_position: e.clientX, y_position: e.clientY,
-        element_id: e.target.id || '', element_class: e.target.className || ''
+        element_id: e.target.id || '', element_class: elementClass
       });
       console.log('[SessionRecorder] Click tracked, total clicks:', clicksRef.current.length);
       scheduleSave();
