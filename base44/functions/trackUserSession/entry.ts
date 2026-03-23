@@ -66,6 +66,17 @@ Deno.serve(async (req) => {
 
       // Handle _new_page_entry - append to pages_visited array
       const updateData = { ...data };
+
+      // Sanitize clicks - element_class must always be a string (SVG elements can send objects)
+      if (updateData.clicks && Array.isArray(updateData.clicks)) {
+        updateData.clicks = updateData.clicks.map(click => ({
+          ...click,
+          element_class: typeof click.element_class === 'string' ? click.element_class : (click.element_class?.baseVal || ''),
+          element: typeof click.element === 'string' ? click.element : String(click.element || ''),
+          element_id: typeof click.element_id === 'string' ? click.element_id : String(click.element_id || '')
+        }));
+      }
+
       if (updateData._new_page_entry) {
         const newPageEntry = updateData._new_page_entry;
         delete updateData._new_page_entry;
