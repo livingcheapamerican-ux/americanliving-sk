@@ -4,9 +4,19 @@ import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "react-router-dom";
 
 const PAGE_NAMES_MAP = {
-  '/': 'Domovská stránka', '/katalog': 'Katalóg domov', '/detail-domu': 'Detail domu',
-  '/konfigurator': 'Konfigurátor', '/kontakt': 'Kontakt', '/o-nas': 'O nás',
-  '/blog': 'Blog', '/faq': 'Často kladené otázky', '/odporucanie-domov': 'AI Odporúčania domov'
+  '/': 'Domovská stránka', '/Domov': 'Domovská stránka',
+  '/Katalog': 'Katalóg domov', '/KatalogRodinneDomy': 'Katalóg – Rodinné domy',
+  '/KatalogMobilneDomy': 'Katalóg – Mobilné domy', '/KatalogModularneDomy': 'Katalóg – Modulárne domy',
+  '/KatalogMontovaneDomy': 'Katalóg – Montované domy', '/KatalogTicabHouse': 'Katalóg – Ticab House',
+  '/KatalogProstoHouse': 'Katalóg – Prosto House', '/KatalogDomkiZGor': 'Katalóg – Domki z Gór',
+  '/DetailDomu': 'Detail domu', '/Konfigurator': 'Konfigurátor',
+  '/KonfiguratorTicabhouse': 'Konfigurátor – Ticab House',
+  '/KonfiguratorProstoHouse': 'Konfigurátor – Prosto House',
+  '/Kalkulacka': 'Kalkulačka hypotéky',
+  '/Kontakt': 'Kontakt', '/ONas': 'O nás', '/Blog': 'Blog', '/BlogDetail': 'Blog – článok',
+  '/FAQ': 'Často kladené otázky', '/OdporucanieDomov': 'AI Odporúčania domov',
+  '/DotaciaAmericana': 'Dotácia Americana', '/GaleriaRealizacii': 'Galéria realizácií',
+  '/MojeKonto': 'Moje konto', '/MojaPonuka': 'Moja ponuka'
 };
 
 const getDeviceInfo = () => {
