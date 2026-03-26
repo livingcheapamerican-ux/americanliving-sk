@@ -3,6 +3,115 @@ import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { useLanguage } from "@/components/LanguageContext";
+
+// Preklady pre Kalkulačku
+const KALKULACKA_TRANSLATIONS = {
+  sk: {
+    title: "Cenová kalkulačka",
+    subtitle: "Vyberte model domu, pridajte doplnkovú výbavu a okamžite zistite orientačnú celkovú cenu stavby.",
+    step1: "Vyberte model domu", step1Hint: "Kliknite na model, ktorý vás zaujíma",
+    search: "Hľadať podľa názvu alebo výrobcu...",
+    step2: "Doplnková výbava",
+    ticabPrices: "Ceny sú načítané priamo z cenníka tohto modelu.",
+    genericPrices: "Orientačné ceny doplnkov (presné ceny po konzultácii).",
+    noExtras: "Pre tento model nie sú dostupné doplnky v databáze.",
+    step3: "Orientačná cena", basePrice: "Základná cena",
+    totalLabel: "Celková orientačná cena", totalNote: "s DPH · orientačná cena",
+    disclaimer: "* Ceny doplnkov sú orientačné. Presná cena závisí od lokality, rozsahu prác a aktuálneho cenníka. Kontaktujte nás pre nezáväznú cenovú ponuku.",
+    wantQuote: "Chcem cenovú ponuku", detailLink: "Zobraziť detailný konfigurátor pre",
+  },
+  en: {
+    title: "Price Calculator",
+    subtitle: "Select a house model, add optional equipment and instantly find out the estimated total construction price.",
+    step1: "Select a house model", step1Hint: "Click on the model you are interested in",
+    search: "Search by name or manufacturer...",
+    step2: "Optional equipment",
+    ticabPrices: "Prices are loaded directly from this model's price list.",
+    genericPrices: "Estimated prices for extras (exact prices after consultation).",
+    noExtras: "No extras available in the database for this model.",
+    step3: "Estimated price", basePrice: "Base price",
+    totalLabel: "Total estimated price", totalNote: "incl. VAT · estimated price",
+    disclaimer: "* Extra prices are indicative. The exact price depends on location, scope of work and current price list. Contact us for a non-binding quote.",
+    wantQuote: "I want a price quote", detailLink: "View detailed configurator for",
+  },
+  de: {
+    title: "Preisrechner",
+    subtitle: "Wählen Sie ein Hausmodell, fügen Sie optionale Ausstattung hinzu und erfahren Sie sofort den geschätzten Gesamtpreis.",
+    step1: "Hausmodell auswählen", step1Hint: "Klicken Sie auf das Modell, das Sie interessiert",
+    search: "Nach Name oder Hersteller suchen...",
+    step2: "Optionale Ausstattung",
+    ticabPrices: "Preise werden direkt aus der Preisliste dieses Modells geladen.",
+    genericPrices: "Ungefähre Preise für Extras (genaue Preise nach Beratung).",
+    noExtras: "Keine Extras für dieses Modell in der Datenbank verfügbar.",
+    step3: "Geschätzter Preis", basePrice: "Grundpreis",
+    totalLabel: "Geschätzter Gesamtpreis", totalNote: "inkl. MwSt. · geschätzter Preis",
+    disclaimer: "* Extrapreise sind orientierend. Der genaue Preis hängt von Standort, Umfang und aktueller Preisliste ab. Kontaktieren Sie uns für ein unverbindliches Angebot.",
+    wantQuote: "Ich möchte ein Preisangebot", detailLink: "Detailkonfigurator für",
+  },
+  fr: {
+    title: "Calculateur de prix",
+    subtitle: "Sélectionnez un modèle de maison, ajoutez des équipements optionnels et trouvez instantanément le prix total estimé.",
+    step1: "Sélectionner un modèle", step1Hint: "Cliquez sur le modèle qui vous intéresse",
+    search: "Rechercher par nom ou fabricant...",
+    step2: "Équipements optionnels",
+    ticabPrices: "Les prix sont chargés directement depuis la liste de prix de ce modèle.",
+    genericPrices: "Prix estimatifs des extras (prix exacts après consultation).",
+    noExtras: "Aucun extra disponible dans la base de données pour ce modèle.",
+    step3: "Prix estimatif", basePrice: "Prix de base",
+    totalLabel: "Prix total estimatif", totalNote: "TTC · prix estimatif",
+    disclaimer: "* Les prix des extras sont indicatifs. Le prix exact dépend de la localité, de l'étendue des travaux et du tarif en vigueur. Contactez-nous pour un devis sans engagement.",
+    wantQuote: "Je veux un devis", detailLink: "Voir le configurateur détaillé pour",
+  },
+  hu: {
+    title: "Árkalkulator",
+    subtitle: "Válasszon házmodellt, adjon hozzá kiegészítő felszerelést, és azonnal megtudja a becsült teljes építési árat.",
+    step1: "Válasszon házmodellt", step1Hint: "Kattintson az Önt érdeklő modellre",
+    search: "Keresés név vagy gyártó szerint...",
+    step2: "Kiegészítő felszerelés",
+    ticabPrices: "Az árak közvetlenül ebből a modell árlistájából vannak betöltve.",
+    genericPrices: "Tájékoztató kiegészítőárak (pontos árak konzultáció után).",
+    noExtras: "Ehhez a modellhez nem állnak rendelkezésre kiegészítők az adatbázisban.",
+    step3: "Becsült ár", basePrice: "Alapár",
+    totalLabel: "Teljes becsült ár", totalNote: "ÁFÁ-val · becsült ár",
+    disclaimer: "* A kiegészítők árai tájékoztató jellegűek. A pontos ár a helyszíntől, a munkák terjedelmétől és az aktuális árlistától függ.",
+    wantQuote: "Árajánlatot kérek", detailLink: "Részletes konfigurátor megtekintése",
+  },
+  pl: {
+    title: "Kalkulator cen",
+    subtitle: "Wybierz model domu, dodaj dodatkowe wyposażenie i natychmiast poznaj orientacyjną całkowitą cenę budowy.",
+    step1: "Wybierz model domu", step1Hint: "Kliknij na model, który Cię interesuje",
+    search: "Szukaj według nazwy lub producenta...",
+    step2: "Dodatkowe wyposażenie",
+    ticabPrices: "Ceny są ładowane bezpośrednio z cennika tego modelu.",
+    genericPrices: "Orientacyjne ceny dodatków (dokładne ceny po konsultacji).",
+    noExtras: "Dla tego modelu nie ma dostępnych dodatków w bazie danych.",
+    step3: "Orientacyjna cena", basePrice: "Cena podstawowa",
+    totalLabel: "Całkowita orientacyjna cena", totalNote: "z VAT · cena orientacyjna",
+    disclaimer: "* Ceny dodatków są orientacyjne. Dokładna cena zależy od lokalizacji, zakresu prac i aktualnego cennika.",
+    wantQuote: "Chcę ofertę cenową", detailLink: "Pokaż szczegółowy konfigurator dla",
+  },
+  uk: {
+    title: "Ціновий калькулятор",
+    subtitle: "Виберіть модель будинку, додайте додаткове обладнання і одразу дізнайтеся орієнтовну загальну вартість будівництва.",
+    step1: "Виберіть модель будинку", step1Hint: "Натисніть на модель, яка вас цікавить",
+    search: "Пошук за назвою або виробником...",
+    step2: "Додаткове обладнання",
+    ticabPrices: "Ціни завантажуються безпосередньо з прайсу цієї моделі.",
+    genericPrices: "Орієнтовні ціни доповнень (точні ціни після консультації).",
+    noExtras: "Для цієї моделі в базі даних немає додатків.",
+    step3: "Орієнтовна ціна", basePrice: "Базова ціна",
+    totalLabel: "Загальна орієнтовна ціна", totalNote: "з ПДВ · орієнтовна ціна",
+    disclaimer: "* Ціни додатків орієнтовні. Точна ціна залежить від місцезнаходження, обсягу робіт та актуального прайсу.",
+    wantQuote: "Хочу цінову пропозицію", detailLink: "Показати детальний конфігуратор для",
+  },
+};
+
+function useKalkulackaT() {
+  const { language } = useLanguage();
+  const tr = KALKULACKA_TRANSLATIONS[language] || KALKULACKA_TRANSLATIONS.sk;
+  return (key) => tr[key] || KALKULACKA_TRANSLATIONS.sk[key] || key;
+}
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -75,6 +184,8 @@ function getTicabPrice(dom, extraId) {
 }
 
 export default function Kalkulacka() {
+  const tk = useKalkulackaT();
+
   // Predvyplnenie z URL parametra (napr. z AI odporúčaní)
   const urlParams = new URLSearchParams(window.location.search);
   const preselectedId = urlParams.get("dom_id");
@@ -150,10 +261,10 @@ export default function Kalkulacka() {
         <div className="max-w-5xl mx-auto">
           <div className="flex items-center gap-3 mb-2">
             <Calculator className="w-8 h-8" />
-            <h1 className="text-3xl md:text-4xl font-black">Cenová kalkulačka</h1>
+            <h1 className="text-3xl md:text-4xl font-black">{tk('title')}</h1>
           </div>
           <p className="text-red-100 text-lg max-w-2xl">
-            Vyberte model domu, pridajte doplnkovú výbavu a okamžite zistite orientačnú celkovú cenu stavby.
+            {tk('subtitle')}
           </p>
         </div>
       </div>
@@ -163,16 +274,16 @@ export default function Kalkulacka() {
         <Card className="p-5 shadow-lg">
           <h2 className="text-xl font-bold text-primary mb-1 flex items-center gap-2">
             <span className="bg-primary text-white rounded-full w-7 h-7 flex items-center justify-center text-sm font-black">1</span>
-            Vyberte model domu
+            {tk('step1')}
           </h2>
-          <p className="text-gray-500 text-sm mb-4 ml-9">Kliknite na model, ktorý vás zaujíma</p>
+          <p className="text-gray-500 text-sm mb-4 ml-9">{tk('step1Hint')}</p>
 
           {/* Vyhľadávanie */}
           <div className="relative mb-4">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type="text"
-              placeholder="Hľadať podľa názvu alebo výrobcu..."
+              placeholder={tk('search')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
@@ -241,16 +352,16 @@ export default function Kalkulacka() {
               <Card className="p-5 shadow-lg">
                 <h2 className="text-xl font-bold text-primary mb-1 flex items-center gap-2">
                   <span className="bg-primary text-white rounded-full w-7 h-7 flex items-center justify-center text-sm font-black">2</span>
-                  Doplnková výbava
+                  {tk('step2')}
                 </h2>
                 <p className="text-gray-500 text-sm mb-4 ml-9">
                   {isTicab
-                    ? "Ceny sú načítané priamo z cenníka tohto modelu."
-                    : "Orientačné ceny doplnkov (presné ceny po konzultácii)."}
+                    ? tk('ticabPrices')
+                    : tk('genericPrices')}
                 </p>
 
                 {extras.length === 0 ? (
-                  <p className="text-gray-400 italic text-sm">Pre tento model nie sú dostupné doplnky v databáze.</p>
+                  <p className="text-gray-400 italic text-sm">{tk('noExtras')}</p>
                 ) : (
                   <div className="space-y-3">
                     {activeGroups.map((group) => {
@@ -317,14 +428,14 @@ export default function Kalkulacka() {
               <Card className="p-5 shadow-xl border-2 border-primary/30 bg-gradient-to-br from-white to-primary/5">
                 <h2 className="text-xl font-bold text-primary mb-4 flex items-center gap-2">
                   <span className="bg-primary text-white rounded-full w-7 h-7 flex items-center justify-center text-sm font-black">3</span>
-                  Orientačná cena
+                  {tk('step3')}
                 </h2>
 
                 {/* Zhrnutie */}
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between items-center py-2 border-b border-gray-100">
                     <span className="text-sm text-gray-600">
-                      Základná cena – <strong>{selectedDom.nazov}</strong>
+                      {tk('basePrice')} – <strong>{selectedDom.nazov}</strong>
                     </span>
                     <span className="font-semibold text-gray-800">
                       {formatPrice(selectedDom.zakladna_cena)}
@@ -347,24 +458,24 @@ export default function Kalkulacka() {
                 {/* Celková cena */}
                 <div className="bg-primary text-white rounded-xl px-5 py-4 flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-red-200 font-medium">Celková orientačná cena</p>
+                    <p className="text-sm text-red-200 font-medium">{tk('totalLabel')}</p>
                     <p className="text-3xl md:text-4xl font-black">{formatPrice(totalPrice)}</p>
-                    <p className="text-xs text-red-200 mt-1">s DPH · orientačná cena</p>
+                    <p className="text-xs text-red-200 mt-1">{tk('totalNote')}</p>
                   </div>
                   <Calculator className="w-12 h-12 text-red-300 opacity-60" />
                 </div>
 
                 {!isTicab && (
                   <p className="text-xs text-gray-400 mt-3 italic">
-                    * Ceny doplnkov sú orientačné. Presná cena závisí od lokality, rozsahu prác a aktuálneho cenníka. Kontaktujte nás pre nezáväznú cenovú ponuku.
+                    {tk('disclaimer')}
                   </p>
                 )}
 
                 {/* CTA */}
                 <div className="mt-5 grid sm:grid-cols-2 gap-3">
                   <Link to={createPageUrl("Kontakt")}>
-                    <Button className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3">
-                      Chcem cenovú ponuku
+                     <Button className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3">
+                      {tk('wantQuote')}
                       <ArrowRight className="ml-2 w-4 h-4" />
                     </Button>
                   </Link>
@@ -382,7 +493,7 @@ export default function Kalkulacka() {
                     to={`${createPageUrl("DetailDomu")}?id=${selectedDom.id}`}
                     className="text-sm text-primary hover:underline font-medium"
                   >
-                    Zobraziť detailný konfigurátor pre {selectedDom.nazov} →
+                    {tk('detailLink')} {selectedDom.nazov} →
                   </Link>
                 </div>
               </Card>
