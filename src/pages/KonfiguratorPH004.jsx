@@ -4,7 +4,7 @@ import ProstoHouseKonfigurator from '../components/konfigurator/ProstoHouseKonfi
 const HOUSE = {
   id: "nord", name: "Nord 103 (PH-004)", basePrice: 49500,
   options: {
-    mounting: [{ label: "Bez montáže", price: 0, description: "Svojpomocná montáž" }, { label: "S montážou", price: 14850, description: "Montáž na kľúč" }],
+    mounting: [{ label: "Bez montáže", price: 0, description: "Svojpomocná montáž" }, { label: "S montážou", price: 15650, description: "Montáž na kľúč" }],
     extension: [],
     insulation: [{ label: "Celoročná 150 mm", price: 0, description: "Štandard" }, { label: "Zvýšená 200 mm", price: 3200, description: "Zvýšený štandard" }, { label: "Prémium 250 mm", price: 6400, description: "Pre A0 certifikát" }, { label: "Extra 300 mm", price: 12000, description: "Extra úspora" }],
     foundation: [{ label: "Bez základov", price: 0, description: "Vlastná realizácia" }, { label: "Pilóty/Pätky", price: 7655, description: "Rýchla realizácia" }, { label: "Základová doska", price: 13000, description: "Pevný podklad" }, { label: "Pásové základy", price: 11500, description: "Klasické základy" }],
