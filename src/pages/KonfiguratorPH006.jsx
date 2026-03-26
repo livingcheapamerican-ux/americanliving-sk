@@ -4,7 +4,7 @@ import ProstoHouseKonfigurator from '../components/konfigurator/ProstoHouseKonfi
 const HOUSE = {
   id: "flat-72", name: "Flat 72 (PH-006)", basePrice: 31700,
   options: {
-    mounting: [{ label: "Bez montáže", price: 0, description: "Svojpomocne" }, { label: "S montážou", price: 7925, description: "Profesionálna montáž" }],
+    mounting: [{ label: "Bez montáže", price: 0, description: "Svojpomocne" }, { label: "S montážou", price: 8400, description: "Profesionálna montáž" }],
     extension: [],
     insulation: [{ label: "Celoročná 150 mm", price: 0, description: "Štandard" }, { label: "Zvýšená 200 mm", price: 2950, description: "Zvýšený štandard" }, { label: "Prémium 250 mm", price: 5900, description: "Pre A0 certifikát" }, { label: "Extra 300 mm", price: 11063, description: "Extra úspora" }],
     foundation: [{ label: "Bez základov", price: 0, description: "Vlastná realizácia" }, { label: "Pilóty/Pätky", price: 3100, description: "Zemné skrutky" }, { label: "Základová doska", price: 10000, description: "Betón" }, { label: "Pásové základy", price: 8500, description: "Betónové pásy" }],
