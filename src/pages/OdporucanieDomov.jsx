@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
-import { Sparkles, Loader2, Home, ArrowRight, CheckCircle, TrendingUp } from "lucide-react";
+import { Sparkles, Loader2, Home, ArrowRight, CheckCircle, TrendingUp, Calculator } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -502,13 +502,21 @@ POVINNÉ PRAVIDLÁ:
                                 </div>
                               )}
 
-                              {/* CTA Button */}
-                              <Link to={`${createPageUrl("DetailDomu")}?id=${house.id}`}>
-                                <Button className="w-full bg-primary hover:bg-secondary">
-                                  {t('viewHouseDetail')}
-                                  <ArrowRight className="w-4 h-4 ml-2" />
-                                </Button>
-                              </Link>
+                              {/* CTA Buttons */}
+                              <div className="grid grid-cols-2 gap-2">
+                                <Link to={`${createPageUrl("DetailDomu")}?id=${house.id}`}>
+                                  <Button className="w-full bg-primary hover:bg-secondary text-sm">
+                                    {t('viewHouseDetail')}
+                                    <ArrowRight className="w-4 h-4 ml-2" />
+                                  </Button>
+                                </Link>
+                                <Link to={`/Kalkulacka?dom_id=${house.id}`}>
+                                  <Button variant="outline" className="w-full border-2 border-primary text-primary hover:bg-primary hover:text-white text-sm">
+                                    <Calculator className="w-4 h-4 mr-2" />
+                                    Kalkulovať
+                                  </Button>
+                                </Link>
+                              </div>
                             </div>
                           </div>
                         </Card>

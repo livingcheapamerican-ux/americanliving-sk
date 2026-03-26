@@ -75,7 +75,11 @@ function getTicabPrice(dom, extraId) {
 }
 
 export default function Kalkulacka() {
-  const [selectedDomId, setSelectedDomId] = useState(null);
+  // Predvyplnenie z URL parametra (napr. z AI odporúčaní)
+  const urlParams = new URLSearchParams(window.location.search);
+  const preselectedId = urlParams.get("dom_id");
+
+  const [selectedDomId, setSelectedDomId] = useState(preselectedId || null);
   const [selectedExtras, setSelectedExtras] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
   const [openGroups, setOpenGroups] = useState({});
