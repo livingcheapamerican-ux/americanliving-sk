@@ -41,7 +41,7 @@ export default function OdporucanieDomov() {
       // Filtrovať len verejné domy a vylúčiť JAK Modules
       const publicHouses = allHouses.filter(h => h.verejny !== false && h.vyrobca !== 'JAK Modules');
 
-      const prompt = `Analyzuj nasledujúce preferencie klienta a odporuč 3 najvhodnejšie domy z databázy.
+      const prompt = `Si AI konzultant American Living. Analyzuj preferencie klienta a odporuč 3 najvhodnejšie domy z databázy.
 
 PREFERENCIE KLIENTA:
 - Rozpočet: ${preferences.budget}€
@@ -51,12 +51,13 @@ PREFERENCIE KLIENTA:
 - Región: ${preferences.region || 'Neuviedol'}
 - Ďalšie požiadavky: ${preferences.otherNeeds || 'Žiadne'}
 
-DATABÁZA DOMOV:
+DATABÁZA DOMOV (PRIAMO Z DB – použij VÝHRADNE tieto ID a názvy):
 ${JSON.stringify(publicHouses.map(h => ({
   id: h.id,
   nazov: h.nazov,
   vyrobca: h.vyrobca,
   typ_domu: h.typ_domu,
+  kategoria: h.kategoria,
   pocet_izieb: h.pocet_izieb,
   zastavana_plocha: h.zastavana_plocha,
   uzitkova_plocha: h.uzitkova_plocha,
@@ -64,61 +65,78 @@ ${JSON.stringify(publicHouses.map(h => ({
   zakladna_cena: h.zakladna_cena,
   energeticky_certifikat: h.energeticky_certifikat,
   celorocny: h.celorocny,
+  popularny: h.popularny,
   popis: h.popis?.substring(0, 300)
 })), null, 2)}
 
-TVOJA ÚLOHA:
-1. Analyzuj preferencie klienta
-2. Vyber 3 najvhodnejšie domy z CELEJ databázy (TICAB HOUSE, PROSTO HOUSE, DOMKI Z GÓR - BEZ JAK Modules!)
-3. Pre každý dom vysvetli PREČO je vhodný (match s požiadavkami)
-4. Zoraď od najvhodnejšieho
-5. Uveď klady a potenciálne kompromisy
+═══════════════════════════════════════════════════════
+VEDOMOSTI O VÝROBCOCH
+═══════════════════════════════════════════════════════
 
-KRITICKÉ PRAVIDLÁ PRE VÝBER DOMOV:
-- MUSÍŠ vyberať z CELEJ databázy, nie len z modulárnych domov
-- Prosto House = MONTOVANÉ domy (nie modulárne!) - vysoká kvalita, ekologické
-- Ticab house = MODULÁRNE domy - rýchla montáž, prefabrikované moduly
-- Domki z Gór = MONTOVANÉ domy - tradičný štýl
-- ❌ NEODPORÚČAJ JAK Modules - vyraď ich z výberu
+🏭 TICAB HOUSE – Modulárny dom:
+- Továrenská výroba CNC, 6 týždňov, žeriav dvíha dom za strechu
+- Zahŕňa: KVH drevo, smrekový obklad, 3-sklo okná, laminát, kúpeľňa, elektro EU, izolácia 150mm
+- NEZAHŔŇA: montáž (INDIVIDUÁLNA!), doprava (INDIVIDUÁLNA!), A0 upgrade, základy
+- A0 upgrade (pre hypotéku): izolácia 250mm + TČ + rekuperácia + projekt + pásové základy → +15-25k€
+- Ticab domy kde kategoria="mobilne_domy" = MOBILNÝ dom → hypotéku NEDOSTANÚ
+- Ticab domy kde kategoria="rodinne_domy" + A0 konfigurácia = hypotéku DOSTANÚ
 
-DÔLEŽITÉ ROZDIELY MEDZI VÝROBCAMI:
-- Počet izieb je MAXIMUM - dom s 4 izbami môže byť upravený na 3 izby
-- Rozpočet je orientačný - môžeš odporučiť aj o 10-15% drahší dom ak je výrazne lepší
+🏗️ PROSTO HOUSE – Montovaný dom:
+- Doprava ZDARMA! Montáž možno aj svojpomocne.
+- Zahŕňa: hrubá stavba, fasáda, strecha, 5-komorové okná, dvere, izolácia 150mm, revízie
+- NEZAHŔŇA: základy, interiér, technológie
+- A0 konfigurácia: izolácia 250mm + TČ + rekuperácia + projektant → hypotéka možná
+- Orientačné doplnkové náklady: montáž ~13k€, základy ~8-18k€, interiér ~12-20k€, technológie ~10k€
 
-DOPRAVA A NÁKLADY:
-- Prosto House: doprava ZDARMA, montáž ~13k€, základy ~8k€, prípojky ~10k€
-- Ticab house: individuálna doprava, A0 upgrade +15-20k€, pásy 11.8k€
-- Domki z Gór: doprava 8-10k€, montáž v cene
+🏔️ DOMKI Z GÓR – Montovaný dom (tradičný štýl):
+- Doprava 8-10k€, montáž v cene
+- Tradičný horský štýl, ekologické materiály
 
-REGIONÁLNE ŠPECIFIKÁ (zohľadni v odporúčaní):
-- Bratislavský kraj: vyššie príjmy, preferencie moderných domov, dôraz na energetickú efektívnosť A0
+═══════════════════════════════════════════════════════
+HYPOTÉKA – KĽÚČOVÉ PRAVIDLÁ
+═══════════════════════════════════════════════════════
+❌ NEDOSTANÚ hypotéku: mobilný dom (kategoria="mobilne_domy"), rekreačná stavba bez A0
+✅ DOSTANÚ hypotéku: kategoria="rodinne_domy" + A0 konfigurácia + pásové základy
+
+Ak klient chce hypotéku → odporúčaj VÝHRADNE domy s kategoria="rodinne_domy"!
+A0 = izolácia 250mm + TČ + rekuperácia + projektant A0 + pásové základy
+
+═══════════════════════════════════════════════════════
+PREDAJNÉ ARGUMENTY
+═══════════════════════════════════════════════════════
+- MUROVANÝ vs MONTOVANÝ: Dom 140m² murovaný: 259 000–294 000€. Montovaný A0: ~172 000€. Úspora 85-120k€!
+- PASCA "DOM NA KĽÚČ": Konkurencia 142 827€ + skryté náklady 29 950€ = reálne 172 777€. American Living = lacnejší + TČ v cene!
+- 8 BEZPLATNÝCH SLUŽIEB: Predaj nehnuteľnosti, hľadanie pozemku, hypotéka, projekt, stavebné povolenie, úradné potvrdenia, stavba, napojenie + kolaudácia.
+
+═══════════════════════════════════════════════════════
+REGIONÁLNE ŠPECIFIKÁ
+═══════════════════════════════════════════════════════
+- Bratislavský kraj: vyššie príjmy, moderné domy, dôraz na A0 energetickú triedu
 - Košický/Prešovský kraj: nižší rozpočet, tradičnejší štýl, Domki z Gór populárne
-- Horské oblasti: potreba kvalitnej izolácie, odolnosť proti snehu, Ticab house A0 vhodné
-- Nížiny: dôraz na chladenie, terasa/pergola, Prosto House s veľkými oknami
+- Horské oblasti: kvalitná izolácia, odolnosť proti snehu, Ticab A0 vhodné
+- Nížiny: dôraz na chladenie, terasa, Prosto House s veľkými oknami
 
-KRITICKÉ - UVEDENÁ CENA:
-- zakladna_cena = ZÁKLADNÁ CENA (BEZ A0, bez základov, bez montáže)
-- V "considerations" VŽDY uveď: "Zobrazená cena je základná. Pre kompletný dom na kľúč počítajte s nákladmi na základy, montáž, prípojky a legislatívu. Použite konfigurátor pre presnú kalkuláciu."
-- Každý dom má vlastný konfigurátor kde si klient môže poskladať presný dom podľa svojich požiadaviek
-- estimated_total_cost = odhadni realistickú cenu s bežnými doplnkami
+═══════════════════════════════════════════════════════
+CENY – KRITICKÉ
+═══════════════════════════════════════════════════════
+- zakladna_cena = ZÁKLADNÁ CENA bez základov, montáže, A0 upgradu
+- estimated_total_cost = odhadni realistickú cenu na kľúč s bežnými doplnkami
+- V "considerations" VŽDY uveď upozornenie na ďalšie náklady a odkaz na konfigurátor
+
+═══════════════════════════════════════════════════════
+TVOJA ÚLOHA
+═══════════════════════════════════════════════════════
+1. Analyzuj preferencie klienta vrátane potreby hypotéky
+2. Vyber 3 najvhodnejšie domy (BEZ JAK Modules!)
+3. Pre každý dom vysvetli PREČO je vhodný
+4. Zoraď od najvhodnejšieho
+5. Uveď klady a kompromisy
 
 POVINNÉ PRAVIDLÁ:
-- Odporuč domy z RÔZNYCH výrobcov (Prosto House, Ticab house, Domki z Gór)
-- ❌ NEODPORÚČAJ JAK Modules - vyraď ich úplne z výberu!
-- ✅ POUŽI LEN house_id a nazov PRESNE z databázy - NESMIEŠ používať žiadne iné názvy!
-- ✅ V poli "house_nazov" MUSÍŠ použiť PRESNÝ názov z databázy (z pola "nazov")
-- ⚠️ OVERENIE: house_id MUSÍ zodpovedať house_nazov - skontroluj si to!
-
-PRÍKLAD SPRÁVNEHO VÝSTUPU:
-{
-  "house_id": "abc123",
-  "house_nazov": "White Flat 15",  // PRESNE ako v DB
-  "match_score": 95,
-  ...
-}
-
-❌ NESPRÁVNE: Používať iné názvy ako sú v databáze
-✅ SPRÁVNE: Kopírovať presný názov z databázy`;
+- ❌ NEODPORÚČAJ JAK Modules
+- ✅ house_id a house_nazov MUSIA presne zodpovedať DB záznamu
+- ✅ Ak klient zmienil hypotéku → len domy s kategoria="rodinne_domy"
+- ✅ Odporuč domy z rôznych výrobcov ak možné`;
 
       const result = await base44.integrations.Core.InvokeLLM({
         prompt: prompt,
