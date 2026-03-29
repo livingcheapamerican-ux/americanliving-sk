@@ -76,13 +76,8 @@ Deno.serve(async (req) => {
 </html>
     `;
     
-    await base44.asServiceRole.integrations.Core.SendEmail({
-      to: 'info.americanliving@gmail.com',
-      subject: '✅ SEO Automatizácia - Sitemap aktualizovaná',
-      body: reportHtml
-    });
-    
-    console.log('✅ Email report odoslaný');
+    // Email sa neodosiela externe - len logujeme výsledok
+    console.log('✅ SEO report dokončený (email preskočený)');
     
     return Response.json({
       success: true,
