@@ -26,9 +26,8 @@ export default function LokaciaDetail() {
     queryKey: ['domy-v-lokalite', lokacia?.nazov_mesta],
     queryFn: async () => {
       if (!lokacia?.nazov_mesta) return [];
-      // Fetch houses - v reálnom scenári by si to filtroval podľa lokality
-      const allHouses = await base44.entities.Dom.list();
-      return allHouses.filter(dom => dom.verejny !== false);
+      const allHouses = await base44.entities.Dom.filter({ verejny: true }, 'poradie', 12);
+      return allHouses;
     },
     enabled: !!lokacia?.nazov_mesta
   });
@@ -258,8 +257,8 @@ export default function LokaciaDetail() {
                           od {dom.zakladna_cena?.toLocaleString('sk-SK')} €
                         </p>
                         <Link
-                          to={`${createPageUrl("DetailDomu")}?id=${dom.id}`}
-                          className="mt-auto"
+                         to={`${createPageUrl("DetailDomu")}?${dom.slug ? `slug=${dom.slug}` : `id=${dom.id}`}`}
+                         className="mt-auto"
                         >
                           <Button className="w-full bg-primary hover:bg-primary/90">
                             Zobraziť detaily

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, memo, useCallback } from "react";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { debounce } from "lodash";
@@ -30,7 +30,7 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
     >
       <Card className={`group overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 sm:hover:-translate-y-2 bg-white flex flex-col h-full ${jeVybrany ? 'ring-2 ring-primary' : ''} ${dom.verejny === false ? 'opacity-60' : ''}`}>
         <div className="relative overflow-hidden aspect-[16/9]">
-          <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
+          <Link to={`${createPageUrl("DetailDomu")}?${dom.slug ? `slug=${dom.slug}` : `id=${dom.id}`}&return=${encodeURIComponent(location.pathname + location.search)}`}>
             {dom.hlavny_obrazok ? (
               <ImageWithWatermark
                 src={
@@ -94,7 +94,7 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
         </div>
         
         <div className="p-1 sm:p-2 flex-1 flex flex-col">
-        <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
+        <Link to={`${createPageUrl("DetailDomu")}?${dom.slug ? `slug=${dom.slug}` : `id=${dom.id}`}&return=${encodeURIComponent(location.pathname + location.search)}`}>
           <h3 className="text-[10px] sm:text-base font-bold text-gray-800 mb-0.5 sm:mb-1 group-hover:text-primary transition-colors line-clamp-2 leading-tight">
             {dom.nazov}
           </h3>
@@ -233,7 +233,7 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
                   </p>
                 </div>
               )}
-              <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
+              <Link to={`${createPageUrl("DetailDomu")}?${dom.slug ? `slug=${dom.slug}` : `id=${dom.id}`}&return=${encodeURIComponent(location.pathname + location.search)}`}>
                 <Button size="sm" className="w-full bg-primary hover:bg-primary/90 group-hover:bg-secondary text-[9px] sm:text-[10px] px-1.5 sm:px-2 h-6 sm:h-7 font-bold shadow-sm">
                   {t('detail')}
                   <ArrowRight className="ml-0.5 w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />
@@ -549,6 +549,7 @@ export default function Katalog() {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={metaTitle} />
         <meta name="twitter:description" content={metaDescription} />
+        <link rel="canonical" href={`https://www.americanliving.sk/Katalog`} />
         <script type="application/ld+json">
           {JSON.stringify(generateSchemaOrg())}
         </script>

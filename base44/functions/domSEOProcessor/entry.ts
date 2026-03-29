@@ -106,8 +106,8 @@ Deno.serve(async (req) => {
 
     // ── Product Schema JSON-LD (rozšírená verzia) ──────────────────────────
     const canonicalUrl = dom.slug
-      ? `https://americanliving.sk/DetailDomu?slug=${dom.slug}`
-      : `https://americanliving.sk/DetailDomu?id=${domId}`;
+      ? `https://www.americanliving.sk/DetailDomu?slug=${dom.slug}`
+      : `https://www.americanliving.sk/DetailDomu?id=${domId}`;
 
     const additionalProps = [
       dom.zastavana_plocha && { "@type": "PropertyValue", name: "Zastavaná plocha", value: `${dom.zastavana_plocha} m²`, unitText: "m²" },

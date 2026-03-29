@@ -35,7 +35,7 @@ Deno.serve(async (req) => {
     const noindexPrefixes = ['/AIMarketingInsights', '/AdminCennik', '/AutoSEOTrigger', '/AdminAnalyzaSessions', '/Admin', '/Test', '/Auto', '/Regeneruj', '/Marketing', '/SEODashboard', '/SEOEditor', '/SocialMediaDashboard', '/SrovnaniDomu', '/GrantovaKampan'];
 
     let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
-    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n';
     
     // Statické stránky (s filtrom noindex)
     for (const page of staticPages) {
@@ -49,7 +49,7 @@ Deno.serve(async (req) => {
       xml += `  </url>\n`;
     }
     
-    // Domy – používame slug URL ak existuje, inak fallback na id
+    // Domy – slug URL, s image sitemap pre Google Images
     for (const dom of domy) {
       if (!dom.verejny) continue;
       const domUrl = dom.slug
@@ -60,6 +60,12 @@ Deno.serve(async (req) => {
       xml += `    <changefreq>weekly</changefreq>\n`;
       xml += `    <priority>0.9</priority>\n`;
       xml += `    <lastmod>${dom.updated_date?.split('T')[0] || new Date().toISOString().split('T')[0]}</lastmod>\n`;
+      if (dom.hlavny_obrazok) {
+        xml += `    <image:image>\n`;
+        xml += `      <image:loc>${dom.hlavny_obrazok}</image:loc>\n`;
+        xml += `      <image:title>${dom.nazov} – ${dom.vyrobca} | American Living</image:title>\n`;
+        xml += `    </image:image>\n`;
+      }
       xml += `  </url>\n`;
     }
 
@@ -69,8 +75,8 @@ Deno.serve(async (req) => {
       if (!lok.slug) continue;
       xml += `  <url>\n`;
       xml += `    <loc>${baseUrl}/lokalita/${lok.slug}</loc>\n`;
-      xml += `    <changefreq>monthly</changefreq>\n`;
-      xml += `    <priority>0.8</priority>\n`;
+      xml += `    <changefreq>weekly</changefreq>\n`;
+      xml += `    <priority>0.9</priority>\n`;
       xml += `    <lastmod>${lok.updated_date?.split('T')[0] || new Date().toISOString().split('T')[0]}</lastmod>\n`;
       xml += `  </url>\n`;
     }
