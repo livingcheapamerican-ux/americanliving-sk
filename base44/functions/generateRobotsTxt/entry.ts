@@ -8,8 +8,41 @@ Allow: /
 # Sitemap
 Sitemap: ${baseUrl}/api/generateSitemap
 
-# Disallow admin stránky
-Disallow: /admin-*
+# Disallow admin a interné stránky
+Disallow: /Admin
+Disallow: /AdminCennik
+Disallow: /AdminBlog
+Disallow: /AdminSpravaDomov
+Disallow: /AdminAnalyz
+Disallow: /AdminPreklad
+Disallow: /AdminUpload
+Disallow: /AdminGoogleDrive
+Disallow: /AdminDokumenty
+Disallow: /AdminPixel
+Disallow: /AdminUser
+Disallow: /AdminWatermark
+Disallow: /AdminMigraci
+Disallow: /AdminDotacia
+Disallow: /AdminGeneruj
+Disallow: /AdminIntegration
+Disallow: /AdminCreditMonitor
+Disallow: /AdminTestGemini
+Disallow: /AdminSEOAnalyzer
+Disallow: /Marketing
+Disallow: /AIMarketingInsights
+Disallow: /SEODashboard
+Disallow: /SEOEditor
+Disallow: /SocialMediaDashboard
+Disallow: /SrovnaniDomu
+Disallow: /GrantovaKampan
+Disallow: /AutoSEOTrigger
+Disallow: /AutoPreklad
+Disallow: /AutoRegeneracia
+Disallow: /Regeneruj
+Disallow: /MojeKonto
+Disallow: /AdminMojeKonto
+Disallow: /MojaPonuka
+Disallow: /TestAnalyza
 
 # Crawl-delay
 Crawl-delay: 1
