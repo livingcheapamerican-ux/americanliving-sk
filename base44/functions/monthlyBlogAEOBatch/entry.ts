@@ -8,9 +8,10 @@ Deno.serve(async (req) => {
 
     // Only process blog posts without ai_summary or faq_schema_data
     const allPosts = await base44.asServiceRole.entities.BlogPost.list();
+    // Správny multi-language formát: { sk: { faqs: [...] } }
     const pendingPosts = allPosts.filter(post =>
       !post.ai_summary || post.ai_summary.trim().length === 0 ||
-      !post.faq_schema_data || !post.faq_schema_data.faqs || post.faq_schema_data.faqs.length === 0
+      !post.faq_schema_data?.sk?.faqs || post.faq_schema_data.sk.faqs.length === 0
     ).slice(0, 5); // Max 5 per run
 
     console.log(`Found ${pendingPosts.length} BlogPosts needing AEO generation`);

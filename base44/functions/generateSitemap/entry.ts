@@ -49,17 +49,32 @@ Deno.serve(async (req) => {
       xml += `  </url>\n`;
     }
     
-    // Domy (verejny: true je už zaistené DB filterom vyššie, ale pridáme aj explicitnú kontrolu)
+    // Domy – používame slug URL ak existuje, inak fallback na id
     for (const dom of domy) {
       if (!dom.verejny) continue;
+      const domUrl = dom.slug
+        ? `${baseUrl}/DetailDomu?slug=${dom.slug}`
+        : `${baseUrl}/DetailDomu?id=${dom.id}`;
       xml += `  <url>\n`;
-      xml += `    <loc>${baseUrl}/detail-domu?id=${dom.id}</loc>\n`;
+      xml += `    <loc>${domUrl}</loc>\n`;
       xml += `    <changefreq>weekly</changefreq>\n`;
       xml += `    <priority>0.9</priority>\n`;
       xml += `    <lastmod>${dom.updated_date?.split('T')[0] || new Date().toISOString().split('T')[0]}</lastmod>\n`;
       xml += `  </url>\n`;
     }
-    
+
+    // Lokality – GEO stránky (kritické pre lokálne SEO)
+    const lokality = await base44.asServiceRole.entities.LokaciaSEO.filter({ verejny: true });
+    for (const lok of lokality) {
+      if (!lok.slug) continue;
+      xml += `  <url>\n`;
+      xml += `    <loc>${baseUrl}/lokalita/${lok.slug}</loc>\n`;
+      xml += `    <changefreq>monthly</changefreq>\n`;
+      xml += `    <priority>0.8</priority>\n`;
+      xml += `    <lastmod>${lok.updated_date?.split('T')[0] || new Date().toISOString().split('T')[0]}</lastmod>\n`;
+      xml += `  </url>\n`;
+    }
+
     // Blogy (filter out noindex pages)
     for (const blog of blogs) {
       const blogPath = `/blog/${blog.slug}`;
@@ -76,7 +91,7 @@ Deno.serve(async (req) => {
     
     xml += '</urlset>';
     
-    console.log(`✅ Sitemap generovaná: ${staticPages.length} statických stránok + ${domy.length} domov + ${blogs.length} blogov`);
+    console.log(`✅ Sitemap generovaná: ${staticPages.length} statických stránok + ${domy.length} domov + ${blogs.length} blogov + ${lokality.length} lokalít`);
     
     return new Response(xml, {
       headers: {

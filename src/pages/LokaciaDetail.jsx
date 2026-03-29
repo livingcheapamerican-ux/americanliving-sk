@@ -114,6 +114,17 @@ export default function LokaciaDetail() {
             }
           }
         })}</script>
+        {lokacia.faq_schema_data?.sk?.faqs?.length > 0 && (
+          <script type="application/ld+json">{JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": lokacia.faq_schema_data.sk.faqs.map(f => ({
+              "@type": "Question",
+              "name": f.otazka,
+              "acceptedAnswer": { "@type": "Answer", "text": f.odpoved }
+            }))
+          })}</script>
+        )}
       </Helmet>
 
       {/* Back Button */}
@@ -146,14 +157,30 @@ export default function LokaciaDetail() {
           <Card className="p-6 md:p-8 mb-12 bg-gradient-to-br from-blue-50 to-white border-blue-200">
             <div className="prose prose-lg max-w-none">
               {lokacia.unikany_text_o_lokalite ? (
-                <div className="text-gray-700 leading-relaxed space-y-4 whitespace-pre-wrap">
-                  {lokacia.unikany_text_o_lokalite}
-                </div>
+                <div
+                  className="text-gray-700 leading-relaxed space-y-4"
+                  dangerouslySetInnerHTML={{ __html: lokacia.unikany_text_o_lokalite }}
+                />
               ) : (
                 <p className="text-gray-600 italic">Obsah sa generuje...</p>
               )}
             </div>
           </Card>
+
+          {/* FAQ Sekcia – zvyšuje SEO relevantnosť */}
+          {lokacia.faq_schema_data?.sk?.faqs?.length > 0 && (
+            <div className="mb-12">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">Často kladené otázky – domy v {lokacia.nazov_mesta}</h2>
+              <div className="space-y-4">
+                {lokacia.faq_schema_data.sk.faqs.map((faq, idx) => (
+                  <Card key={idx} className="p-5 border-l-4 border-primary">
+                    <h3 className="font-bold text-gray-900 mb-2">{faq.otazka}</h3>
+                    <p className="text-gray-600 text-sm leading-relaxed">{faq.odpoved}</p>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Houses Section */}
           {domy && domy.length > 0 && (

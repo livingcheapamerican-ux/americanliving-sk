@@ -22,7 +22,7 @@ Deno.serve(async (req) => {
 
     const { entity_id } = event;
     const mesto = data.nazov_mesta || 'vašom meste';
-    const okres = data.okres || 'vašom okrese';
+    const okres = data.okres || data.nazov_mesta || 'okolí';
 
     if (!entity_id) {
       return Response.json({ error: 'Missing entity_id' }, { status: 400 });
@@ -101,12 +101,24 @@ Deno.serve(async (req) => {
       }
     }
 
-    // ── KROK 3: Jeden jediný update (žiadna slučka) ─────────────────────────
+    // ── KROK 3: FAQ Schema pre lokalitu (0 credits) ─────────────────────────
+    const faq_schema_data = {
+      sk: {
+        faqs: [
+          { otazka: `Kde stavia American Living v okolí ${mesto}?`, odpoved: `American Living realizuje výstavbu montovaných a modulárnych domov priamo v meste ${mesto} a okolí okresu ${okres}.` },
+          { otazka: `Aká je cena montovaného domu v ${mesto}?`, odpoved: `Ceny montovaných domov v lokalite ${mesto} začínajú od 19 500 EUR s DPH. Presná cena závisí od modelu a konfigurácie.` },
+          { otazka: `Ako dlho trvá výstavba domu v ${mesto}?`, odpoved: `Výstavba montovaného domu v ${mesto} trvá spravidla 60-120 dní od podpisu zmluvy vrátane kompletnej realizácie.` },
+          { otazka: `Je možné získať dotáciu na dom v ${mesto}?`, odpoved: `Áno, v lokalite ${mesto} je možné získať dotáciu cez program GRANTAMERICANA – grant pri podpise a preplatenie nákladov na energie.` }
+        ]
+      }
+    };
+
+    // ── KROK 4: Jeden jediný update (žiadna slučka) ─────────────────────────
     await base44.asServiceRole.entities.LokaciaSEO.update(entity_id, {
-      content: seo_html,
       unikany_text_o_lokalite: seo_html,
       meta_title: metaTitle,
-      meta_description: metaDescription
+      meta_description: metaDescription,
+      faq_schema_data
     });
 
     console.log(`✅ LokaciaSEO processed for ${mesto}: ${linksInjected} internal link(s) injected → [${injectedNames.join(', ')}]`);

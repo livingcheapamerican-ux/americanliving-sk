@@ -1,0 +1,47 @@
+{
+  "name": "LokaciaSEO",
+  "type": "object",
+  "properties": {
+    "nazov_mesta": {
+      "type": "string",
+      "description": "N\u00e1zov mesta/lokality (napr. Bratislava, Ko\u0161ice)"
+    },
+    "slug": {
+      "type": "string",
+      "description": "SEO-friendly URL slug (napr. bratislava, kosice)"
+    },
+    "okres": {
+      "type": "string",
+      "description": "N\u00e1zov okresu (napr. Bratislava I, Ko\u0161ice-okolie)"
+    },
+    "kraj": {
+      "type": "string",
+      "description": "N\u00e1zov kraja (napr. Bratislavsk\u00fd kraj, Ko\u0161ick\u00fd kraj)"
+    },
+    "meta_title": {
+      "type": "string",
+      "description": "SEO meta titulok pre lokalitu"
+    },
+    "meta_description": {
+      "type": "string",
+      "description": "SEO meta popis pre lokalitu"
+    },
+    "unikany_text_o_lokalite": {
+      "type": "string",
+      "description": "HTML obsah str\u00e1nky \u2013 generovan\u00fd \u0161abl\u00f3nou (0 kreditov)"
+    },
+    "faq_schema_data": {
+      "type": "object",
+      "description": "FAQ schema pre lokalitu \u2013 form\u00e1t { sk: { faqs: [{otazka, odpoved}] } }"
+    },
+    "verejny": {
+      "type": "boolean",
+      "default": true,
+      "description": "\u010ci je lokalita vidite\u013en\u00e1 na webe"
+    }
+  },
+  "required": [
+    "nazov_mesta",
+    "slug"
+  ]
+}
