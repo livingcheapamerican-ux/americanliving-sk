@@ -57,15 +57,40 @@ Deno.serve(async (req) => {
       const metaTitle = `Montované domy ${mesto} | Výstavba na kľúč - American Living`;
       const metaDescription = `Objavte výhody stavby montovaného domu v ${mesto}. Rýchla výstavba, kvalita a dostupnosť. American Living - oficiálny distribútor.`;
 
+      // ── Interné linky (0 credits – RegEx) ───────────────────────────────
+      const allDomy = await base44.asServiceRole.entities.Dom.list();
+      const domy = allDomy.filter(d => d.verejny !== false && d.nazov && d.id);
+      domy.sort((a, b) => b.nazov.length - a.nazov.length);
+
+      let linkedHtml = seo_html;
+      for (const dom of domy) {
+        const nazov = dom.nazov.trim();
+        if (!nazov) continue;
+        const escaped = nazov.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const placeholders = [];
+        const withPlaceholders = linkedHtml.replace(/<a[\s\S]*?<\/a>/gi, (m) => {
+          const i = placeholders.length;
+          placeholders.push(m);
+          return `__LP_${i}__`;
+        });
+        const regex = new RegExp(`(${escaped})`);
+        if (regex.test(withPlaceholders)) {
+          const replaced = withPlaceholders.replace(regex,
+            `<a href="/DetailDomu?id=${dom.id}" class="internal-link" title="${nazov} - American Living">$1</a>`
+          );
+          linkedHtml = replaced.replace(/__LP_(\d+)__/g, (_, i) => placeholders[parseInt(i)]);
+        }
+      }
+
       await base44.asServiceRole.entities.LokaciaSEO.update(record.id, {
-        content: seo_html,
-        unikany_text_o_lokalite: seo_html,
+        content: linkedHtml,
+        unikany_text_o_lokalite: linkedHtml,
         meta_title: metaTitle,
         meta_description: metaDescription,
         verejny: true
       });
 
-      console.log(`✓ Generated 0-credit SEO content for ${mesto}`);
+      console.log(`✓ Generated 0-credit SEO content + internal links for ${mesto}`);
       results.push({ city: mesto, status: 'success', credits_used: 0 });
     }
 
