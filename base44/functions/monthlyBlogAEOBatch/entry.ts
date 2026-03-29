@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
 
 Deno.serve(async (req) => {
   try {
@@ -51,9 +51,31 @@ Deno.serve(async (req) => {
       }).catch(err => console.error('Log error:', err));
     }
 
-    console.log(`📝 Monthly Blog AEO Batch complete: ${processed} processed, ${failed} failed`);
+    // Spracuj aj Domy bez AEO (max 3 per run, šetríme kredity)
+    const allDomy = await base44.asServiceRole.entities.Dom.list();
+    const pendingDomy = allDomy.filter(dom =>
+      dom.verejny !== false &&
+      (!dom.ai_summary || dom.ai_summary.trim().length === 0 ||
+       !dom.faq_schema_data?.sk?.faqs || dom.faq_schema_data.sk.faqs.length < 3)
+    ).slice(0, 3);
 
-    return Response.json({ success: true, processed, failed });
+    let domProcessed = 0;
+    for (const dom of pendingDomy) {
+      try {
+        const response = await base44.asServiceRole.functions.invoke('generateAEOOnSave', {
+          event: { type: 'update', entity_name: 'Dom', entity_id: dom.id },
+          data: dom,
+          old_data: null
+        });
+        if (response.data?.success) { domProcessed++; console.log(`✓ AEO done for Dom: ${dom.nazov}`); }
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      } catch (error) {
+        console.error(`✗ Error for Dom ${dom.nazov}:`, error.message);
+      }
+    }
+
+    console.log(`📝 Monthly Blog AEO Batch complete: ${processed} blogs + ${domProcessed} domy processed, ${failed} failed`);
+    return Response.json({ success: true, processed, dom_processed: domProcessed, failed });
 
   } catch (error) {
     console.error('Monthly Blog AEO Batch Error:', error);

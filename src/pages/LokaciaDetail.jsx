@@ -125,6 +125,39 @@ export default function LokaciaDetail() {
             }))
           })}</script>
         )}
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Domov", "item": "https://www.americanliving.sk/" },
+            { "@type": "ListItem", "position": 2, "name": "Kde staviame", "item": "https://www.americanliving.sk/" },
+            { "@type": "ListItem", "position": 3, "name": lokacia.nazov_mesta, "item": `https://www.americanliving.sk/lokalita/${lokacia.slug}` }
+          ]
+        })}</script>
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          "@id": "https://www.americanliving.sk/#organization",
+          "name": "American Living",
+          "url": "https://www.americanliving.sk",
+          "telephone": "+421905138124",
+          "email": "info@americanliving.sk",
+          "image": "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/0a055b39a_AmericanLiving.png",
+          "priceRange": "€€",
+          "areaServed": [
+            { "@type": "City", "name": lokacia.nazov_mesta },
+            ...(lokacia.okres ? [{ "@type": "AdministrativeArea", "name": lokacia.okres }] : []),
+            ...(lokacia.kraj ? [{ "@type": "AdministrativeArea", "name": lokacia.kraj }] : [])
+          ],
+          "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": `Montované domy ${lokacia.nazov_mesta}`,
+            "itemListElement": [
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": `Výstavba montovaného domu ${lokacia.nazov_mesta}` } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": `Modulárne domy ${lokacia.nazov_mesta} na kľúč` } }
+            ]
+          }
+        })}</script>
       </Helmet>
 
       {/* Back Button */}

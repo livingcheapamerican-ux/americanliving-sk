@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
 
 Deno.serve(async (req) => {
   try {
@@ -69,9 +69,19 @@ Deno.serve(async (req) => {
       estimated_credits: 3
     }).catch(err => console.error('Log error:', err));
 
-    // Vygeneruj AI zhrnutie a FAQ
+    // Vygeneruj AI zhrnutie a FAQ (optimalizované pre Google AEO/featured snippets)
+    const entityType = entity_name === 'Dom' ? 'montovanom dome' : 'článku';
     const response = await base44.integrations.Core.InvokeLLM({
-      prompt: `Vytvor: a) 1-vetné zhrnutie max 300 znakov. b) 3-5 relevantných FAQ otázok a odpovedí v JSON formáte s polom 'faqs'. Otázky musia byť prirodzené a často kladené v tejto oblasti. Text: ${contentForAnalysis}`,
+      prompt: `Si expert na SEO a AEO (Answer Engine Optimization) pre slovenský trh s nehnuteľnosťami.
+Na základe nasledujúceho textu o ${entityType} vytvor:
+a) ai_summary: 1–2 vety, max 280 znakov. Musí obsahovať kľúčové fakty (cena, plocha, výrobca). Začni faktom, nie menom firmy.
+b) faq_schema_data.faqs: presne 5 otázok a odpovedí. Požiadavky:
+   - Otázky začínajú slovami: Aká, Koľko, Ako, Kde, Čo, Prečo, Je možné
+   - Odpovede sú min. 2 vety, konkrétne, s číslami kde sa dá
+   - Pokrývajú: cenu, plochu/dispozíciu, výrobcu/distribútora, čas výstavby, energetiku
+   - Prirodzene znejú ako reálne otázky od zákazníka
+
+Text: ${contentForAnalysis}`,
       response_json_schema: {
         type: 'object',
         properties: {
@@ -105,11 +115,23 @@ Deno.serve(async (req) => {
       faq_schema_data: faqData
     };
 
-    // Pridaj geo_context_keywords
+    // Pridaj geo_context_keywords (bohatší kontext pre GEO)
     if (entity_name === 'Dom') {
-      updateData.geo_context_keywords = data.typ_domu + ', ' + (data.kategoria || 'dom');
+      const typMap = { modularny: 'modulárny dom', montovany: 'montovaný dom', mobilny: 'mobilný dom' };
+      const typText = typMap[data.typ_domu] || 'dom';
+      const keywordParts = [
+        typText,
+        data.vyrobca || '',
+        data.zastavana_plocha ? `${data.zastavana_plocha}m²` : '',
+        data.energeticky_certifikat ? 'energetická trieda A0' : '',
+        data.celorocny ? 'celoročné bývanie' : '',
+        'American Living Slovensko',
+        'dom na kľúč'
+      ].filter(Boolean);
+      updateData.geo_context_keywords = keywordParts.join(', ');
     } else if (entity_name === 'BlogPost') {
-      updateData.geo_context_keywords = (data.tagy || []).join(', ') || data.kategoria;
+      const tagStr = (data.tagy || []).join(', ');
+      updateData.geo_context_keywords = [tagStr, data.kategoria, 'American Living blog', 'montované domy Slovensko'].filter(Boolean).join(', ');
     }
 
     await base44.asServiceRole.entities[entity_name].update(entity_id, updateData);
