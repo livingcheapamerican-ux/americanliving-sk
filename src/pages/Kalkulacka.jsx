@@ -532,7 +532,7 @@ export default function Kalkulacka() {
                 {/* Link na detail domu */}
                 <div className="mt-3 text-center">
                   <Link
-                    to={`${createPageUrl("DetailDomu")}?id=${selectedDom.id}`}
+                    to={`${createPageUrl("DetailDomu")}?${selectedDom.slug ? `slug=${selectedDom.slug}` : `id=${selectedDom.id}`}`}
                     className="text-sm text-primary hover:underline font-medium"
                   >
                     {tk('detailLink')} {selectedDom.nazov} →

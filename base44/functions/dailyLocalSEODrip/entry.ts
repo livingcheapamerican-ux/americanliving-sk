@@ -151,7 +151,7 @@ ${domyList}
     }
 
     if (results.length > 0) {
-      await base44.functions.invoke('logIntegrationCall', {
+      await base44.asServiceRole.functions.invoke('logIntegrationCall', {
         function_name: 'dailyLocalSEODrip',
         integration_type: 'Other',
         trigger: 'automation_scheduled',
