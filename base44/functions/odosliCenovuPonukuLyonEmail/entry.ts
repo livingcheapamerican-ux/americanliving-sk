@@ -416,259 +416,259 @@ Deno.serve(async (req) => {
             <tr class="category"><td colspan="2">${t(lang, 'insulationHeader')}</td></tr>
             <tr><td style="font-weight: 600;">${t(lang, 'basePrice')}</td><td style="text-align: right; font-weight: 600;">${formatPrice(dom?.zakladna_cena || 0)}</td></tr>
             <tr class="${konfiguraciaData.izolaciaStien !== '150mm' ? 'strikethrough' : ''}">
-              <td>• Insulation walls 150mm</td>
+              <td>• ${({sk:'Izolácia stien 150mm',en:'Insulation walls 150mm',de:'Wandisolierung 150mm',fr:'Isolation murs 150mm',hu:'Falak szigetelése 150mm',pl:'Izolacja ścian 150mm',uk:'Ізоляція стін 150mm',sr:'Izolacija zidova 150mm',hr:'Izolacija zidova 150mm',el:'Μόνωση τοίχων 150mm'})[lang]||'Izolácia stien 150mm'}</td>
               <td style="text-align: right;">${t(lang, 'inPrice')}</td>
             </tr>
             <tr class="${konfiguraciaData.izolaciaStien !== '200mm' ? 'strikethrough' : ''}">
-              <td>• Insulation walls 200mm</td>
+              <td>• ${({sk:'Izolácia stien 200mm',en:'Insulation walls 200mm',de:'Wandisolierung 200mm',fr:'Isolation murs 200mm',hu:'Falak szigetelése 200mm',pl:'Izolacja ścian 200mm',uk:'Ізоляція стін 200mm',sr:'Izolacija zidova 200mm',hr:'Izolacija zidova 200mm',el:'Μόνωση τοίχων 200mm'})[lang]||'Izolácia stien 200mm'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.izolacia_stien_200mm)}</td>
             </tr>
             <tr class="${konfiguraciaData.izolaciaStien !== '250mm' ? 'strikethrough' : ''}">
-              <td>• Insulation walls 250mm</td>
+              <td>• ${({sk:'Izolácia stien 250mm',en:'Insulation walls 250mm',de:'Wandisolierung 250mm',fr:'Isolation murs 250mm',hu:'Falak szigetelése 250mm',pl:'Izolacja ścian 250mm',uk:'Ізоляція стін 250mm',sr:'Izolacija zidova 250mm',hr:'Izolacija zidova 250mm',el:'Μόνωση τοίχων 250mm'})[lang]||'Izolácia stien 250mm'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.izolacia_stien_250mm)}</td>
             </tr>
             <tr class="${konfiguraciaData.izolaciaPodlahy !== '150mm' ? 'strikethrough' : ''}">
-              <td>• Insulation floor 150mm</td>
+              <td>• ${({sk:'Izolácia podlahy 150mm',en:'Floor insulation 150mm',de:'Bodenisolierung 150mm',fr:'Isolation sol 150mm',hu:'Padló szigetelése 150mm',pl:'Izolacja podłogi 150mm',uk:'Ізоляція підлоги 150mm',sr:'Izolacija poda 150mm',hr:'Izolacija poda 150mm',el:'Μόνωση δαπέδου 150mm'})[lang]||'Izolácia podlahy 150mm'}</td>
               <td style="text-align: right;">${t(lang, 'inPrice')}</td>
             </tr>
             <tr class="${konfiguraciaData.izolaciaPodlahy !== '200mm' ? 'strikethrough' : ''}">
-              <td>• Insulation floor 200mm</td>
+              <td>• ${({sk:'Izolácia podlahy 200mm',en:'Floor insulation 200mm',de:'Bodenisolierung 200mm',fr:'Isolation sol 200mm',hu:'Padló szigetelése 200mm',pl:'Izolacja podłogi 200mm',uk:'Ізоляція підлоги 200mm',sr:'Izolacija poda 200mm',hr:'Izolacija poda 200mm',el:'Μόνωση δαπέδου 200mm'})[lang]||'Izolácia podlahy 200mm'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.izolacia_podlahy_200mm)}</td>
             </tr>
             <tr class="${konfiguraciaData.izolaciaStropu !== '150mm' ? 'strikethrough' : ''}">
-              <td>• Insulation ceiling 150mm</td>
+              <td>• ${({sk:'Izolácia stropu 150mm',en:'Ceiling insulation 150mm',de:'Deckenisolierung 150mm',fr:'Isolation plafond 150mm',hu:'Mennyezet szigetelése 150mm',pl:'Izolacja sufitu 150mm',uk:'Ізоляція стелі 150mm',sr:'Izolacija tavanice 150mm',hr:'Izolacija stropa 150mm',el:'Μόνωση οροφής 150mm'})[lang]||'Izolácia stropu 150mm'}</td>
               <td style="text-align: right;">${t(lang, 'inPrice')}</td>
             </tr>
             <tr class="${konfiguraciaData.izolaciaStropu !== '200mm' ? 'strikethrough' : ''}">
-              <td>• Insulation ceiling 200mm</td>
+              <td>• ${({sk:'Izolácia stropu 200mm',en:'Ceiling insulation 200mm',de:'Deckenisolierung 200mm',fr:'Isolation plafond 200mm',hu:'Mennyezet szigetelése 200mm',pl:'Izolacja sufitu 200mm',uk:'Ізоляція стелі 200mm',sr:'Izolacija tavanice 200mm',hr:'Izolacija stropa 200mm',el:'Μόνωση οροφής 200mm'})[lang]||'Izolácia stropu 200mm'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.izolacia_stropu_200mm)}</td>
             </tr>
 
             <tr class="category"><td colspan="2">${t(lang, 'heatingHeader')}</td></tr>
             <tr class="${konfiguraciaData.tepelneCerpadlo !== 'nie' ? 'strikethrough' : ''}">
-              <td>• Heating preparation</td>
+              <td>• ${({sk:'Príprava na vykurovanie',en:'Heating preparation',de:'Heizungsvorbereitung',fr:'Préparation chauffage',hu:'Fűtési előkészítés',pl:'Przygotowanie ogrzewania',uk:'Підготовка опалення',sr:'Priprema grejanja',hr:'Priprema grijanja',el:'Προετοιμασία θέρμανσης'})[lang]||'Príprava na vykurovanie'}</td>
               <td style="text-align: right;">${t(lang, 'inPrice')}</td>
             </tr>
             <tr class="${konfiguraciaData.tepelneCerpadlo !== 'ano' ? 'strikethrough' : ''}">
-              <td>• Heat pump</td>
+              <td>• ${({sk:'Tepelné čerpadlo',en:'Heat pump',de:'Wärmepumpe',fr:'Pompe à chaleur',hu:'Hőszivattyú',pl:'Pompa ciepła',uk:'Тепловий насос',sr:'Toplotna pumpa',hr:'Toplinska pumpa',el:'Αντλία θερμότητας'})[lang]||'Tepelné čerpadlo'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.tepelne_cerpadlo)}</td>
             </tr>
             <tr class="${konfiguraciaData.rekuperacia === 'ano' || konfiguraciaData.pripravaNaRekuperaciu ? 'strikethrough' : ''}">
-              <td>• Without recuperation</td>
+              <td>• ${({sk:'Bez rekuperácie',en:'Without recuperation',de:'Ohne Rekuperation',fr:'Sans récupération',hu:'Rekuperáció nélkül',pl:'Bez rekuperacji',uk:'Без рекуперації',sr:'Bez rekuperacije',hr:'Bez rekuperacije',el:'Χωρίς ανάκτηση'})[lang]||'Bez rekuperácie'}</td>
               <td style="text-align: right;">${t(lang, 'inPrice')}</td>
             </tr>
             <tr class="${!konfiguraciaData.pripravaNaRekuperaciu ? 'strikethrough' : ''}">
-              <td>• Recuperation preparation</td>
+              <td>• ${({sk:'Príprava na rekuperáciu',en:'Recuperation preparation',de:'Rekuperationsvorbereitung',fr:'Préparation récupération',hu:'Rekuperáció előkészítés',pl:'Przygotowanie rekuperacji',uk:'Підготовка рекуперації',sr:'Priprema rekuperacije',hr:'Priprema rekuperacije',el:'Προετοιμασία ανάκτησης'})[lang]||'Príprava na rekuperáciu'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.pripravaNaRekuperaciu)}</td>
             </tr>
             <tr class="${konfiguraciaData.rekuperacia !== 'ano' ? 'strikethrough' : ''}">
-              <td>• Recuperation</td>
+              <td>• ${({sk:'Rekuperácia',en:'Recuperation',de:'Rekuperation',fr:'Récupération',hu:'Rekuperáció',pl:'Rekuperacja',uk:'Рекуперація',sr:'Rekuperacija',hr:'Rekuperacija',el:'Ανάκτηση'})[lang]||'Rekuperácia'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.rekuperacia)}</td>
             </tr>
             <tr class="${!konfiguraciaData.podlahovoKurenie ? 'strikethrough' : ''}">
-              <td>• Floor heating</td>
+              <td>• ${({sk:'Podlahové kúrenie',en:'Floor heating',de:'Fußbodenheizung',fr:'Chauffage au sol',hu:'Padlófűtés',pl:'Ogrzewanie podłogowe',uk:'Підлогове опалення',sr:'Podno grejanje',hr:'Podno grijanje',el:'Ενδοδαπέδια θέρμανση'})[lang]||'Podlahové kúrenie'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.podlahove_kurenie)}</td>
             </tr>
             <tr class="${!konfiguraciaData.pripravaNaKrb ? 'strikethrough' : ''}">
-              <td>• Fireplace preparation</td>
+              <td>• ${({sk:'Príprava na krb',en:'Fireplace preparation',de:'Kaminvorbereitung',fr:'Préparation cheminée',hu:'Kandalló előkészítés',pl:'Przygotowanie kominka',uk:'Підготовка каміна',sr:'Priprema kamina',hr:'Priprema kamina',el:'Προετοιμασία τζακιού'})[lang]||'Príprava na krb'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.pripravaKrb)}</td>
             </tr>
             <tr class="${!konfiguraciaData.ochranaKachle ? 'strikethrough' : ''}">
-              <td>• Stove protection</td>
+              <td>• ${({sk:'Ochrana kachle',en:'Stove protection',de:'Ofenschutz',fr:'Protection poêle',hu:'Kályha védelem',pl:'Ochrona pieca',uk:'Захист печі',sr:'Zaštita peći',hr:'Zaštita peći',el:'Προστασία κουζίνας'})[lang]||'Ochrana kachle'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.ochranaKachle)}</td>
             </tr>
             <tr class="${!konfiguraciaData.klimatizacia ? 'strikethrough' : ''}">
-              <td>• Air conditioning preparation</td>
+              <td>• ${({sk:'Príprava na klimatizáciu',en:'Air conditioning preparation',de:'Klimaanlagenvorbereitung',fr:'Préparation climatisation',hu:'Légkondicionáló előkészítés',pl:'Przygotowanie klimatyzacji',uk:'Підготовка кондиціонера',sr:'Priprema klima uređaja',hr:'Priprema klima uređaja',el:'Προετοιμασία κλιματισμού'})[lang]||'Príprava na klimatizáciu'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.klimatizacia)}</td>
             </tr>
 
             <tr class="category"><td colspan="2">${t(lang, 'facadeHeader')}</td></tr>
             <tr class="${konfiguraciaData.fasada !== 'drevo_smrek' ? 'strikethrough' : ''}">
-              <td>• Facade - spruce wood</td>
+              <td>• ${({sk:'Fasáda - smrekové drevo',en:'Facade - spruce wood',de:'Fassade - Fichtenholz',fr:'Façade - bois épicéa',hu:'Homlokzat - lucfenyő',pl:'Fasada - drewno świerkowe',uk:'Фасад - ялинове дерево',sr:'Fasada - smrekovo drvo',hr:'Fasada - smrekovina',el:'Πρόσοψη - ξύλο ελάτης'})[lang]||'Fasáda - smrekové drevo'}</td>
               <td style="text-align: right;">${t(lang, 'inPrice')}</td>
             </tr>
             <tr class="${konfiguraciaData.fasada !== 'omietka' ? 'strikethrough' : ''}">
-              <td>• Facade - stucco plaster</td>
+              <td>• ${({sk:'Fasáda - šúchaná omietka',en:'Facade - stucco plaster',de:'Fassade - Stuckputz',fr:'Façade - enduit gratté',hu:'Homlokzat - vakolat',pl:'Fasada - tynk szlachetny',uk:'Фасад - штукатурка',sr:'Fasada - malter',hr:'Fasada - žbuka',el:'Πρόσοψη - σοβάς'})[lang]||'Fasáda - šúchaná omietka'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.fasada_omietka)}</td>
             </tr>
             <tr class="${konfiguraciaData.fasada !== 'smrekovec' ? 'strikethrough' : ''}">
-              <td>• Facade - larch</td>
+              <td>• ${({sk:'Fasáda - smrekovec',en:'Facade - larch',de:'Fassade - Lärche',fr:'Façade - mélèze',hu:'Homlokzat - vörösfenyő',pl:'Fasada - modrzew',uk:'Фасад - модрина',sr:'Fasada - ariš',hr:'Fasada - ariš',el:'Πρόσοψη - λάρικας'})[lang]||'Fasáda - smrekovec'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.fasada_smrekovec)}</td>
             </tr>
             <tr class="${konfiguraciaData.fasada !== 'falcovane' ? 'strikethrough' : ''}">
-              <td>• Facade - folded panels</td>
+              <td>• ${({sk:'Fasáda - falcované panely',en:'Facade - folded panels',de:'Fassade - Stehfalzpaneele',fr:'Façade - panneaux à joints',hu:'Homlokzat - lemez burkolat',pl:'Fasada - blacha na rąbek',uk:'Фасад - фальцеві панелі',sr:'Fasada - falc paneli',hr:'Fasada - falc ploče',el:'Πρόσοψη - διπλωτά πανέλ'})[lang]||'Fasáda - falcované panely'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.fasada_falcovane)}</td>
             </tr>
             <tr class="${konfiguraciaData.fasada !== 'thermowood' ? 'strikethrough' : ''}">
-              <td>• Facade - thermowood</td>
+              <td>• ${({sk:'Fasáda - thermowood',en:'Facade - thermowood',de:'Fassade - Thermoholz',fr:'Façade - thermowood',hu:'Homlokzat - thermowood',pl:'Fasada - thermowood',uk:'Фасад - термодерево',sr:'Fasada - termodrvо',hr:'Fasada - termodrvо',el:'Πρόσοψη - thermowood'})[lang]||'Fasáda - thermowood'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.fasada_thermowood)}</td>
             </tr>
 
             <tr class="category"><td colspan="2">${t(lang, 'roofHeader')}</td></tr>
             <tr class="${konfiguraciaData.strecha !== 'korugovan_plech' ? 'strikethrough' : ''}">
-              <td>• Roof - corrugated metal</td>
+              <td>• ${({sk:'Strecha - vlnitý plech',en:'Roof - corrugated metal',de:'Dach - Wellblech',fr:'Toit - tôle ondulée',hu:'Tető - hullámlemez',pl:'Dach - blacha falista',uk:'Дах - гофрований металевий',sr:'Krov - valoviti lim',hr:'Krov - valoviti lim',el:'Οροφή - κυματοειδές μέταλλο'})[lang]||'Strecha - vlnitý plech'}</td>
               <td style="text-align: right;">${t(lang, 'inPrice')}</td>
             </tr>
             <tr class="${konfiguraciaData.strecha !== 'falcovane' ? 'strikethrough' : ''}">
-              <td>• Roof - folded panels</td>
+              <td>• ${({sk:'Strecha - falcované panely',en:'Roof - folded panels',de:'Dach - Stehfalzpaneele',fr:'Toit - panneaux à joints',hu:'Tető - lemez fedés',pl:'Dach - blacha na rąbek',uk:'Дах - фальцеві панелі',sr:'Krov - falc paneli',hr:'Krov - falc ploče',el:'Οροφή - διπλωτά πανέλ'})[lang]||'Strecha - falcované panely'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.strecha_falcovane)}</td>
             </tr>
             <tr class="${konfiguraciaData.odkvapy !== 'nie' ? 'strikethrough' : ''}">
-              <td>• Without gutters</td>
+              <td>• ${({sk:'Bez odkvapov',en:'Without gutters',de:'Ohne Dachrinnen',fr:'Sans gouttières',hu:'Ereszcsatorna nélkül',pl:'Bez rynien',uk:'Без водостоків',sr:'Bez oluka',hr:'Bez oluka',el:'Χωρίς υδρορροές'})[lang]||'Bez odkvapov'}</td>
               <td style="text-align: right;">${t(lang, 'inPrice')}</td>
             </tr>
             <tr class="${konfiguraciaData.odkvapy !== 'ano' ? 'strikethrough' : ''}">
-              <td>• Gutters</td>
+              <td>• ${({sk:'Odkvapy',en:'Gutters',de:'Dachrinnen',fr:'Gouttières',hu:'Ereszcsatorna',pl:'Rynny',uk:'Водостоки',sr:'Oluk',hr:'Oluk',el:'Υδρορροές'})[lang]||'Odkvapy'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.odkvapy)}</td>
             </tr>
 
             <tr class="category"><td colspan="2">${t(lang, 'windowsHeader')}</td></tr>
             <tr class="${konfiguraciaData.okna !== 'biele' ? 'strikethrough' : ''}">
-              <td>• Windows - white 3-glass</td>
+              <td>• ${({sk:'Okná - biele 3-sklo',en:'Windows - white 3-glass',de:'Fenster - weiß 3-Glas',fr:'Fenêtres - blanches triple vitrage',hu:'Ablakok - fehér 3 réteg',pl:'Okna - białe 3-szybowe',uk:'Вікна - білі 3-скло',sr:'Prozori - beli trostruki',hr:'Prozori - bijeli trostruki',el:'Παράθυρα - λευκά τριπλά'})[lang]||'Okná - biele 3-sklo'}</td>
               <td style="text-align: right;">${t(lang, 'inPrice')}</td>
             </tr>
             <tr class="${konfiguraciaData.okna !== 'antracit' ? 'strikethrough' : ''}">
-              <td>• Windows - anthracite 3-glass</td>
+              <td>• ${({sk:'Okná - antracit 3-sklo',en:'Windows - anthracite 3-glass',de:'Fenster - anthrazit 3-Glas',fr:'Fenêtres - anthracite triple vitrage',hu:'Ablakok - antracit 3 réteg',pl:'Okna - antracyt 3-szybowe',uk:'Вікна - антрацит 3-скло',sr:'Prozori - antracit trostruki',hr:'Prozori - antracit trostruki',el:'Παράθυρα - ανθρακί τριπλά'})[lang]||'Okná - antracit 3-sklo'}</td>
               <td style="text-align: right;">${t(lang, 'inPrice')}</td>
             </tr>
             <tr class="${konfiguraciaData.okna !== 'hnede' ? 'strikethrough' : ''}">
-              <td>• Windows - brown 3-glass</td>
+              <td>• ${({sk:'Okná - hnedé 3-sklo',en:'Windows - brown 3-glass',de:'Fenster - braun 3-Glas',fr:'Fenêtres - marron triple vitrage',hu:'Ablakok - barna 3 réteg',pl:'Okna - brązowe 3-szybowe',uk:'Вікна - коричневі 3-скло',sr:'Prozori - smeđi trostruki',hr:'Prozori - smeđi trostruki',el:'Παράθυρα - καφέ τριπλά'})[lang]||'Okná - hnedé 3-sklo'}</td>
               <td style="text-align: right;">${t(lang, 'inPrice')}</td>
             </tr>
             <tr class="${konfiguraciaData.vchodoveDvere !== 'plastove' ? 'strikethrough' : ''}">
-              <td>• Entry door - plastic/metal</td>
+              <td>• ${({sk:'Vchodové dvere - plastové/kovové',en:'Entry door - plastic/metal',de:'Eingangstür - Kunststoff/Metall',fr:'Porte entrée - plastique/métal',hu:'Bejárati ajtó - műanyag/fém',pl:'Drzwi wejściowe - plastikowe/metalowe',uk:'Вхідні двері - пластикові/металеві',sr:'Ulazna vrata - plastična/metalna',hr:'Ulazna vrata - plastična/metalna',el:'Εξωτερική πόρτα - πλαστικό/μέταλλο'})[lang]||'Vchodové dvere - plastové/kovové'}</td>
               <td style="text-align: right;">${t(lang, 'inPrice')}</td>
             </tr>
             <tr class="${konfiguraciaData.vchodoveDvere !== 'kovove' ? 'strikethrough' : ''}">
-              <td>• Entry door - metal</td>
+              <td>• ${({sk:'Vchodové dvere - kovové',en:'Entry door - metal',de:'Eingangstür - Metall',fr:'Porte entrée - métal',hu:'Bejárati ajtó - fém',pl:'Drzwi wejściowe - metalowe',uk:'Вхідні двері - металеві',sr:'Ulazna vrata - metalna',hr:'Ulazna vrata - metalna',el:'Εξωτερική πόρτα - μέταλλο'})[lang]||'Vchodové dvere - kovové'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.dvere_kovove)}</td>
             </tr>
 
             <tr class="category"><td colspan="2">${t(lang, 'interiorHeader')}</td></tr>
             <tr class="${konfiguraciaData.obkladStien !== 'smrek_8cm' ? 'strikethrough' : ''}">
-              <td>• Cladding - spruce 8cm</td>
+              <td>• ${({sk:'Obklad - smrek 8cm',en:'Cladding - spruce 8cm',de:'Verkleidung - Fichte 8cm',fr:'Revêtement - épicéa 8cm',hu:'Burkolat - luc 8cm',pl:'Okładzina - świerk 8cm',uk:'Обшивка - ялина 8cm',sr:'Obloga - smreka 8cm',hr:'Obloga - smreka 8cm',el:'Επένδυση - ελάτη 8cm'})[lang]||'Obklad - smrek 8cm'}</td>
               <td style="text-align: right;">${t(lang, 'inPrice')}</td>
             </tr>
             <tr class="${konfiguraciaData.obkladStien !== 'smrek_bez_uzlov' ? 'strikethrough' : ''}">
-              <td>• Cladding - spruce no-knots</td>
+              <td>• ${({sk:'Obklad - smrek bez uzlov',en:'Cladding - spruce no-knots',de:'Verkleidung - Fichte astfrei',fr:'Revêtement - épicéa sans nœuds',hu:'Burkolat - csomómentes luc',pl:'Okładzina - świerk bez sęków',uk:'Обшивка - ялина без сучків',sr:'Obloga - smreka bez čvorova',hr:'Obloga - smreka bez čvorova',el:'Επένδυση - ελάτη χωρίς ρόζους'})[lang]||'Obklad - smrek bez uzlov'}</td>
               <td style="text-align: right;">${t(lang, 'inPrice')}</td>
             </tr>
             <tr class="${konfiguraciaData.obkladStien !== 'sadrokarton_tapeta' ? 'strikethrough' : ''}">
-              <td>• Cladding - drywall + wallpaper</td>
+              <td>• ${({sk:'Obklad - sadrokartón + tapeta',en:'Cladding - drywall + wallpaper',de:'Verkleidung - Gipskarton + Tapete',fr:'Revêtement - placo + papier peint',hu:'Burkolat - gipszkarton + tapéta',pl:'Okładzina - płyta karton-gips + tapeta',uk:'Обшивка - гіпсокартон + шпалери',sr:'Obloga - gipskarton + tapeta',hr:'Obloga - gipskarton + tapeta',el:'Επένδυση - γυψοσανίδα + ταπετσαρία'})[lang]||'Obklad - sadrokartón + tapeta'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.obklad_sadrokarton)}</td>
             </tr>
             <tr class="${konfiguraciaData.obkladStien !== 'osb_panel' ? 'strikethrough' : ''}">
-              <td>• Cladding - OSB panel</td>
+              <td>• ${({sk:'Obklad - OSB panel',en:'Cladding - OSB panel',de:'Verkleidung - OSB-Platte',fr:'Revêtement - panneau OSB',hu:'Burkolat - OSB panel',pl:'Okładzina - płyta OSB',uk:'Обшивка - OSB панель',sr:'Obloga - OSB ploča',hr:'Obloga - OSB ploča',el:'Επένδυση - πλάκα OSB'})[lang]||'Obklad - OSB panel'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.obklad_osb)}</td>
             </tr>
             <tr>
-              <td>• Floor - laminate</td>
+              <td>• ${({sk:'Podlaha - laminát',en:'Floor - laminate',de:'Boden - Laminat',fr:'Sol - stratifié',hu:'Padló - laminált',pl:'Podłoga - laminat',uk:'Підлога - ламінат',sr:'Pod - laminat',hr:'Pod - laminat',el:'Δάπεδο - laminate'})[lang]||'Podlaha - laminát'}</td>
               <td style="text-align: right;">${t(lang, 'inPrice')}</td>
             </tr>
             <tr class="${konfiguraciaData.interieroveDvere !== 'kridlove' ? 'strikethrough' : ''}">
-              <td>• Interior doors - hinged</td>
+              <td>• ${({sk:'Interiérové dvere - krídlové',en:'Interior doors - hinged',de:'Innentüren - Drehtüren',fr:'Portes intérieures - battantes',hu:'Belső ajtók - szárnyasok',pl:'Drzwi wewnętrzne - skrzydłowe',uk:'Внутрішні двері - розпашні',sr:'Unutrašnja vrata - krilna',hr:'Unutarnja vrata - krilna',el:'Εσωτερικές πόρτες - ανοιγόμενες'})[lang]||'Interiérové dvere - krídlové'}</td>
               <td style="text-align: right;">${t(lang, 'inPrice')}</td>
             </tr>
             <tr class="${konfiguraciaData.interieroveDvere !== 'posuvne' ? 'strikethrough' : ''}">
-              <td>• Interior doors - sliding</td>
+              <td>• ${({sk:'Interiérové dvere - posuvné',en:'Interior doors - sliding',de:'Innentüren - Schiebetüren',fr:'Portes intérieures - coulissantes',hu:'Belső ajtók - tolóajtók',pl:'Drzwi wewnętrzne - przesuwne',uk:'Внутрішні двері - розсувні',sr:'Unutrašnja vrata - klizna',hr:'Unutarnja vrata - klizna',el:'Εσωτερικές πόρτες - συρόμενες'})[lang]||'Interiérové dvere - posuvné'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.dvere_posuvne)}</td>
             </tr>
 
             <tr class="category"><td colspan="2">${t(lang, 'electricalHeader')}</td></tr>
             <tr class="${konfiguraciaData.elektro !== 'eu' ? 'strikethrough' : ''}">
-              <td>• Electrical - EU standard</td>
+              <td>• ${({sk:'Elektro - EU štandard',en:'Electrical - EU standard',de:'Elektro - EU-Standard',fr:'Électricité - norme EU',hu:'Elektromos - EU szabvány',pl:'Elektryka - standard EU',uk:'Електрика - стандарт ЄС',sr:'Elektrika - EU standard',hr:'Elektrika - EU standard',el:'Ηλεκτρολογικά - πρότυπο ΕΕ'})[lang]||'Elektro - EU štandard'}</td>
               <td style="text-align: right;">${t(lang, 'inPrice')}</td>
             </tr>
             <tr class="${konfiguraciaData.elektro !== 'cz' ? 'strikethrough' : ''}">
-              <td>• Electrical - CZ/SK standard</td>
+              <td>• ${({sk:'Elektro - CZ/SK štandard',en:'Electrical - CZ/SK standard',de:'Elektro - CZ/SK-Standard',fr:'Électricité - norme CZ/SK',hu:'Elektromos - CZ/SK szabvány',pl:'Elektryka - standard CZ/SK',uk:'Електрика - стандарт CZ/SK',sr:'Elektrika - CZ/SK standard',hr:'Elektrika - CZ/SK standard',el:'Ηλεκτρολογικά - πρότυπο CZ/SK'})[lang]||'Elektro - CZ/SK štandard'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.elektro_cz)}</td>
             </tr>
             <tr class="${konfiguraciaData.elektro !== 'ge' ? 'strikethrough' : ''}">
-              <td>• Electrical - GE standard (A0)</td>
+              <td>• ${({sk:'Elektro - GE štandard (A0)',en:'Electrical - GE standard (A0)',de:'Elektro - GE-Standard (A0)',fr:'Électricité - norme GE (A0)',hu:'Elektromos - GE szabvány (A0)',pl:'Elektryka - standard GE (A0)',uk:'Електрика - стандарт GE (A0)',sr:'Elektrika - GE standard (A0)',hr:'Elektrika - GE standard (A0)',el:'Ηλεκτρολογικά - πρότυπο GE (A0)'})[lang]||'Elektro - GE štandard (A0)'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.elektro_ge)}</td>
             </tr>
             <tr class="${!konfiguraciaData.bleskozvod ? 'strikethrough' : ''}">
-              <td>• Lightning rod</td>
+              <td>• ${({sk:'Bleskozvod',en:'Lightning rod',de:'Blitzableiter',fr:'Paratonnerre',hu:'Villámhárító',pl:'Piorunochron',uk:'Блискавковідвід',sr:'Gromobran',hr:'Gromobran',el:'Αλεξικέραυνο'})[lang]||'Bleskozvod'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.bleskozvod)}</td>
             </tr>
             <tr class="${!konfiguraciaData.prepat ? 'strikethrough' : ''}">
-              <td>• Surge protection</td>
+              <td>• ${({sk:'Prepäťová ochrana',en:'Surge protection',de:'Überspannungsschutz',fr:'Protection contre les surtensions',hu:'Túlfeszültség védelem',pl:'Ochrona przepięciowa',uk:'Захист від перенапруги',sr:'Zaštita od prenapona',hr:'Zaštita od prenapona',el:'Προστασία υπερτάσεων'})[lang]||'Prepäťová ochrana'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.prepat)}</td>
             </tr>
             <tr class="${!konfiguraciaData.pripravaNaSolarnePanely ? 'strikethrough' : ''}">
-              <td>• Solar panel preparation</td>
+              <td>• ${({sk:'Príprava na solárne panely',en:'Solar panel preparation',de:'Solaranlage Vorbereitung',fr:'Préparation panneaux solaires',hu:'Napelem előkészítés',pl:'Przygotowanie pod panele słoneczne',uk:'Підготовка для сонячних панелей',sr:'Priprema za solarne panele',hr:'Priprema za solarne panele',el:'Προετοιμασία ηλιακών πάνελ'})[lang]||'Príprava na solárne panely'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.pripravaNaSolarnePanely)}</td>
             </tr>
 
             <tr class="category"><td colspan="2">${t(lang, 'bathroomHeader')}</td></tr>
             <tr class="${konfiguraciaData.sprchovyKut !== 'standard' ? 'strikethrough' : ''}">
-              <td>• Shower + WC Geberit</td>
+              <td>• ${({sk:'Sprcha + WC Geberit',en:'Shower + WC Geberit',de:'Dusche + WC Geberit',fr:'Douche + WC Geberit',hu:'Zuhanyzó + WC Geberit',pl:'Prysznic + WC Geberit',uk:'Душ + WC Geberit',sr:'Tuš + WC Geberit',hr:'Tuš + WC Geberit',el:'Ντους + WC Geberit'})[lang]||'Sprcha + WC Geberit'}</td>
               <td style="text-align: right;">${t(lang, 'inPrice')}</td>
             </tr>
             <tr class="${konfiguraciaData.sprchovyKut !== 'radaway' ? 'strikethrough' : ''}">
-              <td>• Shower cabin Radaway</td>
+              <td>• ${({sk:'Sprchový kút Radaway',en:'Shower cabin Radaway',de:'Duschkabine Radaway',fr:'Cabine douche Radaway',hu:'Zuhanyzókabin Radaway',pl:'Kabina prysznicowa Radaway',uk:'Душова кабіна Radaway',sr:'Tuš kabina Radaway',hr:'Tuš kabina Radaway',el:'Καμπίνα ντους Radaway'})[lang]||'Sprchový kút Radaway'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.sprchovyKut)}</td>
             </tr>
             <tr class="${konfiguraciaData.bateria !== 'standard' ? 'strikethrough' : ''}">
-              <td>• Faucet - standard</td>
+              <td>• ${({sk:'Batéria - štandard',en:'Faucet - standard',de:'Armatur - Standard',fr:'Robinet - standard',hu:'Csaptelep - standard',pl:'Bateria - standard',uk:'Змішувач - стандарт',sr:'Slavina - standard',hr:'Slavina - standard',el:'Βρύση - τυπική'})[lang]||'Batéria - štandard'}</td>
               <td style="text-align: right;">${t(lang, 'inPrice')}</td>
             </tr>
             <tr class="${konfiguraciaData.bateria !== 'grohe' ? 'strikethrough' : ''}">
-              <td>• Faucet - Grohe</td>
+              <td>• ${({sk:'Batéria - Grohe',en:'Faucet - Grohe',de:'Armatur - Grohe',fr:'Robinet - Grohe',hu:'Csaptelep - Grohe',pl:'Bateria - Grohe',uk:'Змішувач - Grohe',sr:'Slavina - Grohe',hr:'Slavina - Grohe',el:'Βρύση - Grohe'})[lang]||'Batéria - Grohe'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.bateria)}</td>
             </tr>
             <tr class="${konfiguraciaData.stropKupelna !== 'drevo' ? 'strikethrough' : ''}">
-              <td>• Bathroom ceiling - wood</td>
+              <td>• ${({sk:'Strop kúpeľňa - drevo',en:'Bathroom ceiling - wood',de:'Badezimmerdecke - Holz',fr:'Plafond salle de bain - bois',hu:'Fürdőszoba mennyezet - fa',pl:'Sufit łazienki - drewno',uk:'Стеля ванної - дерево',sr:'Plafon kupatila - drvo',hr:'Strop kupaonice - drvo',el:'Οροφή μπάνιου - ξύλο'})[lang]||'Strop kúpeľňa - drevo'}</td>
               <td style="text-align: right;">${t(lang, 'inPrice')}</td>
             </tr>
             <tr class="${konfiguraciaData.stropKupelna !== 'sadrokarton' ? 'strikethrough' : ''}">
-              <td>• Bathroom ceiling - drywall</td>
+              <td>• ${({sk:'Strop kúpeľňa - sadrokartón',en:'Bathroom ceiling - drywall',de:'Badezimmerdecke - Gipskarton',fr:'Plafond salle de bain - placo',hu:'Fürdőszoba mennyezet - gipszkarton',pl:'Sufit łazienki - gipskarton',uk:'Стеля ванної - гіпсокартон',sr:'Plafon kupatila - gipskarton',hr:'Strop kupaonice - gipskarton',el:'Οροφή μπάνιου - γυψοσανίδα'})[lang]||'Strop kúpeľňa - sadrokartón'}</td>
               <td style="text-align: right;">${t(lang, 'inPrice')}</td>
             </tr>
             <tr class="${!konfiguraciaData.vana ? 'strikethrough' : ''}">
-              <td>• Bathtub</td>
+              <td>• ${({sk:'Vaňa',en:'Bathtub',de:'Badewanne',fr:'Baignoire',hu:'Fürdőkád',pl:'Wanna',uk:'Ванна',sr:'Kada',hr:'Kada',el:'Μπανιέρα'})[lang]||'Vaňa'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.vana)}</td>
             </tr>
             <tr class="${!konfiguraciaData.skrinka ? 'strikethrough' : ''}">
-              <td>• Cabinet</td>
+              <td>• ${({sk:'Skrinka',en:'Cabinet',de:'Schrank',fr:'Armoire',hu:'Szekrény',pl:'Szafka',uk:'Шафа',sr:'Ormarić',hr:'Ormarić',el:'Ντουλάπι'})[lang]||'Skrinka'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.skrinka)}</td>
             </tr>
 
             <tr class="category"><td colspan="2">${t(lang, 'foundationsHeader')}</td></tr>
             <tr class="${konfiguraciaData.zaklady !== 'bez' ? 'strikethrough' : ''}">
-              <td>• Without foundations</td>
+              <td>• ${({sk:'Bez základov',en:'Without foundations',de:'Ohne Fundament',fr:'Sans fondations',hu:'Alapozás nélkül',pl:'Bez fundamentów',uk:'Без фундаменту',sr:'Bez temelja',hr:'Bez temelja',el:'Χωρίς θεμέλια'})[lang]||'Bez základov'}</td>
               <td style="text-align: right;">${t(lang, 'inPrice')}</td>
             </tr>
             <tr class="${konfiguraciaData.zaklady !== 'vruty' ? 'strikethrough' : ''}">
-              <td>• Foundations - ground screws</td>
+              <td>• ${({sk:'Základy - zemné vruty',en:'Foundations - ground screws',de:'Fundament - Erdschrauben',fr:'Fondations - vis de sol',hu:'Alapozás - talajcsavarok',pl:'Fundamenty - śruby gruntowe',uk:'Фундамент - ґрунтові гвинти',sr:'Temelji - zemni vijci',hr:'Temelji - zemni vijci',el:'Θεμέλια - εδαφόβιδες'})[lang]||'Základy - zemné vruty'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.zaklady_vruty)}</td>
             </tr>
             <tr class="${konfiguraciaData.zaklady !== 'patky' ? 'strikethrough' : ''}">
-              <td>• Foundations - concrete pads</td>
+              <td>• ${({sk:'Základy - betónové pätky',en:'Foundations - concrete pads',de:'Fundament - Betonsockel',fr:'Fondations - semelles béton',hu:'Alapozás - betonsarkok',pl:'Fundamenty - stopy betonowe',uk:'Фундамент - бетонні опори',sr:'Temelji - betonske noge',hr:'Temelji - betonski stupci',el:'Θεμέλια - σκυρόδεμα'})[lang]||'Základy - betónové pätky'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.zaklady_patky)}</td>
             </tr>
             <tr class="${konfiguraciaData.zaklady !== 'pasove' ? 'strikethrough' : ''}">
-              <td>• Foundations - strip concrete</td>
+              <td>• ${({sk:'Základy - pásové betónové',en:'Foundations - strip concrete',de:'Fundament - Streifenfundament',fr:'Fondations - semelles filantes',hu:'Alapozás - sávfundamentum',pl:'Fundamenty - ławy betonowe',uk:'Фундамент - стрічковий бетон',sr:'Temelji - trakasti beton',hr:'Temelji - trakasti beton',el:'Θεμέλια - λωριδωτό σκυρόδεμα'})[lang]||'Základy - pásové betónové'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.zaklady_pasove)}</td>
             </tr>
 
             <tr class="category"><td colspan="2">${t(lang, 'engineeringHeader')}</td></tr>
             <tr class="${!konfiguraciaData.inziniering ? 'strikethrough' : ''}">
-              <td>• Engineering</td>
+              <td>• ${({sk:'Inžiniering',en:'Engineering',de:'Engineering',fr:'Ingénierie',hu:'Mérnöki szolgáltatás',pl:'Inżyniering',uk:'Інжиніринг',sr:'Inženjering',hr:'Inženjering',el:'Μηχανική'})[lang]||'Inžiniering'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.inziniering)}</td>
             </tr>
             <tr class="${!konfiguraciaData.projektACertifikacia ? 'strikethrough' : ''}">
-              <td>• Project + A0 Certification</td>
+              <td>• ${({sk:'Projekt + Certifikácia A0',en:'Project + A0 Certification',de:'Projekt + A0-Zertifizierung',fr:'Projet + Certification A0',hu:'Projekt + A0 tanúsítvány',pl:'Projekt + Certyfikacja A0',uk:'Проект + Сертифікація A0',sr:'Projekat + A0 sertifikacija',hr:'Projekt + A0 certifikacija',el:'Σχέδιο + Πιστοποίηση A0'})[lang]||'Projekt + Certifikácia A0'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.projektACertifikacia)}</td>
             </tr>
             <tr class="${!konfiguraciaData.revizia ? 'strikethrough' : ''}">
-              <td>• Revision documentation</td>
+              <td>• ${({sk:'Revízna dokumentácia',en:'Revision documentation',de:'Revisionsdokumentation',fr:'Documentation de révision',hu:'Felülvizsgálati dokumentáció',pl:'Dokumentacja rewizyjna',uk:'Ревізійна документація',sr:'Reviziona dokumentacija',hr:'Revizijska dokumentacija',el:'Τεκμηρίωση αναθεώρησης'})[lang]||'Revízna dokumentácia'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.revizia)}</td>
             </tr>
 
             <tr class="category"><td colspan="2">${t(lang, 'realizationHeader')}</td></tr>
             <tr class="${!konfiguraciaData.montaz ? 'strikethrough' : ''}">
-              <td>• House assembly</td>
+              <td>• ${({sk:'Montáž domu',en:'House assembly',de:'Hausmontage',fr:'Montage maison',hu:'Házmontázs',pl:'Montaż domu',uk:'Монтаж будинку',sr:'Montaža kuće',hr:'Montaža kuće',el:'Συναρμολόγηση σπιτιού'})[lang]||'Montáž domu'}</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.montaz)}</td>
             </tr>
 

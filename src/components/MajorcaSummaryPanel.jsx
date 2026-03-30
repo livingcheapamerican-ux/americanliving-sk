@@ -379,7 +379,7 @@ export default function MajorcaSummaryPanel({
         strecha={strecha}
         odkvapy={odkvapy}
         okna={okna}
-        sieteProtiHmyzu={sieteProtiHmyzu}
+        sieteProtiHmyzu={undefined}
         vchodoveDvere={vchodoveDvere}
         obkladStien={obkladStien}
         interieroveDvere={interieroveDvere}

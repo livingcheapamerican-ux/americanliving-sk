@@ -65,11 +65,6 @@ export default function PhotoMetadataEditor({
     }
   }, [photo, isOpen]);
 
-  // Always render the Dialog to maintain consistent hooks
-  if (!isOpen) {
-    return null;
-  }
-
   const saveMutation = useMutation({
     mutationFn: async (data) => {
       const selectedDom = domy.find(d => d.id === data.dom_id);
@@ -208,6 +203,10 @@ Odpovedz v slovenčine.`,
     e.preventDefault();
     saveMutation.mutate(formData);
   };
+
+  if (!isOpen) {
+    return null;
+  }
 
   return (
     <Dialog open={!!photo} onOpenChange={onClose}>

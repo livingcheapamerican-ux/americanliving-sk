@@ -1,20 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { Save, CheckCircle } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
 export default function ProstoHousePriceSaver({ isAdmin, customPrices, domId, houseCode }) {
-  if (!isAdmin) return null;
-
   const queryClient = useQueryClient();
   const [isSaving, setIsSaving] = useState(false);
+
+  if (!isAdmin) return null;
 
   const savePrices = async () => {
     setIsSaving(true);
     try {
-      // Načítaj dom z databázy
       const domy = await base44.entities.Dom.filter({ id: domId });
       const dom = domy[0];
       
@@ -23,7 +22,6 @@ export default function ProstoHousePriceSaver({ isAdmin, customPrices, domId, ho
         return;
       }
 
-      // Aktualizuj konfigurator_custom_ceny_prosto_house
       await base44.entities.Dom.update(domId, {
         konfigurator_custom_ceny_prosto_house: {
           ...dom.konfigurator_custom_ceny_prosto_house,
@@ -31,9 +29,7 @@ export default function ProstoHousePriceSaver({ isAdmin, customPrices, domId, ho
         }
       });
 
-      // Invaliduj query aby sa refreshli dáta
       queryClient.invalidateQueries({ queryKey: ['dom-' + houseCode.toLowerCase()] });
-      
       toast.success('✓ Ceny boli úspešne uložené!');
     } catch (error) {
       console.error('Chyba pri ukladaní cien:', error);

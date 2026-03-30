@@ -67,7 +67,7 @@ const HOUSE_PH008 = {
   }
 };
 
-function SummaryRow({ label, price, included }) {
+function SummaryRow({ label, price, included, t }) {
   if (price === 0 && !included) return null;
   return (
     <div className="flex justify-between items-center py-2 border-b border-gray-50 last:border-0">
@@ -207,6 +207,7 @@ export default function PH008QuoteSummary({ konfiguratorData, celkovaCena, langu
                     label={row.label}
                     price={row.price || 0}
                     included={row.included || row.price === 0}
+                    t={t}
                   />
                 );
               })}

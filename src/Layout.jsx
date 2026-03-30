@@ -21,13 +21,7 @@ import SessionRecorder from "./components/SessionRecorder";
 
 
 function LayoutContent({ children }) {
-  let location;
-  try {
-    location = useLocation();
-  } catch (e) {
-    // Fallback if useLocation fails
-    location = { pathname: window.location.pathname };
-  }
+  const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { t, language, setLanguage } = useLanguage();
