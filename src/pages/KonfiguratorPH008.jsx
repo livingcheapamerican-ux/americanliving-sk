@@ -269,7 +269,7 @@ const ContactModal = ({ isOpen, onClose, onSubmit, isSubmitting, t }) => {
 
 // ── Hlavný komponent ─────────────────────────────────────────────────────────
 
-export default function KonfiguratorPH008() {
+export default function KonfiguratorPH008({ dom: domProp, isAdmin: isAdminProp }) {
   const { language } = useLanguage();
   const t = (key) => prostoHouseTranslations[language]?.[key] || prostoHouseTranslations['sk']?.[key] || key;
 
@@ -283,18 +283,23 @@ export default function KonfiguratorPH008() {
       const domy = await base44.entities.Dom.filter({ id: domIdFromUrl });
       return domy[0] || null;
     },
-    enabled: !!domIdFromUrl,
+    enabled: !!domIdFromUrl && !domProp,
     staleTime: 0,
     cacheTime: 0,
     refetchOnMount: 'always'
   });
 
+  // Prefer dom passed as prop (from DetailDomu), fallback to DB query
+  const domFromDbOrProp = domProp || domFromDb;
+  const effectiveDomId = domProp?.id || domFromDb?.id || domIdFromUrl;
+
   const { data: user } = useQuery({
     queryKey: ['current-user'],
-    queryFn: () => base44.auth.me().catch(() => null)
+    queryFn: () => base44.auth.me().catch(() => null),
+    enabled: !isAdminProp
   });
 
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = isAdminProp ?? (user?.role === 'admin');
 
   const [customPrices, setCustomPrices] = useState({});
   const [typStavby, setTypStavby] = useState('rekreacna');
@@ -341,10 +346,10 @@ export default function KonfiguratorPH008() {
   };
 
   useEffect(() => {
-    if (domFromDb?.konfigurator_custom_ceny_prosto_house?.['ph008']) {
-      setCustomPrices(domFromDb.konfigurator_custom_ceny_prosto_house['ph008']);
+    if (domFromDbOrProp?.konfigurator_custom_ceny_prosto_house?.['ph008']) {
+      setCustomPrices(domFromDbOrProp.konfigurator_custom_ceny_prosto_house['ph008']);
     }
-  }, [domFromDb]);
+  }, [domFromDbOrProp]);
 
   useEffect(() => {
     if (typStavby === 'rodinny_dom') {
@@ -447,7 +452,7 @@ export default function KonfiguratorPH008() {
       if (revision) selectedItems.push({ name: "Revízie", price: getPrice('addon', 'revision', HOUSE_PH008.addons.revision), selected: true, section: "docs" });
 
       const response = await base44.functions.invoke('odosliCenovuPonukuProstoHouse', {
-        dom_id: domFromDb?.id || domIdFromUrl,
+        dom_id: effectiveDomId,
         klient_meno: klientData.meno, klient_email: klientData.email, klient_telefon: klientData.telefon,
         klient_adresa: klientData.obec, klient_poznamka: klientData.poznamka,
         selectedItems, totalPrice, language,
@@ -714,10 +719,10 @@ export default function KonfiguratorPH008() {
         </AccordionSection>
 
         {/* ── Fotogaléria + Pôdorysy ── */}
-        {domFromDb && (
+        {domFromDbOrProp && (
           <AccordionSection id="galeria" title={t('photoGalleryAndFloorPlans')} icon={Eye} openId={openSection} setOpenId={handleSectionOpen}
             badge={t('photoGalleryBadge')}>
-            <KonfiguratorGaleria dom={domFromDb} facadeIdx={facadeIdx} interiorIdx={interiorIdx} />
+            <KonfiguratorGaleria dom={domFromDbOrProp} facadeIdx={facadeIdx} interiorIdx={interiorIdx} />
           </AccordionSection>
         )}
 
@@ -737,7 +742,7 @@ export default function KonfiguratorPH008() {
           <SaveQuoteButton
             domNazov={HOUSE_PH008.name}
             domKod="PH-008"
-            domId={domIdFromUrl}
+            domId={effectiveDomId}
             celkovaCena={totalPrice}
             konfiguratorData={{ mountingIdx, extensionIdx, insulationIdx, foundationIdx, interiorIdx, doorsIdx, facadeIdx, electricity, water, sanita, boiler, heatPump, recuperation, windowLamination, windowTint, roofWindows, fixWindows, tiltWindowsBig, tiltWindowsSmall, interiorDoorsCount, laminateFloors, floorHeating, networks, engineering, projectant, revision, typStavby, language }}
           />
@@ -760,7 +765,7 @@ export default function KonfiguratorPH008() {
           <SaveQuoteButton
             domNazov={HOUSE_PH008.name}
             domKod="PH-008"
-            domId={domIdFromUrl}
+            domId={effectiveDomId}
             celkovaCena={totalPrice}
             konfiguratorData={{ mountingIdx, extensionIdx, insulationIdx, foundationIdx, interiorIdx, doorsIdx, facadeIdx, electricity, water, sanita, boiler, heatPump, recuperation, windowLamination, windowTint, roofWindows, fixWindows, tiltWindowsBig, tiltWindowsSmall, interiorDoorsCount, laminateFloors, floorHeating, networks, engineering, projectant, revision, typStavby, language }}
           />
@@ -814,7 +819,7 @@ export default function KonfiguratorPH008() {
       )}
 
       <ContactModal isOpen={modalOpen} onClose={() => setModalOpen(false)} onSubmit={handleSubmit} isSubmitting={isSubmitting} t={t} />
-      <ProstoHousePriceSaver isAdmin={isAdmin} customPrices={customPrices} domId={domIdFromUrl} houseCode="ph008" />
+      <ProstoHousePriceSaver isAdmin={isAdmin} customPrices={customPrices} domId={effectiveDomId} houseCode="ph008" />
     </div>
   );
 }

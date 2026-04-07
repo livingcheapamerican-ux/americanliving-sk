@@ -142,7 +142,7 @@ const ContactModal = ({ isOpen, onClose, onSubmit, isSubmitting, t }) => {
 
 // ── Hlavný generický komponent ────────────────────────────────────────────────
 
-export default function ProstoHouseKonfigurator({ house, houseCode }) {
+export default function ProstoHouseKonfigurator({ house, houseCode, dom: domProp }) {
   const { language } = useLanguage();
   const t = (key) => prostoHouseTranslations[language]?.[key] || prostoHouseTranslations['sk']?.[key] || key;
 
@@ -156,8 +156,12 @@ export default function ProstoHouseKonfigurator({ house, houseCode }) {
       const domy = await base44.entities.Dom.filter({ id: domIdFromUrl });
       return domy[0] || null;
     },
-    enabled: !!domIdFromUrl, staleTime: 0, cacheTime: 0, refetchOnMount: 'always'
+    enabled: !!domIdFromUrl && !domProp, staleTime: 0, cacheTime: 0, refetchOnMount: 'always'
   });
+
+  // Prefer dom passed as prop (from DetailDomu), fallback to DB query
+  const effectiveDom = domProp || domFromDb;
+  const effectiveDomId = domProp?.id || domFromDb?.id || domIdFromUrl;
 
   const { data: user } = useQuery({ queryKey: ['current-user'], queryFn: () => base44.auth.me().catch(() => null) });
   const isAdmin = user?.role === 'admin';
@@ -308,7 +312,7 @@ export default function ProstoHouseKonfigurator({ house, houseCode }) {
     try {
       const form = e.target;
       const response = await base44.functions.invoke('odosliCenovuPonukuProstoHouse', {
-        dom_id: domFromDb?.id || domIdFromUrl,
+        dom_id: effectiveDomId,
         klient_meno: form.name.value, klient_email: form.email.value,
         klient_telefon: form.phone.value, klient_adresa: form.city.value, klient_poznamka: form.note.value,
         selectedItems: buildSelectedItems(), totalPrice, language,
@@ -487,10 +491,10 @@ export default function ProstoHouseKonfigurator({ house, houseCode }) {
         </AccordionSection>
 
         {/* Galéria */}
-        {domFromDb && (
+        {effectiveDom && (
           <AccordionSection id="galeria" title={t('photoGalleryAndFloorPlans')} icon={Eye} openId={openSection} setOpenId={handleSectionOpen}
             badge={t('photoGalleryBadge')}>
-            <KonfiguratorGaleria dom={domFromDb} facadeIdx={facadeIdx} interiorIdx={interiorIdx} />
+            <KonfiguratorGaleria dom={effectiveDom} facadeIdx={facadeIdx} interiorIdx={interiorIdx} />
           </AccordionSection>
         )}
 
@@ -507,7 +511,7 @@ export default function ProstoHouseKonfigurator({ house, houseCode }) {
             networks={networks} engineering={engineering} projectant={projectant} revision={revision}
             getPrice={getPrice}
           />
-          <SaveQuoteButton domNazov={house.name} domKod={phCode} domId={domIdFromUrl} celkovaCena={totalPrice} konfiguratorData={konfigData} />
+          <SaveQuoteButton domNazov={house.name} domKod={phCode} domId={effectiveDomId} celkovaCena={totalPrice} konfiguratorData={konfigData} />
         </div>
       </div>
 
@@ -521,7 +525,7 @@ export default function ProstoHouseKonfigurator({ house, houseCode }) {
               {isA0Compliant ? `✓ ${t('meetsA0Cert')}` : t('recreationalUse')}
             </div>
           </button>
-          <SaveQuoteButton domNazov={house.name} domKod={phCode} domId={domIdFromUrl} celkovaCena={totalPrice} konfiguratorData={konfigData} />
+          <SaveQuoteButton domNazov={house.name} domKod={phCode} domId={effectiveDomId} celkovaCena={totalPrice} konfiguratorData={konfigData} />
           <button onClick={() => setModalOpen(true)} className="flex-shrink-0 bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-3 rounded-xl flex items-center gap-2 shadow-lg active:scale-95 transition-all">
             <Send className="w-4 h-4" /><span className="text-sm">{t('sendQuote')}</span>
           </button>
@@ -563,7 +567,7 @@ export default function ProstoHouseKonfigurator({ house, houseCode }) {
       )}
 
       <ContactModal isOpen={modalOpen} onClose={() => setModalOpen(false)} onSubmit={handleSubmit} isSubmitting={isSubmitting} t={t} />
-      <ProstoHousePriceSaver isAdmin={isAdmin} customPrices={customPrices} domId={domIdFromUrl} houseCode={houseCode} />
+      <ProstoHousePriceSaver isAdmin={isAdmin} customPrices={customPrices} domId={effectiveDomId} houseCode={houseCode} />
     </div>
   );
 }

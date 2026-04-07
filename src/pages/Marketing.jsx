@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import AIMarketingChat from "../components/AIMarketingChat";
@@ -235,6 +236,16 @@ export default function Marketing() {
 
   React.useEffect(() => { if (assets.length > 0) setDriveLink(assets[0].link); }, [assets]);
 
+  // Výpočet KPI - must be unconditional (hooks rules), before any early returns
+  const todaySessions = useMemo(() => {
+    const today = startOfDay(new Date());
+    const todayEnd = endOfDay(new Date());
+    return allSessions.filter(s => {
+      const d = new Date(s.created_date);
+      return d >= today && d <= todayEnd;
+    });
+  }, [allSessions]);
+
   if (!isAdmin) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
@@ -244,16 +255,6 @@ export default function Marketing() {
       </div>
     );
   }
-
-  // Výpočet KPI
-  const todaySessions = React.useMemo(() => {
-    const today = startOfDay(new Date());
-    const todayEnd = endOfDay(new Date());
-    return allSessions.filter(s => {
-      const d = new Date(s.created_date);
-      return d >= today && d <= todayEnd;
-    });
-  }, [allSessions]);
 
   const conversions = allSessions.filter(s => s.conversions?.length > 0).length;
   const conversionRate = allSessions.length > 0 
