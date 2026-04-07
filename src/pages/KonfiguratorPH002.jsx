@@ -15,6 +15,6 @@ const HOUSE = {
   addons: { electricity: 7800, water: 3650, sanita: 1169, boiler: 246, heatPump: 3600, recuperation: 7749, windowLamination: 3400, windowTint: 1550, roofWindow: 760, fixWindow: 500, tiltWindowBig: 540, tiltWindowSmall: 225, interiorDoor: 250, laminateFloors: 3415, floorHeating: 6101, networks: 1500, engineering: 2590, projectant: 3500, revision: 1000, transport: 0 }
 };
 
-export default function KonfiguratorPH002() {
-  return <ProstoHouseKonfigurator house={HOUSE} houseCode="ph002" />;
+export default function KonfiguratorPH002({ dom, isAdmin }) {
+  return <ProstoHouseKonfigurator house={HOUSE} houseCode="ph002" dom={dom} isAdmin={isAdmin} />;
 }
