@@ -255,6 +255,13 @@ export default function AdminAnalyzaSessions() {
     return `${secs}s`;
   };
 
+  const safeFormat = (value, fmt, options = {}) => {
+    if (!value) return '—';
+    const d = new Date(value);
+    if (isNaN(d.getTime())) return '—';
+    return format(d, fmt, options);
+  };
+
   const getTagColor = (tag) => {
     const colors = {
       'bounced': 'bg-red-100 text-red-800',
@@ -631,7 +638,7 @@ export default function AdminAnalyzaSessions() {
                         )}
                         <div className="flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
-                          {format(new Date(visitor.lastVisit), 'dd.MM.yyyy HH:mm', { locale: sk })}
+                          {safeFormat(visitor.lastVisit, 'dd.MM.yyyy HH:mm', { locale: sk })}
                         </div>
                       </div>
                     </div>
@@ -655,7 +662,7 @@ export default function AdminAnalyzaSessions() {
                         História návštev ({visitor.totalSessions})
                       </h4>
                       <Badge className="bg-blue-100 text-blue-800">
-                        {format(new Date(visitor.firstVisit), 'dd.MM.yyyy', { locale: sk })} - {format(new Date(visitor.lastVisit), 'dd.MM.yyyy', { locale: sk })}
+                        {safeFormat(visitor.firstVisit, 'dd.MM.yyyy', { locale: sk })} - {safeFormat(visitor.lastVisit, 'dd.MM.yyyy', { locale: sk })}
                       </Badge>
                     </div>
 
@@ -707,7 +714,7 @@ export default function AdminAnalyzaSessions() {
                                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 text-xs text-gray-600">
                                   <div className="flex items-center gap-1">
                                     <Clock className="w-3 h-3" />
-                                    {format(new Date(session.start_time), 'dd.MM.yyyy HH:mm', { locale: sk })}
+                                    {safeFormat(session.start_time, 'dd.MM.yyyy HH:mm', { locale: sk })}
                                   </div>
                                   <div className="flex items-center gap-1">
                                     <TrendingUp className="w-3 h-3" />
@@ -901,44 +908,44 @@ export default function AdminAnalyzaSessions() {
                                   </div>
                                 </div>
                                 <div className="text-right text-xs text-gray-400">
-                                  {format(new Date(page.timestamp), 'HH:mm:ss')}
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+                                  {safeFormat(page.timestamp, 'HH:mm:ss')}
+                                  </div>
+                                  </div>
+                                  </div>
+                                  ))}
+                                  </div>
+                                  </div>
+                                  )}
 
-                    {/* Clicks Timeline */}
-                    {session.clicks && session.clicks.length > 0 && (
-                      <div>
-                        <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                          <MousePointer className="w-4 h-4" />
-                          Kliknutia ({session.clicks.length})
-                        </h4>
-                        <div className="space-y-1 max-h-64 overflow-y-auto bg-white p-3 rounded-lg border">
-                          {session.clicks.map((click, idx) => (
-                            <div key={idx} className="flex items-center justify-between text-xs hover:bg-gray-50 p-2 rounded">
-                              <div className="flex items-center gap-2 flex-1">
-                                <Badge variant="outline" className="text-xs">{click.element}</Badge>
-                                <span className="text-gray-700 truncate max-w-md">{click.text}</span>
-                                {click.page_name_sk && (
+                                  {/* Clicks Timeline */}
+                                  {session.clicks && session.clicks.length > 0 && (
+                                  <div>
+                                  <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                                  <MousePointer className="w-4 h-4" />
+                                  Kliknutia ({session.clicks.length})
+                                  </h4>
+                                  <div className="space-y-1 max-h-64 overflow-y-auto bg-white p-3 rounded-lg border">
+                                  {session.clicks.map((click, idx) => (
+                                  <div key={idx} className="flex items-center justify-between text-xs hover:bg-gray-50 p-2 rounded">
+                                  <div className="flex items-center gap-2 flex-1">
+                                  <Badge variant="outline" className="text-xs">{click.element}</Badge>
+                                  <span className="text-gray-700 truncate max-w-md">{click.text}</span>
+                                  {click.page_name_sk && (
                                   <Badge className="bg-green-50 text-green-700 text-xs">📍 {click.page_name_sk}</Badge>
-                                )}
-                                {click.element_id && (
+                                  )}
+                                  {click.element_id && (
                                   <Badge className="bg-blue-50 text-blue-700 text-xs">#{click.element_id}</Badge>
-                                )}
-                              </div>
-                              <div className="flex items-center gap-3 text-gray-400">
-                                <span>poz: {click.x_position}, {click.y_position}</span>
-                                <span>{format(new Date(click.timestamp), 'HH:mm:ss')}</span>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+                                  )}
+                                  </div>
+                                  <div className="flex items-center gap-3 text-gray-400">
+                                  <span>poz: {click.x_position}, {click.y_position}</span>
+                                  <span>{safeFormat(click.timestamp, 'HH:mm:ss')}</span>
+                                  </div>
+                                  </div>
+                                  ))}
+                                  </div>
+                                  </div>
+                                  )}
 
                     {/* Scroll Behavior */}
                     <div className="grid lg:grid-cols-2 gap-4">
@@ -1056,29 +1063,29 @@ export default function AdminAnalyzaSessions() {
                                     {form.action}
                                   </Badge>
                                 </div>
-                                <span className="text-gray-400">{format(new Date(form.timestamp), 'HH:mm:ss')}</span>
-                              </div>
-                              {form.fields_touched && form.fields_touched.length > 0 && (
+                                <span className="text-gray-400">{safeFormat(form.timestamp, 'HH:mm:ss')}</span>
+                                </div>
+                                {form.fields_touched && form.fields_touched.length > 0 && (
                                 <p className="text-gray-600 mt-1">Polia: {form.fields_touched.join(', ')}</p>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+                                )}
+                                </div>
+                                ))}
+                                </div>
+                                </div>
+                                )}
 
-                    {/* Language Changes */}
-                    {session.language_changes && session.language_changes.length > 0 && (
-                      <div className="bg-teal-50 p-4 rounded-lg border border-teal-200">
-                        <h4 className="font-semibold text-teal-900 mb-2">🌍 Zmeny jazyka</h4>
-                        <div className="space-y-1">
-                          {session.language_changes.map((change, idx) => (
-                            <div key={idx} className="text-xs flex items-center gap-2">
-                              <Badge className="bg-teal-100 text-teal-800">{change.from}</Badge>
-                              <span>→</span>
-                              <Badge className="bg-teal-100 text-teal-800">{change.to}</Badge>
-                              <span className="text-gray-400">{format(new Date(change.timestamp), 'HH:mm:ss')}</span>
-                            </div>
+                                {/* Language Changes */}
+                                {session.language_changes && session.language_changes.length > 0 && (
+                                <div className="bg-teal-50 p-4 rounded-lg border border-teal-200">
+                                <h4 className="font-semibold text-teal-900 mb-2">🌍 Zmeny jazyka</h4>
+                                <div className="space-y-1">
+                                {session.language_changes.map((change, idx) => (
+                                <div key={idx} className="text-xs flex items-center gap-2">
+                                <Badge className="bg-teal-100 text-teal-800">{change.from}</Badge>
+                                <span>→</span>
+                                <Badge className="bg-teal-100 text-teal-800">{change.to}</Badge>
+                                <span className="text-gray-400">{safeFormat(change.timestamp, 'HH:mm:ss')}</span>
+                                </div>
                           ))}
                         </div>
                       </div>
@@ -1187,7 +1194,7 @@ export default function AdminAnalyzaSessions() {
                         <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 text-xs text-gray-600">
                           <div className="flex items-center gap-1">
                             <Clock className="w-3 h-3" />
-                            {format(new Date(session.start_time), 'dd.MM.yyyy HH:mm', { locale: sk })}
+                            {safeFormat(session.start_time, 'dd.MM.yyyy HH:mm', { locale: sk })}
                           </div>
                           <div className="flex items-center gap-1">
                             <TrendingUp className="w-3 h-3" />
@@ -1382,7 +1389,7 @@ export default function AdminAnalyzaSessions() {
                                     </div>
                                   </div>
                                   <div className="text-right text-xs text-gray-400">
-                                    {format(new Date(page.timestamp), 'HH:mm:ss')}
+                                    {safeFormat(page.timestamp, 'HH:mm:ss')}
                                   </div>
                                 </div>
                               </div>
@@ -1413,7 +1420,7 @@ export default function AdminAnalyzaSessions() {
                                 </div>
                                 <div className="flex items-center gap-3 text-gray-400">
                                   <span>poz: {click.x_position}, {click.y_position}</span>
-                                  <span>{format(new Date(click.timestamp), 'HH:mm:ss')}</span>
+                                  <span>{safeFormat(click.timestamp, 'HH:mm:ss')}</span>
                                 </div>
                               </div>
                             ))}
@@ -1537,7 +1544,7 @@ export default function AdminAnalyzaSessions() {
                                       {form.action}
                                     </Badge>
                                   </div>
-                                  <span className="text-gray-400">{format(new Date(form.timestamp), 'HH:mm:ss')}</span>
+                                  <span className="text-gray-400">{safeFormat(form.timestamp, 'HH:mm:ss')}</span>
                                 </div>
                                 {form.fields_touched && form.fields_touched.length > 0 && (
                                   <p className="text-gray-600 mt-1">Polia: {form.fields_touched.join(', ')}</p>
@@ -1558,7 +1565,7 @@ export default function AdminAnalyzaSessions() {
                                 <Badge className="bg-teal-100 text-teal-800">{change.from}</Badge>
                                 <span>→</span>
                                 <Badge className="bg-teal-100 text-teal-800">{change.to}</Badge>
-                                <span className="text-gray-400">{format(new Date(change.timestamp), 'HH:mm:ss')}</span>
+                                <span className="text-gray-400">{safeFormat(change.timestamp, 'HH:mm:ss')}</span>
                               </div>
                             ))}
                           </div>
