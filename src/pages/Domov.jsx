@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Helmet } from "react-helmet-async";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
@@ -100,9 +100,13 @@ export default function Domov() {
 
   const isAdmin = user?.role === 'admin' || user?.super_admin === true;
 
-  const heroImages = heroSettings?.hero_images?.length > 0 
-    ? heroSettings.hero_images 
-    : DEFAULT_HERO_IMAGES;
+  const heroImages = useMemo(() => 
+    heroSettings?.hero_images?.length > 0 
+      ? heroSettings.hero_images 
+      : DEFAULT_HERO_IMAGES,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [heroSettings?.hero_images?.join(',')]
+  );
   
   const heroInterval = heroSettings?.hero_interval || 5000;
 
