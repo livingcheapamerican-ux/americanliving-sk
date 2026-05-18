@@ -1141,7 +1141,7 @@ export default function Katalog() {
               <Card key={i} className="h-48 sm:h-96 animate-pulse bg-gray-200" />
               )}
               </div>
-            ) : zoradeneDomy.length > 0 ? (
+            ) : zoradeneDomy.length > 0 ?
             <>
               {vyrobcaFilter.length === 1 && vyrobcaFilter[0] === "Prosto House" && (
                 <div className="mb-8">
@@ -1177,8 +1177,7 @@ export default function Katalog() {
                 );
               })}
               </motion.div>
-            </>
-            ) : (
+            </> :
 
             <Card className="p-12 text-center">
                 <Home className="w-16 h-16 text-gray-300 mx-auto mb-4" />
@@ -1207,7 +1206,7 @@ export default function Katalog() {
                   {t('resetFilters')}
                 </Button>
               </Card>
-            )}
+            }
           </div>
         </div>
       </div>
