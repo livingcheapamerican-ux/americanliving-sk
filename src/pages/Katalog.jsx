@@ -28,8 +28,9 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
+      className="h-full"
     >
-      <Card className={`group overflow-hidden hover:shadow-2xl hover:shadow-red-900/20 transition-all duration-300 hover:-translate-y-1 sm:hover:-translate-y-2 bg-slate-900 border-white/10 flex flex-col h-full ${jeVybrany ? 'ring-2 ring-red-500' : ''} ${dom.verejny === false ? 'opacity-60' : ''}`}>
+      <Card className={`group overflow-hidden hover:shadow-[0_0_30px_rgba(239,68,68,0.15)] hover:border-red-500/30 transition-all duration-500 hover:-translate-y-2 bg-slate-900 border-white/10 flex flex-col h-full ${jeVybrany ? 'ring-2 ring-red-500' : ''} ${dom.verejny === false ? 'opacity-60' : ''}`}>
         <div className="relative overflow-hidden aspect-[16/9]">
           <Link to={`${createPageUrl("DetailDomu")}?${dom.slug ? `slug=${dom.slug}` : `id=${dom.id}`}&return=${encodeURIComponent(location.pathname + location.search)}`}>
             {dom.hlavny_obrazok ? (
@@ -42,7 +43,7 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
                       : dom.hlavny_obrazok
                 }
                 alt={dom.nazov}
-                className={`w-full h-full ${dizajnFilter === "podorys3d" ? "object-contain bg-white" : "object-cover"} group-hover:scale-105 transition-all duration-500`}
+                className={`w-full h-full ${dizajnFilter === "podorys3d" ? "object-contain bg-white" : "object-cover"} group-hover:scale-110 transition-transform duration-700 ease-out`}
                 useCatalogSetting={true}
                 priority={index < 4}
                 loading={index < 4 ? "eager" : "lazy"}
@@ -51,8 +52,8 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
                 height={225}
               />
             ) : (
-              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                <Home className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400" />
+              <div className="w-full h-full bg-slate-800 flex items-center justify-center">
+                <Home className="w-12 h-12 sm:w-16 sm:h-16 text-slate-600 group-hover:scale-110 transition-transform duration-500" />
               </div>
             )}
           </Link>
@@ -74,7 +75,7 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
                 className={`p-1.5 sm:p-2 rounded-full backdrop-blur-sm transition-all disabled:opacity-50 shadow-lg ${
                   dom.verejny !== false 
                     ? 'bg-green-600/90 text-white hover:bg-green-700' 
-                    : 'bg-gray-600/90 text-white hover:bg-gray-700'
+                    : 'bg-slate-600/90 text-white hover:bg-slate-700'
                 }`}
               >
                 {dom.verejny !== false ? <Eye className="w-3.5 h-3.5 sm:w-5 sm:h-5" /> : <EyeOff className="w-3.5 h-3.5 sm:w-5 sm:h-5" />}
@@ -83,91 +84,91 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
             <button
               onClick={() => toggleSrovnanie(dom)}
               disabled={!jeVybrany && vybraneNaSrovnanie.length >= 3}
-              className={`p-1.5 sm:p-2 rounded-full backdrop-blur-sm transition-all shadow-lg ${
+              className={`p-1.5 sm:p-2 rounded-full backdrop-blur-sm transition-all shadow-lg hover:scale-110 active:scale-95 ${
                 jeVybrany
-                  ? 'bg-primary text-white'
-                  : 'bg-white/90 text-primary hover:bg-primary hover:text-white'} ${
-                !jeVybrany && vybraneNaSrovnanie.length >= 3 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  ? 'bg-red-500 text-white shadow-[0_0_15px_rgba(239,68,68,0.5)]'
+                  : 'bg-white/90 text-slate-900 hover:bg-red-500 hover:text-white'} ${
+                !jeVybrany && vybraneNaSrovnanie.length >= 3 ? 'opacity-50 cursor-not-allowed hover:bg-white/90 hover:text-slate-900 hover:scale-100' : ''}`}
             >
-              <Plus className={`w-3.5 h-3.5 sm:w-5 sm:h-5 transition-transform ${jeVybrany ? 'rotate-45' : ''}`} />
+              <Plus className={`w-3.5 h-3.5 sm:w-5 sm:h-5 transition-transform duration-300 ${jeVybrany ? 'rotate-45' : ''}`} />
             </button>
           </div>
         </div>
         
         <div className="p-2 sm:p-4 flex-1 flex flex-col">
         <Link to={`${createPageUrl("DetailDomu")}?${dom.slug ? `slug=${dom.slug}` : `id=${dom.id}`}&return=${encodeURIComponent(location.pathname + location.search)}`}>
-          <h3 className="text-xs sm:text-lg font-bold text-white mb-1 group-hover:text-red-500 transition-colors line-clamp-2 leading-tight">
+          <h3 className="text-xs sm:text-lg font-bold text-white mb-1 group-hover:text-red-400 transition-colors duration-300 line-clamp-2 leading-tight">
             {dom.nazov}
           </h3>
           {dom.vyrobca === "Prosto House" && dom.prosto_house_kod && (
             <div className="flex items-center gap-1 mb-1">
-              <Package className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-red-600" />
-              <span className="text-[8px] sm:text-[10px] font-bold text-red-600">{dom.prosto_house_kod}</span>
+              <Package className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-red-500" />
+              <span className="text-[8px] sm:text-[10px] font-bold text-red-500">{dom.prosto_house_kod}</span>
             </div>
           )}
         </Link>
           
           {/* Kľúčové benefity pod názvom */}
-          <div className="flex flex-wrap gap-0.5 sm:gap-1 mb-1 sm:mb-1.5">
+          <div className="flex flex-wrap gap-0.5 sm:gap-1 mb-1 sm:mb-1.5 mt-1">
             {dom.celorocny && (
-              <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white px-1.5 py-0.5 rounded text-[8px] sm:text-[10px] font-bold shadow-sm flex items-center gap-0.5">
+              <div className="bg-amber-500/20 border border-amber-500/30 text-amber-400 px-1.5 py-0.5 rounded text-[8px] sm:text-[10px] font-bold shadow-sm flex items-center gap-1 transition-all duration-300 group-hover:border-amber-400/50">
                 <CheckCircle className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                 {t('yearRound')}
               </div>
             )}
             {dom.energeticky_certifikat && (
-              <div className="bg-gradient-to-r from-green-500 to-green-600 text-white px-1.5 py-0.5 rounded text-[8px] sm:text-[10px] font-bold shadow-sm flex items-center gap-0.5">
-                <Zap className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+              <div className="bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 px-1.5 py-0.5 rounded text-[8px] sm:text-[10px] font-bold shadow-sm flex items-center gap-1 transition-all duration-300 group-hover:border-emerald-400/50">
+                <Zap className="w-2.5 h-2.5 sm:w-3 sm:h-3 group-hover:text-yellow-300 transition-colors" />
                 A0
               </div>
             )}
           </div>
 
-          {/* Základné parametre - dlazdice */}
-          <div className="grid grid-cols-3 gap-1 sm:gap-2 mb-2 sm:mb-3">
-            <div className="bg-slate-950 rounded border border-white/5 p-1 sm:p-1.5 text-center">
-              <Home className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-slate-400 group-hover:text-red-400 transition-colors" />
+          {/* Základné parametre - dlazdice so zoom ikonami */}
+          <div className="grid grid-cols-3 gap-1 sm:gap-2 mb-2 sm:mb-3 mt-2">
+            <div className="bg-slate-950 rounded border border-white/5 p-1 sm:p-1.5 text-center transition-colors group-hover:border-white/10">
+              <Home className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-slate-400 group-hover:text-red-400 group-hover:scale-125 group-hover:-translate-y-0.5 transition-all duration-300" />
               <div className="text-[8px] sm:text-[10px] text-slate-500 leading-tight mb-0.5">{t('manufacturer')}</div>
               <div className="font-bold text-slate-300 text-[9px] sm:text-[11px] leading-tight">{dom.vyrobca}</div>
             </div>
             
-            <div className="bg-slate-950 rounded border border-white/5 p-1 sm:p-1.5 text-center">
+            <div className="bg-slate-950 rounded border border-white/5 p-1 sm:p-1.5 text-center transition-colors group-hover:border-white/10">
               {dom.typ_domu === 'montovany' ? (
-                <Hammer className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-orange-500" />
+                <Hammer className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-orange-500 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300" />
               ) : dom.typ_domu === 'mobilny' ? (
-                <Caravan className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-teal-500" />
+                <Caravan className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-teal-500 group-hover:scale-125 group-hover:-translate-x-1 transition-all duration-300" />
               ) : (
-                <LayoutGrid className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-amber-500" />
+                <LayoutGrid className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-amber-500 group-hover:scale-125 group-hover:rotate-6 transition-all duration-300" />
               )}
               <div className="text-[8px] sm:text-[10px] text-slate-500 leading-tight mb-0.5">{t('houseType')}</div>
               <div className="font-bold text-slate-300 text-[9px] sm:text-[11px] leading-tight">{dom.typ_domu === 'modularny' ? t('modularType') : dom.typ_domu === 'montovany' ? t('prefabType') : t('mobileType')}</div>
             </div>
             
-            <div className="bg-slate-950 rounded border border-white/5 p-1 sm:p-1.5 text-center">
-              <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-red-500 rounded-sm mx-auto mb-1" />
+            <div className="bg-slate-950 rounded border border-white/5 p-1 sm:p-1.5 text-center transition-colors group-hover:border-white/10">
+              <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-red-500 rounded-sm mx-auto mb-1 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300" />
               <div className="text-[8px] sm:text-[10px] text-slate-500 leading-tight mb-0.5">{t('builtArea')}</div>
               <div className="font-bold text-white text-[9px] sm:text-[11px]">{dom.zastavana_plocha} m²</div>
             </div>
             
             {dom.uzitkova_plocha && (
-              <div className="bg-slate-950 rounded border border-white/5 p-1 sm:p-1.5 text-center">
-                <Square className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-purple-400" />
+              <div className="bg-slate-950 rounded border border-white/5 p-1 sm:p-1.5 text-center transition-colors group-hover:border-white/10">
+                <Square className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-purple-400 group-hover:scale-125 group-hover:rotate-6 transition-all duration-300" />
                 <div className="text-[8px] sm:text-[10px] text-slate-500 leading-tight mb-0.5">{t('usableArea')}</div>
                 <div className="font-bold text-white text-[9px] sm:text-[11px]">{dom.uzitkova_plocha} m²</div>
               </div>
             )}
             
             {dom.pocet_izieb && (
-              <div className="bg-slate-950 rounded border border-white/5 p-1 sm:p-1.5 text-center">
-                <Grid3x3 className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-blue-400" />
+              <div className="bg-slate-950 rounded border border-white/5 p-1 sm:p-1.5 text-center transition-colors group-hover:border-white/10">
+                <Grid3x3 className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-blue-400 group-hover:scale-125 group-hover:-translate-y-0.5 transition-all duration-300" />
                 <div className="text-[8px] sm:text-[10px] text-slate-500 leading-tight mb-0.5">{t('rooms')}</div>
                 <div className="font-bold text-slate-300 text-[9px] sm:text-[11px]">{dom.pocet_izieb}</div>
               </div>
             )}
             
             {dom.pocet_modulov && (
-              <div className="bg-slate-950 rounded border border-white/5 p-1 sm:p-1.5 text-center">
-                <Boxes className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-red-500" />
+              <div className="bg-slate-950 rounded border border-white/5 p-1 sm:p-1.5 text-center transition-colors group-hover:border-white/10">
+                <Boxes className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-red-500 group-hover:scale-125 transition-all duration-300" />
                 <div className="text-[8px] sm:text-[10px] text-slate-500 leading-tight mb-0.5">Moduly</div>
                 <div className="font-bold text-slate-300 text-[9px] sm:text-[11px]">{dom.pocet_modulov}</div>
               </div>
@@ -178,8 +179,8 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
               (dom.popis && (dom.popis.includes("vstavaná") || dom.popis.includes("zabudovaná") || dom.popis.includes("Vstavaná") || dom.popis.includes("Zabudovaná"))) ||
               (dom.specifikacia && !dom.specifikacia.includes("Terasa: ❌"))
             ) && (
-              <div className="bg-slate-950 rounded border border-white/5 p-1 sm:p-1.5 text-center">
-                <Fence className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-teal-400" />
+              <div className="bg-slate-950 rounded border border-white/5 p-1 sm:p-1.5 text-center transition-colors group-hover:border-white/10">
+                <Fence className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-teal-400 group-hover:scale-125 transition-all duration-300" />
                 <div className="text-[8px] sm:text-[10px] text-slate-500 leading-tight mb-0.5">Terasa</div>
                 <div className="font-bold text-slate-300 text-[9px] sm:text-[11px]">{dom.terasa_plocha} m²</div>
               </div>
@@ -188,28 +189,28 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
 
           <div className="pt-2 sm:pt-3 border-t border-white/10 mt-auto">
             {/* Cena - zvýraznená */}
-            <div className="bg-slate-950 rounded border border-white/5 p-2 sm:p-3 mb-2 sm:mb-3">
+            <div className="bg-slate-950/50 rounded border border-white/5 p-2 sm:p-3 mb-2 sm:mb-3">
               <p className="text-[9px] sm:text-[11px] text-slate-400 font-semibold mb-1">
                 {dom.vyrobca === "Ticab house" ? t('basicConfigPrice') : dom.vyrobca === "Prosto House" ? "Základná cena" : t('priceFromLabel')}
               </p>
               {dom.vyrobca === "Ticab house" ? (
                 <div>
                   <div className="flex items-center gap-2">
-                    <p className="text-xs sm:text-sm font-bold text-red-500 line-through">
+                    <p className="text-xs sm:text-sm font-bold text-red-500/70 line-through">
                       {dom.zakladna_cena?.toLocaleString('sk-SK')} €
                     </p>
-                    <p className="text-lg sm:text-xl font-black text-emerald-500">
+                    <p className="text-lg sm:text-xl font-black text-emerald-400 group-hover:text-emerald-300 transition-colors">
                       {Math.round(dom.zakladna_cena * 0.95)?.toLocaleString('sk-SK')} €
                     </p>
                   </div>
-                  <p className="text-[8px] sm:text-[10px] text-emerald-500 font-semibold mt-0.5">
+                  <p className="text-[8px] sm:text-[10px] text-emerald-500/80 font-semibold mt-0.5">
                     💰 S dotáciou AMERICANA
                   </p>
                   <p className="text-[8px] sm:text-[10px] text-slate-500 mt-1">vrátane DPH</p>
                 </div>
               ) : (
                 <div>
-                  <p className="text-lg sm:text-xl font-black text-white">
+                  <p className="text-lg sm:text-xl font-black text-white group-hover:text-red-100 transition-colors">
                     {dom.zakladna_cena?.toLocaleString('sk-SK')} €
                   </p>
                   <p className="text-[8px] sm:text-[10px] text-slate-500 mt-1">vrátane DPH</p>
@@ -219,25 +220,26 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
             {/* Akčné tlačidlá */}
             <div className="space-y-1 sm:space-y-1.5">
               {dom.vyrobca === "Ticab house" && (
-                <div>
+                <div className="mb-2">
                   <Link to={createPageUrl(`DotaciaAmericana?dom=${dom.id}`)}>
                     <Button 
                       size="sm" 
-                      className="w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white text-[9px] sm:text-[10px] px-1.5 sm:px-2 h-6 sm:h-7 font-bold shadow-lg hover:shadow-xl transition-all animate-pulse border-2 border-white"
+                      className="relative overflow-hidden w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-white text-[9px] sm:text-[10px] px-1.5 sm:px-2 h-7 sm:h-8 font-bold shadow-[0_0_15px_rgba(16,185,129,0.3)] hover:shadow-[0_0_25px_rgba(16,185,129,0.6)] transition-all border border-emerald-500/50 group/btn"
                     >
-                      <Gift className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 mr-0.5" />
-                      {t('dotacia')}
+                      <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
+                      <Gift className="relative z-10 w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1 drop-shadow-md" />
+                      <span className="relative z-10 drop-shadow-md tracking-wider">{t('dotacia')}</span>
                     </Button>
                   </Link>
-                  <p className="text-[8px] sm:text-[11px] text-center font-black text-emerald-800 mt-1 leading-tight px-0.5 bg-emerald-50 py-1 rounded border border-emerald-300">
-                    💰 Tu môžete požiadať o dotáciu na cenu domu a energie zdarma
+                  <p className="text-[8px] sm:text-[10px] text-center font-bold text-emerald-500/80 mt-1 leading-tight px-1">
+                    Požiadajte o dotáciu na energie zdarma
                   </p>
                 </div>
               )}
               <Link to={`${createPageUrl("DetailDomu")}?${dom.slug ? `slug=${dom.slug}` : `id=${dom.id}`}&return=${encodeURIComponent(location.pathname + location.search)}`}>
-                <Button size="sm" className="w-full bg-white hover:bg-slate-200 text-slate-900 text-[10px] sm:text-xs px-2 h-8 font-bold shadow-sm">
+                <Button size="sm" className="w-full bg-white/10 hover:bg-red-600 text-white border border-white/20 hover:border-red-500 text-[10px] sm:text-xs px-2 h-8 font-bold shadow-sm transition-all duration-300">
                   {t('detail')}
-                  <ArrowRight className="ml-1 w-3 h-3" />
+                  <ArrowRight className="ml-2 w-3 h-3 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
             </div>
