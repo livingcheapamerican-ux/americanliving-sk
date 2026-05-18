@@ -28,7 +28,7 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
     >
-      <Card className={`group overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 sm:hover:-translate-y-2 bg-white flex flex-col h-full ${jeVybrany ? 'ring-2 ring-primary' : ''} ${dom.verejny === false ? 'opacity-60' : ''}`}>
+      <Card className={`group overflow-hidden hover:shadow-2xl hover:shadow-red-900/20 transition-all duration-300 hover:-translate-y-1 sm:hover:-translate-y-2 bg-slate-900 border-white/10 flex flex-col h-full ${jeVybrany ? 'ring-2 ring-red-500' : ''} ${dom.verejny === false ? 'opacity-60' : ''}`}>
         <div className="relative overflow-hidden aspect-[16/9]">
           <Link to={`${createPageUrl("DetailDomu")}?${dom.slug ? `slug=${dom.slug}` : `id=${dom.id}`}&return=${encodeURIComponent(location.pathname + location.search)}`}>
             {dom.hlavny_obrazok ? (
@@ -93,9 +93,9 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
           </div>
         </div>
         
-        <div className="p-1 sm:p-2 flex-1 flex flex-col">
+        <div className="p-2 sm:p-4 flex-1 flex flex-col">
         <Link to={`${createPageUrl("DetailDomu")}?${dom.slug ? `slug=${dom.slug}` : `id=${dom.id}`}&return=${encodeURIComponent(location.pathname + location.search)}`}>
-          <h3 className="text-[10px] sm:text-base font-bold text-gray-800 mb-0.5 sm:mb-1 group-hover:text-primary transition-colors line-clamp-2 leading-tight">
+          <h3 className="text-xs sm:text-lg font-bold text-white mb-1 group-hover:text-red-500 transition-colors line-clamp-2 leading-tight">
             {dom.nazov}
           </h3>
           {dom.vyrobca === "Prosto House" && dom.prosto_house_kod && (
@@ -123,52 +123,52 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
           </div>
 
           {/* Základné parametre - dlazdice */}
-          <div className="grid grid-cols-3 gap-0.5 sm:gap-1 mb-1 sm:mb-1.5">
-            <div className="bg-blue-50 rounded p-0.5 sm:p-1 text-center">
-              <Home className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 mx-auto mb-0.5 text-primary" />
-              <div className="text-[7px] sm:text-[9px] text-gray-500 leading-tight mb-0.5">{t('manufacturer')}</div>
-              <div className="font-bold text-gray-800 text-[8px] sm:text-[10px] leading-tight">{dom.vyrobca}</div>
+          <div className="grid grid-cols-3 gap-1 sm:gap-2 mb-2 sm:mb-3">
+            <div className="bg-slate-950 rounded border border-white/5 p-1 sm:p-1.5 text-center">
+              <Home className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-slate-400 group-hover:text-red-400 transition-colors" />
+              <div className="text-[8px] sm:text-[10px] text-slate-500 leading-tight mb-0.5">{t('manufacturer')}</div>
+              <div className="font-bold text-slate-300 text-[9px] sm:text-[11px] leading-tight">{dom.vyrobca}</div>
             </div>
             
-            <div className="bg-orange-50 rounded p-0.5 sm:p-1 text-center">
+            <div className="bg-slate-950 rounded border border-white/5 p-1 sm:p-1.5 text-center">
               {dom.typ_domu === 'montovany' ? (
-                <Hammer className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 mx-auto mb-0.5 text-orange-600" />
+                <Hammer className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-orange-500" />
               ) : dom.typ_domu === 'mobilny' ? (
-                <Caravan className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 mx-auto mb-0.5 text-teal-600" />
+                <Caravan className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-teal-500" />
               ) : (
-                <LayoutGrid className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 mx-auto mb-0.5 text-amber-500" />
+                <LayoutGrid className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-amber-500" />
               )}
-              <div className="text-[7px] sm:text-[9px] text-gray-500 leading-tight mb-0.5">{t('houseType')}</div>
-              <div className="font-bold text-gray-800 text-[8px] sm:text-[10px] leading-tight">{dom.typ_domu === 'modularny' ? t('modularType') : dom.typ_domu === 'montovany' ? t('prefabType') : t('mobileType')}</div>
+              <div className="text-[8px] sm:text-[10px] text-slate-500 leading-tight mb-0.5">{t('houseType')}</div>
+              <div className="font-bold text-slate-300 text-[9px] sm:text-[11px] leading-tight">{dom.typ_domu === 'modularny' ? t('modularType') : dom.typ_domu === 'montovany' ? t('prefabType') : t('mobileType')}</div>
             </div>
             
-            <div className="bg-red-50 rounded p-0.5 sm:p-1 text-center">
-              <div className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 border-2 border-primary rounded-sm mx-auto mb-0.5" />
-              <div className="text-[7px] sm:text-[9px] text-gray-500 leading-tight mb-0.5">{t('builtArea')}</div>
-              <div className="font-bold text-primary text-[8px] sm:text-[10px]">{dom.zastavana_plocha} m²</div>
+            <div className="bg-slate-950 rounded border border-white/5 p-1 sm:p-1.5 text-center">
+              <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-red-500 rounded-sm mx-auto mb-1" />
+              <div className="text-[8px] sm:text-[10px] text-slate-500 leading-tight mb-0.5">{t('builtArea')}</div>
+              <div className="font-bold text-white text-[9px] sm:text-[11px]">{dom.zastavana_plocha} m²</div>
             </div>
             
             {dom.uzitkova_plocha && (
-              <div className="bg-purple-50 rounded p-0.5 sm:p-1 text-center">
-                <Square className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 mx-auto mb-0.5 text-purple-500" />
-                <div className="text-[7px] sm:text-[9px] text-gray-500 leading-tight mb-0.5">{t('usableArea')}</div>
-                <div className="font-bold text-primary text-[8px] sm:text-[10px]">{dom.uzitkova_plocha} m²</div>
+              <div className="bg-slate-950 rounded border border-white/5 p-1 sm:p-1.5 text-center">
+                <Square className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-purple-400" />
+                <div className="text-[8px] sm:text-[10px] text-slate-500 leading-tight mb-0.5">{t('usableArea')}</div>
+                <div className="font-bold text-white text-[9px] sm:text-[11px]">{dom.uzitkova_plocha} m²</div>
               </div>
             )}
             
             {dom.pocet_izieb && (
-              <div className="bg-blue-50 rounded p-0.5 sm:p-1 text-center">
-                <Grid3x3 className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 mx-auto mb-0.5 text-blue-500" />
-                <div className="text-[7px] sm:text-[9px] text-gray-500 leading-tight mb-0.5">{t('rooms')}</div>
-                <div className="font-bold text-gray-800 text-[8px] sm:text-[10px]">{dom.pocet_izieb}</div>
+              <div className="bg-slate-950 rounded border border-white/5 p-1 sm:p-1.5 text-center">
+                <Grid3x3 className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-blue-400" />
+                <div className="text-[8px] sm:text-[10px] text-slate-500 leading-tight mb-0.5">{t('rooms')}</div>
+                <div className="font-bold text-slate-300 text-[9px] sm:text-[11px]">{dom.pocet_izieb}</div>
               </div>
             )}
             
             {dom.pocet_modulov && (
-              <div className="bg-red-50 rounded p-0.5 sm:p-1 text-center">
-                <Boxes className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 mx-auto mb-0.5 text-red-600" />
-                <div className="text-[7px] sm:text-[9px] text-gray-500 leading-tight mb-0.5">Moduly</div>
-                <div className="font-bold text-gray-800 text-[8px] sm:text-[10px]">{dom.pocet_modulov}</div>
+              <div className="bg-slate-950 rounded border border-white/5 p-1 sm:p-1.5 text-center">
+                <Boxes className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-red-500" />
+                <div className="text-[8px] sm:text-[10px] text-slate-500 leading-tight mb-0.5">Moduly</div>
+                <div className="font-bold text-slate-300 text-[9px] sm:text-[11px]">{dom.pocet_modulov}</div>
               </div>
             )}
             
@@ -177,41 +177,41 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
               (dom.popis && (dom.popis.includes("vstavaná") || dom.popis.includes("zabudovaná") || dom.popis.includes("Vstavaná") || dom.popis.includes("Zabudovaná"))) ||
               (dom.specifikacia && !dom.specifikacia.includes("Terasa: ❌"))
             ) && (
-              <div className="bg-teal-50 rounded p-0.5 sm:p-1 text-center">
-                <Fence className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 mx-auto mb-0.5 text-teal-500" />
-                <div className="text-[7px] sm:text-[9px] text-gray-500 leading-tight mb-0.5">Terasa</div>
-                <div className="font-bold text-gray-800 text-[8px] sm:text-[10px]">{dom.terasa_plocha} m²</div>
+              <div className="bg-slate-950 rounded border border-white/5 p-1 sm:p-1.5 text-center">
+                <Fence className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-teal-400" />
+                <div className="text-[8px] sm:text-[10px] text-slate-500 leading-tight mb-0.5">Terasa</div>
+                <div className="font-bold text-slate-300 text-[9px] sm:text-[11px]">{dom.terasa_plocha} m²</div>
               </div>
             )}
           </div>
 
-          <div className="pt-1 sm:pt-1.5 border-t border-gray-200 mt-auto">
+          <div className="pt-2 sm:pt-3 border-t border-white/10 mt-auto">
             {/* Cena - zvýraznená */}
-            <div className="bg-gradient-to-r from-primary/5 to-primary/10 rounded p-1 sm:p-1.5 mb-1 sm:mb-1.5">
-              <p className="text-[8px] sm:text-[9px] text-gray-600 font-semibold mb-0.5">
+            <div className="bg-slate-950 rounded border border-white/5 p-2 sm:p-3 mb-2 sm:mb-3">
+              <p className="text-[9px] sm:text-[11px] text-slate-400 font-semibold mb-1">
                 {dom.vyrobca === "Ticab house" ? t('basicConfigPrice') : dom.vyrobca === "Prosto House" ? "Základná cena" : t('priceFromLabel')}
               </p>
               {dom.vyrobca === "Ticab house" ? (
                 <div>
                   <div className="flex items-center gap-2">
-                    <p className="text-xs sm:text-sm font-bold text-red-600 line-through">
+                    <p className="text-xs sm:text-sm font-bold text-red-500 line-through">
                       {dom.zakladna_cena?.toLocaleString('sk-SK')} €
                     </p>
-                    <p className="text-base sm:text-lg font-black text-green-600">
+                    <p className="text-lg sm:text-xl font-black text-emerald-500">
                       {Math.round(dom.zakladna_cena * 0.95)?.toLocaleString('sk-SK')} €
                     </p>
                   </div>
-                  <p className="text-[7px] sm:text-[8px] text-green-700 font-semibold mt-0.5">
+                  <p className="text-[8px] sm:text-[10px] text-emerald-500 font-semibold mt-0.5">
                     💰 S dotáciou AMERICANA
                   </p>
-                  <p className="text-[7px] sm:text-[8px] text-gray-500 mt-0.5">vrátane DPH</p>
+                  <p className="text-[8px] sm:text-[10px] text-slate-500 mt-1">vrátane DPH</p>
                 </div>
               ) : (
                 <div>
-                  <p className="text-base sm:text-lg font-black text-primary">
+                  <p className="text-lg sm:text-xl font-black text-white">
                     {dom.zakladna_cena?.toLocaleString('sk-SK')} €
                   </p>
-                  <p className="text-[7px] sm:text-[8px] text-gray-500 mt-0.5">vrátane DPH</p>
+                  <p className="text-[8px] sm:text-[10px] text-slate-500 mt-1">vrátane DPH</p>
                 </div>
               )}
             </div>
@@ -234,9 +234,9 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
                 </div>
               )}
               <Link to={`${createPageUrl("DetailDomu")}?${dom.slug ? `slug=${dom.slug}` : `id=${dom.id}`}&return=${encodeURIComponent(location.pathname + location.search)}`}>
-                <Button size="sm" className="w-full bg-primary hover:bg-primary/90 group-hover:bg-secondary text-[9px] sm:text-[10px] px-1.5 sm:px-2 h-6 sm:h-7 font-bold shadow-sm">
+                <Button size="sm" className="w-full bg-white hover:bg-slate-200 text-slate-900 text-[10px] sm:text-xs px-2 h-8 font-bold shadow-sm">
                   {t('detail')}
-                  <ArrowRight className="ml-0.5 w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />
+                  <ArrowRight className="ml-1 w-3 h-3" />
                 </Button>
               </Link>
             </div>
@@ -539,7 +539,7 @@ export default function Katalog() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 overflow-x-hidden max-w-full">
+    <div className="min-h-screen bg-slate-950 text-slate-50 overflow-x-hidden max-w-full font-['Outfit']">
       <Helmet>
         <title>{metaTitle}</title>
         <meta name="description" content={metaDescription} />
@@ -555,7 +555,7 @@ export default function Katalog() {
         </script>
       </Helmet>
       {/* Header */}
-      <section className="bg-gradient-to-br from-red-900 via-red-800 to-red-700 py-3 sm:py-12">
+      <section className="bg-slate-900 border-b border-white/10 py-8 sm:py-16">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row gap-4 lg:gap-8 items-start lg:items-center">
             {/* Ľavá časť - Hlavný nadpis a popis */}
@@ -566,7 +566,7 @@ export default function Katalog() {
               <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-2 sm:mb-4 text-white">
                 {t('houseCatalog')}
               </h1>
-              <p className="text-sm sm:text-lg text-white font-medium">
+              <p className="text-sm sm:text-lg text-slate-400 font-light">
                 {t('modularAndMobileHouses')}
               </p>
             </motion.div>
@@ -610,7 +610,7 @@ export default function Katalog() {
         </div>
       </section>
 
-      <div className="container mx-auto px-1 sm:px-4 py-2 sm:py-8 max-w-full overflow-hidden">
+      <div className="container mx-auto px-2 sm:px-4 py-6 sm:py-12 max-w-full overflow-hidden">
         {/* Tabs pre kategórie */}
         <Tabs value={kategoriaFilter} onValueChange={setKategoriaFilter} className="mb-4 sm:mb-6">
           <TabsList className={`grid w-full max-w-xl mx-auto h-8 sm:h-10 ${canManage ? 'grid-cols-4' : 'grid-cols-3'}`}>
@@ -630,17 +630,17 @@ export default function Katalog() {
             animate={{ opacity: 1, x: 0 }}
             className="lg:w-72 flex-shrink-0">
 
-            <Card className="p-2 sm:p-4 sticky top-16 shadow-lg max-w-full overflow-hidden">
+            <Card className="p-3 sm:p-5 sticky top-24 shadow-2xl bg-slate-900 border-white/10 max-w-full overflow-hidden">
               <div className="flex items-center gap-2 mb-3 sm:mb-4">
                 <Filter className="w-4 h-4 text-primary" />
-                <h2 className="text-base sm:text-lg font-bold text-primary">{t('filters')}</h2>
+                <h2 className="text-base sm:text-lg font-bold text-white">{t('filters')}</h2>
               </div>
 
               <div className="space-y-3 sm:space-y-4">
                 {/* Vyhľadávanie */}
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1 flex items-center gap-1">
-                    <Search className="w-3 h-3 text-gray-700" />
+                  <label className="block text-xs font-semibold text-slate-300 mb-1 flex items-center gap-1">
+                    <Search className="w-3 h-3 text-slate-400" />
                     {t('search')}
                   </label>
                   <div className="relative">
@@ -649,14 +649,14 @@ export default function Katalog() {
                       placeholder={t('namePlaceholder')}
                       value={hladanieInput}
                       onChange={(e) => setHladanieInput(e.target.value)}
-                      className="pl-7 h-8 text-sm" />
+                      className="pl-7 h-9 text-sm bg-slate-950 border-white/10 text-white" />
 
                   </div>
                 </div>
 
                 {/* Zoradenie */}
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                  <label className="block text-xs font-semibold text-slate-300 mb-1">
                     <ArrowUpDown className="w-3 h-3 inline mr-1" />
                     {t('sortBy')}
                   </label>
@@ -680,8 +680,8 @@ export default function Katalog() {
 
                 {/* Výrobca */}
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
-                    <Home className="w-3 h-3 text-primary" />
+                  <label className="block text-xs font-semibold text-slate-300 mb-2 flex items-center gap-1">
+                    <Home className="w-3 h-3 text-red-500" />
                     {t('manufacturer')}
                   </label>
                   <div className="grid grid-cols-1 gap-1.5">
@@ -695,14 +695,14 @@ export default function Katalog() {
                             setVyrobcaFilter([...vyrobcaFilter, v]);
                           }
                         }}
-                        className={`p-2 rounded-lg border-2 transition-all text-left ${
+                        className={`p-2 rounded-lg border transition-all text-left ${
                           vyrobcaFilter.includes(v)
-                            ? 'bg-blue-100 border-primary text-primary font-bold'
-                            : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50'
+                            ? 'bg-red-500/20 border-red-500 text-red-400 font-bold'
+                            : 'bg-slate-950 border-white/10 text-slate-400 hover:border-white/30 hover:text-white hover:bg-white/5'
                         }`}
                       >
                         <div className="flex items-center gap-2">
-                          <Home className={`w-3.5 h-3.5 ${vyrobcaFilter.includes(v) ? 'text-primary' : 'text-gray-400'}`} />
+                          <Home className={`w-3.5 h-3.5 ${vyrobcaFilter.includes(v) ? 'text-red-400' : 'text-slate-500'}`} />
                           <span className="text-xs">{v}</span>
                         </div>
                       </button>
@@ -712,7 +712,7 @@ export default function Katalog() {
 
                 {/* Typ domu */}
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
+                  <label className="block text-xs font-semibold text-slate-300 mb-2 flex items-center gap-1">
                     <LayoutGrid className="w-3 h-3 text-amber-500" />
                     {t('type')}
                   </label>
@@ -734,10 +734,10 @@ export default function Katalog() {
                               setTypFilter([...typFilter, typ.value]);
                             }
                           }}
-                          className={`p-2 rounded-lg border-2 transition-all text-left ${
+                          className={`p-2 rounded-lg border transition-all text-left ${
                             isSelected
-                              ? `bg-${typ.color}-100 border-${typ.color}-500 font-bold`
-                              : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                              ? `bg-${typ.color}-500/20 border-${typ.color}-500 text-${typ.color}-400 font-bold`
+                              : 'bg-slate-950 border-white/10 text-slate-400 hover:border-white/30 hover:text-white hover:bg-white/5'
                           }`}
                         >
                           <div className="flex items-center gap-2">
@@ -751,13 +751,13 @@ export default function Katalog() {
                 </div>
 
                 {/* Cenové rozpätie */}
-                <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                  <label className="block text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
-                    <Euro className="w-3 h-3 text-green-600" />
+                <div className="bg-slate-950 border border-emerald-500/30 rounded-lg p-3">
+                  <label className="block text-xs font-semibold text-slate-300 mb-2 flex items-center gap-1">
+                    <Euro className="w-3 h-3 text-emerald-500" />
                     {t('priceRange')}
                   </label>
                   <div className="mb-3">
-                    <label className="text-[10px] text-gray-500 mb-1 block">Maximálne: {cenoveRozpatie[1].toLocaleString('sk-SK')} €</label>
+                    <label className="text-[10px] text-slate-400 mb-1 block">Maximálne: {cenoveRozpatie[1].toLocaleString('sk-SK')} €</label>
                     <Input
                       type="number"
                       min={0}
@@ -765,7 +765,7 @@ export default function Katalog() {
                       step={5000}
                       value={cenoveRozpatie[1]}
                       onChange={(e) => setCenoveRozpatie([0, Number(e.target.value)])}
-                      className="h-7 text-xs"
+                      className="h-7 text-xs bg-slate-900 border-white/10 text-white"
                     />
                     </div>
                     <Slider
@@ -776,7 +776,7 @@ export default function Katalog() {
                     onValueChange={([val]) => setCenoveRozpatie([0, val])}
                     className="mt-1"
                     />
-                    <div className="flex justify-between text-[10px] text-gray-500 mt-1">
+                    <div className="flex justify-between text-[10px] text-slate-500 mt-1">
                     <span>0 €</span>
                     <span>300 000 €</span>
                     </div>
@@ -784,7 +784,7 @@ export default function Katalog() {
 
                 {/* Počet izieb */}
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
+                  <label className="block text-xs font-semibold text-slate-300 mb-2 flex items-center gap-1">
                     <Grid3x3 className="w-3 h-3 text-blue-500" />
                     {t('roomsFilter')}
                   </label>
@@ -801,14 +801,14 @@ export default function Katalog() {
                               setPocetIziebFilter([...pocetIziebFilter, izby]);
                             }
                           }}
-                          className={`p-2 rounded-lg border-2 transition-all ${
+                          className={`p-2 rounded-lg border transition-all ${
                             isSelected
-                              ? 'bg-blue-100 border-blue-500 text-blue-700 font-bold'
-                              : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50'
+                              ? 'bg-blue-500/20 border-blue-500 text-blue-400 font-bold'
+                              : 'bg-slate-950 border-white/10 text-slate-400 hover:border-white/30 hover:text-white hover:bg-white/5'
                           }`}
                         >
                           <div className="flex flex-col items-center gap-0.5">
-                            <Grid3x3 className={`w-3.5 h-3.5 ${isSelected ? 'text-blue-600' : 'text-gray-400'}`} />
+                            <Grid3x3 className={`w-3.5 h-3.5 ${isSelected ? 'text-blue-400' : 'text-slate-500'}`} />
                             <span className="text-xs font-bold">{izby}</span>
                           </div>
                         </button>
@@ -818,9 +818,9 @@ export default function Katalog() {
                 </div>
 
                 {/* Modulové domy - Ticabhouse filter */}
-                <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                  <label className="block text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
-                    <Boxes className="w-3 h-3 text-red-600" />
+                <div className="bg-slate-950 border border-red-500/30 rounded-lg p-3">
+                  <label className="block text-xs font-semibold text-slate-300 mb-2 flex items-center gap-1">
+                    <Boxes className="w-3 h-3 text-red-500" />
                     Modulové domy
                   </label>
                   <div className="grid grid-cols-1 gap-1.5">
@@ -835,14 +835,14 @@ export default function Katalog() {
                         <button
                           key={opt.value}
                           onClick={() => setModuloveDomyFilter(opt.value)}
-                          className={`p-2 rounded-lg border-2 transition-all text-left ${
+                          className={`p-2 rounded-lg border transition-all text-left ${
                             isSelected
-                              ? 'bg-red-100 border-red-500 text-red-700 font-bold'
-                              : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50'
+                              ? 'bg-red-500/20 border-red-500 text-red-400 font-bold'
+                              : 'bg-slate-950 border-white/10 text-slate-400 hover:border-white/30 hover:text-white hover:bg-white/5'
                           }`}
                         >
                           <div className="flex items-center gap-2">
-                            <Icon className={`w-3.5 h-3.5 ${isSelected ? 'text-red-600' : 'text-gray-400'}`} />
+                            <Icon className={`w-3.5 h-3.5 ${isSelected ? 'text-red-400' : 'text-slate-500'}`} />
                             <span className="text-xs">{opt.label}</span>
                           </div>
                         </button>
@@ -853,12 +853,12 @@ export default function Katalog() {
 
                 {/* Počet modulov - zobrazí sa len pre modulárne domy */}
                 {typFilter.includes("modularny") && !vyrobcaFilter.includes("Ticab house") && (
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                    <label className="block text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
-                      <Boxes className="w-3 h-3 text-red-600" />
+                  <div className="bg-slate-950 border border-red-500/30 rounded-lg p-3">
+                    <label className="block text-xs font-semibold text-slate-300 mb-2 flex items-center gap-1">
+                      <Boxes className="w-3 h-3 text-red-500" />
                       Počet modulov
                     </label>
-                    <p className="text-[10px] text-gray-600 mb-2">Tento výber upravuje počet modulov z ktorých sa má modulárny dom skladať</p>
+                    <p className="text-[10px] text-slate-400 mb-2">Tento výber upravuje počet modulov z ktorých sa má modulárny dom skladať</p>
                     <div className="grid grid-cols-3 gap-1.5">
                       {Array.isArray(domy) && [...new Set(domy.filter(d => d.pocet_modulov && d.vyrobca === "Ticab house").map(d => d.pocet_modulov))].sort((a, b) => a - b).map((moduly) => {
                         const isSelected = pocetModulovFilter.includes(moduly);
@@ -872,10 +872,10 @@ export default function Katalog() {
                                 setPocetModulovFilter([...pocetModulovFilter, moduly]);
                               }
                             }}
-                            className={`p-2 rounded-lg border-2 transition-all ${
+                            className={`p-2 rounded-lg border transition-all ${
                               isSelected
-                                ? 'bg-red-100 border-red-500 text-red-700 font-bold'
-                                : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50'
+                                ? 'bg-red-500/20 border-red-500 text-red-400 font-bold'
+                                : 'bg-slate-950 border-white/10 text-slate-400 hover:border-white/30 hover:text-white hover:bg-white/5'
                             }`}
                           >
                             <div className="flex flex-col items-center gap-0.5">
@@ -1101,36 +1101,29 @@ export default function Katalog() {
             </div>
 
             {/* Srovnání panel */}
+            {/* Srovnání panel */}
             {vybraneNaSrovnanie.length > 0 &&
-            <Card className="p-4 mb-6 bg-blue-50 border-2 border-primary">
+            <Card className="p-4 mb-6 bg-slate-900 border border-emerald-500/30 shadow-[0_0_20px_rgba(16,185,129,0.1)]">
                 <div className="flex items-center justify-between flex-wrap gap-4">
                   <div className="flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5 text-primary" />
-                    <span className="font-semibold text-primary">
+                    <CheckCircle className="w-5 h-5 text-emerald-500" />
+                    <span className="font-semibold text-emerald-400">
                       {t('selectedForComparison')}: {vybraneNaSrovnanie.length}/3
                     </span>
                   </div>
                   <div className="flex gap-2">
                     {vybraneNaSrovnanie.length >= 2 &&
-                  <Link to={`${createPageUrl("SrovnaniDomu")}?ids=${vybraneNaSrovnanie.map((d) => d.id).join(',')}`}>
-                        <Button className="bg-secondary hover:bg-secondary/90">
+                      <Link to={`${createPageUrl("SrovnaniDomu")}?ids=${vybraneNaSrovnanie.map((d) => d.id).join(',')}`}>
+                        <Button className="bg-white text-slate-900 hover:bg-slate-200">
                           {t('compareHouses')}
                           <ArrowRight className="ml-2 w-4 h-4" />
                         </Button>
                       </Link>
-                  }
-                    <Button variant="outline" onClick={() => setVybraneNaSrovnanie([])}>
+                    }
+                    <Button variant="ghost" className="text-slate-400 hover:text-white" onClick={() => setVybraneNaSrovnanie([])}>
                       {t('cancelSelection')}
                     </Button>
                   </div>
-                </div>
-                <div className="flex gap-2 mt-3 flex-wrap">
-                  {vybraneNaSrovnanie.map((dom) =>
-                <div key={dom.id} className="bg-white px-3 py-1 rounded-full text-sm border border-primary flex items-center gap-2">
-                      {dom.nazov}
-                      <button onClick={() => toggleSrovnanie(dom)} className="text-red-500 hover:text-red-700">×</button>
-                    </div>
-                )}
                 </div>
               </Card>
             }
