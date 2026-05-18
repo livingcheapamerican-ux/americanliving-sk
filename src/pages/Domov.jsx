@@ -13,7 +13,6 @@ import {
 import { motion } from "framer-motion";
 import HeroSettingsManager from "../components/admin/HeroSettingsManager";
 import { useLanguage } from "../components/LanguageContext";
-import { useLanguage } from "../components/LanguageContext";
 import ServiceDetailModal from "../components/ServiceDetailModal";
 
 // Dotacia verify banner translations
