@@ -19,6 +19,7 @@ import { useLanguage } from "../components/LanguageContext";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Info, Gift } from "lucide-react";
 import ImageWithWatermark from "../components/ImageWithWatermark";
+import ProstoHouseMarketing from "../components/ProstoHouseMarketing";
 
 // Memoizovaný komponent pre kartičku domu
 const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitImages, jeVybrany, toggleSrovnanie, vybraneNaSrovnanie, canManage, handleToggleVerejny, toggleVerejnyMutation, handleDeleteDom, deleteDomMutation, location, t }) => {
@@ -1140,7 +1141,13 @@ export default function Katalog() {
               <Card key={i} className="h-48 sm:h-96 animate-pulse bg-gray-200" />
               )}
               </div>
-            ) : zoradeneDomy.length > 0 ?
+            ) : zoradeneDomy.length > 0 ? (
+            <>
+              {vyrobcaFilter.length === 1 && vyrobcaFilter[0] === "Prosto House" && (
+                <div className="mb-8">
+                  <ProstoHouseMarketing />
+                </div>
+              )}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -1169,7 +1176,9 @@ export default function Katalog() {
                   />
                 );
               })}
-              </motion.div> :
+              </motion.div>
+            </>
+            ) : (
 
             <Card className="p-12 text-center">
                 <Home className="w-16 h-16 text-gray-300 mx-auto mb-4" />

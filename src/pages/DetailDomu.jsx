@@ -34,7 +34,9 @@ import KonfiguratorPH009 from "./KonfiguratorPH009";
 import { useLanguage } from "../components/LanguageContext";
 import TranslatedDescription from "../components/TranslatedDescription";
 import ShellInfoBox from "../components/ShellInfoBox";
+import DOMPurify from 'dompurify';
 import { prostoHouseTranslations } from "../components/translations/ProstoHouseTranslations";
+import ProstoHouseMarketing from "../components/ProstoHouseMarketing";
 import ExternalReviews from "../components/ExternalReviews";
 import GaleriaLightbox from "../components/GaleriaLightbox";
 import YoutubePlayer from "../components/YoutubePlayer";
@@ -1569,7 +1571,9 @@ export default function DetailDomu() {
               </div>
             )}
 
-
+            {isProstoHouse && (
+              <ProstoHouseMarketing />
+            )}
 
             {/* Štandardná výbava pre Ticabhouse */}
             {isTicabhouse && (
