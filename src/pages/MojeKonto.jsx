@@ -60,6 +60,17 @@ export default function MojeKonto() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {(user?.role === 'admin' || user?.super_admin) && (
+        <div className="bg-red-600 text-white text-center py-2 px-4 flex justify-center items-center gap-4 text-sm font-medium">
+          <span>Režim administrátora aktívny</span>
+          <Link to="/AdminMojeKonto" className="bg-white text-red-600 px-3 py-1 rounded-full text-xs font-bold hover:bg-red-50 transition-colors shadow-sm">
+            Prejsť do Admin Dashboardu →
+          </Link>
+          <Link to="/AdminZnalostnaBaza" className="bg-white text-red-600 px-3 py-1 rounded-full text-xs font-bold hover:bg-red-50 transition-colors shadow-sm">
+            🧠 AI Znalostná Báza
+          </Link>
+        </div>
+      )}
       {/* Hero header */}
       <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-10 px-4">
         <div className="max-w-5xl mx-auto">
