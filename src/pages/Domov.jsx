@@ -13,7 +13,7 @@ import {
 import { motion } from "framer-motion";
 import HeroSettingsManager from "../components/admin/HeroSettingsManager";
 import { useLanguage } from "../components/LanguageContext";
-import FloatingHouses from "../components/FloatingHouses";
+import { useLanguage } from "../components/LanguageContext";
 import ServiceDetailModal from "../components/ServiceDetailModal";
 
 // Dotacia verify banner translations
@@ -329,8 +329,7 @@ export default function Domov() {
           }
         })}</script>
       </Helmet>
-      <FloatingHouses side="left" domy={verejneDomy} />
-      <FloatingHouses side="right" domy={verejneDomy} />
+
       {/* Admin Login Box - zobrazí sa len pre neprihlásených */}
       {!user && (
         <div className="hidden md:block fixed bottom-6 left-6 z-50">
@@ -499,6 +498,88 @@ export default function Domov() {
           ))}
         </div>
       </section>
+
+      {/* Populárne domy Carousel */}
+      {domy && domy.length > 0 && (
+        <section className="py-12 sm:py-20 bg-slate-950 relative border-b border-white/5">
+          <div className="container mx-auto px-4 mb-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl sm:text-4xl font-bold text-white mb-2">{t('popularHouses') || 'Populárne domy'}</h2>
+                <p className="text-slate-400">{t('popularHousesDesc') || 'Pozrite si najžiadanejšie modely z nášho katalógu'}</p>
+              </div>
+              <Link to={createPageUrl("Katalog")} className="hidden sm:flex items-center gap-2 text-primary hover:text-red-400 font-semibold transition-colors">
+                {t('showAllHouses') || 'Zobraziť všetky domy'} <ArrowRight className="w-5 h-5" />
+              </Link>
+            </div>
+          </div>
+          
+          <div className="w-full overflow-hidden">
+            <div className="flex overflow-x-auto snap-x snap-mandatory pb-8 px-4 sm:px-12 xl:px-24 gap-4 sm:gap-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+              {domy.map((dom, index) => (
+                <motion.div 
+                  key={dom.id} 
+                  initial={{ opacity: 0, x: 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  className="snap-center sm:snap-start shrink-0 w-[85vw] sm:w-[400px] lg:w-[450px]"
+                >
+                  <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}`}>
+                    <Card className="bg-slate-900/80 backdrop-blur-sm border-white/10 overflow-hidden group hover:-translate-y-2 transition-all duration-300 shadow-xl hover:shadow-red-900/20">
+                      <div className="aspect-[4/3] overflow-hidden relative">
+                        <img 
+                          src={dom.hlavny_obrazok || dom.obrazky?.[0]} 
+                          alt={dom.nazov} 
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                          loading="lazy"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-80" />
+                        
+                        {dom.popularny && (
+                          <div className="absolute top-4 left-4 bg-red-600/90 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg border border-red-500/50 flex items-center gap-1">
+                            <Star className="w-3 h-3" /> Bestseller
+                          </div>
+                        )}
+                        
+                        <div className="absolute bottom-4 left-4 right-4">
+                          <h3 className="text-xl sm:text-2xl font-bold text-white mb-1 drop-shadow-md">{dom.nazov}</h3>
+                          <div className="flex flex-wrap gap-2 mt-2">
+                            {dom.zastavana_plocha && (
+                              <span className="text-xs font-semibold bg-slate-800/80 backdrop-blur-md text-slate-200 px-2 py-1 rounded-md border border-white/10">
+                                {dom.zastavana_plocha} m²
+                              </span>
+                            )}
+                            {dom.pocet_izieb && (
+                              <span className="text-xs font-semibold bg-slate-800/80 backdrop-blur-md text-slate-200 px-2 py-1 rounded-md border border-white/10">
+                                {dom.pocet_izieb} {t('rooms') || 'izby'}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="p-5">
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="text-xs text-slate-400">{t('priceFrom') || 'Cena od'}</div>
+                          <div className="text-xl font-black text-white">{dom.zakladna_cena?.toLocaleString('sk-SK')} €</div>
+                        </div>
+                        <Button variant="outline" className="w-full border-white/10 hover:bg-white hover:text-slate-900 bg-transparent text-white transition-all group-hover:border-white">
+                          {t('houseDetail') || 'Detail domu'} <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                      </div>
+                    </Card>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+          <div className="container mx-auto px-4 mt-4 sm:hidden">
+            <Link to={createPageUrl("Katalog")} className="flex items-center justify-center gap-2 text-primary hover:text-red-400 font-semibold transition-colors w-full bg-slate-900/50 py-3 rounded-xl border border-white/5">
+              {t('showAllHouses') || 'Zobraziť všetky domy'} <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
+        </section>
+      )}
 
       {/* Trusted Partners Section - Overení partneri */}
       <section className="py-12 sm:py-24 bg-slate-950 relative overflow-hidden">
@@ -769,8 +850,17 @@ export default function Domov() {
             </div>
             </motion.div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-4 max-w-6xl mx-auto mb-4 sm:mb-10">
-            {sluzby.map((sluzba, index) => (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 max-w-6xl mx-auto mb-4 sm:mb-10">
+            {sluzby.map((sluzba, index) => {
+              const getBentoClasses = (idx) => {
+                if (idx === 0) return "md:col-span-2";
+                if (idx === 3) return "md:col-span-2";
+                if (idx === 4) return "md:col-span-2";
+                if (idx === 7) return "md:col-span-2";
+                return "md:col-span-1";
+              };
+              
+              return (
               <motion.div 
                 key={index}
                 initial={{ opacity: 0, y: 30 }}
@@ -781,45 +871,40 @@ export default function Domov() {
                   setSelectedService(sluzba);
                   setServiceModalOpen(true);
                 }}
+                className={`h-full ${getBentoClasses(index)}`}
               >
-                <Card className="group overflow-hidden h-full hover:shadow-2xl hover:shadow-red-900/20 transition-all duration-300 cursor-pointer bg-slate-900 border-white/10 shadow-lg hover:-translate-y-2">
-                  <div className="relative aspect-video overflow-hidden">
+                <Card className="group overflow-hidden h-full flex flex-col hover:shadow-2xl hover:shadow-red-900/20 transition-all duration-300 cursor-pointer bg-slate-900 border-white/10 shadow-lg hover:-translate-y-2">
+                  <div className="relative flex-1 min-h-[200px] overflow-hidden">
                     <img 
-                      src={sluzba.image.includes("unsplash.com") ? sluzba.image.replace(/\?.*$/, "") + "?fm=webp&auto=format,compress&w=400&q=75" : sluzba.image}
+                      src={sluzba.image.includes("unsplash.com") ? sluzba.image.replace(/\?.*$/, "") + "?fm=webp&auto=format,compress&w=800&q=75" : sluzba.image}
                       alt={sluzba.nazov}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                      width={400}
-                      height={225}
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       loading="lazy"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent group-hover:from-blue-900/80" />
-                    <div className="absolute bottom-1.5 left-1.5 sm:bottom-2 sm:left-2">
-                      <div className="w-6 h-6 sm:w-10 sm:h-10 bg-gradient-to-br from-white to-blue-50 rounded-md sm:rounded-lg flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                        <sluzba.icon className="w-3 h-3 sm:w-5 sm:h-5 text-primary" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/50 to-transparent group-hover:from-blue-900/80 transition-colors duration-500" />
+                    <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 right-4">
+                      <div className="w-10 h-10 sm:w-14 sm:h-14 bg-gradient-to-br from-white to-slate-100 rounded-xl flex items-center justify-center shadow-2xl mb-4 group-hover:-translate-y-2 transition-transform duration-500">
+                        <sluzba.icon className="w-5 h-5 sm:w-7 sm:h-7 text-primary" />
                       </div>
+                      <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 drop-shadow-md">{sluzba.nazov}</h3>
+                      <p className="text-slate-300 text-sm sm:text-base font-light line-clamp-2">{sluzba.popis}</p>
                     </div>
                     {/* Click indicator */}
                     <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm rounded-full px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity">
                       <span className="text-xs font-bold text-primary">Klikni pre viac →</span>
                     </div>
                   </div>
-                  <div className="p-4 sm:p-6 bg-slate-900">
-                    <h3 className="text-base sm:text-lg font-bold text-white mb-2 group-hover:text-red-500 transition-colors line-clamp-2">
-                      {sluzba.nazov}
-                    </h3>
-                    <p className="text-sm text-slate-400 font-light">{sluzba.popis}</p>
-                  </div>
-                  </Card>
-                  </motion.div>
-                  ))}
-                  </div>
+                </Card>
+              </motion.div>
+            )})}
+            </div>
 
                   <div className="text-center">
-            <p className="text-sm sm:text-xl text-gray-600 mb-4 sm:mb-6">
-              <strong style={{ color: '#333333' }}>{t('youDontHaveToArrange')}</strong> {t('weHandleEverything')}
+            <p className="text-sm sm:text-xl text-slate-400 mb-4 sm:mb-6">
+              <strong className="text-white">{t('youDontHaveToArrange')}</strong> {t('weHandleEverything')}
             </p>
             <Link to={createPageUrl("Kontakt")}>
-              <Button size="sm" className="bg-gray-900 hover:bg-black text-white font-semibold px-4 sm:px-8 text-xs sm:text-base shadow-lg">
+              <Button size="lg" className="bg-primary hover:bg-red-700 text-white font-bold px-6 sm:px-10 py-6 text-sm sm:text-lg shadow-[0_0_20px_rgba(239,68,68,0.3)] hover:shadow-[0_0_30px_rgba(239,68,68,0.5)] transition-all">
                 {t('startProject')}
                 <ArrowRight className="ml-1.5 sm:ml-2 w-3.5 h-3.5 sm:w-5 sm:h-5" />
                 </Button>
