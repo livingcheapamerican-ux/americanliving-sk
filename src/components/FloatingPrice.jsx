@@ -64,7 +64,7 @@ export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyro
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className={mobileOnly ? "md:hidden fixed bottom-20 right-2 z-40 pointer-events-auto" : "fixed bottom-20 right-4 md:bottom-8 md:right-8 z-40 pointer-events-auto"}
+            className={mobileOnly ? "md:hidden fixed bottom-24 right-4 z-40 pointer-events-auto" : "fixed bottom-24 right-4 md:bottom-28 md:right-8 z-40 pointer-events-auto"}
           >
             <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl shadow-2xl border-2 border-white/50 overflow-hidden">
               <div className="px-3 py-2">
