@@ -50,7 +50,6 @@ const getDeviceInfo = () => {
   };
 };
 
-// Test if localStorage is available (fails in incognito mode)
 const isLocalStorageAvailable = () => {
   try {
     const test = '__localStorage_test__';
@@ -83,29 +82,54 @@ export default function SessionRecorder() {
   const sessionDbStartTimeRef = useRef(null);
   const localStorageAvailableRef = useRef(isLocalStorageAvailable());
 
+  // --- ADVANCED TRACKING REFS ---
+  const activeDurationSecondsRef = useRef(0);
+  const lastActiveTimestampRef = useRef(Date.now());
+  const idleTimeoutIdRef = useRef(null);
+  const isIdleRef = useRef(false);
+  
+  const rageClicksRef = useRef([]);
+  const recentClicksHistoryRef = useRef([]);
+  const deadClicksRef = useRef([]);
+  
+  const fieldTimersRef = useRef({});
+  const webVitalsRef = useRef({ lcp: 0, cls: 0, fid: 0, ttfb: 0, recorded: false });
+
   const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ['current-user'],
     queryFn: () => base44.auth.me().catch(() => null),
     staleTime: Infinity
   });
 
-  // doSave and scheduleSave defined as regular functions (hoisted) so they can be used anywhere
+  // ACTIVITY MONITORING (IDLE TIME)
+  const updateActiveTime = () => {
+    const now = Date.now();
+    if (!isIdleRef.current) {
+      const diff = Math.round((now - lastActiveTimestampRef.current) / 1000);
+      if (diff > 0) {
+        activeDurationSecondsRef.current += diff;
+      }
+    }
+    lastActiveTimestampRef.current = now;
+    isIdleRef.current = false;
+    
+    if (idleTimeoutIdRef.current) clearTimeout(idleTimeoutIdRef.current);
+    idleTimeoutIdRef.current = setTimeout(() => {
+      isIdleRef.current = true;
+    }, 15000); // 15s of no mouse movement/keys = idle
+  };
+
   function doSave(capturedPageEntry = null) {
     if (!sessionIdRef.current) return;
+    
+    // Pred uložením vždy aktualizujeme aktívny čas
+    updateActiveTime();
 
     const currentPage = window.location.pathname + window.location.search;
     const timeOnCurrentPage = pageStartTimeRef.current ? Math.round((Date.now() - pageStartTimeRef.current) / 1000) : 0;
     const startTime = sessionDbStartTimeRef.current || sessionStartRef.current;
     const currentDuration = startTime ? Math.round((Date.now() - new Date(startTime).getTime()) / 1000) : 0;
     
-    console.log('[SessionRecorder] doSave called:', {
-      sessionId: sessionIdRef.current,
-      timeOnCurrentPage,
-      currentDuration,
-      clicksCount: clicksRef.current.length,
-      mouseMovements: mouseMovementsRef.current,
-      page: currentPage
-    });
     const scrollValues = Object.values(scrollDepthRef.current);
     const maxScroll = scrollValues.length > 0 ? Math.max(...scrollValues) : 0;
 
@@ -117,6 +141,7 @@ export default function SessionRecorder() {
     if (previousSessions) tags.push('vracajuci_sa');
     if (formInteractionsRef.current.some(f => f.completed)) tags.push('konvertoval');
     if (configuratorInteractionsRef.current.length > 5) tags.push('pouzivatel_konfiguratora');
+    if (rageClicksRef.current.length > 0) tags.push('frustrovany_rage_clicks');
 
     const newPageEntry = capturedPageEntry || {
       page_url: currentPage,
@@ -130,6 +155,10 @@ export default function SessionRecorder() {
 
     const updates = {
       duration_seconds: currentDuration,
+      active_duration_seconds: activeDurationSecondsRef.current, // NEW
+      performance_metrics: webVitalsRef.current, // NEW
+      rage_clicks: rageClicksRef.current, // NEW
+      dead_clicks: deadClicksRef.current, // NEW
       mouse_movements: mouseMovementsRef.current,
       mouse_heatmap_data: mouseHeatmapRef.current,
       scroll_depth: { max_percentage: maxScroll, depths_per_page: scrollDepthRef.current },
@@ -140,7 +169,7 @@ export default function SessionRecorder() {
       dom_interactions: domInteractionsRef.current,
       errors_encountered: errorsRef.current,
       language_changes: languageChangesRef.current,
-      engagement_score: Math.min(100, Math.round((currentDuration / 60) * 10 + (clicksRef.current.length) * 2 + maxScroll / 2)),
+      engagement_score: Math.min(100, Math.round((activeDurationSecondsRef.current / 60) * 10 + (clicksRef.current.length) * 2 + maxScroll / 2)),
       session_tags: tags,
       language: localStorageAvailableRef.current ? localStorage.getItem('language') || 'sk' : 'sk',
       last_activity: new Date().toISOString(),
@@ -149,33 +178,24 @@ export default function SessionRecorder() {
       _new_page_entry: newPageEntry
     };
 
-    if (!base44.functions || typeof base44.functions.invoke !== 'function') {
-      console.warn('[SessionRecorder] base44.functions.invoke not available, skipping save');
-      return;
-    }
+    if (!base44.functions || typeof base44.functions.invoke !== 'function') return;
 
-    console.log('[SessionRecorder] Sending update to trackUserSession');
     base44.functions.invoke('trackUserSession', {
       action: 'update',
       session_id: sessionIdRef.current,
       data: updates
     }).then((res) => {
-      console.log('[SessionRecorder] Update response:', res);
-      if (res?.data?.session_start_time) {
-        sessionDbStartTimeRef.current = res.data.session_start_time;
-      }
-    }).catch((err) => {
-      console.error('[SessionRecorder] Update failed:', err);
-    });
+      if (res?.data?.session_start_time) sessionDbStartTimeRef.current = res.data.session_start_time;
+    }).catch(() => {});
   }
 
   function scheduleSave() {
     if (!sessionIdRef.current) return;
     if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
-    saveTimeoutRef.current = setTimeout(() => doSave(), 30000);
+    saveTimeoutRef.current = setTimeout(() => doSave(), 15000); // Rýchlejší save pre advanced
   }
 
-  // Initialize session ONCE per page load
+  // CORE INIT & WEB VITALS
   useEffect(() => {
     if (sessionInitializedRef.current || sessionIdRef.current || userLoading) return;
     sessionInitializedRef.current = true;
@@ -183,11 +203,36 @@ export default function SessionRecorder() {
     const newSessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     sessionIdRef.current = newSessionId;
     sessionStartRef.current = new Date().toISOString();
-    // Set pageStartTime immediately so first page is tracked from the start
     pageStartTimeRef.current = Date.now();
     lastPageRef.current = window.location.pathname + window.location.search;
-    
-    console.log('[SessionRecorder] Initializing session:', newSessionId);
+    lastActiveTimestampRef.current = Date.now();
+
+    // WEB VITALS COLLECTION
+    try {
+      if (typeof PerformanceObserver !== 'undefined') {
+        const obs = new PerformanceObserver((list) => {
+          for (const entry of list.getEntries()) {
+            if (entry.entryType === 'largest-contentful-paint') {
+              webVitalsRef.current.lcp = Math.round(entry.startTime);
+            }
+            if (entry.entryType === 'layout-shift' && !entry.hadRecentInput) {
+              webVitalsRef.current.cls += entry.value;
+            }
+            if (entry.entryType === 'first-input') {
+              webVitalsRef.current.fid = Math.round(entry.processingStart - entry.startTime);
+            }
+            if (entry.entryType === 'navigation') {
+              webVitalsRef.current.ttfb = Math.round(entry.responseStart);
+            }
+          }
+          webVitalsRef.current.recorded = true;
+        });
+        obs.observe({ type: 'largest-contentful-paint', buffered: true });
+        obs.observe({ type: 'layout-shift', buffered: true });
+        obs.observe({ type: 'first-input', buffered: true });
+        obs.observe({ type: 'navigation', buffered: true });
+      }
+    } catch (e) { console.warn("PerformanceObserver not supported", e); }
 
     const previousSessions = localStorageAvailableRef.current ? localStorage.getItem('user_previous_sessions') : null;
     const isReturning = !!previousSessions;
@@ -200,12 +245,8 @@ export default function SessionRecorder() {
     const referrerUrl = document.referrer || 'direct';
     const referrerDomain = referrerUrl !== 'direct' ? (() => { try { return new URL(referrerUrl).hostname; } catch { return referrerUrl; } })() : 'direct';
 
-    if (!base44.functions || typeof base44.functions.invoke !== 'function') {
-      console.error('[SessionRecorder] base44.functions.invoke not available');
-      return;
-    }
+    if (!base44.functions || typeof base44.functions.invoke !== 'function') return;
 
-    console.log('[SessionRecorder] Calling trackUserSession with action: create');
     base44.functions.invoke('trackUserSession', {
       action: 'create',
       session_id: newSessionId,
@@ -220,16 +261,17 @@ export default function SessionRecorder() {
         scroll_depth: {}, mouse_movements: 0, mouse_heatmap_data: [],
         form_interactions: [], configurator_interactions: [],
         dom_interactions: [], errors_encountered: [], language_changes: [],
+        rage_clicks: [], dead_clicks: [], // NEW
+        active_duration_seconds: 0, // NEW
         device_info: getDeviceInfo(),
         referrer: referrerUrl, referrer_domain: referrerDomain,
         utm_params: utmParams, conversions: [],
         language: localStorage.getItem('language') || 'sk',
-        performance_metrics: { avg_page_load_time: 0, slow_pages: [], total_ajax_calls: 0 },
+        performance_metrics: webVitalsRef.current,
         engagement_score: 0, is_active: true,
         session_tags: isReturning ? ['vracajuci_sa'] : []
       }
     }).then((res) => {
-      console.log('[SessionRecorder] Session created successfully:', res);
       if (!sessionIdRef.current) return;
       sessionDbStartTimeRef.current = sessionStartRef.current;
 
@@ -241,7 +283,6 @@ export default function SessionRecorder() {
         } catch (err) {}
       }
 
-      // Fetch location - cached 24h (only if localStorage available)
       if (localStorageAvailableRef.current) {
         const cachedLocation = localStorage.getItem('user_location_cache');
         const cacheTimestamp = localStorage.getItem('user_location_cache_time');
@@ -253,28 +294,24 @@ export default function SessionRecorder() {
             data: JSON.parse(cachedLocation)
           }).catch(() => {});
         } else {
-          fetch('https://ipapi.co/json/')
-            .then(r => r.json())
-            .then(data => {
-              if (!sessionIdRef.current) return;
-              const locationData = {
-                ip: data.ip, country: data.country_name, country_code: data.country_code,
-                region: data.region, city: data.city, timezone: data.timezone,
-                latitude: data.latitude, longitude: data.longitude
-              };
-              localStorage.setItem('user_location_cache', JSON.stringify(locationData));
-              localStorage.setItem('user_location_cache_time', Date.now().toString());
-              base44.functions.invoke('trackUserSession', {
-                action: 'update_location', session_id: sessionIdRef.current, data: locationData
-              }).catch(() => {});
+          fetch('https://ipapi.co/json/').then(r => r.json()).then(data => {
+            if (!sessionIdRef.current) return;
+            const locationData = {
+              ip: data.ip, country: data.country_name, country_code: data.country_code,
+              region: data.region, city: data.city, timezone: data.timezone,
+              latitude: data.latitude, longitude: data.longitude
+            };
+            localStorage.setItem('user_location_cache', JSON.stringify(locationData));
+            localStorage.setItem('user_location_cache_time', Date.now().toString());
+            base44.functions.invoke('trackUserSession', {
+              action: 'update_location', session_id: sessionIdRef.current, data: locationData
             }).catch(() => {});
+          }).catch(() => {});
         }
       }
 
-      // Save initial page entry after 5s so we have real time data
       setTimeout(() => doSave(), 5000);
-    }).catch((err) => {
-      console.error('[SessionRecorder] Failed to create session:', err);
+    }).catch(() => {
       sessionIdRef.current = null;
       sessionInitializedRef.current = false;
     });
@@ -289,20 +326,34 @@ export default function SessionRecorder() {
       errorsRef.current.push({ error_message: e.message, error_stack: e.error?.stack || '', timestamp: new Date().toISOString(), page_url: window.location.pathname });
       scheduleSave();
     };
+    
+    // VISIBILITY API PRE ACTIVE TIME
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        updateActiveTime();
+        isIdleRef.current = true;
+      } else {
+        lastActiveTimestampRef.current = Date.now();
+        isIdleRef.current = false;
+      }
+    };
+
     window.addEventListener('storage', handleStorageChange);
     window.addEventListener('error', handleError);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('error', handleError);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [user, userLoading]);
 
-  // Track page changes
+  // TRACK PAGE CHANGES & USER EVENTS
   useEffect(() => {
     if (!sessionIdRef.current) return;
     const currentPage = window.location.pathname + window.location.search;
 
-    // Save the PREVIOUS page's data before switching
     if (lastPageRef.current && pageStartTimeRef.current) {
       const prevPage = lastPageRef.current;
       const timeSpent = Math.round((Date.now() - pageStartTimeRef.current) / 1000);
@@ -326,6 +377,7 @@ export default function SessionRecorder() {
     const reachedMilestones = new Set();
 
     const handleScroll = () => {
+      updateActiveTime();
       const scrollPercentage = Math.round((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100);
       if (scrollPercentage > maxScroll) {
         maxScroll = scrollPercentage;
@@ -340,23 +392,64 @@ export default function SessionRecorder() {
     };
 
     const handleClick = (e) => {
-      // element_class must be a string (SVG elements return SVGAnimatedString object)
+      updateActiveTime();
       const rawClass = e.target.className;
       const elementClass = typeof rawClass === 'string' ? rawClass : (rawClass?.baseVal || '');
-      clicksRef.current.push({
-        element: e.target.tagName || '',
-        text: e.target.textContent?.substring(0, 100) || '',
+      const clickTime = Date.now();
+      const tag = e.target.tagName || '';
+      
+      const newClick = {
+        element: tag,
+        text: e.target.textContent?.substring(0, 50) || '',
         timestamp: new Date().toISOString(),
         page_url: currentPage,
-        page_name_sk: PAGE_NAMES_MAP[window.location.pathname] || document.title,
         x_position: e.clientX, y_position: e.clientY,
         element_id: e.target.id || '', element_class: elementClass
-      });
-      console.log('[SessionRecorder] Click tracked, total clicks:', clicksRef.current.length);
+      };
+      
+      clicksRef.current.push(newClick);
+
+      // --- DEAD CLICKS DETECTION ---
+      // Ak element nie je interaktivny a nespustila sa standardna reakcia
+      const interactiveTags = ['A', 'BUTTON', 'INPUT', 'SELECT', 'TEXTAREA', 'LABEL', 'SUMMARY', 'VIDEO', 'AUDIO'];
+      const hasInteractiveRole = e.target.getAttribute('role') === 'button' || e.target.getAttribute('role') === 'link';
+      const isInteractiveParent = e.target.closest('a') || e.target.closest('button');
+      
+      if (!interactiveTags.includes(tag) && !hasInteractiveRole && !isInteractiveParent) {
+        // Môže ísť o dead click, zanesieme to
+        deadClicksRef.current.push({
+          ...newClick,
+          reason: 'Non-interactive element clicked'
+        });
+      }
+
+      // --- RAGE CLICKS DETECTION ---
+      // Ak existujú aspoň 2 predchádzajúce kliky z poslednej sekundy na rovnakej ploche
+      recentClicksHistoryRef.current.push({ x: e.clientX, y: e.clientY, time: clickTime });
+      recentClicksHistoryRef.current = recentClicksHistoryRef.current.filter(c => clickTime - c.time < 1500); // 1.5s okno
+      
+      if (recentClicksHistoryRef.current.length >= 3) {
+        // Skontroluj ci su kliky pri sebe (cca 50px radius)
+        const xs = recentClicksHistoryRef.current.map(c => c.x);
+        const ys = recentClicksHistoryRef.current.map(c => c.y);
+        const maxDistX = Math.max(...xs) - Math.min(...xs);
+        const maxDistY = Math.max(...ys) - Math.min(...ys);
+        
+        if (maxDistX < 50 && maxDistY < 50) {
+           // Zaznamenaj rage click
+           rageClicksRef.current.push({
+             element: tag, element_id: newClick.element_id, 
+             page_url: currentPage, timestamp: new Date().toISOString()
+           });
+           recentClicksHistoryRef.current = []; // Resetni po detekcii
+        }
+      }
+
       scheduleSave();
     };
 
     const handleMouseMove = (e) => {
+      updateActiveTime();
       mouseMovementsRef.current++;
       if (mouseMovementsRef.current % 50 === 0) {
         mouseHeatmapRef.current.push({ x: e.clientX, y: e.clientY, page_url: currentPage });
@@ -364,16 +457,42 @@ export default function SessionRecorder() {
       }
     };
 
+    const handleKeyDown = () => updateActiveTime();
+
+    // --- ENHANCED FORM TRACKING ---
     const handleFormFocus = (e) => {
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
-        const form = e.target.closest('form');
-        formInteractionsRef.current.push({
-          form_id: form?.id || form?.className || 'unknown_form',
-          action: 'field_focus', timestamp: new Date().toISOString(),
-          page_url: currentPage,
-          fields_touched: [e.target.name || e.target.id || 'unnamed_field'],
-          completed: false
-        });
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
+        const fieldName = e.target.name || e.target.id || 'unnamed_field';
+        fieldTimersRef.current[fieldName] = Date.now();
+      }
+    };
+
+    const handleFormBlur = (e) => {
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
+        const fieldName = e.target.name || e.target.id || 'unnamed_field';
+        const startTime = fieldTimersRef.current[fieldName];
+        if (startTime) {
+          const timeSpentSeconds = Math.round((Date.now() - startTime) / 1000);
+          const form = e.target.closest('form');
+          
+          let formInteraction = formInteractionsRef.current.find(f => f.form_id === (form?.id || form?.className || 'unknown_form'));
+          if (!formInteraction) {
+            formInteraction = {
+              form_id: form?.id || form?.className || 'unknown_form',
+              action: 'filling', timestamp: new Date().toISOString(),
+              page_url: currentPage, fields_touched: [], completed: false,
+              total_struggle_time: 0
+            };
+            formInteractionsRef.current.push(formInteraction);
+          }
+          
+          // Ulož strávený čas na danom poli (ako struggle metrics)
+          if (!formInteraction.fields_touched.includes(fieldName)) {
+            formInteraction.fields_touched.push(fieldName);
+          }
+          formInteraction.total_struggle_time = (formInteraction.total_struggle_time || 0) + timeSpentSeconds;
+          delete fieldTimersRef.current[fieldName];
+        }
       }
     };
 
@@ -389,21 +508,25 @@ export default function SessionRecorder() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('click', handleClick);
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('keydown', handleKeyDown, { passive: true });
     document.addEventListener('focus', handleFormFocus, true);
+    document.addEventListener('blur', handleFormBlur, true);
     document.addEventListener('submit', handleFormSubmit, true);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('click', handleClick);
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('focus', handleFormFocus, true);
+      document.removeEventListener('blur', handleFormBlur, true);
       document.removeEventListener('submit', handleFormSubmit, true);
     };
   }, [location.pathname, location.search, user]);
 
-  // Periodic save every 60 seconds
+  // Periodic save every 30 seconds for accuracy
   useEffect(() => {
-    const interval = setInterval(() => doSave(), 60000);
+    const interval = setInterval(() => doSave(), 30000);
     return () => clearInterval(interval);
   }, []);
 
@@ -422,6 +545,8 @@ export default function SessionRecorder() {
   useEffect(() => {
     const handleBeforeUnload = () => {
       if (!sessionIdRef.current || !lastPageRef.current || !pageStartTimeRef.current) return;
+      updateActiveTime(); // Final time sync
+      
       const timeSpent = Math.round((Date.now() - pageStartTimeRef.current) / 1000);
       const startTime = sessionDbStartTimeRef.current || sessionStartRef.current;
       const duration = startTime ? Math.round((Date.now() - new Date(startTime).getTime()) / 1000) : 0;
@@ -442,10 +567,14 @@ export default function SessionRecorder() {
         action: 'update', session_id: sessionIdRef.current,
         data: {
           end_time: new Date().toISOString(), is_active: false, duration_seconds: duration,
+          active_duration_seconds: activeDurationSecondsRef.current,
           mouse_movements: mouseMovementsRef.current,
+          rage_clicks: rageClicksRef.current,
+          dead_clicks: deadClicksRef.current,
           scroll_depth: { max_percentage: maxScroll, depths_per_page: scrollDepthRef.current },
           clicks: clicksRef.current,
-          engagement_score: Math.min(100, Math.round((duration / 60) * 10 + (clicksRef.current.length) * 2 + maxScroll / 2)),
+          performance_metrics: webVitalsRef.current,
+          engagement_score: Math.min(100, Math.round((activeDurationSecondsRef.current / 60) * 10 + (clicksRef.current.length) * 2 + maxScroll / 2)),
           _new_page_entry: finalPageEntry
         }
       });
