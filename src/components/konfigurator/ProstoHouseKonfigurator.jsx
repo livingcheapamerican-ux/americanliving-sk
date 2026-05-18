@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import {
   Home, Check, Info, Send, X, Thermometer, Zap, Layout, Hammer,
-  CheckCircle, FileText, Eye, Lock, ChevronDown, ChevronUp, MessageCircle
+  CheckCircle, FileText, Eye, Lock, ChevronDown, ChevronUp, MessageCircle, ChevronLeft, ChevronRight
 } from 'lucide-react';
 import { useLanguage } from '../LanguageContext';
 import { prostoHouseTranslations } from '../translations/ProstoHouseTranslations';
@@ -16,26 +16,26 @@ import KonfiguratorGaleria from './KonfiguratorGaleria';
 // ── Mini komponenty ────────────────────────────────────────────────────────────
 
 const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmin, onPriceChange }) => (
-  <button onClick={onClick} className={`relative flex flex-col p-3 rounded-xl border transition-all w-full text-left active:scale-[0.98] gap-2 ${selected ? 'border-red-500 bg-red-500/10 shadow-sm' : 'border-white/10 bg-slate-900 hover:border-white/20 hover:shadow-sm'}`}>
-    <div className="flex items-start gap-3">
-      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all mt-0.5 ${selected ? 'border-red-500 bg-red-500' : 'border-slate-700'}`}>
-        {selected && <Check className="w-3 h-3 text-white" />}
+  <button onClick={onClick} className={`relative flex flex-col p-4 rounded-2xl border-2 transition-all w-full text-left active:scale-[0.98] gap-2 ${selected ? 'border-red-500 bg-red-500/10 shadow-[0_0_20px_rgba(239,68,68,0.15)]' : 'border-white/10 bg-slate-900 hover:border-white/20 hover:shadow-sm'}`}>
+    <div className="flex items-start gap-3 w-full">
+      <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all mt-0.5 ${selected ? 'border-red-500 bg-red-500' : 'border-slate-700'}`}>
+        {selected && <Check className="w-4 h-4 text-white" />}
       </div>
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className={`font-semibold text-sm ${selected ? 'text-red-400' : 'text-slate-200'}`}>{label}</span>
-          {isA0 && <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-1.5 py-0.5 rounded-full">A0</span>}
+        <div className="flex items-center gap-2 flex-wrap mb-1">
+          <span className={`font-bold text-base ${selected ? 'text-red-400' : 'text-slate-200'}`}>{label}</span>
+          {isA0 && <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">A0 Certifikácia</span>}
         </div>
-        {description && <p className="text-xs text-slate-400 mt-0.5 leading-tight">{description}</p>}
+        {description && <p className="text-sm text-slate-400 mt-1 leading-relaxed">{description}</p>}
       </div>
-      <div className="flex-shrink-0">
+      <div className="flex-shrink-0 mt-0.5">
         {isAdmin && onPriceChange ? (
-          <div className="flex items-center gap-1 bg-slate-950 border border-red-500/30 rounded px-1 py-0.5" onClick={e => e.stopPropagation()}>
+          <div className="flex items-center gap-1 bg-slate-950 border border-red-500/30 rounded px-2 py-1" onClick={e => e.stopPropagation()}>
             <span className="text-xs text-slate-500">€</span>
-            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-16 text-sm font-bold text-red-400 bg-transparent outline-none" />
+            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-20 text-sm font-bold text-red-400 bg-transparent outline-none" />
           </div>
         ) : (
-          <span className={`text-sm font-bold whitespace-nowrap ${selected ? 'text-red-400' : 'text-slate-500'}`}>
+          <span className={`text-base font-bold whitespace-nowrap ${selected ? 'text-red-400' : 'text-slate-500'}`}>
             {price === 0 ? 'V cene' : `+${price.toLocaleString()} €`}
           </span>
         )}
@@ -45,25 +45,25 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
 );
 
 const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = false, isAdmin, onPriceChange, description, t }) => (
-  <button onClick={!disabled && !locked ? onChange : undefined} className={`flex items-center justify-between p-4 rounded-xl border transition-all w-full active:scale-[0.98] ${locked ? 'border-emerald-500/30 bg-emerald-500/10 cursor-not-allowed' : checked ? 'border-red-500 bg-red-500/10 shadow-sm' : disabled ? 'border-white/5 bg-slate-900/50 opacity-60 cursor-not-allowed' : 'border-white/10 bg-slate-900 hover:border-white/20'}`}>
+  <button onClick={!disabled && !locked ? onChange : undefined} className={`flex items-center justify-between p-4 rounded-xl border-2 transition-all w-full active:scale-[0.98] ${locked ? 'border-emerald-500/30 bg-emerald-500/10 cursor-not-allowed' : checked ? 'border-red-500 bg-red-500/10 shadow-sm' : disabled ? 'border-white/5 bg-slate-900/50 opacity-60 cursor-not-allowed' : 'border-white/10 bg-slate-900 hover:border-white/20'}`}>
     <div className="flex items-center gap-3">
-      <div className={`w-5 h-5 rounded border flex items-center justify-center flex-shrink-0 ${locked ? 'bg-emerald-500 border-emerald-500' : checked ? 'bg-red-500 border-red-500' : 'bg-slate-950 border-slate-700'}`}>
-        {locked ? <Lock className="w-3 h-3 text-white" /> : checked && <Check className="w-3 h-3 text-white" />}
+      <div className={`w-6 h-6 rounded border-2 flex items-center justify-center flex-shrink-0 ${locked ? 'bg-emerald-500 border-emerald-500' : checked ? 'bg-red-500 border-red-500' : 'bg-slate-950 border-slate-700'}`}>
+        {locked ? <Lock className="w-4 h-4 text-white" /> : checked && <Check className="w-4 h-4 text-white" />}
       </div>
       <div className="text-left">
-        <span className={`font-semibold text-sm block ${checked || locked ? 'text-white' : 'text-slate-300'}`}>{label}</span>
-        {description && <p className="text-xs text-slate-400 mt-0.5 leading-tight">{description}</p>}
-        {locked && <span className="text-[10px] uppercase font-bold text-emerald-500 tracking-wider">{t ? t('requiredForA0') : 'Vyžadované pre A0'}</span>}
+        <span className={`font-bold text-base block ${checked || locked ? 'text-white' : 'text-slate-300'}`}>{label}</span>
+        {description && <p className="text-sm text-slate-400 mt-1 leading-relaxed">{description}</p>}
+        {locked && <span className="text-xs uppercase font-bold text-emerald-500 tracking-wider flex items-center gap-1 mt-1"><CheckCircle className="w-3 h-3" /> {t ? t('requiredForA0') : 'Vyžadované pre A0'}</span>}
       </div>
     </div>
     <div className="ml-3 flex-shrink-0">
       {isAdmin && onPriceChange ? (
-        <div className="flex items-center gap-1 bg-slate-950 border border-red-500/30 rounded px-1 py-0.5" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center gap-1 bg-slate-950 border border-red-500/30 rounded px-2 py-1" onClick={e => e.stopPropagation()}>
           <span className="text-xs text-slate-500">€</span>
-          <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-16 text-sm font-bold text-red-400 bg-transparent outline-none" />
+          <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-20 text-sm font-bold text-red-400 bg-transparent outline-none" />
         </div>
       ) : (
-        <span className={`text-sm font-bold whitespace-nowrap ${locked ? 'text-emerald-400' : 'text-slate-400'}`}>
+        <span className={`text-base font-bold whitespace-nowrap ${locked ? 'text-emerald-400' : 'text-slate-400'}`}>
           {price === 0 ? '0 €' : `+${price.toLocaleString()} €`}
         </span>
       )}
@@ -72,46 +72,25 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
 );
 
 const CounterRow = ({ label, price, value, onChange, isAdmin, onPriceChange }) => (
-  <div className="flex items-center justify-between p-4 rounded-xl border border-white/10 bg-slate-900">
+  <div className="flex items-center justify-between p-4 rounded-xl border-2 border-white/10 bg-slate-900">
     <div>
-      <div className="font-semibold text-sm text-slate-200">{label}</div>
+      <div className="font-bold text-base text-slate-200">{label}</div>
       {isAdmin && onPriceChange ? (
         <div className="flex items-center gap-1 mt-1">
           <span className="text-xs text-slate-500">€</span>
-          <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-16 text-xs font-bold text-red-400 bg-slate-950 outline-none border border-red-500/30 rounded px-1" />
+          <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-16 text-sm font-bold text-red-400 bg-slate-950 outline-none border border-red-500/30 rounded px-1 py-0.5" />
         </div>
       ) : (
-        <div className="text-xs text-red-400 font-bold mt-0.5">{price} € / ks</div>
+        <div className="text-sm text-red-400 font-bold mt-1">{price} € / ks</div>
       )}
     </div>
-    <div className="flex items-center gap-3">
-      <button onClick={() => onChange(Math.max(0, value - 1))} className="w-9 h-9 rounded-lg bg-slate-800 hover:bg-slate-700 flex items-center justify-center font-bold text-slate-300 active:scale-90 transition-all border border-white/10">−</button>
-      <span className="w-6 text-center font-bold text-base text-white">{value}</span>
-      <button onClick={() => onChange(value + 1)} className="w-9 h-9 rounded-lg bg-red-600 text-white hover:bg-red-700 flex items-center justify-center font-bold active:scale-90 transition-all">+</button>
+    <div className="flex items-center gap-4">
+      <button onClick={() => onChange(Math.max(0, value - 1))} className="w-10 h-10 rounded-xl bg-slate-800 hover:bg-slate-700 flex items-center justify-center font-bold text-slate-300 active:scale-90 transition-all border border-white/10">−</button>
+      <span className="w-8 text-center font-black text-xl text-white">{value}</span>
+      <button onClick={() => onChange(value + 1)} className="w-10 h-10 rounded-xl bg-red-600 text-white hover:bg-red-700 flex items-center justify-center font-bold active:scale-90 transition-all shadow-[0_0_15px_rgba(239,68,68,0.4)]">+</button>
     </div>
   </div>
 );
-
-const AccordionSection = ({ id, title, icon: Icon, openId, setOpenId, children, badge, isDone }) => {
-  const isOpen = openId === id;
-  return (
-    <div className={`rounded-2xl border overflow-hidden transition-all duration-200 ${isOpen ? 'border-red-500/50 shadow-md shadow-red-500/10' : isDone ? 'border-emerald-500/30' : 'border-white/10'}`}>
-      <button onClick={() => setOpenId(isOpen ? null : id)} className={`w-full flex items-center justify-between p-4 md:p-5 text-left transition-colors ${isOpen ? 'bg-red-500/10' : isDone ? 'bg-emerald-500/10 hover:bg-emerald-500/20' : 'bg-slate-900 hover:bg-slate-800'}`}>
-        <div className="flex items-center gap-3">
-          <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${isOpen ? 'bg-red-600 text-white' : isDone ? 'bg-emerald-500 text-white' : 'bg-slate-800 text-slate-400'}`}>
-            {isDone && !isOpen ? <Check className="w-5 h-5" /> : <Icon className="w-5 h-5" />}
-          </div>
-          <div>
-            <span className={`font-bold text-base ${isOpen ? 'text-red-400' : isDone ? 'text-emerald-400' : 'text-slate-200'}`}>{title}</span>
-            {badge && <div className="text-xs text-slate-400 mt-0.5 truncate max-w-[200px] md:max-w-xs">{badge}</div>}
-          </div>
-        </div>
-        {isOpen ? <ChevronUp className="w-5 h-5 text-red-500 flex-shrink-0" /> : <ChevronDown className={`w-5 h-5 flex-shrink-0 ${isDone ? 'text-emerald-400' : 'text-slate-500'}`} />}
-      </button>
-      {isOpen && <div className="p-4 md:p-5 border-t border-white/5 bg-slate-900/50 backdrop-blur-sm space-y-3">{children}</div>}
-    </div>
-  );
-};
 
 const SectionLabel = ({ label, color = 'gray' }) => {
   const colorMap = {
@@ -126,7 +105,10 @@ const SectionLabel = ({ label, color = 'gray' }) => {
     'green': 'text-green-400'
   };
   return (
-    <div className={`text-xs font-bold uppercase tracking-wide ${colorMap[color] || 'text-slate-400'} mb-2 mt-4 first:mt-0`}>{label}</div>
+    <div className={`text-sm font-black uppercase tracking-widest ${colorMap[color] || 'text-slate-400'} mb-4 mt-8 first:mt-0 flex items-center gap-2`}>
+      <span className="w-2 h-2 rounded-full bg-current"></span>
+      {label}
+    </div>
   );
 };
 
@@ -144,7 +126,7 @@ const ContactModal = ({ isOpen, onClose, onSubmit, isSubmitting, t }) => {
           <div><label className="block text-sm font-semibold text-slate-300 mb-2">{t('phone')}</label><input required type="tel" placeholder="+421 900 000 000" name="phone" className="w-full px-4 py-3 bg-slate-950 border border-white/10 text-white rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all placeholder:text-slate-600" /></div>
           <div><label className="block text-sm font-semibold text-slate-300 mb-2">{t('city')}</label><input required type="text" placeholder="Bratislava" name="city" className="w-full px-4 py-3 bg-slate-950 border border-white/10 text-white rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all placeholder:text-slate-600" /></div>
           <div><label className="block text-sm font-semibold text-slate-300 mb-2">{t('note')}</label><textarea name="note" rows={3} placeholder="Mám záujem o..." className="w-full px-4 py-3 bg-slate-950 border border-white/10 text-white rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all placeholder:text-slate-600"></textarea></div>
-          <button type="submit" disabled={isSubmitting} className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-2 mt-6 disabled:opacity-50 text-lg shadow-lg">
+          <button type="submit" disabled={isSubmitting} className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-2 mt-6 disabled:opacity-50 text-lg shadow-[0_0_20px_rgba(239,68,68,0.4)]">
             {isSubmitting ? <span>{t('sending')}</span> : <><span>{t('sendQuote')}</span><Send className="w-5 h-5" /></>}
           </button>
         </form>
@@ -153,7 +135,7 @@ const ContactModal = ({ isOpen, onClose, onSubmit, isSubmitting, t }) => {
   );
 };
 
-// ── Hlavný generický komponent ────────────────────────────────────────────────
+// ── Hlavný Wizard komponent ────────────────────────────────────────────────
 
 export default function ProstoHouseKonfigurator({ house, houseCode, dom: domProp }) {
   const { language } = useLanguage();
@@ -172,7 +154,6 @@ export default function ProstoHouseKonfigurator({ house, houseCode, dom: domProp
     enabled: !!domIdFromUrl && !domProp, staleTime: 0, cacheTime: 0, refetchOnMount: 'always'
   });
 
-  // Prefer dom passed as prop (from DetailDomu), fallback to DB query
   const effectiveDom = domProp || domFromDb;
   const effectiveDomId = domProp?.id || domFromDb?.id || domIdFromUrl;
 
@@ -181,10 +162,25 @@ export default function ProstoHouseKonfigurator({ house, houseCode, dom: domProp
 
   const hasExtension = house.options.extension && house.options.extension.length > 0;
 
+  // Wizard state
+  const [currentStep, setCurrentStep] = useState(0);
+  
+  const wizardSteps = [
+    { id: 'ucel', title: t('selectProjectType') || 'Účel', icon: Home },
+    { id: 'hruba', title: t('roughConstruction') || 'Základy', icon: Hammer },
+    { id: 'exterier', title: t('stepExterior') || 'Exteriér', icon: Thermometer },
+    { id: 'interier', title: t('interior') || 'Interiér', icon: Layout },
+    { id: 'tech', title: t('technologies') || 'Technológie', icon: Zap },
+    { id: 'finale', title: t('services') || 'Zhrnutie', icon: CheckCircle }
+  ];
+
+  const totalSteps = wizardSteps.length;
+
+  const handleNext = () => { if (currentStep < totalSteps - 1) { setCurrentStep(c => c + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); } };
+  const handlePrev = () => { if (currentStep > 0) { setCurrentStep(c => c - 1); window.scrollTo({ top: 0, behavior: 'smooth' }); } };
+
   const [customPrices, setCustomPrices] = useState({});
   const [typStavby, setTypStavby] = useState('rekreacna');
-  const [openSection, setOpenSection] = useState('structure');
-  const [visitedSections, setVisitedSections] = useState(new Set(['structure']));
 
   const [mountingIdx, setMountingIdx] = useState(0);
   const [extensionIdx, setExtensionIdx] = useState(0);
@@ -218,12 +214,6 @@ export default function ProstoHouseKonfigurator({ house, houseCode, dom: domProp
   const [financing, setFinancing] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [mobileSummaryOpen, setMobileSummaryOpen] = useState(false);
-
-  const handleSectionOpen = (id) => {
-    setOpenSection(id);
-    if (id) setVisitedSections(prev => new Set([...prev, id]));
-  };
 
   useEffect(() => {
     if (domFromDb?.konfigurator_custom_ceny_prosto_house?.[houseCode]) {
@@ -359,225 +349,313 @@ export default function ProstoHouseKonfigurator({ house, houseCode, dom: domProp
 
   const phCode = houseCode.replace('ph0', 'PH-0').replace('ph', 'PH-');
 
+  const CurrentIcon = wizardSteps[currentStep].icon;
+
   return (
-    <div className="pb-24 md:pb-8">
-      {/* Header */}
-      <div className="bg-slate-900/80 backdrop-blur-md border-b border-white/10 sticky top-0 z-30">
-        <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between gap-2">
-          <div className="flex-1 min-w-0">
-            <h1 className="text-sm sm:text-base font-bold text-white leading-tight">{house.name}</h1>
-            <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-              <span className="text-xs text-slate-400">{t('configuratorLabel')}</span>
-              <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold ${isA0Compliant ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'}`}>
-                {isA0Compliant ? <CheckCircle className="w-3 h-3" /> : <Info className="w-3 h-3" />}
-                {isA0Compliant ? t('meetsA0Cert') : t('recreationalUse')}
-              </div>
+    <div className="pb-32 md:pb-32 bg-slate-950 min-h-screen">
+      {/* Header Wizard Progress */}
+      <div className="bg-slate-900/90 backdrop-blur-xl border-b border-white/10 sticky top-0 z-30 shadow-lg">
+        <div className="max-w-3xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between gap-4 mb-4">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-lg sm:text-xl font-black text-white leading-tight flex items-center gap-2">
+                {house.name}
+                {isA0Compliant && <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] px-2 py-0.5 rounded-full uppercase tracking-widest hidden sm:inline-block">A0 Cert</span>}
+              </h1>
+            </div>
+            <button onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))} className="md:hidden flex-shrink-0 relative p-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95" aria-label="AI Chatbot">
+              <MessageCircle className="w-5 h-5 text-red-500" />
+              <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-600 rounded-full text-[8px] font-black text-white flex items-center justify-center border-2 border-slate-900">AI</span>
+            </button>
+          </div>
+          
+          {/* Progress Bar */}
+          <div className="flex flex-col gap-2">
+            <div className="flex justify-between text-xs font-bold text-slate-400">
+              <span className="text-red-400 flex items-center gap-1.5 uppercase tracking-widest">
+                <CurrentIcon className="w-4 h-4" />
+                {wizardSteps[currentStep].title}
+              </span>
+              <span>Krok {currentStep + 1} z {totalSteps}</span>
+            </div>
+            <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden flex">
+              {wizardSteps.map((_, i) => (
+                <div key={i} className={`h-full flex-1 border-r border-slate-900 last:border-r-0 transition-all duration-500 ${i <= currentStep ? 'bg-red-500' : 'bg-transparent'}`} />
+              ))}
             </div>
           </div>
-          <button onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))} className="md:hidden flex-shrink-0 relative p-2 rounded-lg hover:bg-slate-800 active:bg-slate-700" aria-label="AI Chatbot">
-            <MessageCircle className="w-6 h-6 text-red-500" />
-            <span className="absolute top-1 right-1 w-3 h-3 bg-gradient-to-br from-cyan-500 to-purple-600 rounded-full text-[7px] font-bold text-white flex items-center justify-center">AI</span>
-          </button>
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 py-5 space-y-3">
-        {/* Typ stavby */}
-        <div className="bg-slate-900/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4">
-          <div className="text-xs font-bold uppercase tracking-wide text-slate-400 mb-3">{t('selectProjectType')}</div>
-          <div className="grid grid-cols-2 gap-3">
-            <button onClick={() => setTypStavby('rekreacna')} className={`p-4 rounded-xl border transition-all flex flex-col items-center gap-2 active:scale-95 ${typStavby === 'rekreacna' ? 'border-blue-500 bg-blue-500/10 text-blue-400' : 'border-white/10 bg-slate-900 text-slate-400 hover:border-white/20 hover:bg-slate-800'}`}>
-              <Home className="w-6 h-6" /><span className="text-sm font-bold text-center leading-tight">{t('recreationalBuilding')}</span>
-            </button>
-            <button onClick={() => setTypStavby('rodinny_dom')} className={`p-4 rounded-xl border transition-all flex flex-col items-center gap-2 active:scale-95 ${typStavby === 'rodinny_dom' ? 'border-emerald-500 bg-emerald-500/10 text-emerald-400' : 'border-white/10 bg-slate-900 text-slate-400 hover:border-white/20 hover:bg-slate-800'}`}>
-              <div className="flex items-center gap-1"><Home className="w-6 h-6" /><span className="bg-emerald-600 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold">A0</span></div>
-              <span className="text-sm font-bold text-center leading-tight">{t('familyHouseA0')}</span>
-            </button>
+      {/* Main Content Area */}
+      <div className="max-w-3xl mx-auto px-4 py-6 md:py-8 space-y-6">
+        
+        {/* STEP 0: Účel stavby */}
+        {currentStep === 0 && (
+          <div className="animate-in fade-in slide-in-from-right-4 duration-500">
+            <div className="mb-6">
+              <h2 className="text-2xl font-black text-white mb-2">Základné rozhodnutie</h2>
+              <p className="text-slate-400">Na aký účel plánujete dom využívať? Toto rozhodnutie nám pomôže automaticky predvybrať technológie potrebné pre stavebné povolenie.</p>
+            </div>
+            <div className="grid sm:grid-cols-2 gap-4 mb-6">
+              <button onClick={() => setTypStavby('rekreacna')} className={`p-6 rounded-2xl border-2 transition-all flex flex-col items-center gap-4 active:scale-95 ${typStavby === 'rekreacna' ? 'border-blue-500 bg-blue-500/10 shadow-[0_0_20px_rgba(59,130,246,0.15)]' : 'border-white/10 bg-slate-900 hover:border-white/20 hover:bg-slate-800'}`}>
+                <div className={`p-4 rounded-full ${typStavby === 'rekreacna' ? 'bg-blue-500 text-white' : 'bg-slate-800 text-slate-400'}`}>
+                  <Home className="w-8 h-8" />
+                </div>
+                <div className="text-center">
+                  <span className={`block text-lg font-black mb-1 ${typStavby === 'rekreacna' ? 'text-blue-400' : 'text-slate-300'}`}>{t('recreationalBuilding')}</span>
+                  <span className="text-sm text-slate-500">Chata, víkendový dom. Nevyžaduje energetický certifikát A0.</span>
+                </div>
+              </button>
+              <button onClick={() => setTypStavby('rodinny_dom')} className={`p-6 rounded-2xl border-2 transition-all flex flex-col items-center gap-4 active:scale-95 ${typStavby === 'rodinny_dom' ? 'border-emerald-500 bg-emerald-500/10 shadow-[0_0_20px_rgba(16,185,129,0.15)]' : 'border-white/10 bg-slate-900 hover:border-white/20 hover:bg-slate-800'}`}>
+                <div className={`p-4 rounded-full relative ${typStavby === 'rodinny_dom' ? 'bg-emerald-500 text-white' : 'bg-slate-800 text-slate-400'}`}>
+                  <Home className="w-8 h-8" />
+                  <span className="absolute -top-2 -right-2 bg-emerald-600 text-white text-[10px] px-2 py-1 rounded-full font-black border-2 border-slate-900">A0</span>
+                </div>
+                <div className="text-center">
+                  <span className={`block text-lg font-black mb-1 ${typStavby === 'rodinny_dom' ? 'text-emerald-400' : 'text-slate-300'}`}>{t('familyHouseA0')}</span>
+                  <span className="text-sm text-slate-500">Trvalé bývanie. Splnený zákonný štandard (zateplenie, čerpadlo, rekuperácia).</span>
+                </div>
+              </button>
+            </div>
+            <A0StatusHint isA0Compliant={isA0Compliant} insulationIdx={insulationIdx} heatPump={heatPump} recuperation={recuperation} projectant={projectant} onGoToSection={() => {}} t={t} />
           </div>
-          <A0StatusHint isA0Compliant={isA0Compliant} insulationIdx={insulationIdx} heatPump={heatPump} recuperation={recuperation} projectant={projectant} onGoToSection={handleSectionOpen} t={t} />
-        </div>
-
-        {/* Hrubá stavba */}
-        <AccordionSection id="structure" title={t('roughConstruction')} icon={Hammer} openId={openSection} setOpenId={handleSectionOpen}
-          isDone={visitedSections.has('structure') && openSection !== 'structure'}
-          badge={[house.options.mounting[mountingIdx]?.label, hasExtension ? house.options.extension[extensionIdx]?.label : null, house.options.foundation[foundationIdx]?.label].filter(Boolean).join(' · ')}>
-          <SectionLabel label={t('shellAssembly')} color="orange" />
-          {house.options.mounting.map((opt, i) => (
-            <OptionCard key={i} label={i === 0 ? t('noAssemblySelf') : t('withAssembly')} price={getPrice('mounting', i, opt.price)} description={i === 0 ? t('selfAssemblyDesc') : t('proAssemblyDesc')} selected={mountingIdx === i} onClick={() => setMountingIdx(i)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('mounting', i, p)} />
-          ))}
-          {hasExtension && (
-            <>
-              <SectionLabel label={t('houseExtension')} color="teal" />
-              <div className="grid grid-cols-2 gap-2">
-                {house.options.extension.map((opt, i) => {
-                  const labels = { 0: t('noExtension'), 1: '+1,2 m', 2: '+2,4 m', 3: '+3,6 m', 4: '+4,8 m' };
-                  return <OptionCard key={i} label={labels[i] || opt.label} price={getPrice('extension', i, opt.price)} selected={extensionIdx === i} onClick={() => setExtensionIdx(i)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('extension', i, p)} />;
-                })}
-              </div>
-            </>
-          )}
-          <SectionLabel label={t('foundations')} color="amber" />
-          {house.options.foundation.map((opt, i) => {
-            const labels = { 0: t('noFoundations'), 1: t('pilotsFootings'), 2: t('foundationSlab'), 3: t('stripFoundations') };
-            const descs = { 0: t('noFoundationsDesc'), 1: t('pilotsFootingsDesc'), 2: t('foundationSlabDesc'), 3: t('stripFoundationsDesc') };
-            return <OptionCard key={i} label={labels[i]} price={getPrice('foundation', i, opt.price)} description={descs[i]} selected={foundationIdx === i} onClick={() => setFoundationIdx(i)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('foundation', i, p)} />;
-          })}
-        </AccordionSection>
-
-        {/* Exteriér */}
-        <AccordionSection id="exterior" title={t('stepExterior')} icon={Thermometer} openId={openSection} setOpenId={handleSectionOpen}
-          isDone={visitedSections.has('exterior') && openSection !== 'exterior'}
-          badge={`${house.options.insulation[insulationIdx]?.label} · ${house.options.facade[facadeIdx]?.label} · ${house.options.doors[doorsIdx]?.label}`}>
-          <SectionLabel label={t('insulationType')} color="blue" />
-          {house.options.insulation.map((opt, i) => {
-            const labels = { 0: t('yearRound150mm'), 1: t('enhanced200mm'), 2: t('premium250mm'), 3: t('extra300mm') };
-            const descs = { 0: t('yearRound150mmDesc'), 1: t('enhanced200mmDesc'), 2: t('premium250mmDesc'), 3: t('extra300mmDesc') };
-            return <OptionCard key={i} label={labels[i] || opt.label} price={getPrice('insulation', i, opt.price)} description={descs[i] || opt.description} selected={insulationIdx === i} onClick={() => setInsulationIdx(i)} isA0={opt.label.includes('250 mm')} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('insulation', i, p)} />;
-          })}
-          <SectionLabel label={t('facade')} color="purple" />
-          {house.options.facade.map((opt, i) => (
-            <OptionCard key={i} label={i === 0 ? t('facadeStandard') : t('facadeStucco')} price={getPrice('facade', i, opt.price)} description={i === 0 ? t('facadeStandardDesc') : t('facadeStuccoDesc')} selected={facadeIdx === i} onClick={() => setFacadeIdx(i)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('facade', i, p)} />
-          ))}
-          <SectionLabel label={t('entryDoors')} color="red" />
-          {house.options.doors.map((opt, i) => {
-            const labels = { 0: t('doorsStandard'), 1: t('doorsMetal2Locks'), 2: t('doorsPlasticMetal') };
-            const descs = { 0: t('doorsStandardDesc'), 1: t('doorsMetal2LocksDesc'), 2: t('doorsPlasticMetalDesc') };
-            return <OptionCard key={i} label={labels[i]} price={getPrice('doors', i, opt.price)} description={descs[i]} selected={doorsIdx === i} onClick={() => setDoorsIdx(i)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('doors', i, p)} />;
-          })}
-          <SectionLabel label={t('additionalWindows')} color="gray" />
-          <div className="grid grid-cols-2 gap-2">
-            {[
-              { l: t('roofWindow'), p: getPrice('addon', 'roofWindow', house.addons.roofWindow), v: roofWindows, s: setRoofWindows, k: 'roofWindow' },
-              { l: t('fixedWindow'), p: getPrice('addon', 'fixWindow', house.addons.fixWindow), v: fixWindows, s: setFixWindows, k: 'fixWindow' },
-              { l: t('tiltWindowBig'), p: getPrice('addon', 'tiltWindowBig', house.addons.tiltWindowBig), v: tiltWindowsBig, s: setTiltWindowsBig, k: 'tiltWindowBig' },
-              { l: t('tiltWindowSmall'), p: getPrice('addon', 'tiltWindowSmall', house.addons.tiltWindowSmall), v: tiltWindowsSmall, s: setTiltWindowsSmall, k: 'tiltWindowSmall' }
-            ].map((item, idx) => (
-              <CounterRow key={idx} label={item.l} price={item.p} value={item.v} onChange={item.s} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', item.k, p)} />
-            ))}
-          </div>
-        </AccordionSection>
-
-        {/* Interiér */}
-        <AccordionSection id="interior" title={t('interior')} icon={Layout} openId={openSection} setOpenId={handleSectionOpen}
-          isDone={visitedSections.has('interior') && openSection !== 'interior'}
-          badge={house.options.interior[interiorIdx]?.label}>
-          <SectionLabel label={t('interiorFinish')} color="emerald" />
-          {house.options.interior.map((opt, i) => {
-            const labels = { 0: t('noInterior'), 1: t('interiorWood'), 2: t('interiorDrywall') };
-            const descs = { 0: t('noInteriorDesc'), 1: t('interiorWoodDesc'), 2: t('interiorDrywallDesc') };
-            return <OptionCard key={i} label={labels[i]} price={getPrice('interior', i, opt.price)} description={descs[i]} selected={interiorIdx === i} onClick={() => setInteriorIdx(i)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('interior', i, p)} />;
-          })}
-          <SectionLabel label={t('interiorDoorsCount')} color="gray" />
-          <CounterRow label={t('interiorDoorsCount')} price={getPrice('addon', 'interiorDoor', house.addons.interiorDoor)} value={interiorDoorsCount} onChange={setInteriorDoorsCount} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'interiorDoor', p)} />
-          <SectionLabel label={t('interiorAddons')} color="gray" />
-          <AddonRow label={t('windowLamination')} price={getPrice('addon', 'windowLamination', house.addons.windowLamination)} checked={windowLamination} onChange={() => setWindowLamination(!windowLamination)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'windowLamination', p)} t={t} />
-          <AddonRow label={t('tintedGlass')} price={getPrice('addon', 'windowTint', house.addons.windowTint)} checked={windowTint} onChange={() => setWindowTint(!windowTint)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'windowTint', p)} t={t} />
-          <AddonRow label={t('laminateFloors')} price={getPrice('addon', 'laminateFloors', house.addons.laminateFloors)} checked={laminateFloors} onChange={() => setLaminateFloors(!laminateFloors)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'laminateFloors', p)} t={t} />
-          <AddonRow label={t('floorHeating')} price={getPrice('addon', 'floorHeating', house.addons.floorHeating)} checked={floorHeating} onChange={() => setFloorHeating(!floorHeating)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'floorHeating', p)} t={t} />
-        </AccordionSection>
-
-        {/* Technológie */}
-        <AccordionSection id="tech" title={t('technologies')} icon={Zap} openId={openSection} setOpenId={handleSectionOpen}
-          isDone={visitedSections.has('tech') && openSection !== 'tech'}>
-          <SectionLabel label={t('pipes')} color="gray" />
-          <AddonRow label={t('electricalWiring')} price={getPrice('addon', 'electricity', house.addons.electricity)} checked={electricity} onChange={() => setElectricity(!electricity)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'electricity', p)} t={t} />
-          <AddonRow label={t('waterDrainage')} price={getPrice('addon', 'water', house.addons.water)} checked={water} onChange={() => setWater(!water)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'water', p)} t={t} />
-          <AddonRow label={t('sanitary')} price={getPrice('addon', 'sanita', house.addons.sanita)} checked={sanita} onChange={() => setSanita(!sanita)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'sanita', p)} t={t} />
-          <AddonRow label={t('boiler')} price={getPrice('addon', 'boiler', house.addons.boiler)} checked={boiler} onChange={() => setBoiler(!boiler)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'boiler', p)} t={t} />
-          <SectionLabel label={t('a0Standard')} color="green" />
-          <AddonRow label={t('heatPump')} price={getPrice('addon', 'heatPump', house.addons.heatPump)} checked={heatPump} onChange={() => setHeatPump(!heatPump)} locked={typStavby === 'rodinny_dom'} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'heatPump', p)} t={t} />
-          <AddonRow label={t('recuperation')} price={getPrice('addon', 'recuperation', house.addons.recuperation)} checked={recuperation} onChange={() => setRecuperation(!recuperation)} locked={typStavby === 'rodinny_dom'} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'recuperation', p)} t={t} />
-        </AccordionSection>
-
-        {/* Služby */}
-        <AccordionSection id="services" title={t('services')} icon={FileText} openId={openSection} setOpenId={handleSectionOpen}
-          isDone={visitedSections.has('services') && openSection !== 'services'}>
-          <SectionLabel label={t('documentation')} color="gray" />
-          <AddonRow label={t('projectant')} price={getPrice('addon', 'projectant', house.addons.projectant)} checked={projectant} onChange={() => setProjectant(!projectant)} locked={typStavby === 'rodinny_dom'} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'projectant', p)} t={t} />
-          <AddonRow label={t('engineering')} description={t('engineeringDesc')} price={getPrice('addon', 'engineering', house.addons.engineering)} checked={engineering} onChange={() => setEngineering(!engineering)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'engineering', p)} t={t} />
-          <AddonRow label={t('revisions')} price={getPrice('addon', 'revision', house.addons.revision)} checked={revision} onChange={() => {}} disabled={true} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'revision', p)} t={t} />
-          <AddonRow label={t('networkConnections')} price={getPrice('addon', 'networks', house.addons.networks)} checked={networks} onChange={() => setNetworks(!networks)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'networks', p)} t={t} />
-          <SectionLabel label={t('freeServices')} color="gray" />
-          <AddonRow label={t('realEstate')} price={0} checked={realEstate} onChange={() => setRealEstate(!realEstate)} t={t} />
-          <AddonRow label={t('landSearch')} price={0} checked={landSearch} onChange={() => setLandSearch(!landSearch)} t={t} />
-          <AddonRow label={t('financing')} price={0} checked={financing} onChange={() => setFinancing(!financing)} t={t} />
-        </AccordionSection>
-
-        {/* Galéria */}
-        {effectiveDom && (
-          <AccordionSection id="galeria" title={t('photoGalleryAndFloorPlans')} icon={Eye} openId={openSection} setOpenId={handleSectionOpen}
-            badge={t('photoGalleryBadge')}>
-            <KonfiguratorGaleria dom={effectiveDom} facadeIdx={facadeIdx} interiorIdx={interiorIdx} />
-          </AccordionSection>
         )}
 
-        {/* Súhrn ceny (desktop) */}
-        <div className="hidden md:block space-y-3">
-          <ProstoHouseSummary
-            house={house} t={t} isA0Compliant={isA0Compliant} totalPrice={totalPrice} onSendQuote={() => setModalOpen(true)}
-            mountingIdx={mountingIdx} extensionIdx={extensionIdx} insulationIdx={insulationIdx} foundationIdx={foundationIdx}
-            interiorIdx={interiorIdx} doorsIdx={doorsIdx} facadeIdx={facadeIdx}
-            electricity={electricity} water={water} sanita={sanita} boiler={boiler}
-            heatPump={heatPump} recuperation={recuperation} windowLamination={windowLamination} windowTint={windowTint}
-            roofWindows={roofWindows} fixWindows={fixWindows} tiltWindowsBig={tiltWindowsBig} tiltWindowsSmall={tiltWindowsSmall}
-            interiorDoorsCount={interiorDoorsCount} laminateFloors={laminateFloors} floorHeating={floorHeating}
-            networks={networks} engineering={engineering} projectant={projectant} revision={revision}
-            getPrice={getPrice}
-          />
-          <SaveQuoteButton domNazov={house.name} domKod={phCode} domId={effectiveDomId} celkovaCena={totalPrice} konfiguratorData={konfigData} />
-        </div>
+        {/* STEP 1: Hrubá stavba a Základy */}
+        {currentStep === 1 && (
+          <div className="animate-in fade-in slide-in-from-right-4 duration-500 space-y-6">
+            <div className="mb-6">
+              <h2 className="text-2xl font-black text-white mb-2">Hrubá stavba a Konštrukcia</h2>
+              <p className="text-slate-400">Vyberte si spôsob dodania a typ založenia stavby.</p>
+            </div>
+            
+            <SectionLabel label={t('shellAssembly')} color="orange" />
+            <div className="space-y-3">
+              {house.options.mounting.map((opt, i) => (
+                <OptionCard key={i} label={i === 0 ? t('noAssemblySelf') : t('withAssembly')} price={getPrice('mounting', i, opt.price)} description={i === 0 ? t('selfAssemblyDesc') : t('proAssemblyDesc')} selected={mountingIdx === i} onClick={() => setMountingIdx(i)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('mounting', i, p)} />
+              ))}
+            </div>
+
+            {hasExtension && (
+              <>
+                <SectionLabel label={t('houseExtension')} color="teal" />
+                <div className="grid grid-cols-2 gap-3">
+                  {house.options.extension.map((opt, i) => {
+                    const labels = { 0: t('noExtension'), 1: '+1,2 m', 2: '+2,4 m', 3: '+3,6 m', 4: '+4,8 m' };
+                    return <OptionCard key={i} label={labels[i] || opt.label} price={getPrice('extension', i, opt.price)} selected={extensionIdx === i} onClick={() => setExtensionIdx(i)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('extension', i, p)} />;
+                  })}
+                </div>
+              </>
+            )}
+
+            <SectionLabel label={t('foundations')} color="amber" />
+            <div className="space-y-3">
+              {house.options.foundation.map((opt, i) => {
+                const labels = { 0: t('noFoundations'), 1: t('pilotsFootings'), 2: t('foundationSlab'), 3: t('stripFoundations') };
+                const descs = { 0: t('noFoundationsDesc'), 1: t('pilotsFootingsDesc'), 2: t('foundationSlabDesc'), 3: t('stripFoundationsDesc') };
+                return <OptionCard key={i} label={labels[i]} price={getPrice('foundation', i, opt.price)} description={descs[i]} selected={foundationIdx === i} onClick={() => setFoundationIdx(i)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('foundation', i, p)} />;
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* STEP 2: Exteriér */}
+        {currentStep === 2 && (
+          <div className="animate-in fade-in slide-in-from-right-4 duration-500 space-y-6">
+            <div className="mb-6">
+              <h2 className="text-2xl font-black text-white mb-2">Exteriér a Zateplenie</h2>
+              <p className="text-slate-400">Prispôsobte si vzhľad a energetickú triedu vášho domu.</p>
+            </div>
+
+            <SectionLabel label={t('insulationType')} color="blue" />
+            <div className="space-y-3">
+              {house.options.insulation.map((opt, i) => {
+                const labels = { 0: t('yearRound150mm'), 1: t('enhanced200mm'), 2: t('premium250mm'), 3: t('extra300mm') };
+                const descs = { 0: t('yearRound150mmDesc'), 1: t('enhanced200mmDesc'), 2: t('premium250mmDesc'), 3: t('extra300mmDesc') };
+                return <OptionCard key={i} label={labels[i] || opt.label} price={getPrice('insulation', i, opt.price)} description={descs[i] || opt.description} selected={insulationIdx === i} onClick={() => setInsulationIdx(i)} isA0={opt.label.includes('250 mm')} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('insulation', i, p)} />;
+              })}
+            </div>
+
+            <SectionLabel label={t('facade')} color="purple" />
+            <div className="space-y-3">
+              {house.options.facade.map((opt, i) => (
+                <OptionCard key={i} label={i === 0 ? t('facadeStandard') : t('facadeStucco')} price={getPrice('facade', i, opt.price)} description={i === 0 ? t('facadeStandardDesc') : t('facadeStuccoDesc')} selected={facadeIdx === i} onClick={() => setFacadeIdx(i)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('facade', i, p)} />
+              ))}
+            </div>
+
+            <SectionLabel label={t('entryDoors')} color="red" />
+            <div className="space-y-3">
+              {house.options.doors.map((opt, i) => {
+                const labels = { 0: t('doorsStandard'), 1: t('doorsMetal2Locks'), 2: t('doorsPlasticMetal') };
+                const descs = { 0: t('doorsStandardDesc'), 1: t('doorsMetal2LocksDesc'), 2: t('doorsPlasticMetalDesc') };
+                return <OptionCard key={i} label={labels[i]} price={getPrice('doors', i, opt.price)} description={descs[i]} selected={doorsIdx === i} onClick={() => setDoorsIdx(i)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('doors', i, p)} />;
+              })}
+            </div>
+
+            <SectionLabel label={t('additionalWindows')} color="gray" />
+            <div className="space-y-3">
+              {[
+                { l: t('roofWindow'), p: getPrice('addon', 'roofWindow', house.addons.roofWindow), v: roofWindows, s: setRoofWindows, k: 'roofWindow' },
+                { l: t('fixedWindow'), p: getPrice('addon', 'fixWindow', house.addons.fixWindow), v: fixWindows, s: setFixWindows, k: 'fixWindow' },
+                { l: t('tiltWindowBig'), p: getPrice('addon', 'tiltWindowBig', house.addons.tiltWindowBig), v: tiltWindowsBig, s: setTiltWindowsBig, k: 'tiltWindowBig' },
+                { l: t('tiltWindowSmall'), p: getPrice('addon', 'tiltWindowSmall', house.addons.tiltWindowSmall), v: tiltWindowsSmall, s: setTiltWindowsSmall, k: 'tiltWindowSmall' }
+              ].map((item, idx) => (
+                <CounterRow key={idx} label={item.l} price={item.p} value={item.v} onChange={item.s} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', item.k, p)} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* STEP 3: Interiér */}
+        {currentStep === 3 && (
+          <div className="animate-in fade-in slide-in-from-right-4 duration-500 space-y-6">
+            <div className="mb-6">
+              <h2 className="text-2xl font-black text-white mb-2">Interiér a Úpravy</h2>
+              <p className="text-slate-400">Zvoľte si finálnu úpravu vnútorných priestorov a podláh.</p>
+            </div>
+
+            <SectionLabel label={t('interiorFinish')} color="emerald" />
+            <div className="space-y-3">
+              {house.options.interior.map((opt, i) => {
+                const labels = { 0: t('noInterior'), 1: t('interiorWood'), 2: t('interiorDrywall') };
+                const descs = { 0: t('noInteriorDesc'), 1: t('interiorWoodDesc'), 2: t('interiorDrywallDesc') };
+                return <OptionCard key={i} label={labels[i]} price={getPrice('interior', i, opt.price)} description={descs[i]} selected={interiorIdx === i} onClick={() => setInteriorIdx(i)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('interior', i, p)} />;
+              })}
+            </div>
+
+            <SectionLabel label={t('interiorDoorsCount')} color="gray" />
+            <CounterRow label={t('interiorDoorsCount')} price={getPrice('addon', 'interiorDoor', house.addons.interiorDoor)} value={interiorDoorsCount} onChange={setInteriorDoorsCount} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'interiorDoor', p)} />
+            
+            <SectionLabel label={t('interiorAddons')} color="gray" />
+            <div className="space-y-3">
+              <AddonRow label={t('windowLamination')} price={getPrice('addon', 'windowLamination', house.addons.windowLamination)} checked={windowLamination} onChange={() => setWindowLamination(!windowLamination)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'windowLamination', p)} t={t} />
+              <AddonRow label={t('tintedGlass')} price={getPrice('addon', 'windowTint', house.addons.windowTint)} checked={windowTint} onChange={() => setWindowTint(!windowTint)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'windowTint', p)} t={t} />
+              <AddonRow label={t('laminateFloors')} price={getPrice('addon', 'laminateFloors', house.addons.laminateFloors)} checked={laminateFloors} onChange={() => setLaminateFloors(!laminateFloors)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'laminateFloors', p)} t={t} />
+              <AddonRow label={t('floorHeating')} price={getPrice('addon', 'floorHeating', house.addons.floorHeating)} checked={floorHeating} onChange={() => setFloorHeating(!floorHeating)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'floorHeating', p)} t={t} />
+            </div>
+          </div>
+        )}
+
+        {/* STEP 4: Technológie */}
+        {currentStep === 4 && (
+          <div className="animate-in fade-in slide-in-from-right-4 duration-500 space-y-6">
+            <div className="mb-6">
+              <h2 className="text-2xl font-black text-white mb-2">Inštalácie a Technológie</h2>
+              <p className="text-slate-400">Komplexné riešenie sietí a technológií pre váš dom.</p>
+            </div>
+
+            <SectionLabel label={t('pipes')} color="gray" />
+            <div className="space-y-3">
+              <AddonRow label={t('electricalWiring')} price={getPrice('addon', 'electricity', house.addons.electricity)} checked={electricity} onChange={() => setElectricity(!electricity)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'electricity', p)} t={t} />
+              <AddonRow label={t('waterDrainage')} price={getPrice('addon', 'water', house.addons.water)} checked={water} onChange={() => setWater(!water)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'water', p)} t={t} />
+              <AddonRow label={t('sanitary')} price={getPrice('addon', 'sanita', house.addons.sanita)} checked={sanita} onChange={() => setSanita(!sanita)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'sanita', p)} t={t} />
+              <AddonRow label={t('boiler')} price={getPrice('addon', 'boiler', house.addons.boiler)} checked={boiler} onChange={() => setBoiler(!boiler)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'boiler', p)} t={t} />
+            </div>
+
+            <SectionLabel label={t('a0Standard')} color="green" />
+            <div className="space-y-3">
+              <AddonRow label={t('heatPump')} price={getPrice('addon', 'heatPump', house.addons.heatPump)} checked={heatPump} onChange={() => setHeatPump(!heatPump)} locked={typStavby === 'rodinny_dom'} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'heatPump', p)} t={t} />
+              <AddonRow label={t('recuperation')} price={getPrice('addon', 'recuperation', house.addons.recuperation)} checked={recuperation} onChange={() => setRecuperation(!recuperation)} locked={typStavby === 'rodinny_dom'} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'recuperation', p)} t={t} />
+            </div>
+          </div>
+        )}
+
+        {/* STEP 5: Služby a Galéria (Finále) */}
+        {currentStep === 5 && (
+          <div className="animate-in fade-in slide-in-from-right-4 duration-500 space-y-8">
+            <div>
+              <h2 className="text-2xl font-black text-white mb-2">Finálne Zhrnutie</h2>
+              <p className="text-slate-400">Prezrite si galériu, vyberte doplnkové služby a odošlite nezáväzný dopyt.</p>
+            </div>
+
+            <div className="bg-slate-900 border border-white/10 p-6 rounded-3xl">
+              <SectionLabel label={t('documentation')} color="gray" />
+              <div className="space-y-3 mb-8">
+                <AddonRow label={t('projectant')} price={getPrice('addon', 'projectant', house.addons.projectant)} checked={projectant} onChange={() => setProjectant(!projectant)} locked={typStavby === 'rodinny_dom'} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'projectant', p)} t={t} />
+                <AddonRow label={t('engineering')} description={t('engineeringDesc')} price={getPrice('addon', 'engineering', house.addons.engineering)} checked={engineering} onChange={() => setEngineering(!engineering)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'engineering', p)} t={t} />
+                <AddonRow label={t('revisions')} price={getPrice('addon', 'revision', house.addons.revision)} checked={revision} onChange={() => {}} disabled={true} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'revision', p)} t={t} />
+                <AddonRow label={t('networkConnections')} price={getPrice('addon', 'networks', house.addons.networks)} checked={networks} onChange={() => setNetworks(!networks)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'networks', p)} t={t} />
+              </div>
+
+              <SectionLabel label={t('freeServices')} color="gray" />
+              <div className="space-y-3 mb-8">
+                <AddonRow label={t('realEstate')} price={0} checked={realEstate} onChange={() => setRealEstate(!realEstate)} t={t} />
+                <AddonRow label={t('landSearch')} price={0} checked={landSearch} onChange={() => setLandSearch(!landSearch)} t={t} />
+                <AddonRow label={t('financing')} price={0} checked={financing} onChange={() => setFinancing(!financing)} t={t} />
+              </div>
+            </div>
+
+            {effectiveDom && (
+              <div className="bg-slate-900 border border-white/10 p-6 rounded-3xl">
+                <h3 className="text-lg font-black text-white mb-4">{t('photoGalleryAndFloorPlans')}</h3>
+                <KonfiguratorGaleria dom={effectiveDom} facadeIdx={facadeIdx} interiorIdx={interiorIdx} />
+              </div>
+            )}
+
+            {/* Desktop Summary View embedded in the last step */}
+            <div className="hidden md:block bg-slate-900 border border-white/10 p-6 rounded-3xl shadow-2xl">
+              <ProstoHouseSummary
+                house={house} t={t} isA0Compliant={isA0Compliant} totalPrice={totalPrice} onSendQuote={() => setModalOpen(true)}
+                mountingIdx={mountingIdx} extensionIdx={extensionIdx} insulationIdx={insulationIdx} foundationIdx={foundationIdx}
+                interiorIdx={interiorIdx} doorsIdx={doorsIdx} facadeIdx={facadeIdx}
+                electricity={electricity} water={water} sanita={sanita} boiler={boiler}
+                heatPump={heatPump} recuperation={recuperation} windowLamination={windowLamination} windowTint={windowTint}
+                roofWindows={roofWindows} fixWindows={fixWindows} tiltWindowsBig={tiltWindowsBig} tiltWindowsSmall={tiltWindowsSmall}
+                interiorDoorsCount={interiorDoorsCount} laminateFloors={laminateFloors} floorHeating={floorHeating}
+                networks={networks} engineering={engineering} projectant={projectant} revision={revision}
+                getPrice={getPrice}
+              />
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Fixný mobilný panel */}
-      <div className="fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-lg border-t border-white/10 z-50 md:hidden shadow-[0_-4px_30px_-4px_rgba(0,0,0,0.5)]">
-        <div className="px-4 py-2 flex items-center gap-2">
-          <button onClick={() => setMobileSummaryOpen(true)} className="flex-1 text-left">
-            <div className="text-[11px] text-slate-400 font-medium flex items-center gap-1">{t('totalWithVAT')} <Eye className="w-3 h-3 text-slate-500" /></div>
-            <div className="text-2xl font-black text-white leading-tight">{totalPrice.toLocaleString()} €</div>
-            <div className={`text-[11px] font-bold mt-0.5 ${isA0Compliant ? 'text-emerald-400' : 'text-blue-400'}`}>
-              {isA0Compliant ? `✓ ${t('meetsA0Cert')}` : t('recreationalUse')}
-            </div>
-          </button>
-          <SaveQuoteButton domNazov={house.name} domKod={phCode} domId={effectiveDomId} celkovaCena={totalPrice} konfiguratorData={konfigData} />
-          <button onClick={() => setModalOpen(true)} className="flex-shrink-0 bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-3 rounded-xl flex items-center gap-2 shadow-lg active:scale-95 transition-all">
-            <Send className="w-4 h-4" /><span className="text-sm">{t('sendQuote')}</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Mobilný súhrn */}
-      {mobileSummaryOpen && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex flex-col justify-end md:hidden animate-in fade-in duration-200" onClick={() => setMobileSummaryOpen(false)}>
-          <div className="bg-slate-900 rounded-t-3xl max-h-[80vh] overflow-y-auto w-full p-5 animate-in slide-in-from-bottom duration-300 border-t border-white/10" onClick={e => e.stopPropagation()}>
-            <div className="w-10 h-1 bg-slate-700 rounded-full mx-auto mb-5"></div>
-            <h3 className="text-lg font-bold mb-4 text-white">{t('configurationSummary')}</h3>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between py-2 border-b border-white/10"><span className="text-slate-400">{house.name}</span><span className="font-bold text-white">{house.basePrice.toLocaleString()} €</span></div>
-              {mountingIdx > 0 && <div className="flex justify-between py-1.5"><span className="text-slate-400">{t('assemblyItem')}</span><span className="font-semibold text-red-400">+{getPrice('mounting', mountingIdx, house.options.mounting[mountingIdx].price).toLocaleString()} €</span></div>}
-              {hasExtension && extensionIdx > 0 && <div className="flex justify-between py-1.5"><span className="text-slate-400">{t('extensionItem')}</span><span className="font-semibold text-red-400">+{getPrice('extension', extensionIdx, house.options.extension[extensionIdx].price).toLocaleString()} €</span></div>}
-              <div className="flex justify-between py-1.5"><span className="text-slate-400">{t('insulationItem')}</span><span className="font-semibold text-white">{getPrice('insulation', insulationIdx, house.options.insulation[insulationIdx].price) > 0 ? `+${getPrice('insulation', insulationIdx, house.options.insulation[insulationIdx].price).toLocaleString()} €` : '✓'}</span></div>
-              {foundationIdx > 0 && <div className="flex justify-between py-1.5"><span className="text-slate-400">{t('foundationsItem')}</span><span className="font-semibold text-red-400">+{getPrice('foundation', foundationIdx, house.options.foundation[foundationIdx].price).toLocaleString()} €</span></div>}
-              {facadeIdx > 0 && <div className="flex justify-between py-1.5"><span className="text-slate-400">{t('facadeItem')}</span><span className="font-semibold text-red-400">+{getPrice('facade', facadeIdx, house.options.facade[facadeIdx].price).toLocaleString()} €</span></div>}
-              {interiorIdx > 0 && <div className="flex justify-between py-1.5"><span className="text-slate-400">{t('interiorFinishItem')}</span><span className="font-semibold text-red-400">+{getPrice('interior', interiorIdx, house.options.interior[interiorIdx].price).toLocaleString()} €</span></div>}
-              {electricity && <div className="flex justify-between py-1.5"><span className="text-slate-400">{t('electricalInstallation')}</span><span className="font-semibold text-red-400">+{getPrice('addon', 'electricity', house.addons.electricity).toLocaleString()} €</span></div>}
-              {water && <div className="flex justify-between py-1.5"><span className="text-slate-400">{t('waterAndDrainage')}</span><span className="font-semibold text-red-400">+{getPrice('addon', 'water', house.addons.water).toLocaleString()} €</span></div>}
-              {heatPump && <div className="flex justify-between py-1.5"><span className="text-slate-400">{t('heatPumpItem')}</span><span className="font-semibold text-red-400">+{getPrice('addon', 'heatPump', house.addons.heatPump).toLocaleString()} €</span></div>}
-              {recuperation && <div className="flex justify-between py-1.5"><span className="text-slate-400">{t('recuperationItem')}</span><span className="font-semibold text-red-400">+{getPrice('addon', 'recuperation', house.addons.recuperation).toLocaleString()} €</span></div>}
-              {projectant && <div className="flex justify-between py-1.5"><span className="text-slate-400">{t('projectantItem')}</span><span className="font-semibold text-red-400">+{getPrice('addon', 'projectant', house.addons.projectant).toLocaleString()} €</span></div>}
-              {engineering && <div className="flex justify-between py-1.5"><span className="text-slate-400">{t('engineeringItem')}</span><span className="font-semibold text-red-400">+{getPrice('addon', 'engineering', house.addons.engineering).toLocaleString()} €</span></div>}
-              {revision && <div className="flex justify-between py-1.5"><span className="text-slate-400">{t('revisionsItem')}</span><span className="font-semibold text-red-400">+{getPrice('addon', 'revision', house.addons.revision).toLocaleString()} €</span></div>}
-            </div>
-            <div className="mt-5 pt-4 border-t border-white/10 flex justify-between items-center">
-              <span className="font-bold text-white">{t('totalWithVAT')}</span>
-              <span className="text-2xl font-black text-white">{totalPrice.toLocaleString()} €</span>
-            </div>
-            <button onClick={() => { setMobileSummaryOpen(false); setModalOpen(true); }} className="mt-4 w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 text-base active:scale-[0.98]">
-              <Send className="w-5 h-5" /> {t('sendQuote')}
+      {/* Navigation Sticky Footer */}
+      <div className="fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-xl border-t border-white/10 z-40 p-4 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+        <div className="max-w-3xl mx-auto flex items-center justify-between gap-4">
+          <div className="flex-shrink-0">
+            <button 
+              onClick={handlePrev} 
+              disabled={currentStep === 0}
+              className="px-4 py-3 rounded-xl border border-white/10 text-slate-300 font-bold active:scale-95 transition-all flex items-center gap-2 disabled:opacity-30 disabled:active:scale-100 hover:bg-slate-800"
+            >
+              <ChevronLeft className="w-5 h-5" />
+              <span className="hidden sm:inline">Späť</span>
             </button>
-            <div className="h-24"></div>
+          </div>
+
+          <div className="flex-1 text-center">
+            <div className="text-[11px] text-slate-400 font-bold uppercase tracking-widest">{t('totalWithVAT')}</div>
+            <div className="text-2xl font-black text-white">{totalPrice.toLocaleString()} €</div>
+          </div>
+
+          <div className="flex-shrink-0 flex items-center gap-2">
+            {currentStep === totalSteps - 1 ? (
+              <button 
+                onClick={() => setModalOpen(true)} 
+                className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-xl flex items-center gap-2 shadow-[0_0_20px_rgba(239,68,68,0.4)] active:scale-95 transition-all"
+              >
+                <span className="hidden sm:inline">{t('sendQuote')}</span>
+                <Send className="w-5 h-5 sm:hidden" />
+              </button>
+            ) : (
+              <button 
+                onClick={handleNext} 
+                className="bg-slate-100 hover:bg-white text-slate-900 font-bold px-6 py-3 rounded-xl flex items-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.1)] active:scale-95 transition-all"
+              >
+                <span className="hidden sm:inline">Ďalej</span>
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            )}
+            
+            {/* Vložený SaveQuoteButton vedľa hlavného tlačidla ak je to na desktop alebo posledný krok */}
+            <div className="hidden md:block">
+              <SaveQuoteButton domNazov={house.name} domKod={phCode} domId={effectiveDomId} celkovaCena={totalPrice} konfiguratorData={konfigData} />
+            </div>
           </div>
         </div>
-      )}
+      </div>
 
       <ContactModal isOpen={modalOpen} onClose={() => setModalOpen(false)} onSubmit={handleSubmit} isSubmitting={isSubmitting} t={t} />
       <ProstoHousePriceSaver isAdmin={isAdmin} customPrices={customPrices} domId={effectiveDomId} houseCode={houseCode} />
