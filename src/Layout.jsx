@@ -163,7 +163,7 @@ function LayoutContent({ children }) {
   const KONFIGA_LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/1a73e4a6c_Konfigaeu.jpg";
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-950 text-slate-50 font-['Outfit']">
       <Helmet>
         {shouldNoindex && <meta name="robots" content="noindex, nofollow" />}
       </Helmet>
@@ -219,11 +219,11 @@ function LayoutContent({ children }) {
       {/* Toast Container */}
       <Toaster position="top-right" richColors closeButton />
 
-      {/* Header */}
+      {/* Header - Floating Pill Design */}
       <header 
-      className={`fixed left-0 right-0 z-50 transition-all duration-300 bg-white shadow-md py-0`}
+        className={`fixed left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'top-4' : 'top-0 sm:top-6'} px-2 sm:px-6`}
       >
-        <div className="container mx-auto px-1 sm:px-4 py-0.5 sm:py-0.5">
+        <div className={`mx-auto max-w-7xl transition-all duration-500 ${scrolled ? 'bg-slate-900/80 backdrop-blur-xl shadow-2xl shadow-black/50 border border-white/10 rounded-full py-2 px-4' : 'bg-transparent py-4'}`}>
           <div className="flex items-center justify-between gap-1 sm:gap-2">
             {/* Mobile - placeholder for layout balance */}
             <div className="sm:hidden w-8" />
@@ -238,7 +238,7 @@ function LayoutContent({ children }) {
               </Link>
 
               <div className="hidden md:flex flex-col items-center gap-0">
-                <span className="text-[7px] lg:text-[9px] text-gray-600 font-medium whitespace-nowrap">Powered by</span>
+                <span className="text-[7px] lg:text-[9px] text-slate-400 font-medium whitespace-nowrap">Powered by</span>
                 <a 
                   href="https://konfiga.eu" 
                   target="_blank" 
@@ -253,8 +253,9 @@ function LayoutContent({ children }) {
                 </a>
               </div>
             </div>
-
-            <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1">
+            
+            {/* Navigácia ako Glassmorphism Pill */}
+            <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
               {[...navItems, ...adminNavItems].map((item) => {
                 const tourId = item.path === createPageUrl("Katalog") ? "nav-katalog"
                   : item.path === createPageUrl("OdporucanieDomov") ? "nav-ai"
@@ -271,19 +272,15 @@ function LayoutContent({ children }) {
                     key={item.path}
                     to={item.path}
                     data-tour={tourId}
-                    className={`rounded-md font-medium transition-all ${
-                      isDotacia
-                        ? 'px-3 xl:px-4 py-1.5 xl:py-2 text-sm lg:text-base xl:text-lg'
-                        : 'px-2 xl:px-3 py-1 xl:py-1.5 text-xs lg:text-sm xl:text-base'
-                    } ${
+                    className={`rounded-full font-bold transition-all px-4 py-2 text-sm ${
                       isActive(item.path)
-                        ? 'bg-primary text-white'
+                        ? 'bg-red-600/20 text-red-500 border border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.2)]'
                         : isDotacia 
-                          ? 'bg-gradient-to-r from-emerald-500 via-green-400 to-green-600 text-white hover:from-emerald-600 hover:to-green-700 shadow-lg hover:shadow-xl hover:scale-105 nav-shimmer'
+                          ? 'bg-gradient-to-r from-red-600 via-red-500 to-red-700 text-white hover:scale-105 shadow-[0_0_20px_rgba(239,68,68,0.4)]'
                         : isKredity
-                          ? 'bg-orange-500 text-white hover:bg-orange-600'
-                          : 'text-gray-700 hover:bg-gray-100'
-                    } ${isDotacia ? 'flex flex-col items-center leading-tight border-2 border-white shadow-[0_0_15px_rgba(16,185,129,0.5)]' : ''}`}
+                          ? 'bg-orange-500/20 text-orange-400 hover:bg-orange-500/30'
+                          : 'text-slate-300 hover:text-white hover:bg-white/10'
+                    }`}
                   >
                     {isDotacia ? (
                       <>
@@ -303,12 +300,12 @@ function LayoutContent({ children }) {
               <div className="hidden lg:block mr-2">
                 <Popover>
                   <PopoverTrigger asChild>
-                    <button className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white border border-gray-200 hover:bg-gray-50 transition-all shadow-sm">
-                      <Languages className="w-4 h-4 text-gray-700" />
-                      <span className="text-sm font-medium text-gray-700">
+                    <button className="flex items-center gap-2 px-3 py-2 rounded-full bg-slate-800/50 border border-white/10 hover:bg-white/10 transition-all shadow-sm">
+                      <Languages className="w-4 h-4 text-slate-300" />
+                      <span className="text-sm font-medium text-slate-200">
                         {AVAILABLE_LANGUAGES.find(l => l.code === language)?.flag}
                       </span>
-                      <ChevronDown className="w-3 h-3 text-gray-500" />
+                      <ChevronDown className="w-3 h-3 text-slate-400" />
                     </button>
                   </PopoverTrigger>
                   <PopoverContent className="w-56 p-2">
@@ -337,7 +334,7 @@ function LayoutContent({ children }) {
             {isAdmin && (
               <>
                 <Link to={createPageUrl("AdminUserManagement")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminUserManagement')}>
+                  <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white hover:bg-white/10 h-8 w-8" title={t('adminUserManagement')}>
                     <Users className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                   </Button>
                 </Link>

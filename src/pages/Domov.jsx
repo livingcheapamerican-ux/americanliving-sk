@@ -379,7 +379,7 @@ export default function Domov() {
 
 
       {/* Hero Section */}
-      <section className="relative h-[60vh] sm:h-[80vh] min-h-[380px] sm:min-h-[600px] overflow-hidden bg-white pt-8 sm:pt-0">
+      <section className="relative h-[80vh] sm:h-[100vh] min-h-[500px] sm:min-h-[700px] overflow-hidden bg-slate-950 pt-8 sm:pt-0">
         
         {heroImages.map((img, index) => (
           <div
@@ -401,7 +401,7 @@ export default function Domov() {
               fetchpriority={index === 0 ? "high" : undefined}
               decoding={index === 0 ? "sync" : "async"}
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/30" />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
           </div>
         ))}
 
@@ -449,8 +449,7 @@ export default function Domov() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="hidden sm:block text-sm sm:text-lg md:text-xl mb-4 sm:mb-6 text-gray-100 leading-relaxed max-w-2xl" 
-              style={{ textShadow: '2px 2px 8px rgba(0,0,0,1)' }}
+              className="hidden sm:block text-sm sm:text-lg md:text-xl mb-4 sm:mb-8 text-slate-300 leading-relaxed max-w-2xl font-light" 
             >
               {t('everythingYouNeed')}
             </motion.p>
@@ -502,14 +501,14 @@ export default function Domov() {
       </section>
 
       {/* Trusted Partners Section - Overení partneri */}
-      <section className="py-8 sm:py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            className="text-xl sm:text-3xl md:text-4xl font-bold text-center mb-6 sm:mb-12"
-            style={{ color: '#333333' }}
-          >
+      <section className="py-12 sm:py-24 bg-slate-950 relative overflow-hidden">
+        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+        <div className="container mx-auto px-4 relative z-10">
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              className="text-2xl sm:text-4xl md:text-5xl font-bold text-center mb-8 sm:mb-16 text-white"
+            >
             {t('trustedPartnersTitle')}
           </motion.h2>
           
@@ -518,7 +517,7 @@ export default function Domov() {
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              className="bg-white rounded-2xl p-4 sm:p-8 shadow-md hover:shadow-xl transition-shadow"
+              className="bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-3xl p-6 sm:p-10 shadow-2xl hover:bg-slate-800/50 transition-all"
             >
               <div className="mb-3 sm:mb-6">
                 <div className="aspect-[16/9] overflow-hidden rounded-xl">
@@ -532,10 +531,10 @@ export default function Domov() {
                   />
                 </div>
               </div>
-              <h3 className="text-lg sm:text-2xl font-bold mb-2 sm:mb-4" style={{ color: '#333333' }}>
+              <h3 className="text-xl sm:text-3xl font-bold mb-3 sm:mb-5 text-white">
                 {t('prostoTitle')}
               </h3>
-              <p className="text-gray-600 leading-relaxed text-sm sm:text-lg">
+              <p className="text-slate-400 leading-relaxed text-sm sm:text-lg font-light">
                 {t('prostoBody')}
               </p>
             </motion.div>
@@ -544,7 +543,7 @@ export default function Domov() {
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              className="bg-white rounded-2xl p-4 sm:p-8 shadow-md hover:shadow-xl transition-shadow"
+              className="bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-3xl p-6 sm:p-10 shadow-2xl hover:bg-slate-800/50 transition-all"
             >
               <div className="mb-3 sm:mb-6">
                 <div className="aspect-[16/9] overflow-hidden rounded-xl">
@@ -558,10 +557,10 @@ export default function Domov() {
                   />
                 </div>
               </div>
-              <h3 className="text-lg sm:text-2xl font-bold mb-2 sm:mb-4" style={{ color: '#333333' }}>
+              <h3 className="text-xl sm:text-3xl font-bold mb-3 sm:mb-5 text-white">
                 {t('ticabTitle')}
               </h3>
-              <p className="text-gray-600 leading-relaxed text-sm sm:text-lg">
+              <p className="text-slate-400 leading-relaxed text-sm sm:text-lg font-light">
                 {t('ticabBody')}
               </p>
             </motion.div>
@@ -570,7 +569,8 @@ export default function Domov() {
       </section>
 
       {/* DOTÁCIA AMERICANA - High-Contrast RED */}
-      <section className="py-8 sm:py-12 bg-white">
+      <section className="py-12 sm:py-24 bg-slate-900 relative">
+        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
         <div className="container mx-auto px-4 text-center">
           <motion.div
             animate={{ scale: [1, 1.02, 1] }}
@@ -606,7 +606,7 @@ export default function Domov() {
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="bg-white rounded-2xl p-4 sm:p-6 shadow-md border-2 border-emerald-300 relative overflow-hidden"
+                className="bg-slate-950 rounded-3xl p-6 sm:p-8 shadow-[0_0_30px_rgba(16,185,129,0.15)] border border-emerald-500/30 relative overflow-hidden"
               >
                 <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-400/10 rounded-full blur-3xl"></div>
                 <div className="flex items-center gap-3 mb-3 relative z-10">
@@ -615,7 +615,7 @@ export default function Domov() {
                   </div>
                   <h3 className="text-base sm:text-xl font-black text-emerald-700">{t('forFamilies')}</h3>
                 </div>
-                <ul className="space-y-2 text-sm sm:text-base text-gray-800 relative z-10">
+                <ul className="space-y-3 text-sm sm:text-base text-slate-300 relative z-10">
                   <li className="flex items-start gap-2">
                     <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
                     <span><strong className="text-emerald-700">{t('grantAtSigning')}</strong></span>
@@ -636,7 +636,7 @@ export default function Domov() {
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="bg-white rounded-2xl p-4 sm:p-6 shadow-md border-2 border-yellow-300 relative overflow-hidden"
+                className="bg-slate-950 rounded-3xl p-6 sm:p-8 shadow-[0_0_30px_rgba(234,179,8,0.15)] border border-yellow-500/30 relative overflow-hidden"
               >
                 <div className="absolute top-0 right-0 w-24 h-24 bg-yellow-400/10 rounded-full blur-3xl"></div>
                 <div className="flex items-center gap-3 mb-3 relative z-10">
@@ -645,7 +645,7 @@ export default function Domov() {
                   </div>
                   <h3 className="text-base sm:text-xl font-black text-yellow-700">{t('forInvestors')}</h3>
                 </div>
-                <ul className="space-y-2 text-sm sm:text-base text-gray-800 relative z-10">
+                <ul className="space-y-3 text-sm sm:text-base text-slate-300 relative z-10">
                   <li className="flex items-start gap-2">
                     <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
                     <span><strong className="text-yellow-700">{t('grantAtSigning')}</strong></span>
@@ -662,7 +662,7 @@ export default function Domov() {
               </motion.div>
             </div>
               
-            <p className="text-xs sm:text-sm text-center text-gray-800 font-medium bg-white/70 backdrop-blur-sm rounded-lg p-2 sm:p-3">
+            <p className="text-xs sm:text-sm text-center text-slate-300 font-medium bg-slate-800/70 backdrop-blur-sm border border-white/10 rounded-lg p-3 sm:p-4">
               💡 <strong>{t('grantAmountVaries')}</strong>
             </p>
           </div>
@@ -738,7 +738,7 @@ export default function Domov() {
 
 
       {/* Komplexné služby - S OBRÁZKAMI */}
-      <section className="py-6 sm:py-16 bg-white">
+      <section className="py-12 sm:py-24 bg-slate-950 relative border-t border-white/10">
         <div className="container mx-auto px-2 sm:px-4">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -747,10 +747,10 @@ export default function Domov() {
             transition={{ duration: 0.6 }}
             className="text-center mb-4 sm:mb-10"
           >
-              <h2 className="text-lg sm:text-3xl md:text-5xl font-bold mb-2 sm:mb-4" style={{ color: '#333333' }}>
+              <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 text-white">
                 {t('allInOnePlace')}
               </h2>
-            <p className="text-xs sm:text-base text-gray-600 max-w-3xl mx-auto mb-3">
+            <p className="text-sm sm:text-lg text-slate-400 max-w-3xl mx-auto mb-6">
               {t('comprehensiveServicesDesc')}
             </p>
             <div className="flex flex-wrap justify-center gap-1 sm:gap-2 text-[10px] sm:text-sm font-semibold">
@@ -782,7 +782,7 @@ export default function Domov() {
                   setServiceModalOpen(true);
                 }}
               >
-                <Card className="group overflow-hidden h-full hover:shadow-xl transition-all duration-300 cursor-pointer bg-white shadow-md hover:-translate-y-1">
+                <Card className="group overflow-hidden h-full hover:shadow-2xl hover:shadow-red-900/20 transition-all duration-300 cursor-pointer bg-slate-900 border-white/10 shadow-lg hover:-translate-y-2">
                   <div className="relative aspect-video overflow-hidden">
                     <img 
                       src={sluzba.image.includes("unsplash.com") ? sluzba.image.replace(/\?.*$/, "") + "?fm=webp&auto=format,compress&w=400&q=75" : sluzba.image}
@@ -803,11 +803,11 @@ export default function Domov() {
                       <span className="text-xs font-bold text-primary">Klikni pre viac →</span>
                     </div>
                   </div>
-                  <div className="p-2 sm:p-3 bg-gradient-to-b from-white to-gray-50">
-                    <h3 className="text-sm sm:text-sm font-bold text-gray-900 mb-1 group-hover:text-primary transition-colors line-clamp-2">
+                  <div className="p-4 sm:p-6 bg-slate-900">
+                    <h3 className="text-base sm:text-lg font-bold text-white mb-2 group-hover:text-red-500 transition-colors line-clamp-2">
                       {sluzba.nazov}
                     </h3>
-                    <p className="text-xs sm:text-xs text-gray-600 font-medium">{sluzba.popis}</p>
+                    <p className="text-sm text-slate-400 font-light">{sluzba.popis}</p>
                   </div>
                   </Card>
                   </motion.div>
@@ -829,7 +829,7 @@ export default function Domov() {
       </section>
 
       {/* Prečo American Living */}
-      <section className="py-6 sm:py-16 bg-white">
+      <section className="py-12 sm:py-24 bg-slate-900 border-t border-white/10">
         <div className="container mx-auto px-2 sm:px-4">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -838,10 +838,10 @@ export default function Domov() {
             transition={{ duration: 0.6 }}
             className="text-center mb-4 sm:mb-10"
           >
-              <h2 className="text-lg sm:text-3xl md:text-5xl font-bold mb-1.5 sm:mb-3" style={{ color: '#333333' }}>
+              <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-6 text-white">
                 {t('whyAmericanLiving')}
               </h2>
-            <p className="text-xs sm:text-base text-gray-600 max-w-3xl mx-auto">
+            <p className="text-sm sm:text-lg text-slate-400 max-w-3xl mx-auto font-light">
               {t('qualityBrand')}
             </p>
             </motion.div>
@@ -856,7 +856,7 @@ export default function Domov() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 whileHover={{ y: -8 }}
               >
-                <Card className="p-6 text-center h-full hover:shadow-xl transition-all duration-300 bg-white shadow-md group">
+                <Card className="p-8 text-center h-full hover:shadow-2xl transition-all duration-300 bg-slate-950 border-white/5 shadow-lg group">
                   <motion.div 
                     whileHover={{ rotate: [0, -10, 10, -10, 0], scale: 1.15 }}
                     transition={{ duration: 0.5 }}
@@ -864,8 +864,8 @@ export default function Domov() {
                   >
                     <vyhoda.icon className="w-8 h-8 text-white" />
                   </motion.div>
-                  <h3 className="text-base font-bold mb-2" style={{ color: '#333333' }}>{vyhoda.title}</h3>
-                  <p className="text-sm text-gray-600 leading-relaxed">{vyhoda.description}</p>
+                  <h3 className="text-lg font-bold mb-3 text-white">{vyhoda.title}</h3>
+                  <p className="text-sm text-slate-400 leading-relaxed font-light">{vyhoda.description}</p>
                   </Card>
                   </motion.div>
                   ))}
@@ -909,7 +909,7 @@ export default function Domov() {
 
       {/* Naša ponuka */}
       {domy.length > 0 && (
-        <section className="py-6 sm:py-16 bg-gray-50">
+        <section className="py-12 sm:py-24 bg-slate-950 border-t border-white/10">
           <div className="container mx-auto px-2 sm:px-4">
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
@@ -918,10 +918,10 @@ export default function Domov() {
               transition={{ duration: 0.6 }}
               className="text-center mb-4 sm:mb-10"
             >
-                <h2 className="text-lg sm:text-3xl md:text-5xl font-bold mb-1.5" style={{ color: '#333333' }}>
+                <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-6 text-white">
                   {t('ourOffer')}
                 </h2>
-              <p className="text-xs sm:text-base text-gray-600">
+              <p className="text-sm sm:text-lg text-slate-400 font-light">
                 {t('woodHouseNotLookWood')}
               </p>
               </motion.div>
@@ -937,7 +937,7 @@ export default function Domov() {
                     whileHover={{ y: -8 }}
                   >
                     <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}`}>
-                      <Card className="group overflow-hidden hover:shadow-xl transition-all duration-300 bg-white shadow-md h-full">
+                      <Card className="group overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 bg-slate-900 border-white/10 shadow-lg h-full">
                       <div className="relative aspect-video overflow-hidden">
                         <img
                           src={dom.hlavny_obrazok?.includes("unsplash.com") ? dom.hlavny_obrazok.replace(/([&?])w=\d+/, "$1w=300").replace("q=80", "q=75") + (dom.hlavny_obrazok.includes("?") ? "&fm=webp" : "?fm=webp") : dom.hlavny_obrazok}
@@ -958,12 +958,12 @@ export default function Domov() {
                           </motion.div>
                         )}
                       </div>
-                      <div className="p-2 sm:p-4">
-                        <div className="text-[8px] sm:text-xs text-gray-500 mb-0.5 sm:mb-1 font-semibold uppercase tracking-wider truncate">{dom.vyrobca}</div>
-                        <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-1.5 sm:mb-2 group-hover:text-secondary transition-colors line-clamp-2 leading-tight">
+                      <div className="p-3 sm:p-5">
+                        <div className="text-[10px] sm:text-xs text-slate-500 mb-1 sm:mb-2 font-bold uppercase tracking-widest truncate">{dom.vyrobca}</div>
+                        <h3 className="text-sm sm:text-base font-bold text-white mb-2 sm:mb-3 group-hover:text-red-500 transition-colors line-clamp-2 leading-tight">
                           {dom.nazov}
                         </h3>
-                        <div className="flex items-center justify-between pt-1.5 sm:pt-2 border-t border-gray-200">
+                        <div className="flex items-center justify-between pt-2 sm:pt-4 border-t border-white/10">
                           <div className="flex-1 min-w-0">
                             {dom.vyrobca === "Ticab house" ? (
                               <div>
@@ -1002,7 +1002,7 @@ export default function Domov() {
             >
               <Link to={createPageUrl("Katalog")}>
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                  <Button size="lg" className="relative bg-gray-900 hover:bg-black text-white font-black text-sm sm:text-xl px-6 sm:px-16 py-4 sm:py-8 shadow-lg group">
+                  <Button size="lg" className="relative bg-white hover:bg-slate-200 text-slate-900 font-black text-sm sm:text-xl px-6 sm:px-16 py-4 sm:py-8 shadow-[0_0_30px_rgba(255,255,255,0.15)] group">
                     <Home className="mr-1 w-4 h-4 sm:mr-2 sm:w-6 sm:h-6 group-hover:rotate-12 transition-transform" />
                     {t('showAllHouses')}
                     <ArrowRight className="ml-1 w-4 h-4 sm:ml-2 sm:w-6 sm:h-6 group-hover:translate-x-2 transition-transform" />
@@ -1015,18 +1015,18 @@ export default function Domov() {
       )}
 
       {/* Proces realizácie */}
-      <section className="py-3 sm:py-10 bg-white">
+      <section className="py-6 sm:py-16 bg-slate-900 border-t border-white/10">
         <div className="container mx-auto px-2 sm:px-4">
-          <div className="text-center mb-2 sm:mb-4">
-              <h2 className="text-sm sm:text-2xl font-bold text-gray-900">{t('implementationProcess')}</h2>
+          <div className="text-center mb-4 sm:mb-8">
+              <h2 className="text-sm sm:text-2xl font-bold text-white">{t('implementationProcess')}</h2>
             </div>
 
             <div className="max-w-7xl mx-auto flex flex-wrap justify-center gap-1 sm:gap-2">
             {proces.map((krok, index) => (
-              <div key={index} className="flex items-center gap-0.5 sm:gap-1 bg-gray-50 border border-gray-200 rounded px-1 py-0.5 sm:px-3 sm:py-1.5">
-                <span className="text-[7px] sm:text-xs font-bold text-primary/50">{krok.cislo}</span>
-                <krok.icon className="w-2 h-2 sm:w-4 sm:h-4 text-primary" />
-                <span className="text-[7px] sm:text-xs font-medium text-gray-800">{krok.nazov}</span>
+              <div key={index} className="flex items-center gap-0.5 sm:gap-1 bg-slate-950 border border-white/10 rounded-full px-2 py-1 sm:px-4 sm:py-2">
+                <span className="text-[7px] sm:text-xs font-bold text-red-500/80">{krok.cislo}</span>
+                <krok.icon className="w-2 h-2 sm:w-4 sm:h-4 text-red-500" />
+                <span className="text-[7px] sm:text-xs font-medium text-slate-300">{krok.nazov}</span>
               </div>
                   ))}
                   </div>
@@ -1041,13 +1041,13 @@ export default function Domov() {
       />
 
       {/* CTA Section */}
-      <section className="py-6 sm:py-16 bg-gray-900">
+      <section className="py-12 sm:py-24 bg-slate-950 border-t border-white/10 relative overflow-hidden">
         <div className="container mx-auto px-2 sm:px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-lg sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-4 text-white">
               {t('readyForOwnHouse')}
             </h2>
-            <p className="text-xs sm:text-base mb-3 sm:mb-6 text-gray-300">
+            <p className="text-sm sm:text-lg mb-6 sm:mb-10 text-slate-400 font-light">
               {t('contactUsAndFind')}
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
@@ -1062,7 +1062,7 @@ export default function Domov() {
               </Link>
               <Link to={createPageUrl("Kontakt")} className="w-full sm:w-auto">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                  <Button size="lg" variant="outline" className="w-full sm:w-auto bg-transparent border-2 border-white text-white hover:bg-white hover:text-gray-900 font-bold text-sm sm:text-lg px-6 sm:px-12 py-4 sm:py-7">
+                  <Button size="lg" variant="outline" className="w-full sm:w-auto bg-transparent border-2 border-white/20 text-white hover:bg-white/10 hover:text-white font-bold text-sm sm:text-lg px-6 sm:px-12 py-4 sm:py-7">
                     <Phone className="mr-1 w-4 h-4 sm:mr-2 sm:w-6 sm:h-6" />
                     {t('contact')}
                   </Button>
