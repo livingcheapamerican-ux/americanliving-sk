@@ -37,6 +37,7 @@ import ShellInfoBox from "../components/ShellInfoBox";
 import DOMPurify from 'dompurify';
 import { prostoHouseTranslations } from "../components/translations/ProstoHouseTranslations";
 import ProstoHouseMarketing from "../components/ProstoHouseMarketing";
+import TicabhouseMarketing from "../components/TicabhouseMarketing";
 import ExternalReviews from "../components/ExternalReviews";
 import GaleriaLightbox from "../components/GaleriaLightbox";
 import YoutubePlayer from "../components/YoutubePlayer";
@@ -1573,6 +1574,10 @@ export default function DetailDomu() {
 
             {isProstoHouse && (
               <ProstoHouseMarketing />
+            )}
+
+            {isTicabhouse && (
+              <TicabhouseMarketing />
             )}
 
             {/* Štandardná výbava pre Ticabhouse */}
