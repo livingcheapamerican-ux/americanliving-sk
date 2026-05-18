@@ -1,16 +1,281 @@
-import React, { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Sparkles, Home, Send, Eye, EyeOff, CheckCircle } from "lucide-react";
-import { motion } from "framer-motion";
-import { useLanguage } from "./LanguageContext";
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import EditableTile from "./EditableTile";
 import { toast } from "sonner";
+import { useLanguage } from "./LanguageContext";
 import FloatingPrice from "./FloatingPrice";
+import { 
+  Home, Check, Send, X, Thermometer, Zap, Layout, Hammer, 
+  CheckCircle, Eye, EyeOff, Lock, ChevronDown, ChevronUp, 
+  Paintbrush, DoorOpen, Wrench, Layers, Droplet, Flame, CheckSquare, Sparkles
+} from "lucide-react";
 
+// ── Glassmorphism Komponenty ──────────────────────────────────────────────
+const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmin, onPriceChange, icon: Icon }) => (
+  <button onClick={onClick} className={`relative flex flex-col p-5 rounded-3xl border-2 transition-all duration-500 w-full text-left active:scale-[0.98] gap-4 overflow-hidden group ${selected ? 'border-red-500 bg-gradient-to-br from-red-500/10 to-red-900/10 shadow-[0_0_30px_rgba(239,68,68,0.2)] scale-[1.02] backdrop-blur-md' : 'border-white/5 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.05] backdrop-blur-sm'}`}>
+    {selected && <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-orange-500 opacity-80" />}
+    <div className="flex items-start gap-4 w-full relative z-10">
+      {Icon && (
+        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all duration-500 ${selected ? 'bg-gradient-to-br from-red-500 to-red-700 text-white shadow-xl shadow-red-500/30 rotate-3' : 'bg-white/5 text-slate-400 group-hover:text-slate-300 group-hover:scale-110'}`}>
+          <Icon className={`w-7 h-7 transition-transform duration-500 ${selected ? 'scale-110' : 'scale-100'}`} />
+        </div>
+      )}
+      
+      <div className="flex-1 min-w-0 mt-1">
+        <div className="flex items-center gap-2 flex-wrap mb-1.5">
+          <span className={`font-black text-lg transition-colors duration-300 ${selected ? 'text-white' : 'text-slate-200'}`}>{label}</span>
+          {isA0 && <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.2)]">A0 Certifikácia</span>}
+        </div>
+        {description && <p className="text-sm text-slate-400 leading-relaxed">{description}</p>}
+      </div>
+      
+      <div className="flex flex-col items-end flex-shrink-0">
+        <div className={`w-7 h-7 mb-3 rounded-full border-2 flex items-center justify-center transition-all duration-500 ${selected ? 'border-red-500 bg-red-500 scale-110 shadow-lg shadow-red-500/40' : 'border-slate-700 bg-slate-950/50'}`}>
+          {selected && <Check className="w-4 h-4 text-white" />}
+        </div>
+        
+        {isAdmin && onPriceChange ? (
+          <div className="flex items-center gap-1 bg-slate-950/80 border border-red-500/30 rounded px-2 py-1 mt-1 backdrop-blur-md" onClick={e => e.stopPropagation()}>
+            <span className="text-xs text-slate-500">€</span>
+            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-20 text-sm font-bold text-red-400 bg-transparent outline-none" />
+          </div>
+        ) : (
+          <span className={`text-base font-black whitespace-nowrap transition-colors duration-300 ${selected ? 'text-red-400' : 'text-slate-500'}`}>
+            {price === 0 ? 'V cene' : `+${price.toLocaleString()} €`}
+          </span>
+        )}
+      </div>
+    </div>
+  </button>
+);
+
+const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = false, isAdmin, onPriceChange, description, t, icon: Icon }) => (
+  <button onClick={!disabled && !locked ? onChange : undefined} className={`flex items-center justify-between p-4 rounded-2xl border-2 transition-all duration-500 w-full active:scale-[0.98] group overflow-hidden relative ${locked ? 'border-emerald-500/30 bg-emerald-500/5 cursor-not-allowed' : checked ? 'border-red-500 bg-gradient-to-r from-red-500/10 to-transparent shadow-[0_0_20px_rgba(239,68,68,0.1)] scale-[1.01] backdrop-blur-md' : disabled ? 'border-white/5 bg-slate-900/50 opacity-60 cursor-not-allowed' : 'border-white/5 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.05] backdrop-blur-sm'}`}>
+    {checked && !locked && <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500" />}
+    <div className="flex items-center gap-4 relative z-10">
+      <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors duration-500 ${locked ? 'bg-emerald-500/20 text-emerald-400' : checked ? 'bg-gradient-to-br from-red-500 to-red-600 text-white shadow-lg shadow-red-500/20' : 'bg-white/5 text-slate-400 group-hover:scale-110 transition-transform duration-300'}`}>
+        {Icon ? <Icon className={`w-6 h-6 transition-transform duration-500 ${checked ? 'scale-110' : 'scale-100'}`} /> : (locked ? <Lock className="w-5 h-5" /> : <CheckSquare className="w-5 h-5" />)}
+      </div>
+      <div className="text-left">
+        <span className={`font-bold text-lg block transition-colors duration-300 ${checked || locked ? 'text-white' : 'text-slate-300'}`}>{label}</span>
+        {description && <p className="text-sm text-slate-400 mt-1 leading-relaxed">{description}</p>}
+        {locked && <span className="text-[11px] uppercase font-bold text-emerald-500 tracking-wider flex items-center gap-1 mt-1"><CheckCircle className="w-3 h-3" /> {t ? t('requiredForA0') : 'Vyžadované pre A0'}</span>}
+      </div>
+    </div>
+    <div className="flex items-center gap-4 ml-3 flex-shrink-0 relative z-10">
+      <div className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-all duration-300 ${locked ? 'bg-emerald-500 border-emerald-500' : checked ? 'bg-red-500 border-red-500 scale-110' : 'bg-slate-950/50 border-slate-700'}`}>
+        {locked ? <Lock className="w-4 h-4 text-white" /> : checked && <Check className="w-4 h-4 text-white" />}
+      </div>
+      <div className="flex-shrink-0 min-w-[70px] text-right">
+        {isAdmin && onPriceChange ? (
+          <div className="flex items-center gap-1 bg-slate-950/80 border border-red-500/30 rounded px-2 py-1 backdrop-blur-sm" onClick={e => e.stopPropagation()}>
+            <span className="text-xs text-slate-500">€</span>
+            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-20 text-sm font-bold text-red-400 bg-transparent outline-none" />
+          </div>
+        ) : (
+          <span className={`text-base font-black whitespace-nowrap transition-colors duration-300 ${locked ? 'text-emerald-400' : 'text-slate-400'}`}>
+            {price === 0 ? '0 €' : `+${price.toLocaleString()} €`}
+          </span>
+        )}
+      </div>
+    </div>
+  </button>
+);
+
+const CounterRow = ({ label, price, value, onChange, isAdmin, onPriceChange, icon: Icon }) => (
+  <div className="flex items-center justify-between p-4 rounded-2xl border-2 border-white/5 bg-white/[0.02] backdrop-blur-sm transition-all duration-500 hover:border-white/20 group relative overflow-hidden">
+    {value > 0 && <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500" />}
+    <div className="flex items-center gap-4 relative z-10">
+      {Icon && (
+        <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors duration-500 ${value > 0 ? 'bg-slate-800 text-white' : 'bg-white/5 text-slate-400 group-hover:scale-110 transition-transform duration-300'}`}>
+          <Icon className={`w-6 h-6 transition-transform duration-500 ${value > 0 ? 'scale-110' : ''}`} />
+        </div>
+      )}
+      <div>
+        <div className={`font-bold text-lg transition-colors duration-300 ${value > 0 ? 'text-white' : 'text-slate-300'}`}>{label}</div>
+        {isAdmin && onPriceChange ? (
+          <div className="flex items-center gap-1 mt-1">
+            <span className="text-xs text-slate-500">€</span>
+            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-16 text-sm font-bold text-red-400 bg-slate-950 outline-none border border-red-500/30 rounded px-1 py-0.5" />
+          </div>
+        ) : (
+          <div className="text-sm text-red-400 font-bold mt-1">{price} € / ks</div>
+        )}
+      </div>
+    </div>
+    <div className="flex items-center gap-4 relative z-10">
+      <button onClick={() => onChange(Math.max(0, value - 1))} className="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center font-bold text-slate-300 active:scale-90 transition-all border border-white/10 backdrop-blur-sm">−</button>
+      <span className={`w-8 text-center font-black text-xl transition-colors duration-300 ${value > 0 ? 'text-white' : 'text-slate-500'}`}>{value}</span>
+      <button onClick={() => onChange(value + 1)} className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 flex items-center justify-center font-bold active:scale-90 transition-all shadow-[0_0_15px_rgba(239,68,68,0.4)]">+</button>
+    </div>
+  </div>
+);
+
+const SectionLabel = ({ label, color = 'gray' }) => {
+  const colorMap = {
+    'gray': 'text-slate-400',
+    'orange': 'text-orange-400',
+    'teal': 'text-teal-400',
+    'amber': 'text-amber-400',
+    'blue': 'text-blue-400',
+    'purple': 'text-purple-400',
+    'red': 'text-red-400',
+    'emerald': 'text-emerald-400',
+    'green': 'text-green-400'
+  };
+  return (
+    <div className={`text-sm font-black uppercase tracking-widest ${colorMap[color] || 'text-slate-400'} mb-4 mt-10 first:mt-0 flex items-center gap-2`}>
+      <span className="w-2 h-2 rounded-full bg-current shadow-[0_0_10px_currentColor]"></span>
+      {label}
+    </div>
+  );
+};
+const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = false, isAdmin, onPriceChange, description, t, icon: Icon }) => (
+  <button onClick={!disabled && !locked ? onChange : undefined} className={`flex items-center justify-between p-4 rounded-2xl border-2 transition-all duration-500 w-full active:scale-[0.98] group overflow-hidden relative ${locked ? 'border-emerald-500/30 bg-emerald-500/5 cursor-not-allowed' : checked ? 'border-red-500 bg-gradient-to-r from-red-500/10 to-transparent shadow-[0_0_20px_rgba(239,68,68,0.1)] scale-[1.01] backdrop-blur-md' : disabled ? 'border-white/5 bg-slate-900/50 opacity-60 cursor-not-allowed' : 'border-white/5 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.05] backdrop-blur-sm'}`}>
+    {checked && !locked && <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500" />}
+    <div className="flex items-center gap-4 relative z-10">
+      <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors duration-500 ${locked ? 'bg-emerald-500/20 text-emerald-400' : checked ? 'bg-gradient-to-br from-red-500 to-red-600 text-white shadow-lg shadow-red-500/20' : 'bg-white/5 text-slate-400 group-hover:scale-110 transition-transform duration-300'}`}>
+        {Icon ? <Icon className={`w-6 h-6 transition-transform duration-500 ${checked ? 'scale-110' : 'scale-100'}`} /> : (locked ? <Lock className="w-5 h-5" /> : <CheckSquare className="w-5 h-5" />)}
+      </div>
+      <div className="text-left">
+        <span className={`font-bold text-lg block transition-colors duration-300 ${checked || locked ? 'text-white' : 'text-slate-300'}`}>{label}</span>
+        {description && <p className="text-sm text-slate-400 mt-1 leading-relaxed">{description}</p>}
+        {locked && <span className="text-[11px] uppercase font-bold text-emerald-500 tracking-wider flex items-center gap-1 mt-1"><CheckCircle className="w-3 h-3" /> {t ? t('requiredForA0') : 'Vyžadované pre A0'}</span>}
+      </div>
+    </div>
+    <div className="flex items-center gap-4 ml-3 flex-shrink-0 relative z-10">
+      <div className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-all duration-300 ${locked ? 'bg-emerald-500 border-emerald-500' : checked ? 'bg-red-500 border-red-500 scale-110' : 'bg-slate-950/50 border-slate-700'}`}>
+        {locked ? <Lock className="w-4 h-4 text-white" /> : checked && <Check className="w-4 h-4 text-white" />}
+      </div>
+      <div className="flex-shrink-0 min-w-[70px] text-right">
+        {isAdmin && onPriceChange ? (
+          <div className="flex items-center gap-1 bg-slate-950/80 border border-red-500/30 rounded px-2 py-1 backdrop-blur-sm" onClick={e => e.stopPropagation()}>
+            <span className="text-xs text-slate-500">€</span>
+            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-20 text-sm font-bold text-red-400 bg-transparent outline-none" />
+          </div>
+        ) : (
+          <span className={`text-base font-black whitespace-nowrap transition-colors duration-300 ${locked ? 'text-emerald-400' : 'text-slate-400'}`}>
+            {price === 0 ? '0 €' : `+${price.toLocaleString()} €`}
+          </span>
+        )}
+      </div>
+    </div>
+  </button>
+);
+
+const CounterRow = ({ label, price, value, onChange, isAdmin, onPriceChange, icon: Icon }) => (
+  <div className="flex items-center justify-between p-4 rounded-2xl border-2 border-white/5 bg-white/[0.02] backdrop-blur-sm transition-all duration-500 hover:border-white/20 group relative overflow-hidden">
+    {value > 0 && <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500" />}
+    <div className="flex items-center gap-4 relative z-10">
+      {Icon && (
+        <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors duration-500 ${value > 0 ? 'bg-slate-800 text-white' : 'bg-white/5 text-slate-400 group-hover:scale-110 transition-transform duration-300'}`}>
+          <Icon className={`w-6 h-6 transition-transform duration-500 ${value > 0 ? 'scale-110' : ''}`} />
+        </div>
+      )}
+      <div>
+        <div className={`font-bold text-lg transition-colors duration-300 ${value > 0 ? 'text-white' : 'text-slate-300'}`}>{label}</div>
+        {isAdmin && onPriceChange ? (
+          <div className="flex items-center gap-1 mt-1">
+            <span className="text-xs text-slate-500">€</span>
+            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-16 text-sm font-bold text-red-400 bg-slate-950 outline-none border border-red-500/30 rounded px-1 py-0.5" />
+          </div>
+        ) : (
+          <div className="text-sm text-red-400 font-bold mt-1">{price} € / ks</div>
+        )}
+      </div>
+    </div>
+    <div className="flex items-center gap-4 relative z-10">
+      <button onClick={() => onChange(Math.max(0, value - 1))} className="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center font-bold text-slate-300 active:scale-90 transition-all border border-white/10 backdrop-blur-sm">−</button>
+      <span className={`w-8 text-center font-black text-xl transition-colors duration-300 ${value > 0 ? 'text-white' : 'text-slate-500'}`}>{value}</span>
+      <button onClick={() => onChange(value + 1)} className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 flex items-center justify-center font-bold active:scale-90 transition-all shadow-[0_0_15px_rgba(239,68,68,0.4)]">+</button>
+    </div>
+  </div>
+);
+
+  return (
+    <div className={`text-sm font-black uppercase tracking-widest ${colorMap[color] || 'text-slate-400'} mb-4 mt-10 first:mt-0 flex items-center gap-2`}>
+      <span className="w-2 h-2 rounded-full bg-current shadow-[0_0_10px_currentColor]"></span>
+      {label}
+    </div>
+  );
+};
+const CounterRow = ({ label, price, value, onChange, isAdmin, onPriceChange, icon: Icon }) => (
+  <div className="flex items-center justify-between p-4 rounded-2xl border-2 border-white/5 bg-white/[0.02] backdrop-blur-sm transition-all duration-500 hover:border-white/20 group relative overflow-hidden">
+    {value > 0 && <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500" />}
+    <div className="flex items-center gap-4 relative z-10">
+      {Icon && (
+        <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors duration-500 ${value > 0 ? 'bg-slate-800 text-white' : 'bg-white/5 text-slate-400 group-hover:scale-110 transition-transform duration-300'}`}>
+          <Icon className={`w-6 h-6 transition-transform duration-500 ${value > 0 ? 'scale-110' : ''}`} />
+        </div>
+      )}
+      <div>
+        <div className={`font-bold text-lg transition-colors duration-300 ${value > 0 ? 'text-white' : 'text-slate-300'}`}>{label}</div>
+        {isAdmin && onPriceChange ? (
+          <div className="flex items-center gap-1 mt-1">
+            <span className="text-xs text-slate-500">€</span>
+            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-16 text-sm font-bold text-red-400 bg-slate-950 outline-none border border-red-500/30 rounded px-1 py-0.5" />
+          </div>
+        ) : (
+          <div className="text-sm text-red-400 font-bold mt-1">{price} € / ks</div>
+        )}
+      </div>
+    </div>
+    <div className="flex items-center gap-4 relative z-10">
+      <button onClick={() => onChange(Math.max(0, value - 1))} className="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center font-bold text-slate-300 active:scale-90 transition-all border border-white/10 backdrop-blur-sm">−</button>
+      <span className={`w-8 text-center font-black text-xl transition-colors duration-300 ${value > 0 ? 'text-white' : 'text-slate-500'}`}>{value}</span>
+      <button onClick={() => onChange(value + 1)} className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 flex items-center justify-center font-bold active:scale-90 transition-all shadow-[0_0_15px_rgba(239,68,68,0.4)]">+</button>
+    </div>
+  </div>
+);
+
+  return (
+    <div className={`text-sm font-black uppercase tracking-widest ${colorMap[color] || 'text-slate-400'} mb-4 mt-10 first:mt-0 flex items-center gap-2`}>
+      <span className="w-2 h-2 rounded-full bg-current shadow-[0_0_10px_currentColor]"></span>
+      {label}
+    </div>
+  );
+};
+
+const BigSectionHeader = ({ title, description, icon: Icon, stepIdx, totalSteps }) => (
+  <div className="mb-8 border-b border-white/10 pb-6">
+    <div className="lg:hidden text-red-500 font-bold uppercase tracking-widest text-xs mb-4 flex items-center gap-2">
+      <span className="w-8 h-[2px] bg-red-500"></span>
+      Krok {stepIdx + 1} z {totalSteps}
+    </div>
+    <div className="flex items-start gap-4">
+      <div className="w-12 h-12 lg:w-14 lg:h-14 flex-shrink-0 bg-red-500/10 border border-red-500/30 rounded-2xl flex items-center justify-center shadow-[0_0_15px_rgba(239,68,68,0.2)]">
+        <Icon className="w-6 h-6 lg:w-7 lg:h-7 text-red-500" />
+      </div>
+      <div>
+        <h2 className="text-2xl lg:text-3xl font-black text-white tracking-tight mb-2">{title}</h2>
+        {description && <p className="text-slate-400 text-sm lg:text-base leading-relaxed">{description}</p>}
+      </div>
+    </div>
+  </div>
+);
+
+const ContactModal = ({ isOpen, onClose, onSubmit, isSubmitting, t }) => {
+  if (!isOpen) return null;
+  return (
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+      <div className="bg-slate-900 border border-white/10 rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto custom-scrollbar animate-in zoom-in-95 duration-200">
+        <button onClick={onClose} className="absolute top-4 right-4 p-2 bg-slate-800 rounded-full text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"><X className="w-5 h-5" /></button>
+        <h2 className="text-2xl font-bold mb-2 text-white">{t('inquiryForm')}</h2>
+        <p className="text-slate-400 mb-8">{t('inquiryFormDesc')}</p>
+        <form onSubmit={onSubmit} className="space-y-5">
+          <div><label className="block text-sm font-semibold text-slate-300 mb-2">{t('nameSurname')}</label><input required type="text" placeholder="Jozef Novák" name="name" className="w-full px-4 py-3 bg-slate-950 border border-white/10 text-white rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all placeholder:text-slate-600" /></div>
+          <div><label className="block text-sm font-semibold text-slate-300 mb-2">{t('email')}</label><input required type="email" placeholder="jozef@example.com" name="email" className="w-full px-4 py-3 bg-slate-950 border border-white/10 text-white rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all placeholder:text-slate-600" /></div>
+          <div><label className="block text-sm font-semibold text-slate-300 mb-2">{t('phone')}</label><input required type="tel" placeholder="+421 900 000 000" name="phone" className="w-full px-4 py-3 bg-slate-950 border border-white/10 text-white rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all placeholder:text-slate-600" /></div>
+          <div><label className="block text-sm font-semibold text-slate-300 mb-2">{t('city')}</label><input required type="text" placeholder="Bratislava" name="city" className="w-full px-4 py-3 bg-slate-950 border border-white/10 text-white rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all placeholder:text-slate-600" /></div>
+          <div><label className="block text-sm font-semibold text-slate-300 mb-2">{t('note')}</label><textarea name="note" rows={3} placeholder="Mám záujem o..." className="w-full px-4 py-3 bg-slate-950 border border-white/10 text-white rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all placeholder:text-slate-600"></textarea></div>
+          <button type="submit" disabled={isSubmitting} className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-2 mt-6 disabled:opacity-50 text-lg shadow-[0_0_20px_rgba(239,68,68,0.4)]">
+            {isSubmitting ? <span>{t('sending')}</span> : <><span>{t('sendQuote')}</span><Send className="w-5 h-5" /></>}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
 export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, predajNehnutelnosti, setPredajNehnutelnosti, hladamPozemok, setHladamPozemok, financneSluzby, setFinancneSluzby, ucel, setUcel, izolaciaStien, setIzolaciaStien, izolaciaPodlahy, setIzolaciaPodlahy, izolaciaStropu, setIzolaciaStropu, tepelneCerpadlo, setTepelneCerpadlo, rekuperacia, setRekuperacia, pripravaNaRekuperaciu, setPripravaNaRekuperaciu, podlahovoKurenie, setPodlahovoKurenie, pripravaNaKrb, setPripravaNaKrb, ochranaKachle, setOchranaKachle, klimatizacia, setKlimatizacia, fasada, setFasada, strecha, setStrecha, odkvapy, setOdkvapy, okna, setOkna, vchodoveDvere, setVchodoveDvere, obkladStien, setObkladStien, podlaha, setPodlaha, interieroveDvere, setInterieroveDvere, elektro, setElektro, bleskozvod, setBleskozvod, prepat, setPrepat, pripravaNaSolarnePanely, setPripravaNaSolarnePanely, sprchovyKut, setSprchovyKut, vana, setVana, bateria, setBateria, skrinka, setSkrinka, stropKupelna, setStropKupelna, inziniering, setInziniering, projektACertifikacia, setProjektACertifikacia, revizia, setRevizia, zaklady, setZaklady, montaz, setMontaz, doprava, setDoprava }) {
   const { language, t } = useLanguage();
   const queryClient = useQueryClient();
@@ -285,915 +550,381 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
     }
   };
 
+
+  // ── ScrollSpy Logika ──
+  const [activeSection, setActiveSection] = useState(0);
+  
+  const sections = [
+    { id: 0, title: getTranslatedText('sekcia_ucel', 'nazov') || t('purposeOfBuilding') || 'Účel stavby', icon: Home },
+    { id: 1, title: getTranslatedText('sekcia_izolacia', 'nazov') || t('insulationSection') || 'Izolácia', icon: Thermometer },
+    { id: 2, title: getTranslatedText('sekcia_vykurovanie', 'nazov') || t('heatingSection') || 'Vykurovanie', icon: Flame },
+    { id: 3, title: getTranslatedText('sekcia_fasada', 'nazov') || t('facadeSection') || 'Fasáda', icon: Paintbrush },
+    { id: 4, title: getTranslatedText('sekcia_strecha', 'nazov') || t('roofSection') || 'Strecha', icon: Home },
+    { id: 5, title: getTranslatedText('sekcia_okna_dvere', 'nazov') || t('windowsDoorsSection') || 'Okná a dvere', icon: DoorOpen },
+    { id: 6, title: getTranslatedText('sekcia_interier', 'nazov') || t('interiorSection') || 'Interiér', icon: Layout },
+    { id: 7, title: getTranslatedText('sekcia_elektro', 'nazov') || t('electricalSection') || 'Elektro', icon: Zap },
+    { id: 8, title: getTranslatedText('sekcia_kupelna', 'nazov') || t('bathroomSection') || 'Kúpeľňa', icon: Droplet },
+    { id: 9, title: getTranslatedText('sekcia_zaklady', 'nazov') || t('foundationsSection') || 'Základy', icon: Wrench },
+    { id: 10, title: getTranslatedText('sekcia_inziniering', 'nazov') || t('engineeringDocsSection') || 'Inžiniering', icon: Layers },
+    { id: 11, title: getTranslatedText('sekcia_realizacia', 'nazov') || t('realizationSection') || 'Realizácia', icon: Hammer },
+    { id: 12, title: getTranslatedText('sekcia_sluzby', 'nazov') || t('additionalServices') || 'Služby k nákupu', icon: Sparkles },
+  ];
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = parseInt(entry.target.id.split('-')[1]);
+            setActiveSection(index);
+          }
+        });
+      },
+      { rootMargin: '-20% 0px -80% 0px' }
+    );
+
+    sections.forEach((_, index) => {
+      const element = document.getElementById(`section-${index}`);
+      if (element) observer.observe(element);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const scrollToSection = (index) => {
+    const element = document.getElementById(`section-${index}`);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+      setActiveSection(index);
+    }
+  };
+
   return (
-    <div className="w-full">
-        <FloatingPrice 
-          price={totalPrice} 
-          isVisible={true} 
-          onSendQuote={handleSendQuoteFromFloating}
-          dom={dom}
-          vyrobca="Ticab house"
-        />
+    <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start w-full relative mt-8 font-sans">
+      
+      {/* ĽAVÉ MENU - Scroll Spy */}
+      <aside className="hidden lg:block w-64 flex-shrink-0 sticky top-24 h-[calc(100vh-8rem)] overflow-y-auto custom-scrollbar rounded-3xl bg-slate-950 border border-white/10 p-4 shadow-2xl z-40">
+        <div className="text-xs font-black text-slate-500 uppercase tracking-widest mb-4 px-2">{t('yourConfig') || 'Konfigurácia'}</div>
+        <nav className="flex flex-col gap-1 relative">
+          <div className="absolute left-6 top-6 bottom-6 w-px bg-slate-800 -z-10" />
+          {sections.map((section, idx) => (
+            <button
+              key={idx}
+              onClick={() => scrollToSection(idx)}
+              className={`flex items-center gap-3 w-full text-left p-2.5 rounded-xl transition-all duration-300 group ${
+                activeSection === idx ? 'bg-white/10 shadow-lg' : 'hover:bg-white/5'
+              }`}
+            >
+              <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-500 ${
+                activeSection === idx 
+                  ? 'bg-red-500 text-white shadow-[0_0_15px_rgba(239,68,68,0.4)] scale-110' 
+                  : activeSection > idx
+                    ? 'bg-slate-800 text-slate-400'
+                    : 'bg-slate-900 border border-white/5 text-slate-600'
+              }`}>
+                {activeSection > idx ? <Check className="w-4 h-4" /> : <section.icon className="w-4 h-4" />}
+              </div>
+              <span className={`text-sm font-bold transition-colors duration-300 ${
+                activeSection === idx ? 'text-white' : activeSection > idx ? 'text-slate-300' : 'text-slate-500'
+              }`}>
+                {section.title}
+              </span>
+            </button>
+          ))}
+        </nav>
+      </aside>
+
+      {/* HLAVNÝ OBSAH */}
+      <div className="flex-1 min-w-0 w-full space-y-12 pb-32">
         
-        {/* Dodatočné služby - KROK 0 */}
-        <Card className="p-3 sm:p-4 mb-3 bg-gradient-to-br from-cyan-50 via-white to-teal-50 border-2 border-cyan-300 shadow-lg">
-          <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
-            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-cyan-600 text-white text-sm mr-1">0</span>
-            📋 {getTranslatedText('sekcia_sluzby', 'nazov') || t('additionalServices') || 'Dodatočné služby'}
-          </h3>
-          <p className="text-xs sm:text-sm text-gray-600 mb-3">
-            {getTranslatedText('sekcia_sluzby', 'podnadpis') || 'Vyberte si doplnkové služby (voliteľné):'}
-          </p>
-          <div className="space-y-2">
-            {/* Predaj nehnuteľnosti */}
-            <div
-              onClick={() => setPredajNehnutelnosti(!predajNehnutelnosti)}
-              className={`p-3 rounded-lg border-2 cursor-pointer transition-all ${
-                predajNehnutelnosti 
-                  ? 'bg-blue-100 border-blue-500 shadow-md' 
-                  : 'bg-white border-blue-200 hover:border-blue-400'
-              }`}
-            >
-              <div className="flex items-start gap-2">
-                <div className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
-                  predajNehnutelnosti ? 'bg-blue-500 border-blue-500' : 'border-gray-300'
-                }`}>
-                  {predajNehnutelnosti && <CheckCircle className="w-4 h-4 text-white" />}
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm sm:text-base font-semibold text-gray-900">
-                    {getTranslatedText('sluzba_predaj', 'nazov') || 'Predaj predošlej nehnuteľnosti'}
-                  </p>
-                  <p className="text-xs text-gray-600 mt-0.5">
-                    {getTranslatedText('sluzba_predaj', 'dlhy_popis') || 'Budú sa Vám venovať naši najlepší odborníci v realitách.'}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Hľadám pozemok */}
-            <div
-              onClick={() => setHladamPozemok(!hladamPozemok)}
-              className={`p-3 rounded-lg border-2 cursor-pointer transition-all ${
-                hladamPozemok 
-                  ? 'bg-green-100 border-green-500 shadow-md' 
-                  : 'bg-white border-green-200 hover:border-green-400'
-              }`}
-            >
-              <div className="flex items-start gap-2">
-                <div className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
-                  hladamPozemok ? 'bg-green-500 border-green-500' : 'border-gray-300'
-                }`}>
-                  {hladamPozemok && <CheckCircle className="w-4 h-4 text-white" />}
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm sm:text-base font-semibold text-gray-900">
-                    {getTranslatedText('sluzba_pozemok', 'nazov') || 'Chcem pozemok pod svoj dom'}
-                  </p>
-                  <p className="text-xs text-gray-600 mt-0.5">
-                    {getTranslatedText('sluzba_pozemok', 'dlhy_popis') || 'Pomôžeme Vám nájsť ideálny pozemok.'}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Finančné služby */}
-            <div
-              onClick={() => setFinancneSluzby(!financneSluzby)}
-              className={`p-3 rounded-lg border-2 cursor-pointer transition-all ${
-                financneSluzby 
-                  ? 'bg-orange-100 border-orange-500 shadow-md' 
-                  : 'bg-white border-orange-200 hover:border-orange-400'
-              }`}
-            >
-              <div className="flex items-start gap-2">
-                <div className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
-                  financneSluzby ? 'bg-orange-500 border-orange-500' : 'border-gray-300'
-                }`}>
-                  {financneSluzby && <CheckCircle className="w-4 h-4 text-white" />}
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm sm:text-base font-semibold text-gray-900">
-                    {getTranslatedText('sluzba_finance', 'nazov') || 'Finančné služby - úvery/poistky'}
-                  </p>
-                  <p className="text-xs text-gray-600 mt-0.5">
-                    {getTranslatedText('sluzba_finance', 'dlhy_popis') || 'Budú sa Vám venovať naši najlepší finančníci, ktorí Vám pomôžu nie len s financovaním vášho bývania, ale pomocnú ruku vám podajú aj v ťažkých chvíľach s financiami.'}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Card>
-
-        {/* Účel stavby */}
-        <Card className="p-3 sm:p-4 mb-3 bg-gradient-to-br from-blue-50 via-white to-indigo-50 border-2 border-blue-200 shadow-lg">
-          <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
-            <Home className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
-            {getTranslatedText('sekcia_ucel', 'nazov') || t('purposeOfBuilding') || 'Účel stavby'}
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {/* Rekreačná stavba */}
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+        {/* 0. Účel stavby */}
+        <section id="section-0" className="scroll-mt-32">
+          <BigSectionHeader title={getTranslatedText('sekcia_ucel', 'nazov') || t('purposeOfBuilding') || 'Účel stavby'} icon={Home} stepIdx={0} totalSteps={13} />
+          <div className="grid sm:grid-cols-2 gap-4">
+            <OptionCard 
+              label={getTranslatedText('ucel_rekreacna', 'nazov') || t('recreationalBuilding')}
+              description={getTranslatedText('ucel_rekreacna', 'podnadpis') || t('economicChoice')}
+              selected={ucel === "chata"}
               onClick={() => {
                 setUcel("chata");
                 setKolaudacia("bez_a0");
-                setIzolaciaStien("150mm");
-                setIzolaciaPodlahy("150mm");
-                setIzolaciaStropu("150mm");
-                setTepelneCerpadlo("nie");
-                setRekuperacia("nie");
-                setPripravaNaRekuperaciu(false);
-                setPodlahovoKurenie(false);
-                setPripravaNaKrb(false);
-                setOchranaKachle(false);
-                setKlimatizacia(false);
-                setFasada("drevo_smrek");
-                setStrecha("korugovan_plech");
-                setOdkvapy("nie");
-                setOkna("biele");
-                setVchodoveDvere("plastove");
-                setObkladStien("smrek_8cm");
-                setPodlaha("laminat");
-                setInterieroveDvere("kridlove");
-                setElektro("eu");
-                setBleskozvod(false);
-                setPrepat(false);
-                setPripravaNaSolarnePanely(false);
-                setSprchovyKut("standard");
-                setVana(false);
-                setBateria("standard");
-                setSkrinka(false);
-                setStropKupelna("drevo");
-                setInziniering(false);
-                setProjektACertifikacia(false);
-                setRevizia(false);
-                setZaklady("bez");
-                setMontaz(false);
-                setDoprava(false);
+                setIzolaciaStien("150mm"); setIzolaciaPodlahy("150mm"); setIzolaciaStropu("150mm");
+                setTepelneCerpadlo("nie"); setRekuperacia("nie"); setPripravaNaRekuperaciu(false);
+                setPodlahovoKurenie(false); setPripravaNaKrb(false); setOchranaKachle(false); setKlimatizacia(false);
+                setFasada("drevo_smrek"); setStrecha("korugovan_plech"); setOdkvapy("nie");
+                setOkna("biele"); setVchodoveDvere("plastove"); setObkladStien("smrek_8cm");
+                setPodlaha("laminat"); setInterieroveDvere("kridlove"); setElektro("eu");
+                setBleskozvod(false); setPrepat(false); setPripravaNaSolarnePanely(false);
+                setSprchovyKut("standard"); setVana(false); setBateria("standard");
+                setSkrinka(false); setStropKupelna("drevo"); setInziniering(false);
+                setProjektACertifikacia(false); setRevizia(false); setZaklady("bez");
+                setMontaz(false); setDoprava(false);
               }}
-              className={`p-3 rounded-lg cursor-pointer transition-all border-2 ${
-                ucel === "chata" 
-                  ? "bg-green-100 border-green-500 shadow-md" 
-                  : "bg-white border-gray-300 hover:border-green-400"
-              }`}
-            >
-              <h4 className="text-sm sm:text-base font-bold text-gray-900 mb-1">
-                {getTranslatedText('ucel_rekreacna', 'nazov') || t('recreationalBuilding')}
-              </h4>
-              <p className="text-xs sm:text-sm text-blue-600 font-semibold mb-1">
-                {getTranslatedText('ucel_rekreacna', 'podnadpis') || t('economicChoice')}
-              </p>
-              <ul className="space-y-0.5 text-[11px] sm:text-xs text-gray-600">
-                {(getTranslatedText('ucel_rekreacna', 'dlhy_popis') || t('recreationalBuildingDesc'))
-                  .split('\n')
-                  .map((line, i) => <li key={i}>• {line}</li>)}
-              </ul>
-            </motion.div>
-
-            {/* Rodinný dom A0 */}
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              price={0}
+              icon={Home}
+            />
+            <OptionCard 
+              label={getTranslatedText('ucel_rodinny', 'nazov') || t('familyHouseA0')}
+              description={getTranslatedText('ucel_rodinny', 'dlhy_popis') || t('familyHouseA0Desc')}
+              selected={ucel === "rodinny"}
+              isA0={true}
               onClick={() => {
-                setUcel("rodinny");
-                setKolaudacia("s_a0");
-                setIzolaciaStien("250mm");
-                setIzolaciaPodlahy("200mm");
-                setIzolaciaStropu("200mm");
-                setTepelneCerpadlo("ano");
-                setPripravaNaRekuperaciu(true);
-                setRekuperacia("ano");
-                setInziniering(true);
-                setProjektACertifikacia(true);
-                setRevizia(true);
-                setBleskozvod(true);
-                setPrepat(true);
-                setElektro("ge");
-                setKlimatizacia(true);
+                setUcel("rodinny"); setKolaudacia("s_a0");
+                setIzolaciaStien("250mm"); setIzolaciaPodlahy("200mm"); setIzolaciaStropu("200mm");
+                setTepelneCerpadlo("ano"); setPripravaNaRekuperaciu(true); setRekuperacia("ano");
+                setInziniering(true); setProjektACertifikacia(true); setRevizia(true);
+                setBleskozvod(true); setPrepat(true); setElektro("ge"); setKlimatizacia(true);
               }}
-              className={`p-3 rounded-lg cursor-pointer transition-all border-2 ${
-                ucel === "rodinny" 
-                  ? "bg-green-100 border-green-500 shadow-md" 
-                  : "bg-white border-gray-300 hover:border-green-400"
-              }`}
-            >
-              <div className="flex items-center gap-2 mb-1">
-                <h4 className="text-sm sm:text-base font-bold text-gray-900">
-                  {getTranslatedText('ucel_rodinny', 'nazov') || t('familyHouseA0')}
-                </h4>
-                <Badge className="bg-green-600 text-white text-[8px] sm:text-[9px]">⚡</Badge>
-              </div>
-              <ul className="space-y-0.5 text-[11px] sm:text-xs text-gray-600">
-                {(getTranslatedText('ucel_rodinny', 'dlhy_popis') || t('familyHouseA0Desc'))
-                  .split('\n')
-                  .map((line, i) => <li key={i}>• {line}</li>)}
-              </ul>
-            </motion.div>
-          </div>
-        </Card>
-
-        {/* Hlavný konfigurátor - Grid layout */}
-        <div className="grid md:grid-cols-2 gap-3 mb-3">
-          {/* IZOLÁCIA */}
-          <Card className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-300 shadow-md">
-            <h3 className="text-sm sm:text-base font-bold text-blue-900 mb-2 sm:mb-3 flex items-center gap-2">
-              <span className="flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-blue-600 text-white text-xs sm:text-sm mr-1">1</span>
-              🏠 {getTranslatedText('sekcia_izolacia', 'nazov') || t('insulationSection') || 'Izolácia'}
-            </h3>
-            <div className="space-y-2 sm:space-y-3">
-              {/* Steny */}
-              <div>
-                <p className="text-xs sm:text-[11px] font-semibold text-gray-700 mb-1">
-                  {getTranslatedText('izolacia_stien', 'nazov') || t('wallInsulation') || 'Izolácia stien:'}
-                </p>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 sm:gap-2 border border-blue-300 rounded-md p-1.5 sm:p-2 bg-white/50">
-                  <EditableTile selected={izolaciaStien === "150mm"} onClick={() => setIzolaciaStien("150mm")} 
-                    title={getTranslatedText('izolacia_stien_150', 'nazov') || t('walls150mm') || 'Steny 150mm'} 
-                    subtitle={getTranslatedText('izolacia_stien_150', 'podnadpis') || t('recreational') || 'Rekreačné'} 
-                    price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
-                  <EditableTile selected={izolaciaStien === "200mm"} onClick={() => setIzolaciaStien("200mm")} 
-                    title={getTranslatedText('izolacia_stien_200', 'nazov') || t('walls200mm') || 'Steny 200mm'} 
-                    subtitle={getTranslatedText('izolacia_stien_200', 'podnadpis') || ''} 
-                    price={formatPrice(CENY.izolacia_stien_200mm)} isPriced={true} t={t} 
-                    priceKey="izolacia_stien_200mm" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                  <EditableTile selected={izolaciaStien === "250mm"} onClick={() => setIzolaciaStien("250mm")} 
-                    title={getTranslatedText('izolacia_stien_250', 'nazov') || t('walls250mm') || 'Steny 250mm'} 
-                    subtitle={getTranslatedText('izolacia_stien_250', 'podnadpis') || t('premiumA0') || 'Premium A0'} 
-                    price={formatPrice(CENY.izolacia_stien_250mm)} isPriced={true} isA0={true} t={t} 
-                    priceKey="izolacia_stien_250mm" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                </div>
-              </div>
-
-              {/* Podlaha */}
-              <div>
-                <p className="text-xs sm:text-[11px] font-semibold text-gray-700 mb-1">
-                  {getTranslatedText('izolacia_podlahy', 'nazov') || t('floorInsulation') || 'Izolácia podlahy:'}
-                </p>
-                <div className="grid grid-cols-2 gap-1.5 sm:gap-2 border border-blue-300 rounded-md p-1.5 sm:p-2 bg-white/50">
-                  <EditableTile selected={izolaciaPodlahy === "150mm"} onClick={() => setIzolaciaPodlahy("150mm")} 
-                    title={getTranslatedText('izolacia_podlahy_150', 'nazov') || t('floor150mm') || 'Podlaha 150mm'} 
-                    subtitle={getTranslatedText('izolacia_podlahy_150', 'podnadpis') || ''} 
-                    price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
-                  <EditableTile selected={izolaciaPodlahy === "200mm"} onClick={() => setIzolaciaPodlahy("200mm")} 
-                    title={getTranslatedText('izolacia_podlahy_200', 'nazov') || t('floor200mm') || 'Podlaha 200mm'} 
-                    subtitle={getTranslatedText('izolacia_podlahy_200', 'podnadpis') || t('a0') || 'A0'} 
-                    price={formatPrice(CENY.izolacia_podlahy_200mm)} isPriced={true} isA0={true} t={t} 
-                    priceKey="izolacia_podlahy_200mm" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                </div>
-              </div>
-
-              {/* Strop */}
-              <div>
-                <p className="text-xs sm:text-[11px] font-semibold text-gray-700 mb-1">
-                  {getTranslatedText('izolacia_stropu', 'nazov') || t('ceilingInsulation') || 'Izolácia stropu:'}
-                </p>
-                <div className="grid grid-cols-2 gap-1.5 sm:gap-2 border border-blue-300 rounded-md p-1.5 sm:p-2 bg-white/50">
-                  <EditableTile selected={izolaciaStropu === "150mm"} onClick={() => setIzolaciaStropu("150mm")} 
-                    title={getTranslatedText('izolacia_stropu_150', 'nazov') || t('ceiling150mm') || 'Strop 150mm'} 
-                    subtitle={getTranslatedText('izolacia_stropu_150', 'podnadpis') || ''} 
-                    price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
-                  <EditableTile selected={izolaciaStropu === "200mm"} onClick={() => setIzolaciaStropu("200mm")} 
-                    title={getTranslatedText('izolacia_stropu_200', 'nazov') || t('ceiling200mm') || 'Strop 200mm'} 
-                    subtitle={getTranslatedText('izolacia_stropu_200', 'podnadpis') || t('a0') || 'A0'} 
-                    price={formatPrice(CENY.izolacia_stropu_200mm)} isPriced={true} isA0={true} t={t} 
-                    priceKey="izolacia_stropu_200mm" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                </div>
-              </div>
-            </div>
-          </Card>
-
-          {/* VYKUROVANIE */}
-          <Card className="p-3 bg-gradient-to-br from-orange-50 to-red-50 border-2 border-orange-300 shadow-md">
-            <h3 className="text-base font-bold text-orange-900 mb-2 flex items-center gap-2">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-orange-600 text-white text-sm mr-1">2</span>
-              🔥 {getTranslatedText('sekcia_vykurovanie', 'nazov') || t('heatingSection') || 'Vykurovanie'}
-            </h3>
-            <div className="space-y-2">
-              {/* Tepelné čerpadlo */}
-              <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                  {getTranslatedText('tepelne_cerpadlo', 'nazov') || t('heating') || 'Vykurovanie:'}
-                </p>
-                <div className="grid grid-cols-2 gap-1.5 border border-orange-300 rounded-md p-1.5 bg-white/50">
-                  <EditableTile selected={tepelneCerpadlo === "nie"} onClick={() => setTepelneCerpadlo("nie")} 
-                    title={getTranslatedText('tepelne_cerpadlo_nie', 'nazov') || t('heatingPreparation')} 
-                    subtitle={getTranslatedText('tepelne_cerpadlo_nie', 'podnadpis') || t('convectors')} 
-                    price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
-                  <EditableTile selected={tepelneCerpadlo === "ano"} onClick={() => setTepelneCerpadlo("ano")} 
-                    title={getTranslatedText('tepelne_cerpadlo_ano', 'nazov') || t('heatPump')} 
-                    subtitle={getTranslatedText('tepelne_cerpadlo_ano', 'podnadpis') || t('a0Required')} 
-                    price={formatPrice(CENY.tepelne_cerpadlo)} isPriced={true} isA0={true} t={t} 
-                    priceKey="tepelne_cerpadlo" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                </div>
-              </div>
-
-              {/* Rekuperácia */}
-              <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                  {getTranslatedText('rekuperacia', 'nazov') || t('ventilation') || 'Vetranie:'}
-                </p>
-                <div className="grid grid-cols-3 gap-1.5 border border-orange-300 rounded-md p-1.5 bg-white/50">
-                  <EditableTile selected={rekuperacia === "nie" && !pripravaNaRekuperaciu} onClick={() => {setRekuperacia("nie"); setPripravaNaRekuperaciu(false);}} 
-                    title={getTranslatedText('rekuperacia_nie', 'nazov') || t('withoutRecuperation')} 
-                    subtitle={getTranslatedText('rekuperacia_nie', 'podnadpis') || ''} 
-                    price="0 €" isPriced={false} isIncluded={true} hideIncludedMessage={true} t={t} isAdmin={isAdmin} />
-                  <EditableTile selected={pripravaNaRekuperaciu} onClick={() => {setPripravaNaRekuperaciu(true); setRekuperacia("nie");}} 
-                    title={getTranslatedText('pripravaNaRekuperaciu', 'nazov') || 'Príprava na rekuperáciu'} 
-                    subtitle={getTranslatedText('pripravaNaRekuperaciu', 'podnadpis') || ''} 
-                    price={formatPrice(CENY.pripravaNaRekuperaciu)} isPriced={true} isA0={true} t={t} 
-                    priceKey="pripravaNaRekuperaciu" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                  <EditableTile selected={rekuperacia === "ano"} onClick={() => {setRekuperacia("ano"); setPripravaNaRekuperaciu(false);}} 
-                    title={getTranslatedText('rekuperacia_ano', 'nazov') || t('recuperation')} 
-                    subtitle={getTranslatedText('rekuperacia_ano', 'podnadpis') || t('a0Required')} 
-                    price={formatPrice(CENY.rekuperacia)} isPriced={true} isA0={true} t={t} 
-                    priceKey="rekuperacia" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                </div>
-              </div>
-
-              {/* Doplnky */}
-              <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                  {getTranslatedText('vykurovanie_doplnky', 'nazov') || t('heatingExtras') || 'Doplnky:'}
-                </p>
-                <div className="space-y-1.5">
-                  <EditableTile selected={podlahovoKurenie} onClick={() => setPodlahovoKurenie(!podlahovoKurenie)} 
-                    title={getTranslatedText('podlahove_kurenie', 'nazov') || t('floorHeating')} 
-                    subtitle={getTranslatedText('podlahove_kurenie', 'podnadpis') || ''} 
-                    price={formatPrice(CENY.podlahove_kurenie)} isPriced={true} t={t} 
-                    priceKey="podlahove_kurenie" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                  <EditableTile selected={pripravaNaKrb} onClick={() => setPripravaNaKrb(!pripravaNaKrb)} 
-                    title={getTranslatedText('pripravaKrb', 'nazov') || t('fireplacePrep')} 
-                    subtitle={getTranslatedText('pripravaKrb', 'podnadpis') || ''} 
-                    price={formatPrice(CENY.pripravaKrb)} isPriced={true} t={t} 
-                    priceKey="pripravaKrb" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                  <EditableTile selected={ochranaKachle} onClick={() => setOchranaKachle(!ochranaKachle)} 
-                    title={getTranslatedText('ochranaKachle', 'nazov') || t('stoveProtection')} 
-                    subtitle={getTranslatedText('ochranaKachle', 'podnadpis') || ''} 
-                    price={formatPrice(CENY.ochranaKachle)} isPriced={true} t={t} 
-                    priceKey="ochranaKachle" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                  <EditableTile selected={klimatizacia} onClick={() => setKlimatizacia(!klimatizacia)} 
-                    title={getTranslatedText('klimatizacia', 'nazov') || 'Príprava na klimatizáciu'} 
-                    subtitle={getTranslatedText('klimatizacia', 'podnadpis') || ''} 
-                    price={formatPrice(CENY.klimatizacia)} isPriced={CENY.klimatizacia > 0} isA0={true} t={t} 
-                    priceKey="klimatizacia" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                  </div>
-                  </div>
-            </div>
-          </Card>
-        </div>
-
-        {/* Pokračovanie sekcií */}
-        <div className="grid md:grid-cols-2 gap-3 mb-3">
-          {/* FASÁDA */}
-          <Card className="p-3 bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-300 shadow-md">
-            <h3 className="text-base font-bold text-purple-900 mb-2 flex items-center gap-2">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-purple-600 text-white text-sm mr-1">3</span>
-              🎨 {getTranslatedText('sekcia_fasada', 'nazov') || t('facadeSection') || 'Fasáda'}
-            </h3>
-            <div>
-              <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                {getTranslatedText('fasada_typ', 'nazov') || t('facadeType') || 'Typ fasády:'}
-              </p>
-              <div className="grid grid-cols-2 gap-1.5 border border-purple-300 rounded-md p-1.5 bg-white/50">
-                <EditableTile selected={fasada === "drevo_smrek"} onClick={() => setFasada("drevo_smrek")} 
-                  title={getTranslatedText('fasada_drevo_smrek', 'nazov') || t('spruceWood')} 
-                  subtitle={getTranslatedText('fasada_drevo_smrek', 'podnadpis') || t('darkLight')} 
-                  price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
-                <EditableTile selected={fasada === "omietka"} onClick={() => setFasada("omietka")} 
-                  title={getTranslatedText('fasada_omietka', 'nazov') || t('scratchedPlaster')} 
-                  subtitle={getTranslatedText('fasada_omietka', 'podnadpis') || 'Baumit'} 
-                  price={formatPrice(CENY.fasada_omietka)} isPriced={true} t={t} 
-                  priceKey="fasada_omietka" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                <EditableTile selected={fasada === "smrekovec"} onClick={() => setFasada("smrekovec")} 
-                  title={getTranslatedText('fasada_smrekovec', 'nazov') || t('larch')} 
-                  subtitle={getTranslatedText('fasada_smrekovec', 'podnadpis') || ''} 
-                  price={formatPrice(CENY.fasada_smrekovec)} isPriced={true} t={t} 
-                  priceKey="fasada_smrekovec" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                <EditableTile selected={fasada === "falcovane"} onClick={() => setFasada("falcovane")} 
-                  title={getTranslatedText('fasada_falcovane', 'nazov') || t('foldedPanels')} 
-                  subtitle={getTranslatedText('fasada_falcovane', 'podnadpis') || ''} 
-                  price={formatPrice(CENY.fasada_falcovane)} isPriced={true} t={t} 
-                  priceKey="fasada_falcovane" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                <EditableTile selected={fasada === "thermowood"} onClick={() => setFasada("thermowood")} 
-                  title={getTranslatedText('fasada_thermowood', 'nazov') || 'Thermowood'} 
-                  subtitle={getTranslatedText('fasada_thermowood', 'podnadpis') || ''} 
-                  price={formatPrice(CENY.fasada_thermowood)} isPriced={true} t={t} 
-                  priceKey="fasada_thermowood" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-              </div>
-            </div>
-          </Card>
-
-          {/* STRECHA */}
-          <Card className="p-3 bg-gradient-to-br from-indigo-50 to-blue-50 border-2 border-indigo-300 shadow-md">
-            <h3 className="text-base font-bold text-indigo-900 mb-2 flex items-center gap-2">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-indigo-600 text-white text-sm mr-1">4</span>
-              🏠 {getTranslatedText('sekcia_strecha', 'nazov') || t('roofSection') || 'Strecha'}
-            </h3>
-            <div className="space-y-2">
-              {/* Krytina */}
-              <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                  {getTranslatedText('stresna_krytina', 'nazov') || t('roofCoveringType') || 'Strešná krytina:'}
-                </p>
-                <div className="grid grid-cols-2 gap-1.5 border border-indigo-300 rounded-md p-1.5 bg-white/50">
-                  <EditableTile selected={strecha === "korugovan_plech"} onClick={() => setStrecha("korugovan_plech")} 
-                    title={getTranslatedText('strecha_korugovan', 'nazov') || t('corrugatedMetal')} 
-                    subtitle={getTranslatedText('strecha_korugovan', 'podnadpis') || ''} 
-                    price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
-                  <EditableTile selected={strecha === "falcovane"} onClick={() => setStrecha("falcovane")} 
-                    title={getTranslatedText('strecha_falcovane', 'nazov') || t('foldedPanels')} 
-                    subtitle={getTranslatedText('strecha_falcovane', 'podnadpis') || ''} 
-                    price={formatPrice(CENY.strecha_falcovane)} isPriced={true} t={t} 
-                    priceKey="strecha_falcovane" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                </div>
-              </div>
-
-              {/* Odkvapy */}
-              <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                  {getTranslatedText('odkvapy', 'nazov') || t('gutters') || 'Odkvapy:'}
-                </p>
-                <div className="grid grid-cols-2 gap-1.5 border border-indigo-300 rounded-md p-1.5 bg-white/50">
-                  <EditableTile selected={odkvapy === "nie"} onClick={() => setOdkvapy("nie")} 
-                    title={getTranslatedText('odkvapy_nie', 'nazov') || t('withoutGutters')} 
-                    subtitle={getTranslatedText('odkvapy_nie', 'podnadpis') || ''} 
-                    price="0 €" isPriced={false} isIncluded={true} hideIncludedMessage={true} t={t} isAdmin={isAdmin} />
-                  <EditableTile selected={odkvapy === "ano"} onClick={() => setOdkvapy("ano")} 
-                    title={getTranslatedText('odkvapy_ano', 'nazov') || t('gutters')} 
-                    subtitle={getTranslatedText('odkvapy_ano', 'podnadpis') || t('roofColor')} 
-                    price={formatPrice(CENY.odkvapy)} isPriced={true} t={t} 
-                    priceKey="odkvapy" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                </div>
-              </div>
-            </div>
-          </Card>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-3 mb-3">
-          {/* OKNÁ A DVERE */}
-          <Card className="p-3 bg-gradient-to-br from-cyan-50 to-teal-50 border-2 border-cyan-300 shadow-md">
-            <h3 className="text-base font-bold text-cyan-900 mb-2 flex items-center gap-2">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-cyan-600 text-white text-sm mr-1">5</span>
-              🚪 {getTranslatedText('sekcia_okna_dvere', 'nazov') || t('windowsDoorsSection') || 'Okná a dvere'}
-            </h3>
-            <div className="space-y-2">
-              {/* Okná */}
-              <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                  {getTranslatedText('okna_farba', 'nazov') || t('windowColor') || 'Farba okien 3-sklo:'}
-                </p>
-                <div className="grid grid-cols-3 gap-1.5 border border-cyan-300 rounded-md p-1.5 bg-white/50">
-                  <EditableTile selected={okna === "biele"} onClick={() => setOkna("biele")} 
-                    title={getTranslatedText('okna_biele', 'nazov') || t('white')} 
-                    subtitle={getTranslatedText('okna_biele', 'podnadpis') || ''} 
-                    price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
-                  <EditableTile selected={okna === "antracit"} onClick={() => setOkna("antracit")} 
-                    title={getTranslatedText('okna_antracit', 'nazov') || t('anthracite')} 
-                    subtitle={getTranslatedText('okna_antracit', 'podnadpis') || ''} 
-                    price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
-                  <EditableTile selected={okna === "hnede"} onClick={() => setOkna("hnede")} 
-                    title={getTranslatedText('okna_hnede', 'nazov') || t('brown')} 
-                    subtitle={getTranslatedText('okna_hnede', 'podnadpis') || ''} 
-                    price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
-                </div>
-              </div>
-
-              {/* Vchodové dvere */}
-              <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                  {getTranslatedText('vchodove_dvere', 'nazov') || t('entryDoors') || 'Vchodové dvere:'}
-                </p>
-                <div className="grid grid-cols-2 gap-1.5 border border-cyan-300 rounded-md p-1.5 bg-white/50">
-                  <EditableTile selected={vchodoveDvere === "plastove"} onClick={() => setVchodoveDvere("plastove")} 
-                    title={getTranslatedText('dvere_plastove', 'nazov') || t('metalPlasticDoors')} 
-                    subtitle={getTranslatedText('dvere_plastove', 'podnadpis') || ''} 
-                    price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
-                  <EditableTile selected={vchodoveDvere === "kovove"} onClick={() => setVchodoveDvere("kovove")} 
-                    title={getTranslatedText('dvere_kovove', 'nazov') || t('metalDoors')} 
-                    subtitle={getTranslatedText('dvere_kovove', 'podnadpis') || ''} 
-                    price={formatPrice(CENY.dvere_kovove)} isPriced={true} t={t} 
-                    priceKey="dvere_kovove" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                </div>
-              </div>
-            </div>
-          </Card>
-
-          {/* INTERIÉR */}
-          <Card className="p-3 bg-gradient-to-br from-amber-50 to-yellow-50 border-2 border-amber-300 shadow-md">
-            <h3 className="text-base font-bold text-amber-900 mb-2 flex items-center gap-2">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-amber-600 text-white text-sm mr-1">6</span>
-              🛋️ {getTranslatedText('sekcia_interier', 'nazov') || t('interiorSection') || 'Interiér'}
-            </h3>
-            <div className="space-y-2">
-              {/* Obklad stien */}
-              <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                  {getTranslatedText('obklad_stien', 'nazov') || t('wallCladding') || 'Obklad stien:'}
-                </p>
-                <div className="grid grid-cols-2 gap-1.5 border border-amber-300 rounded-md p-1.5 bg-white/50">
-                  <EditableTile selected={obkladStien === "smrek_8cm"} onClick={() => setObkladStien("smrek_8cm")} 
-                    title={getTranslatedText('obklad_smrek_8cm', 'nazov') || t('spruceWall8cm')} 
-                    subtitle={getTranslatedText('obklad_smrek_8cm', 'podnadpis') || ''} 
-                    price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
-                  <EditableTile selected={obkladStien === "smrek_bez_uzlov"} onClick={() => setObkladStien("smrek_bez_uzlov")} 
-                    title={getTranslatedText('obklad_smrek_bez_uzlov', 'nazov') || t('spruceWallNoKnots')} 
-                    subtitle={getTranslatedText('obklad_smrek_bez_uzlov', 'podnadpis') || ''} 
-                    price={formatPrice(CENY.obklad_smrek_bez_uzlov)} isPriced={false} t={t} 
-                    priceKey="obklad_smrek_bez_uzlov" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                  <EditableTile selected={obkladStien === "sadrokarton_tapeta"} onClick={() => setObkladStien("sadrokarton_tapeta")} 
-                    title={getTranslatedText('obklad_sadrokarton', 'nazov') || t('drywallWallpaperPaint')} 
-                    subtitle={getTranslatedText('obklad_sadrokarton', 'podnadpis') || ''} 
-                    price={formatPrice(CENY.obklad_sadrokarton_tapeta)} isPriced={true} t={t} 
-                    priceKey="obklad_sadrokarton_tapeta" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                  <EditableTile selected={obkladStien === "osb_panel"} onClick={() => setObkladStien("osb_panel")} 
-                    title={getTranslatedText('obklad_osb', 'nazov') || t('osbLaminatePanel')} 
-                    subtitle={getTranslatedText('obklad_osb', 'podnadpis') || ''} 
-                    price={formatPrice(CENY.obklad_osb_panel)} isPriced={true} t={t} 
-                    priceKey="obklad_osb_panel" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                </div>
-              </div>
-
-              {/* Podlaha */}
-              <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                  {getTranslatedText('podlaha', 'nazov') || t('floorType') || 'Podlaha:'}
-                </p>
-                <div className="border border-amber-300 rounded-md p-1.5 bg-white/50">
-                  <EditableTile selected={podlaha === "laminat"} onClick={() => setPodlaha("laminat")} 
-                    title={getTranslatedText('podlaha_laminat', 'nazov') || t('laminate')} 
-                    subtitle={getTranslatedText('podlaha_laminat', 'podnadpis') || ''} 
-                    price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
-                </div>
-              </div>
-
-              {/* Interiérové dvere */}
-              <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                  {getTranslatedText('interierove_dvere', 'nazov') || t('interiorDoorsType') || 'Interiérové dvere:'}
-                </p>
-                <div className="grid grid-cols-2 gap-1.5 border border-amber-300 rounded-md p-1.5 bg-white/50">
-                  <EditableTile selected={interieroveDvere === "kridlove"} onClick={() => setInterieroveDvere("kridlove")} 
-                    title={getTranslatedText('dvere_kridlove', 'nazov') || t('hingedDoors')} 
-                    subtitle={getTranslatedText('dvere_kridlove', 'podnadpis') || ''} 
-                    price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
-                  <EditableTile selected={interieroveDvere === "posuvne"} onClick={() => setInterieroveDvere("posuvne")} 
-                    title={getTranslatedText('dvere_posuvne', 'nazov') || t('slidingDoors')} 
-                    subtitle={getTranslatedText('dvere_posuvne', 'podnadpis') || ''} 
-                    price={formatPrice(CENY.dvere_posuvne)} isPriced={true} t={t} 
-                    priceKey="dvere_posuvne" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                </div>
-              </div>
-            </div>
-          </Card>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-3 mb-3">
-          {/* ELEKTRO */}
-          <Card className="p-3 bg-gradient-to-br from-yellow-50 to-amber-50 border-2 border-yellow-300 shadow-md">
-            <h3 className="text-base font-bold text-yellow-900 mb-2 flex items-center gap-2">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-yellow-600 text-white text-sm mr-1">7</span>
-              ⚡ {getTranslatedText('sekcia_elektro', 'nazov') || t('electricalSection') || 'Elektroinštalácia'}
-            </h3>
-            <div className="space-y-2">
-              {/* Štandard */}
-              <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                  {getTranslatedText('elektro_typ', 'nazov') || t('installationType') || 'Typ inštalácie:'}
-                </p>
-                <div className="grid grid-cols-3 gap-1.5 border border-yellow-300 rounded-md p-1.5 bg-white/50">
-                  <EditableTile selected={elektro === "eu"} onClick={() => setElektro("eu")} 
-                    title={getTranslatedText('elektro_eu', 'nazov') || t('euStandard')} 
-                    subtitle={getTranslatedText('elektro_eu', 'podnadpis') || ''} 
-                    price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
-                  <EditableTile selected={elektro === "cz"} onClick={() => setElektro("cz")} 
-                    title={getTranslatedText('elektro_cz', 'nazov') || t('czSkStandard')} 
-                    subtitle={getTranslatedText('elektro_cz', 'podnadpis') || t('socketsExtraFuses')} 
-                    price={formatPrice(CENY.elektro_cz)} isPriced={true} t={t} 
-                    priceKey="elektro_cz" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                  <EditableTile selected={elektro === "ge"} onClick={() => setElektro("ge")} 
-                    title={getTranslatedText('elektro_ge', 'nazov') || t('geStandard')} 
-                    subtitle={getTranslatedText('elektro_ge', 'podnadpis') || ''} 
-                    price={formatPrice(CENY.elektro_ge)} isPriced={true} isA0={true} t={t} 
-                    priceKey="elektro_ge" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                </div>
-              </div>
-
-              {/* Doplnky */}
-              <div>
-                <p className="text-xs font-semibold text-gray-700 mb-2">
-                  {getTranslatedText('elektro_doplnky', 'nazov') || (t('heatingExtras') + ' (' + t('selectMultiple') + ')') || 'Doplnky (môžeš vybrať viac):'}
-                </p>
-                <div className="space-y-2">
-                  <EditableTile selected={bleskozvod} onClick={() => setBleskozvod(!bleskozvod)} 
-                    title={getTranslatedText('bleskozvod', 'nazov') || t('lightningRod')} 
-                    subtitle={getTranslatedText('bleskozvod', 'podnadpis') || ''} 
-                    price={formatPrice(CENY.bleskozvod)} isPriced={true} isA0={true} t={t} 
-                    priceKey="bleskozvod" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                  <EditableTile selected={prepat} onClick={() => setPrepat(!prepat)} 
-                    title={getTranslatedText('prepat', 'nazov') || t('surgeProtection')} 
-                    subtitle={getTranslatedText('prepat', 'podnadpis') || ''} 
-                    price={formatPrice(CENY.prepat)} isPriced={true} isA0={true} t={t} 
-                    priceKey="prepat" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                  <EditableTile selected={pripravaNaSolarnePanely} onClick={() => setPripravaNaSolarnePanely(!pripravaNaSolarnePanely)} 
-                    title={getTranslatedText('pripravaNaSolarnePanely', 'nazov') || 'Príprava na solárne panely'} 
-                    subtitle={getTranslatedText('pripravaNaSolarnePanely', 'podnadpis') || ''} 
-                    price={formatPrice(CENY.pripravaNaSolarnePanely)} isPriced={true} t={t} 
-                    priceKey="pripravaNaSolarnePanely" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                </div>
-              </div>
-            </div>
-          </Card>
-
-          {/* KÚPEĽŇA */}
-          <Card className="p-3 bg-gradient-to-br from-teal-50 to-cyan-50 border-2 border-teal-300 shadow-md">
-            <h3 className="text-base font-bold text-teal-900 mb-2 flex items-center gap-2">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-teal-600 text-white text-sm mr-1">8</span>
-              🚿 {getTranslatedText('sekcia_kupelna', 'nazov') || t('bathroomSection') || 'Kúpeľňa'}
-            </h3>
-            <div className="space-y-2">
-              {/* Sprcha */}
-              <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                  {getTranslatedText('sprchovyKut', 'nazov') || t('showerCabin') || 'Sprchový kút:'}
-                </p>
-                <div className="grid grid-cols-2 gap-1.5 border border-teal-300 rounded-md p-1.5 bg-white/50">
-                  <EditableTile selected={sprchovyKut === "standard"} onClick={() => setSprchovyKut("standard")} 
-                    title={getTranslatedText('sprcha_standard', 'nazov') || t('shower')} 
-                    subtitle={getTranslatedText('sprcha_standard', 'podnadpis') || 'WC Geberit'} 
-                    price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
-                  <EditableTile selected={sprchovyKut === "radaway"} onClick={() => setSprchovyKut("radaway")} 
-                    title={getTranslatedText('sprcha_radaway', 'nazov') || t('showerRadawayTile')} 
-                    subtitle={getTranslatedText('sprcha_radaway', 'podnadpis') || ''} 
-                    price={formatPrice(CENY.sprchovyKut)} isPriced={true} t={t} 
-                    priceKey="sprchovyKut" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                </div>
-              </div>
-
-              {/* Batéria */}
-              <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                  {getTranslatedText('bateria', 'nazov') || t('faucet') || 'Batéria:'}
-                </p>
-                <div className="grid grid-cols-2 gap-1.5 border border-teal-300 rounded-md p-1.5 bg-white/50">
-                  <EditableTile selected={bateria === "standard"} onClick={() => setBateria("standard")} 
-                    title={getTranslatedText('bateria_standard', 'nazov') || t('faucetStandard')} 
-                    subtitle={getTranslatedText('bateria_standard', 'podnadpis') || ''} 
-                    price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
-                  <EditableTile selected={bateria === "grohe"} onClick={() => setBateria("grohe")} 
-                    title={getTranslatedText('bateria_grohe', 'nazov') || 'Grohe'} 
-                    subtitle={getTranslatedText('bateria_grohe', 'podnadpis') || ''} 
-                    price={formatPrice(CENY.bateria)} isPriced={true} t={t} 
-                    priceKey="bateria" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                </div>
-              </div>
-
-              {/* Strop kúpeľňa */}
-              <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                  {getTranslatedText('strop_kupelna', 'nazov') || t('bathroomCeiling') || 'Strop (kúpeľňa):'}
-                </p>
-                <div className="grid grid-cols-2 gap-1.5 border border-teal-300 rounded-md p-1.5 bg-white/50">
-                  <EditableTile selected={stropKupelna === "drevo"} onClick={() => setStropKupelna("drevo")} 
-                    title={getTranslatedText('strop_drevo', 'nazov') || t('ceilingWoodPattern')} 
-                    subtitle={getTranslatedText('strop_drevo', 'podnadpis') || ''} 
-                    price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
-                  <EditableTile selected={stropKupelna === "sadrokarton"} onClick={() => setStropKupelna("sadrokarton")} 
-                    title={getTranslatedText('strop_sadrokarton', 'nazov') || t('drywallWallpaperPaint')} 
-                    subtitle={getTranslatedText('strop_sadrokarton', 'podnadpis') || ''} 
-                    price={formatPrice(CENY.strop_kupelna_sadrokarton)} isPriced={false} t={t} 
-                    priceKey="strop_kupelna_sadrokarton" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                </div>
-              </div>
-
-              {/* Doplnky */}
-              <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                  {getTranslatedText('kupelna_doplnky', 'nazov') || t('bathExtras') || 'Doplnky:'}
-                </p>
-                <div className="space-y-1.5">
-                  <EditableTile selected={vana} onClick={() => setVana(!vana)} 
-                    title={getTranslatedText('vana', 'nazov') || t('bathtub')} 
-                    subtitle={getTranslatedText('vana', 'podnadpis') || ''} 
-                    price={formatPrice(CENY.vana)} isPriced={true} t={t} 
-                    priceKey="vana" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                  <EditableTile selected={skrinka} onClick={() => setSkrinka(!skrinka)} 
-                    title={getTranslatedText('skrinka', 'nazov') || t('cabinet')} 
-                    subtitle={getTranslatedText('skrinka', 'podnadpis') || ''} 
-                    price={formatPrice(CENY.skrinka)} isPriced={true} t={t} 
-                    priceKey="skrinka" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                </div>
-              </div>
-            </div>
-          </Card>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-3 mb-3">
-          {/* ZÁKLADY */}
-          <Card className="p-3 bg-gradient-to-br from-stone-50 to-gray-50 border-2 border-stone-300 shadow-md">
-            <h3 className="text-base font-bold text-stone-900 mb-2 flex items-center gap-2">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-stone-600 text-white text-sm mr-1">9</span>
-              🏗️ {getTranslatedText('sekcia_zaklady', 'nazov') || t('foundationsSection') || 'Základy'}
-            </h3>
-            <div>
-              <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                {getTranslatedText('zaklady_typ', 'nazov') || t('foundationType') || 'Typ základov:'}
-              </p>
-              <div className="grid grid-cols-2 gap-1.5 border border-stone-300 rounded-md p-1.5 bg-white/50">
-                <EditableTile selected={zaklady === "bez"} onClick={() => setZaklady("bez")} 
-                  title={getTranslatedText('zaklady_bez', 'nazov') || t('noFoundations')} 
-                  subtitle={getTranslatedText('zaklady_bez', 'podnadpis') || ''} 
-                  price="0 €" isPriced={false} isIncluded={true} hideIncludedMessage={true} t={t} isAdmin={isAdmin} />
-                <EditableTile selected={zaklady === "vruty"} onClick={() => setZaklady("vruty")} 
-                  title={getTranslatedText('zaklady_vruty', 'nazov') || t('groundScrews')} 
-                  subtitle={getTranslatedText('zaklady_vruty', 'podnadpis') || ''} 
-                  price={formatPrice(CENY.zaklady_vruty)} isPriced={true} t={t} 
-                  priceKey="zaklady_vruty" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                <EditableTile selected={zaklady === "patky"} onClick={() => setZaklady("patky")} 
-                  title={getTranslatedText('zaklady_patky', 'nazov') || t('concretePads')} 
-                  subtitle={getTranslatedText('zaklady_patky', 'podnadpis') || ''} 
-                  price={formatPrice(CENY.zaklady_patky)} isPriced={true} t={t} 
-                  priceKey="zaklady_patky" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                <EditableTile selected={zaklady === "pasove"} onClick={() => setZaklady("pasove")} 
-                  title={getTranslatedText('zaklady_pasove', 'nazov') || t('stripFoundations')} 
-                  subtitle={getTranslatedText('zaklady_pasove', 'podnadpis') || ''} 
-                  price={formatPrice(CENY.zaklady_pasove)} isPriced={true} t={t} 
-                  priceKey="zaklady_pasove" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-              </div>
-            </div>
-          </Card>
-
-          {/* SLUŽBY */}
-          <Card className="p-3 bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-300 shadow-md">
-            <h3 className="text-base font-bold text-green-900 mb-2 flex items-center gap-2">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-green-600 text-white text-sm mr-1">10</span>
-              <Sparkles className="w-4 h-4 text-green-600" />
-              {getTranslatedText('sekcia_inziniering', 'nazov') || t('engineeringDocsSection') || 'Inžiniering a dokumentácia (A0)'}
-            </h3>
-            <div className="space-y-1.5">
-              <EditableTile selected={inziniering} onClick={() => setInziniering(!inziniering)} 
-                title={getTranslatedText('inziniering', 'nazov') || t('engineering')} 
-                subtitle={getTranslatedText('inziniering', 'podnadpis') || t('permit')} 
-                price={formatPrice(CENY.inziniering)} isPriced={true} isA0={true} t={t} 
-                priceKey="inziniering" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-              <EditableTile selected={projektACertifikacia} onClick={() => setProjektACertifikacia(!projektACertifikacia)} 
-                title={getTranslatedText('projekt_certifikacia', 'nazov') || t('projectCertShort')} 
-                subtitle={getTranslatedText('projekt_certifikacia', 'podnadpis') || 'A0'} 
-                price={formatPrice(CENY.projektACertifikacia)} isPriced={true} isA0={true} t={t} 
-                priceKey="projektACertifikacia" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-              <EditableTile selected={revizia} onClick={() => setRevizia(!revizia)} 
-                title={getTranslatedText('revizia', 'nazov') || t('revisionDocsShort')} 
-                subtitle={getTranslatedText('revizia', 'podnadpis') || ''} 
-                price={formatPrice(CENY.revizia)} isPriced={true} t={t} 
-                priceKey="revizia" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-            </div>
-          </Card>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-3 mb-3">
-          {/* REALIZÁCIA */}
-          <Card className="p-3 bg-gradient-to-br from-slate-50 to-gray-50 border-2 border-slate-300 shadow-md">
-            <h3 className="text-base font-bold text-slate-900 mb-2 flex items-center gap-2">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-slate-600 text-white text-sm mr-1">11</span>
-              🚚 {getTranslatedText('sekcia_realizacia', 'nazov') || t('realizationSection') || 'Realizácia'}
-            </h3>
-            <div className="space-y-1.5">
-              <EditableTile selected={montaz} onClick={() => setMontaz(!montaz)} 
-                title={getTranslatedText('montaz', 'nazov') || t('houseAssembly')} 
-                subtitle={getTranslatedText('montaz', 'podnadpis') || ''} 
-                price={formatPrice(CENY.montaz)} isPriced={true} t={t} 
-                priceKey="montaz" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-              {(dopravaViditelna || isAdmin) && (
-                <div className="relative">
-                  <EditableTile 
-                    selected={doprava && dopravaViditelna} 
-                    onClick={() => dopravaViditelna && setDoprava(!doprava)} 
-                    title={getTranslatedText('doprava', 'nazov') || t('transportTile')} 
-                    subtitle={getTranslatedText('doprava', 'podnadpis') || t('allModulesTransport')} 
-                    price={formatPrice(CENY.doprava)} 
-                    isPriced={true} 
-                    t={t} 
-                    priceKey="doprava" 
-                    onPriceChange={handlePriceChange} 
-                    isAdmin={isAdmin}
-                    className={!dopravaViditelna && isAdmin ? 'opacity-50 pointer-events-none' : ''} />
-                  {!dopravaViditelna && isAdmin && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-gray-900/30 rounded-lg backdrop-blur-[1px]">
-                      <div className="bg-orange-600 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-2">
-                        <EyeOff className="w-3 h-3" />
-                        Skryté pre verejnosť
-                      </div>
-                    </div>
-                  )}
-                  {isAdmin && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleToggleDopravaVisibility();
-                      }}
-                      disabled={toggleDopravaVisibilityMutation.isPending}
-                      className={`absolute -top-2 -right-2 z-10 p-1.5 rounded-full shadow-lg transition-all ${
-                        dopravaViditelna 
-                          ? 'bg-green-600 hover:bg-green-700 text-white' 
-                          : 'bg-red-600 hover:bg-red-700 text-white'
-                      }`}
-                      title={dopravaViditelna ? 'Skryť pre verejnosť' : 'Zobraziť pre verejnosť'}
-                    >
-                      {dopravaViditelna ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
-          </Card>
-        </div>
-
-        {/* FÁZA 12 - Záverečné CTA */}
-        <Card className="p-4 bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-300 shadow-lg">
-          <h3 className="text-lg font-bold text-green-900 mb-3 flex items-center gap-2">
-            <span className="flex items-center justify-center w-7 h-7 rounded-full bg-green-600 text-white text-base mr-1">12</span>
-            ✅ {t('readyToStart') || 'Pripravení začať?'}
-          </h3>
-          <p className="text-sm text-gray-700 mb-4">
-            {t('finalPhaseDesc') || 'Vybrali ste si svoju konfiguráciu. Pošleme Vám podrobnú cenovú ponuku a vizualizáciu Vášho domu.'}
-          </p>
-          <FloatingPrice 
-            price={totalPrice} 
-            isVisible={true} 
-            buttonText={t('sendQuoteAndShowHouse') || 'Pošli mi cenovú ponuku a ukáž môj dom'}
-            onSendQuote={async (contactData) => {
-              try {
-                const response = await base44.functions.invoke('odosliCenovuPonukuLyonEmail', {
-                  dom,
-                  klientData: contactData,
-                  language,
-                  konfiguraciaData: {
-                    ucel, izolaciaStien, izolaciaPodlahy, izolaciaStropu, tepelneCerpadlo,
-                    rekuperacia, pripravaNaRekuperaciu, podlahovoKurenie, pripravaNaKrb,
-                    ochranaKachle, klimatizacia, fasada, strecha, odkvapy, okna, vchodoveDvere,
-                    obkladStien, podlaha: "laminat", interieroveDvere, elektro, bleskozvod, prepat,
-                    pripravaNaSolarnePanely, sprchovyKut, vana, bateria, skrinka, stropKupelna,
-                    inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava,
-                    predajNehnutelnosti, hladamPozemok, financneSluzby,
-                    totalPrice
-                  }
-                });
-                return response;
-              } catch (error) {
-                console.error('Error sending quote:', error);
-                throw error;
-              }
-            }}
-            dom={dom}
-            vyrobca="Ticab house"
-            hidePrice={true}
-          />
-        </Card>
-
-        {/* Sticky Footer - len pre mobil */}
-        <div className="xl:hidden sticky bottom-0 left-0 right-0 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white p-3 shadow-2xl z-50 mt-4 rounded-t-2xl border-t-4 border-white/20">
-          <div className="flex justify-between items-center gap-3">
-            <div className="flex-1">
-              <p className="text-[10px] text-white/70 mb-0.5">{t('totalPrice') || 'Celková cena'}</p>
-              <p className="text-xl sm:text-2xl font-black text-white drop-shadow-lg">
-                {formatPrice(totalPrice)}
-              </p>
-            </div>
-            <FloatingPrice 
-              price={totalPrice} 
-              isVisible={true} 
-              buttonText={t('sendQuoteAndShowHouse') || 'Poslať ponuku'}
-              onSendQuote={async (contactData) => {
-                try {
-                  const response = await base44.functions.invoke('odosliCenovuPonukuLyonEmail', {
-                    dom,
-                    klientData: contactData,
-                    language,
-                    konfiguraciaData: {
-                      ucel, izolaciaStien, izolaciaPodlahy, izolaciaStropu, tepelneCerpadlo,
-                      rekuperacia, pripravaNaRekuperaciu, podlahovoKurenie, pripravaNaKrb,
-                      ochranaKachle, klimatizacia, fasada, strecha, odkvapy, okna, vchodoveDvere,
-                      obkladStien, podlaha: "laminat", interieroveDvere, elektro, bleskozvod, prepat,
-                      pripravaNaSolarnePanely, sprchovyKut, vana, bateria, skrinka, stropKupelna,
-                      inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava,
-                      predajNehnutelnosti, hladamPozemok, financneSluzby,
-                      totalPrice
-                    }
-                  });
-                  return response;
-                } catch (error) {
-                  console.error('Error sending quote:', error);
-                  throw error;
-                }
-              }}
-              dom={dom}
-              vyrobca="Ticab house"
-              hidePrice={true}
-              mobileOnly={true}
+              price={0}
+              icon={Zap}
             />
           </div>
-        </div>
+        </section>
+
+        {/* 1. Izolácia */}
+        <section id="section-1" className="scroll-mt-32">
+          <BigSectionHeader title={getTranslatedText('sekcia_izolacia', 'nazov') || t('insulationSection') || 'Izolácia'} icon={Thermometer} stepIdx={1} totalSteps={13} />
+          
+          <SectionLabel label={getTranslatedText('izolacia_stien', 'nazov') || t('wallInsulation') || 'Izolácia stien'} color="red" />
+          <div className="grid sm:grid-cols-2 gap-4 mb-8">
+            <OptionCard label={getTranslatedText('izolacia_stien_150', 'nazov') || t('walls150mm') || 'Steny 150mm'} description={getTranslatedText('izolacia_stien_150', 'podnadpis')} selected={izolaciaStien === "150mm"} onClick={() => setIzolaciaStien("150mm")} price={0} isAdmin={isAdmin} />
+            <OptionCard label={getTranslatedText('izolacia_stien_200', 'nazov') || t('walls200mm') || 'Steny 200mm'} description={getTranslatedText('izolacia_stien_200', 'podnadpis')} selected={izolaciaStien === "200mm"} onClick={() => setIzolaciaStien("200mm")} price={CENY.izolacia_stien_200mm} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('izolacia_stien_200mm', p)} />
+            <OptionCard label={getTranslatedText('izolacia_stien_250', 'nazov') || t('walls250mm') || 'Steny 250mm'} description={getTranslatedText('izolacia_stien_250', 'podnadpis')} selected={izolaciaStien === "250mm"} onClick={() => setIzolaciaStien("250mm")} price={CENY.izolacia_stien_250mm} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('izolacia_stien_250mm', p)} isA0={true} />
+          </div>
+
+          <SectionLabel label={getTranslatedText('izolacia_podlahy', 'nazov') || t('floorInsulation') || 'Izolácia podlahy'} color="red" />
+          <div className="grid sm:grid-cols-2 gap-4 mb-8">
+            <OptionCard label={getTranslatedText('izolacia_podlahy_150', 'nazov') || t('floor150mm') || 'Podlaha 150mm'} selected={izolaciaPodlahy === "150mm"} onClick={() => setIzolaciaPodlahy("150mm")} price={0} isAdmin={isAdmin} />
+            <OptionCard label={getTranslatedText('izolacia_podlahy_200', 'nazov') || t('floor200mm') || 'Podlaha 200mm'} selected={izolaciaPodlahy === "200mm"} onClick={() => setIzolaciaPodlahy("200mm")} price={CENY.izolacia_podlahy_200mm} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('izolacia_podlahy_200mm', p)} isA0={true} />
+          </div>
+
+          <SectionLabel label={getTranslatedText('izolacia_stropu', 'nazov') || t('ceilingInsulation') || 'Izolácia stropu'} color="red" />
+          <div className="grid sm:grid-cols-2 gap-4">
+            <OptionCard label={getTranslatedText('izolacia_stropu_150', 'nazov') || t('ceiling150mm') || 'Strop 150mm'} selected={izolaciaStropu === "150mm"} onClick={() => setIzolaciaStropu("150mm")} price={0} isAdmin={isAdmin} />
+            <OptionCard label={getTranslatedText('izolacia_stropu_200', 'nazov') || t('ceiling200mm') || 'Strop 200mm'} selected={izolaciaStropu === "200mm"} onClick={() => setIzolaciaStropu("200mm")} price={CENY.izolacia_stropu_200mm} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('izolacia_stropu_200mm', p)} isA0={true} />
+          </div>
+        </section>
+
+        {/* 2. Vykurovanie */}
+        <section id="section-2" className="scroll-mt-32">
+          <BigSectionHeader title={getTranslatedText('sekcia_vykurovanie', 'nazov') || t('heatingSection') || 'Vykurovanie'} icon={Flame} stepIdx={2} totalSteps={13} />
+          
+          <SectionLabel label={getTranslatedText('tepelne_cerpadlo', 'nazov') || t('heating') || 'Tepelné čerpadlo'} color="orange" />
+          <div className="grid sm:grid-cols-2 gap-4 mb-8">
+            <OptionCard label={getTranslatedText('tepelne_cerpadlo_nie', 'nazov') || t('heatingPreparation')} selected={tepelneCerpadlo === "nie"} onClick={() => setTepelneCerpadlo("nie")} price={0} isAdmin={isAdmin} />
+            <OptionCard label={getTranslatedText('tepelne_cerpadlo_ano', 'nazov') || t('heatPump')} selected={tepelneCerpadlo === "ano"} onClick={() => setTepelneCerpadlo("ano")} price={CENY.tepelne_cerpadlo} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('tepelne_cerpadlo', p)} isA0={true} />
+          </div>
+
+          <SectionLabel label={getTranslatedText('rekuperacia', 'nazov') || t('ventilation') || 'Rekuperácia'} color="orange" />
+          <div className="grid sm:grid-cols-2 gap-4 mb-8">
+            <OptionCard label={getTranslatedText('rekuperacia_nie', 'nazov') || t('withoutRecuperation')} selected={rekuperacia === "nie" && !pripravaNaRekuperaciu} onClick={() => {setRekuperacia("nie"); setPripravaNaRekuperaciu(false);}} price={0} isAdmin={isAdmin} />
+            <OptionCard label={getTranslatedText('pripravaNaRekuperaciu', 'nazov') || 'Príprava na rekuperáciu'} selected={pripravaNaRekuperaciu} onClick={() => {setPripravaNaRekuperaciu(true); setRekuperacia("nie");}} price={CENY.pripravaNaRekuperaciu} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('pripravaNaRekuperaciu', p)} isA0={true} />
+            <OptionCard label={getTranslatedText('rekuperacia_ano', 'nazov') || t('recuperation')} selected={rekuperacia === "ano"} onClick={() => {setRekuperacia("ano"); setPripravaNaRekuperaciu(false);}} price={CENY.rekuperacia} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('rekuperacia', p)} isA0={true} />
+          </div>
+
+          <SectionLabel label={getTranslatedText('vykurovanie_doplnky', 'nazov') || t('heatingExtras') || 'Doplnky'} color="orange" />
+          <div className="space-y-4">
+            <AddonRow label={getTranslatedText('podlahove_kurenie', 'nazov') || t('floorHeating')} checked={podlahovoKurenie} onChange={() => setPodlahovoKurenie(!podlahovoKurenie)} price={CENY.podlahove_kurenie} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('podlahove_kurenie', p)} />
+            <AddonRow label={getTranslatedText('pripravaKrb', 'nazov') || t('fireplacePrep')} checked={pripravaNaKrb} onChange={() => setPripravaNaKrb(!pripravaNaKrb)} price={CENY.pripravaKrb} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('pripravaKrb', p)} />
+            <AddonRow label={getTranslatedText('ochranaKachle', 'nazov') || t('stoveProtection')} checked={ochranaKachle} onChange={() => setOchranaKachle(!ochranaKachle)} price={CENY.ochranaKachle} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('ochranaKachle', p)} />
+            <AddonRow label={getTranslatedText('klimatizacia', 'nazov') || 'Príprava na klimatizáciu'} checked={klimatizacia} onChange={() => setKlimatizacia(!klimatizacia)} price={CENY.klimatizacia} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('klimatizacia', p)} locked={ucel === "rodinny"} t={t} />
+          </div>
+        </section>
+
+        {/* 3. Fasáda */}
+        <section id="section-3" className="scroll-mt-32">
+          <BigSectionHeader title={getTranslatedText('sekcia_fasada', 'nazov') || t('facadeSection') || 'Fasáda'} icon={Paintbrush} stepIdx={3} totalSteps={13} />
+          <div className="grid sm:grid-cols-2 gap-4">
+            <OptionCard label={getTranslatedText('fasada_drevo_smrek', 'nazov') || t('spruceWood')} selected={fasada === "drevo_smrek"} onClick={() => setFasada("drevo_smrek")} price={0} />
+            <OptionCard label={getTranslatedText('fasada_omietka', 'nazov') || t('scratchedPlaster')} selected={fasada === "omietka"} onClick={() => setFasada("omietka")} price={CENY.fasada_omietka} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('fasada_omietka', p)} />
+            <OptionCard label={getTranslatedText('fasada_smrekovec', 'nazov') || t('larch')} selected={fasada === "smrekovec"} onClick={() => setFasada("smrekovec")} price={CENY.fasada_smrekovec} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('fasada_smrekovec', p)} />
+            <OptionCard label={getTranslatedText('fasada_falcovane', 'nazov') || t('foldedPanels')} selected={fasada === "falcovane"} onClick={() => setFasada("falcovane")} price={CENY.fasada_falcovane} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('fasada_falcovane', p)} />
+            <OptionCard label={getTranslatedText('fasada_thermowood', 'nazov') || 'Thermowood'} selected={fasada === "thermowood"} onClick={() => setFasada("thermowood")} price={CENY.fasada_thermowood} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('fasada_thermowood', p)} />
+          </div>
+        </section>
+
+        {/* 4. Strecha */}
+        <section id="section-4" className="scroll-mt-32">
+          <BigSectionHeader title={getTranslatedText('sekcia_strecha', 'nazov') || t('roofSection') || 'Strecha'} icon={Home} stepIdx={4} totalSteps={13} />
+          <SectionLabel label={getTranslatedText('stresna_krytina', 'nazov') || t('roofCoveringType') || 'Strešná krytina'} color="purple" />
+          <div className="grid sm:grid-cols-2 gap-4 mb-8">
+            <OptionCard label={getTranslatedText('strecha_korugovan', 'nazov') || t('corrugatedMetal')} selected={strecha === "korugovan_plech"} onClick={() => setStrecha("korugovan_plech")} price={0} />
+            <OptionCard label={getTranslatedText('strecha_falcovane', 'nazov') || t('foldedPanels')} selected={strecha === "falcovane"} onClick={() => setStrecha("falcovane")} price={CENY.strecha_falcovane} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('strecha_falcovane', p)} />
+          </div>
+          <SectionLabel label={getTranslatedText('odkvapy', 'nazov') || t('gutters') || 'Odkvapy'} color="purple" />
+          <div className="grid sm:grid-cols-2 gap-4">
+            <OptionCard label={getTranslatedText('odkvapy_nie', 'nazov') || t('withoutGutters')} selected={odkvapy === "nie"} onClick={() => setOdkvapy("nie")} price={0} />
+            <OptionCard label={getTranslatedText('odkvapy_ano', 'nazov') || t('gutters')} selected={odkvapy === "ano"} onClick={() => setOdkvapy("ano")} price={CENY.odkvapy} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('odkvapy', p)} />
+          </div>
+        </section>
+
+        {/* 5. Okná a dvere */}
+        <section id="section-5" className="scroll-mt-32">
+          <BigSectionHeader title={getTranslatedText('sekcia_okna_dvere', 'nazov') || t('windowsDoorsSection') || 'Okná a dvere'} icon={DoorOpen} stepIdx={5} totalSteps={13} />
+          <SectionLabel label={getTranslatedText('okna_farba', 'nazov') || t('windowColor') || 'Farba okien 3-sklo'} color="blue" />
+          <div className="grid sm:grid-cols-3 gap-4 mb-8">
+            <OptionCard label={getTranslatedText('okna_biele', 'nazov') || t('white')} selected={okna === "biele"} onClick={() => setOkna("biele")} price={0} />
+            <OptionCard label={getTranslatedText('okna_antracit', 'nazov') || t('anthracite')} selected={okna === "antracit"} onClick={() => setOkna("antracit")} price={0} />
+            <OptionCard label={getTranslatedText('okna_hnede', 'nazov') || t('brown')} selected={okna === "hnede"} onClick={() => setOkna("hnede")} price={0} />
+          </div>
+          <SectionLabel label={getTranslatedText('vchodove_dvere', 'nazov') || t('entryDoors') || 'Vchodové dvere'} color="blue" />
+          <div className="grid sm:grid-cols-2 gap-4">
+            <OptionCard label={getTranslatedText('dvere_plastove', 'nazov') || t('metalPlasticDoors')} selected={vchodoveDvere === "plastove"} onClick={() => setVchodoveDvere("plastove")} price={0} />
+            <OptionCard label={getTranslatedText('dvere_kovove', 'nazov') || t('metalDoors')} selected={vchodoveDvere === "kovove"} onClick={() => setVchodoveDvere("kovove")} price={CENY.dvere_kovove} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('dvere_kovove', p)} />
+          </div>
+        </section>
+
+        {/* 6. Interiér */}
+        <section id="section-6" className="scroll-mt-32">
+          <BigSectionHeader title={getTranslatedText('sekcia_interier', 'nazov') || t('interiorSection') || 'Interiér'} icon={Layout} stepIdx={6} totalSteps={13} />
+          <SectionLabel label={getTranslatedText('obklad_stien', 'nazov') || t('wallCladding') || 'Obklad stien'} color="amber" />
+          <div className="grid sm:grid-cols-2 gap-4 mb-8">
+            <OptionCard label={getTranslatedText('obklad_smrek_8cm', 'nazov') || t('spruceWall8cm')} selected={obkladStien === "smrek_8cm"} onClick={() => setObkladStien("smrek_8cm")} price={0} />
+            <OptionCard label={getTranslatedText('obklad_smrek_bez_uzlov', 'nazov') || t('spruceWallNoKnots')} selected={obkladStien === "smrek_bez_uzlov"} onClick={() => setObkladStien("smrek_bez_uzlov")} price={CENY.obklad_smrek_bez_uzlov} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('obklad_smrek_bez_uzlov', p)} />
+            <OptionCard label={getTranslatedText('obklad_sadrokarton', 'nazov') || t('drywallWallpaperPaint')} selected={obkladStien === "sadrokarton_tapeta"} onClick={() => setObkladStien("sadrokarton_tapeta")} price={CENY.obklad_sadrokarton_tapeta} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('obklad_sadrokarton_tapeta', p)} />
+            <OptionCard label={getTranslatedText('obklad_osb', 'nazov') || t('osbLaminatePanel')} selected={obkladStien === "osb_panel"} onClick={() => setObkladStien("osb_panel")} price={CENY.obklad_osb_panel} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('obklad_osb_panel', p)} />
+          </div>
+          <SectionLabel label={getTranslatedText('podlaha', 'nazov') || t('floorType') || 'Podlaha'} color="amber" />
+          <div className="grid sm:grid-cols-2 gap-4 mb-8">
+            <OptionCard label={getTranslatedText('podlaha_laminat', 'nazov') || t('laminate')} selected={podlaha === "laminat"} onClick={() => setPodlaha("laminat")} price={0} />
+          </div>
+          <SectionLabel label={getTranslatedText('interierove_dvere', 'nazov') || t('interiorDoorsType') || 'Interiérové dvere'} color="amber" />
+          <div className="grid sm:grid-cols-2 gap-4">
+            <OptionCard label={getTranslatedText('dvere_kridlove', 'nazov') || t('hingedDoors')} selected={interieroveDvere === "kridlove"} onClick={() => setInterieroveDvere("kridlove")} price={0} />
+            <OptionCard label={getTranslatedText('dvere_posuvne', 'nazov') || t('slidingDoors')} selected={interieroveDvere === "posuvne"} onClick={() => setInterieroveDvere("posuvne")} price={CENY.dvere_posuvne} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('dvere_posuvne', p)} />
+          </div>
+        </section>
+
+        {/* 7. Elektro */}
+        <section id="section-7" className="scroll-mt-32">
+          <BigSectionHeader title={getTranslatedText('sekcia_elektro', 'nazov') || t('electricalSection') || 'Elektroinštalácia'} icon={Zap} stepIdx={7} totalSteps={13} />
+          <SectionLabel label={getTranslatedText('elektro_typ', 'nazov') || t('installationType') || 'Typ inštalácie'} color="yellow" />
+          <div className="grid sm:grid-cols-3 gap-4 mb-8">
+            <OptionCard label={getTranslatedText('elektro_eu', 'nazov') || t('euStandard')} selected={elektro === "eu"} onClick={() => setElektro("eu")} price={0} />
+            <OptionCard label={getTranslatedText('elektro_cz', 'nazov') || t('czSkStandard')} selected={elektro === "cz"} onClick={() => setElektro("cz")} price={CENY.elektro_cz} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('elektro_cz', p)} />
+            <OptionCard label={getTranslatedText('elektro_ge', 'nazov') || t('geStandard')} selected={elektro === "ge"} onClick={() => setElektro("ge")} price={CENY.elektro_ge} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('elektro_ge', p)} isA0={true} />
+          </div>
+          <SectionLabel label="Doplnky" color="yellow" />
+          <div className="space-y-4">
+            <AddonRow label={getTranslatedText('bleskozvod', 'nazov') || t('lightningRod')} checked={bleskozvod} onChange={() => setBleskozvod(!bleskozvod)} price={CENY.bleskozvod} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('bleskozvod', p)} locked={ucel === "rodinny"} t={t} />
+            <AddonRow label={getTranslatedText('prepat', 'nazov') || t('surgeProtection')} checked={prepat} onChange={() => setPrepat(!prepat)} price={CENY.prepat} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('prepat', p)} locked={ucel === "rodinny"} t={t} />
+            <AddonRow label={getTranslatedText('pripravaNaSolarnePanely', 'nazov') || 'Príprava na solárne panely'} checked={pripravaNaSolarnePanely} onChange={() => setPripravaNaSolarnePanely(!pripravaNaSolarnePanely)} price={CENY.pripravaNaSolarnePanely} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('pripravaNaSolarnePanely', p)} />
+          </div>
+        </section>
+
+        {/* 8. Kúpeľňa */}
+        <section id="section-8" className="scroll-mt-32">
+          <BigSectionHeader title={getTranslatedText('sekcia_kupelna', 'nazov') || t('bathroomSection') || 'Kúpeľňa'} icon={Droplet} stepIdx={8} totalSteps={13} />
+          <SectionLabel label={getTranslatedText('sprchovyKut', 'nazov') || t('showerCabin') || 'Sprchový kút'} color="teal" />
+          <div className="grid sm:grid-cols-2 gap-4 mb-8">
+            <OptionCard label={getTranslatedText('sprcha_standard', 'nazov') || t('shower')} selected={sprchovyKut === "standard"} onClick={() => setSprchovyKut("standard")} price={0} />
+            <OptionCard label={getTranslatedText('sprcha_radaway', 'nazov') || t('showerRadawayTile')} selected={sprchovyKut === "radaway"} onClick={() => setSprchovyKut("radaway")} price={CENY.sprchovyKut} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('sprchovyKut', p)} />
+          </div>
+          <SectionLabel label={getTranslatedText('bateria', 'nazov') || t('faucet') || 'Batéria'} color="teal" />
+          <div className="grid sm:grid-cols-2 gap-4 mb-8">
+            <OptionCard label={getTranslatedText('bateria_standard', 'nazov') || t('faucetStandard')} selected={bateria === "standard"} onClick={() => setBateria("standard")} price={0} />
+            <OptionCard label={getTranslatedText('bateria_grohe', 'nazov') || 'Grohe'} selected={bateria === "grohe"} onClick={() => setBateria("grohe")} price={CENY.bateria} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('bateria', p)} />
+          </div>
+          <SectionLabel label={getTranslatedText('strop_kupelna', 'nazov') || t('bathroomCeiling') || 'Strop'} color="teal" />
+          <div className="grid sm:grid-cols-2 gap-4 mb-8">
+            <OptionCard label={getTranslatedText('strop_drevo', 'nazov') || t('ceilingWoodPattern')} selected={stropKupelna === "drevo"} onClick={() => setStropKupelna("drevo")} price={0} />
+            <OptionCard label={getTranslatedText('strop_sadrokarton', 'nazov') || t('drywallWallpaperPaint')} selected={stropKupelna === "sadrokarton"} onClick={() => setStropKupelna("sadrokarton")} price={CENY.strop_kupelna_sadrokarton} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('strop_kupelna_sadrokarton', p)} />
+          </div>
+          <SectionLabel label="Doplnky" color="teal" />
+          <div className="space-y-4">
+            <AddonRow label={getTranslatedText('vana', 'nazov') || t('bathtub')} checked={vana} onChange={() => setVana(!vana)} price={CENY.vana} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('vana', p)} />
+            <AddonRow label={getTranslatedText('skrinka', 'nazov') || t('cabinet')} checked={skrinka} onChange={() => setSkrinka(!skrinka)} price={CENY.skrinka} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('skrinka', p)} />
+          </div>
+        </section>
+
+        {/* 9. Základy */}
+        <section id="section-9" className="scroll-mt-32">
+          <BigSectionHeader title={getTranslatedText('sekcia_zaklady', 'nazov') || t('foundationsSection') || 'Základy'} icon={Wrench} stepIdx={9} totalSteps={13} />
+          <div className="grid sm:grid-cols-2 gap-4">
+            <OptionCard label={getTranslatedText('zaklady_bez', 'nazov') || t('noFoundations')} selected={zaklady === "bez"} onClick={() => setZaklady("bez")} price={0} />
+            <OptionCard label={getTranslatedText('zaklady_vruty', 'nazov') || t('groundScrews')} selected={zaklady === "vruty"} onClick={() => setZaklady("vruty")} price={CENY.zaklady_vruty} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('zaklady_vruty', p)} />
+            <OptionCard label={getTranslatedText('zaklady_patky', 'nazov') || t('concretePads')} selected={zaklady === "patky"} onClick={() => setZaklady("patky")} price={CENY.zaklady_patky} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('zaklady_patky', p)} />
+            <OptionCard label={getTranslatedText('zaklady_pasove', 'nazov') || t('stripFoundations')} selected={zaklady === "pasove"} onClick={() => setZaklady("pasove")} price={CENY.zaklady_pasove} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('zaklady_pasove', p)} />
+          </div>
+        </section>
+
+        {/* 10. Inžiniering */}
+        <section id="section-10" className="scroll-mt-32">
+          <BigSectionHeader title={getTranslatedText('sekcia_inziniering', 'nazov') || t('engineeringDocsSection') || 'Inžiniering a dokumentácia'} icon={Layers} stepIdx={10} totalSteps={13} />
+          <div className="space-y-4">
+            <AddonRow label={getTranslatedText('inziniering', 'nazov') || t('engineering')} checked={inziniering} onChange={() => setInziniering(!inziniering)} price={CENY.inziniering} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('inziniering', p)} locked={ucel === "rodinny"} t={t} />
+            <AddonRow label={getTranslatedText('projekt_certifikacia', 'nazov') || t('projectCertShort')} checked={projektACertifikacia} onChange={() => setProjektACertifikacia(!projektACertifikacia)} price={CENY.projektACertifikacia} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('projektACertifikacia', p)} locked={ucel === "rodinny"} t={t} />
+            <AddonRow label={getTranslatedText('revizia', 'nazov') || t('revisionDocsShort')} checked={revizia} onChange={() => setRevizia(!revizia)} price={CENY.revizia} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('revizia', p)} locked={ucel === "rodinny"} t={t} />
+          </div>
+        </section>
+
+        {/* 11. Realizácia */}
+        <section id="section-11" className="scroll-mt-32">
+          <BigSectionHeader title={getTranslatedText('sekcia_realizacia', 'nazov') || t('realizationSection') || 'Realizácia'} icon={Hammer} stepIdx={11} totalSteps={13} />
+          <div className="space-y-4">
+            <AddonRow label={getTranslatedText('montaz', 'nazov') || t('houseAssembly')} checked={montaz} onChange={() => setMontaz(!montaz)} price={CENY.montaz} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('montaz', p)} />
+            
+            {(dopravaViditelna || isAdmin) && (
+              <div className="relative">
+                <AddonRow 
+                  label={getTranslatedText('doprava', 'nazov') || t('transportTile')} 
+                  checked={doprava && dopravaViditelna} 
+                  onChange={() => dopravaViditelna && setDoprava(!doprava)} 
+                  price={CENY.doprava} 
+                  isAdmin={isAdmin} 
+                  onPriceChange={p => handlePriceChange('doprava', p)} 
+                  disabled={!dopravaViditelna && isAdmin}
+                />
+                {!dopravaViditelna && isAdmin && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-gray-900/30 rounded-lg backdrop-blur-[1px]">
+                    <div className="bg-orange-600 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-2">
+                      <EyeOff className="w-3 h-3" />
+                      Skryté pre verejnosť
+                    </div>
+                  </div>
+                )}
+                {isAdmin && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleToggleDopravaVisibility();
+                    }}
+                    disabled={toggleDopravaVisibilityMutation.isPending}
+                    className={`absolute -top-3 -right-3 z-10 p-2 rounded-full shadow-lg transition-all ${
+                      dopravaViditelna 
+                        ? 'bg-green-600 hover:bg-green-700 text-white' 
+                        : 'bg-red-600 hover:bg-red-700 text-white'
+                    }`}
+                    title={dopravaViditelna ? 'Skryť pre verejnosť' : 'Zobraziť pre verejnosť'}
+                  >
+                    {dopravaViditelna ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* 12. Služby k nákupu */}
+        <section id="section-12" className="scroll-mt-32">
+          <BigSectionHeader title={getTranslatedText('sekcia_sluzby', 'nazov') || t('additionalServices') || 'Dodatočné služby'} description={getTranslatedText('sekcia_sluzby', 'podnadpis') || 'Vyberte si doplnkové služby (voliteľné):'} icon={Sparkles} stepIdx={12} totalSteps={13} />
+          <div className="space-y-4">
+            <AddonRow label={getTranslatedText('sluzba_predaj', 'nazov') || 'Predaj predošlej nehnuteľnosti'} description={getTranslatedText('sluzba_predaj', 'dlhy_popis') || 'Budú sa Vám venovať naši najlepší odborníci v realitách.'} checked={predajNehnutelnosti} onChange={() => setPredajNehnutelnosti(!predajNehnutelnosti)} price={0} />
+            <AddonRow label={getTranslatedText('sluzba_pozemok', 'nazov') || 'Chcem pozemok pod svoj dom'} description={getTranslatedText('sluzba_pozemok', 'dlhy_popis') || 'Pomôžeme Vám nájsť ideálny pozemok.'} checked={hladamPozemok} onChange={() => setHladamPozemok(!hladamPozemok)} price={0} />
+            <AddonRow label={getTranslatedText('sluzba_finance', 'nazov') || 'Finančné služby - úvery/poistky'} description={getTranslatedText('sluzba_finance', 'dlhy_popis') || 'Budú sa Vám venovať naši najlepší finančníci.'} checked={financneSluzby} onChange={() => setFinancneSluzby(!financneSluzby)} price={0} />
+          </div>
+        </section>
+
       </div>
+      
+      {/* Plávajúca cena */}
+      <FloatingPrice 
+        price={totalPrice} 
+        isVisible={true} 
+        onSendQuote={handleSendQuoteFromFloating}
+        dom={dom}
+        vyrobca="Ticab house"
+      />
+    </div>
   );
 }

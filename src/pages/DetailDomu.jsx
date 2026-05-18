@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Helmet } from "react-helmet-async";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -46,10 +46,20 @@ import YoutubePlayer from "../components/YoutubePlayer";
 export default function DetailDomu() {
   const { t, language } = useLanguage();
   const location = useLocation();
+  const navigate = useNavigate();
   const urlParams = new URLSearchParams(location.search);
   const domId = urlParams.get('id');
   const domSlug = urlParams.get('slug');
-  const returnUrl = urlParams.get('return') || createPageUrl("Katalog");
+  const returnParam = urlParams.get('return');
+  const returnUrl = (returnParam && returnParam !== 'null') ? returnParam : createPageUrl("Katalog");
+  
+  const handleBackToCatalog = () => {
+    try {
+      navigate(returnUrl);
+    } catch (error) {
+      window.location.href = returnUrl;
+    }
+  };
 
   const { data: dom, isLoading } = useQuery({
     queryKey: ['dom-detail', domId, domSlug],
@@ -429,12 +439,10 @@ export default function DetailDomu() {
           <Home className="w-16 h-16 text-gray-300 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-700 mb-2">{t('noHousesFound')}</h2>
           <p className="text-gray-500 mb-6">{t('tryChangingFilters')}</p>
-          <Link to={createPageUrl("Katalog")}>
-            <Button className="bg-primary hover:bg-primary/90">
-              <ArrowLeft className="mr-2 w-4 h-4" />
-              {t('backToCatalog')}
-            </Button>
-          </Link>
+          <Button className="bg-primary hover:bg-primary/90" onClick={handleBackToCatalog}>
+            <ArrowLeft className="mr-2 w-4 h-4" />
+            {t('backToCatalog')}
+          </Button>
         </Card>
       </div>
     );
@@ -531,16 +539,14 @@ export default function DetailDomu() {
         )}
       </Helmet>
       {/* Back Button */}
-      <div className="bg-slate-900/80 backdrop-blur-md border-b border-white/10 sticky z-[60] shadow-md" style={{ top: '2.5rem' }}>
+      <div className="bg-slate-900/80 backdrop-blur-md border-b border-white/10 sticky top-[5rem] lg:top-[6rem] z-[60] shadow-md">
         <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-3">
           <div className="flex items-center justify-between mb-2 sm:mb-0">
-            <Link to={returnUrl}>
-              <Button variant="ghost" size="sm" className="text-white hover:text-red-400 hover:bg-white/5 text-xs sm:text-sm h-8 sm:h-9 font-bold">
-                <ArrowLeft className="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" />
-                <span className="hidden sm:inline">{t('backToCatalog')}</span>
-                <span className="sm:hidden">{t('back')}</span>
-              </Button>
-            </Link>
+            <Button variant="ghost" size="sm" className="text-white hover:text-red-400 hover:bg-white/5 text-xs sm:text-sm h-8 sm:h-9 font-bold relative z-50 pointer-events-auto" onClick={handleBackToCatalog}>
+              <ArrowLeft className="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden sm:inline">{t('backToCatalog')}</span>
+              <span className="sm:hidden">{t('back')}</span>
+            </Button>
             <div className="flex items-center gap-2">
               {canManage && (
                 <Button
