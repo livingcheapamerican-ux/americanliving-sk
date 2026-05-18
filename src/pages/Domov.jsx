@@ -648,103 +648,122 @@ export default function Domov() {
         </div>
       </section>
 
-      {/* DOTÁCIA AMERICANA - High-Contrast RED */}
-      <section className="py-12 sm:py-24 bg-slate-900 relative">
-        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
-        <div className="container mx-auto px-4 text-center">
-          <motion.div
-            animate={{ scale: [1, 1.02, 1] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="inline-block w-full sm:w-auto"
-          >
-            <Link to={createPageUrl("DotaciaAmericana")} className="block">
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Button 
-                  size="lg" 
-                  style={{ backgroundColor: '#FF0000' }}
-                  className="hover:opacity-90 text-white font-black w-full sm:w-auto text-xl sm:text-3xl md:text-5xl px-6 sm:px-20 py-6 sm:py-12 shadow-2xl border-4 border-white relative overflow-hidden group transition-all"
-                >
-                  <div className="flex flex-col items-center relative z-10">
-                    <span className="text-white drop-shadow-lg text-base sm:text-3xl md:text-4xl">{dv.line1}</span>
-                    <span className="text-white text-xl sm:text-4xl md:text-5xl drop-shadow-lg mt-1">{dv.line2}</span>
-                  </div>
-                  <motion.div
-                    animate={{ scale: [1, 1.1, 1] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="absolute -right-1 -top-1 sm:-right-3 sm:-top-3 bg-yellow-400 text-gray-900 text-[10px] sm:text-sm font-black px-2 py-0.5 sm:px-4 sm:py-1.5 rounded-full rotate-12 shadow-lg border-2 border-white"
-                  >
-                    ✨ {t('newBadge')}!
-                  </motion.div>
-                </Button>
-              </motion.div>
-            </Link>
-          </motion.div>
-          <div className="mt-6 sm:mt-8 max-w-5xl mx-auto space-y-4 sm:space-y-5 px-0 sm:px-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-              {/* Pre rodiny */}
-              <motion.div 
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                className="bg-slate-950 rounded-3xl p-6 sm:p-8 shadow-[0_0_30px_rgba(16,185,129,0.15)] border border-emerald-500/30 relative overflow-hidden"
-              >
-                <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-400/10 rounded-full blur-3xl"></div>
-                <div className="flex items-center gap-3 mb-3 relative z-10">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
-                    <Home className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-                  </div>
-                  <h3 className="text-base sm:text-xl font-black text-emerald-700">{t('forFamilies')}</h3>
-                </div>
-                <ul className="space-y-3 text-sm sm:text-base text-slate-300 relative z-10">
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <span><strong className="text-emerald-700">{t('grantAtSigning')}</strong></span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <span><strong className="text-emerald-700">{t('energyFullyRefunded')}</strong></span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <span>{t('supportAfterHandover')}</span>
-                  </li>
-                </ul>
-              </motion.div>
+      {/* DOTÁCIA AMERICANA - Premium Redesign */}
+      <section className="py-16 sm:py-28 bg-slate-950 relative overflow-hidden border-t border-white/5">
+        {/* Glow effects */}
+        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-red-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-red-900/10 rounded-full blur-[150px] pointer-events-none"></div>
 
-              {/* Pre investorov */}
-              <motion.div 
-                initial={{ opacity: 0, x: 20 }}
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+            
+            {/* Ľavá strana: Copywriting */}
+            <div className="w-full lg:w-1/2">
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="bg-slate-950 rounded-3xl p-6 sm:p-8 shadow-[0_0_30px_rgba(234,179,8,0.15)] border border-yellow-500/30 relative overflow-hidden"
+                transition={{ duration: 0.8 }}
               >
-                <div className="absolute top-0 right-0 w-24 h-24 bg-yellow-400/10 rounded-full blur-3xl"></div>
-                <div className="flex items-center gap-3 mb-3 relative z-10">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
-                    <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-                  </div>
-                  <h3 className="text-base sm:text-xl font-black text-yellow-700">{t('forInvestors')}</h3>
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-bold mb-6">
+                  <Gift className="w-4 h-4" /> VIP Benefit Program
                 </div>
-                <ul className="space-y-3 text-sm sm:text-base text-slate-300 relative z-10">
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-                    <span><strong className="text-yellow-700">{t('grantAtSigning')}</strong></span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-                    <span><strong className="text-yellow-700">{t('marketingFree')}</strong></span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-                    <span>{t('passiveIncomeFromAirbnb')}</span>
-                  </li>
-                </ul>
+                <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight">
+                  Viac než len dom.<br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-600">
+                    Finančná injekcia pre váš nový začiatok.
+                  </span>
+                </h2>
+                <p className="text-lg sm:text-xl text-slate-400 font-light mb-8 leading-relaxed max-w-xl">
+                  Vieme, že stavba domu je životné rozhodnutie a obrovská finančná záťaž. Preto sme vytvorili exkluzívny program <strong className="text-slate-200">Dotácia Americana</strong>, ktorý vám po podpise zmluvy pomôže pokryť náklady na energie alebo uľahčí vašu investíciu.
+                </p>
+                
+                <Link to={createPageUrl("DotaciaAmericana")} className="inline-block w-full sm:w-auto">
+                  <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-bold px-8 py-7 text-lg shadow-[0_0_30px_rgba(220,38,38,0.3)] hover:shadow-[0_0_50px_rgba(220,38,38,0.5)] border border-red-400/50 transition-all group rounded-2xl">
+                    <span className="flex items-center justify-center gap-3">
+                      Overiť nárok na dotáciu
+                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    </span>
+                  </Button>
+                </Link>
+                
+                <div className="mt-8 flex items-center gap-3 text-sm text-slate-500">
+                  <Shield className="w-5 h-5 text-slate-400" />
+                  <span>Garantované financovanie pre našich klientov.</span>
+                </div>
               </motion.div>
             </div>
-              
-            <p className="text-xs sm:text-sm text-center text-slate-300 font-medium bg-slate-800/70 backdrop-blur-sm border border-white/10 rounded-lg p-3 sm:p-4">
-              💡 <strong>{t('grantAmountVaries')}</strong>
-            </p>
+
+            {/* Pravá strana: Glassmorphism Karty */}
+            <div className="w-full lg:w-1/2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 relative">
+                
+                {/* Karta Pre Rodiny */}
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                  className="bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-3xl p-6 sm:p-8 hover:bg-slate-800/60 transition-all shadow-2xl relative overflow-hidden group"
+                >
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl group-hover:bg-emerald-500/20 transition-all"></div>
+                  <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-emerald-900/50">
+                    <Home className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-4">{t('forFamilies')}</h3>
+                  <ul className="space-y-4">
+                    <li className="flex items-start gap-3">
+                      <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
+                      <span className="text-slate-300 text-sm leading-relaxed">{t('grantAtSigning')}</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
+                      <span className="text-slate-300 text-sm leading-relaxed">{t('energyFullyRefunded')}</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
+                      <span className="text-slate-300 text-sm leading-relaxed">{t('supportAfterHandover')}</span>
+                    </li>
+                  </ul>
+                </motion.div>
+
+                {/* Karta Pre Investorov */}
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                  className="bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-3xl p-6 sm:p-8 hover:bg-slate-800/60 transition-all shadow-2xl relative overflow-hidden lg:mt-12 group"
+                >
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/10 rounded-full blur-3xl group-hover:bg-yellow-500/20 transition-all"></div>
+                  <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-yellow-700 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-yellow-900/50">
+                    <TrendingUp className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-4">{t('forInvestors')}</h3>
+                  <ul className="space-y-4">
+                    <li className="flex items-start gap-3">
+                      <CheckCircle className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />
+                      <span className="text-slate-300 text-sm leading-relaxed">{t('grantAtSigning')}</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <CheckCircle className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />
+                      <span className="text-slate-300 text-sm leading-relaxed">{t('marketingFree')}</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <CheckCircle className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />
+                      <span className="text-slate-300 text-sm leading-relaxed">{t('passiveIncomeFromAirbnb')}</span>
+                    </li>
+                  </ul>
+                </motion.div>
+
+              </div>
+              <div className="mt-6 text-center lg:text-right">
+                <p className="inline-block px-4 py-2 bg-slate-900/80 rounded-lg border border-white/5 text-xs text-slate-500 italic">
+                  💡 {t('grantAmountVaries')}
+                </p>
+              </div>
+            </div>
+            
           </div>
         </div>
       </section>
