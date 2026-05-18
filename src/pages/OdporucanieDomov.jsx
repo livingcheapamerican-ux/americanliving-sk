@@ -193,23 +193,28 @@ POVINNÉ PRAVIDLÁ:
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8 px-4">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
-        >
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-full mb-4">
-            <Sparkles className="w-5 h-5" />
-            <span className="font-bold">{t('aiRecommendationSystem')}</span>
-          </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            {t('findYourPerfectHome')}
-          </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            {t('tellUsYourRequirements')}
-          </p>
-        </motion.div>
+      {/* Header */}
+      <section className="relative bg-gradient-to-r from-red-900 to-red-700 text-white py-20 overflow-hidden mb-12">
+        <div className="absolute inset-0 bg-black/30"></div>
+        <div className="container mx-auto px-4 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="max-w-3xl"
+          >
+            <div className="inline-flex items-center gap-2 bg-accent/90 text-white px-6 py-2 rounded-full mb-6">
+              <Sparkles className="w-5 h-5" />
+              <span className="font-bold">{t('aiRecommendationSystem')}</span>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 drop-shadow-lg">
+              {t('findYourPerfectHome')}
+            </h1>
+            <p className="text-xl text-white drop-shadow-md">
+              {t('tellUsYourRequirements')}
+            </p>
+          </motion.div>
+        </div>
+      </section>
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Preferences Form */}
@@ -310,7 +315,7 @@ POVINNÉ PRAVIDLÁ:
                 <Button
                   onClick={handleGetRecommendations}
                   disabled={isAnalyzing}
-                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-6 text-lg"
+                  className="w-full bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-primary text-white font-bold py-6 text-lg"
                 >
                   {isAnalyzing ? (
                     <>
@@ -338,8 +343,8 @@ POVINNÉ PRAVIDLÁ:
                   exit={{ opacity: 0 }}
                   className="flex items-center justify-center h-full"
                 >
-                  <Card className="p-12 text-center bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-dashed border-purple-300">
-                    <Sparkles className="w-16 h-16 text-purple-400 mx-auto mb-4" />
+                  <Card className="p-12 text-center bg-gradient-to-br from-red-50 to-orange-50 border-2 border-dashed border-red-300">
+                    <Sparkles className="w-16 h-16 text-accent mx-auto mb-4" />
                     <h3 className="text-xl font-bold text-gray-700 mb-2">
                       {t('readyForRecommendations')}
                     </h3>
@@ -358,7 +363,7 @@ POVINNÉ PRAVIDLÁ:
                   className="flex items-center justify-center h-full"
                 >
                   <Card className="p-12 text-center">
-                    <Loader2 className="w-16 h-16 text-purple-600 mx-auto mb-4 animate-spin" />
+                    <Loader2 className="w-16 h-16 text-primary mx-auto mb-4 animate-spin" />
                     <h3 className="text-xl font-bold text-gray-700 mb-2">
                       {t('aiAnalyzingDatabase')}
                     </h3>
@@ -376,7 +381,7 @@ POVINNÉ PRAVIDLÁ:
                   className="space-y-6"
                 >
                   {/* Summary */}
-                  <Card className="p-6 bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200">
+                  <Card className="p-6 bg-gradient-to-r from-red-50 to-orange-50 border-2 border-red-200">
                     <h3 className="font-bold text-lg mb-2 flex items-center gap-2">
                       <CheckCircle className="w-5 h-5 text-green-600" />
                       {t('aiAnalysis')}
@@ -443,7 +448,7 @@ POVINNÉ PRAVIDLÁ:
                               <div className="mb-4">
                                 <div className="flex items-center justify-between mb-2">
                                   <span className="text-sm font-semibold text-gray-700">{t('matchWithRequirements')}</span>
-                                  <span className="text-sm font-bold text-purple-600">{rec.match_score}%</span>
+                                  <span className="text-sm font-bold text-primary">{rec.match_score}%</span>
                                 </div>
                                 <div className="w-full bg-gray-200 rounded-full h-3">
                                   <motion.div
@@ -547,8 +552,8 @@ POVINNÉ PRAVIDLÁ:
             className="mt-12 grid md:grid-cols-3 gap-6"
           >
             <Card className="p-6 text-center">
-              <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Sparkles className="w-6 h-6 text-purple-600" />
+              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Sparkles className="w-6 h-6 text-primary" />
               </div>
               <h3 className="font-bold text-gray-900 mb-2">{t('intelligentAnalysis')}</h3>
               <p className="text-sm text-gray-600">

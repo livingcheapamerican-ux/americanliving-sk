@@ -146,7 +146,7 @@ export default function ONas() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <Card className="p-8 bg-gradient-to-br from-yellow-50 to-orange-50 border-2 border-yellow-300">
+              <Card className="p-8 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">
                   {t('responsibilityForConstruction')}
                 </h3>
@@ -168,9 +168,10 @@ export default function ONas() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <Card className="p-8 bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-300">
-                <h3 className="text-2xl font-bold text-green-900 mb-6">
-                  ✓ {t('ourHousesMeetAllStandards')}
+              <Card className="p-8 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                <h3 className="text-2xl font-bold text-primary mb-6 flex items-center gap-2">
+                  <CheckCircle className="w-7 h-7 text-accent flex-shrink-0" />
+                  {t('ourHousesMeetAllStandards')}
                 </h3>
                 <ul className="space-y-3">
                   <li className="flex items-start gap-3">
