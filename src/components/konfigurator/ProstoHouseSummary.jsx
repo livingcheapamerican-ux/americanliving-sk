@@ -45,25 +45,25 @@ export default function ProstoHouseSummary({
   const hasExtension = house.options.extension && house.options.extension.length > 0;
 
   return (
-    <div className="bg-white rounded-2xl border-2 border-gray-200 overflow-hidden">
+    <div className="bg-slate-900/50 backdrop-blur-sm rounded-2xl border border-white/10 overflow-hidden">
       {/* Header */}
-      <div className="bg-gray-900 text-white p-5 flex items-center justify-between">
+      <div className="bg-slate-900 text-white p-5 flex items-center justify-between border-b border-white/10">
         <div>
-          <div className="text-xs text-gray-400 uppercase tracking-wide mb-1">{t('configurationSummary')}</div>
+          <div className="text-xs text-slate-400 uppercase tracking-wide mb-1">{t('configurationSummary')}</div>
           <div className="text-4xl font-black">{totalPrice.toLocaleString()} €</div>
-          <div className="text-xs text-gray-400 mt-1">{t('totalWithVAT')}</div>
+          <div className="text-xs text-slate-400 mt-1">{t('totalWithVAT')}</div>
         </div>
-        <div className={`px-3 py-1.5 rounded-full text-xs font-bold ${isA0Compliant ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'}`}>
+        <div className={`px-3 py-1.5 rounded-full text-xs font-bold ${isA0Compliant ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'}`}>
           {isA0Compliant ? t('meetsA0Cert') : t('recreationalUse')}
         </div>
       </div>
 
       {/* Položky */}
-      <div className="p-5 space-y-1 text-sm border-b border-gray-100">
+      <div className="p-5 space-y-1 text-sm border-b border-white/10">
         {/* Základná cena */}
-        <div className="flex justify-between py-2 border-b border-gray-100 mb-3">
-          <span className="text-gray-700 font-semibold">{house.name}</span>
-          <span className="font-bold">{house.basePrice.toLocaleString()} €</span>
+        <div className="flex justify-between py-2 border-b border-white/10 mb-3">
+          <span className="text-slate-300 font-semibold">{house.name}</span>
+          <span className="font-bold text-white">{house.basePrice.toLocaleString()} €</span>
         </div>
 
         {/* Hrubá stavba */}
@@ -129,9 +129,9 @@ export default function ProstoHouseSummary({
 
       {/* Celková cena + tlačidlo */}
       <div className="p-5">
-        <div className="flex justify-between items-center mb-4 pb-4 border-b border-gray-200">
-          <span className="font-bold text-gray-900 text-base">{t('totalWithVAT')}</span>
-          <span className="text-3xl font-black text-gray-900">{totalPrice.toLocaleString()} €</span>
+        <div className="flex justify-between items-center mb-4 pb-4 border-b border-white/10">
+          <span className="font-bold text-white text-base">{t('totalWithVAT')}</span>
+          <span className="text-3xl font-black text-white">{totalPrice.toLocaleString()} €</span>
         </div>
         <button
           onClick={onSendQuote}
@@ -150,10 +150,10 @@ function SummaryRow({ label, price, info, alwaysShow = false }) {
   return (
     <div className="flex justify-between items-center py-1.5">
       <div className="flex-1 min-w-0">
-        <span className="text-gray-700 leading-tight">{label}</span>
-        {info && <span className="text-gray-400 text-xs ml-1">({info})</span>}
+        <span className="text-slate-300 leading-tight">{label}</span>
+        {info && <span className="text-slate-500 text-xs ml-1">({info})</span>}
       </div>
-      <span className={`font-semibold whitespace-nowrap ml-3 ${price > 0 ? 'text-red-600' : 'text-gray-500'}`}>
+      <span className={`font-semibold whitespace-nowrap ml-3 ${price > 0 ? 'text-red-400' : 'text-slate-500'}`}>
         {price > 0 ? `+${price.toLocaleString()} €` : '✓'}
       </span>
     </div>
