@@ -1572,13 +1572,6 @@ export default function DetailDomu() {
               </div>
             )}
 
-            {isProstoHouse && (
-              <ProstoHouseMarketing />
-            )}
-
-            {isTicabhouse && (
-              <TicabhouseMarketing />
-            )}
 
             {/* Štandardná výbava pre Ticabhouse */}
             {isTicabhouse && (
@@ -1772,6 +1765,17 @@ export default function DetailDomu() {
               </div>
             )}
           </motion.div>
+        </div>
+
+        {/* Marketingové sekcie na celú šírku */}
+        <div className="w-full mt-12 max-w-7xl mx-auto">
+          {isProstoHouse && (
+            <ProstoHouseMarketing />
+          )}
+
+          {isTicabhouse && (
+            <TicabhouseMarketing />
+          )}
         </div>
 
         {/* External Reviews Section */}

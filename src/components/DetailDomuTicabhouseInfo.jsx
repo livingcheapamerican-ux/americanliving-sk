@@ -111,7 +111,7 @@ export default function DetailDomuTicabhouseInfo({ dom, t, language, lyonState }
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 2xl:grid-cols-2 gap-6 mt-6">
           <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-2xl p-5">
             <h4 className="font-bold text-emerald-400 mb-4 flex items-center gap-2">
               <CheckCircle className="w-5 h-5" />
