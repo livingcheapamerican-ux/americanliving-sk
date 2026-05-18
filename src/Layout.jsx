@@ -223,7 +223,7 @@ function LayoutContent({ children }) {
       <header 
         className={`fixed left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'top-4' : 'top-0 sm:top-6'} px-2 sm:px-6`}
       >
-        <div className={`mx-auto max-w-7xl transition-all duration-500 ${scrolled ? 'bg-slate-900/80 backdrop-blur-xl shadow-2xl shadow-black/50 border border-white/10 rounded-full py-2 px-4' : 'bg-transparent py-4'}`}>
+        <div className={`mx-auto max-w-7xl transition-all duration-500 ${(scrolled && !mobileMenuOpen) ? 'bg-slate-900/80 backdrop-blur-xl shadow-2xl shadow-black/50 border border-white/10 rounded-full py-2 px-4' : (mobileMenuOpen ? 'bg-slate-950 border border-white/10 rounded-3xl p-4 shadow-2xl mt-2' : 'bg-transparent py-4 px-4')}`}>
           <div className="flex items-center justify-between gap-1 sm:gap-2">
             {/* Mobile - placeholder for layout balance */}
             <div className="sm:hidden w-8" />
@@ -521,9 +521,9 @@ function LayoutContent({ children }) {
           </div>
 
           {mobileMenuOpen && (
-            <nav className="lg:hidden mt-4 pb-4 border-t pt-4 space-y-2">
-              <div className="md:hidden flex items-center justify-center gap-2 py-3 border-b">
-                <span className="text-xs text-gray-600 font-medium">Powered by</span>
+            <nav className="lg:hidden mt-4 pb-4 border-t border-white/10 pt-4 space-y-2">
+              <div className="md:hidden flex items-center justify-center gap-2 py-3 border-b border-white/10 mb-2">
+                <span className="text-xs text-slate-400 font-medium">Powered by</span>
                 <a 
                   href="https://konfiga.eu" 
                   target="_blank" 
@@ -544,12 +544,12 @@ function LayoutContent({ children }) {
                     key={item.path}
                     to={item.path}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all ${
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
                       isActive(item.path)
-                        ? 'bg-primary text-white'
+                        ? 'bg-red-600/20 text-red-500 border border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.2)]'
                         : isDotacia
-                          ? 'bg-gradient-to-r from-emerald-500 via-green-400 to-green-600 text-white hover:from-emerald-600 hover:to-green-700 shadow-lg border-2 border-white nav-shimmer'
-                          : 'text-gray-700 hover:bg-gray-100'
+                          ? 'bg-gradient-to-r from-red-600 via-red-500 to-red-700 text-white shadow-[0_0_20px_rgba(239,68,68,0.4)]'
+                          : 'text-slate-300 hover:bg-white/10 hover:text-white'
                     }`}
                   >
                     <item.icon className="w-5 h-5" />
@@ -569,7 +569,7 @@ function LayoutContent({ children }) {
                   <Link
                     to={createPageUrl("AdminAnalyzaDomov")}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-slate-400 hover:bg-white/10 hover:text-white transition-all"
                   >
                     <Brain className="w-5 h-5" />
                     {t('adminAIAnalysis')}
@@ -577,7 +577,7 @@ function LayoutContent({ children }) {
                   <Link
                     to={createPageUrl("AdminSpravaDomov")}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-slate-400 hover:bg-white/10 hover:text-white transition-all"
                   >
                     <Image className="w-5 h-5" />
                     {t('adminHouseManagement')}
@@ -585,7 +585,7 @@ function LayoutContent({ children }) {
                   <Link
                     to={createPageUrl("AdminUploadFotiekDomov")}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-slate-400 hover:bg-white/10 hover:text-white transition-all"
                   >
                     <Image className="w-5 h-5" />
                     {t('adminPhotoUpload')}
@@ -593,7 +593,7 @@ function LayoutContent({ children }) {
                   <Link
                     to={createPageUrl("AdminPrekladyDomov")}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-slate-400 hover:bg-white/10 hover:text-white transition-all"
                   >
                     <FileText className="w-5 h-5" />
                     {t('adminTranslationsHouses')}
