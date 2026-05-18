@@ -1207,7 +1207,7 @@ export default function Katalog() {
                   {t('resetFilters')}
                 </Button>
               </Card>
-            }
+            )}
           </div>
         </div>
       </div>
