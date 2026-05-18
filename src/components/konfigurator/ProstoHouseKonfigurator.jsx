@@ -369,19 +369,16 @@ export default function ProstoHouseKonfigurator({ house, houseCode, dom: domProp
   const phCode = houseCode.replace('ph0', 'PH-0').replace('ph', 'PH-');
 
   return (
-    <div className="bg-slate-950 min-h-screen pb-32 lg:pb-16 font-['Outfit']">
+    <div className="bg-slate-950 min-h-screen pb-40 lg:pb-32 font-['Outfit']">
       
-      <div className="container mx-auto px-4 py-8 lg:py-12 max-w-7xl">
-        <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 relative items-start">
+      <div className="container mx-auto px-4 py-8 lg:py-12 max-w-4xl">
+        <div className="space-y-4">
           
-          {/* ĽAVÝ STĹPEC: Plynulý formulár konfigurátora */}
-          <div className="lg:col-span-8 space-y-4">
-            
-            {/* Mobilná hlavička domu */}
-            <div className="lg:hidden mb-8">
-              <h1 className="text-3xl font-black text-white">{house.name}</h1>
-              {isA0Compliant && <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] px-2 py-0.5 rounded-full uppercase tracking-widest mt-2 inline-block font-bold">A0 Certifikát</span>}
-            </div>
+          {/* Hlavička domu */}
+          <div className="mb-8">
+            <h1 className="text-3xl lg:text-4xl font-black text-white">{house.name}</h1>
+            {isA0Compliant && <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs px-3 py-1 rounded-full uppercase tracking-widest mt-3 inline-block font-bold">A0 Certifikát</span>}
+          </div>
 
             {/* SEKCIA 1: Účel stavby */}
             <div className="mb-12">
@@ -589,65 +586,61 @@ export default function ProstoHouseKonfigurator({ house, houseCode, dom: domProp
               </div>
             )}
 
-          </div>
-
-          {/* PRAVÝ STĹPEC: Sticky Sumár pre Desktop */}
-          <div className="hidden lg:block lg:col-span-4 sticky top-28">
-            <div className="mb-6">
-              <h2 className="text-2xl font-black text-white leading-tight break-words">{house.name}</h2>
-              {isA0Compliant && <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] px-2 py-0.5 rounded-full uppercase tracking-widest mt-2 inline-block font-bold">A0 Certifikát</span>}
+            {/* Sumár konfigurácie na spodku */}
+            <div className="mb-12">
+              <BigSectionHeader title="Súhrn konfigurácie" description="Skontrolujte si vybrané položky a odošlite dopyt." icon={FileText} />
+              <div className="bg-slate-900 border border-white/10 p-6 lg:p-8 rounded-3xl shadow-2xl">
+                <ProstoHouseSummary
+                  house={house} t={t} isA0Compliant={isA0Compliant} totalPrice={totalPrice} onSendQuote={() => setModalOpen(true)}
+                  mountingIdx={mountingIdx} extensionIdx={extensionIdx} insulationIdx={insulationIdx} foundationIdx={foundationIdx}
+                  interiorIdx={interiorIdx} doorsIdx={doorsIdx} facadeIdx={facadeIdx}
+                  electricity={electricity} water={water} sanita={sanita} boiler={boiler}
+                  heatPump={heatPump} recuperation={recuperation} windowLamination={windowLamination} windowTint={windowTint}
+                  roofWindows={roofWindows} fixWindows={fixWindows} tiltWindowsBig={tiltWindowsBig} tiltWindowsSmall={tiltWindowsSmall}
+                  interiorDoorsCount={interiorDoorsCount} laminateFloors={laminateFloors} floorHeating={floorHeating}
+                  networks={networks} engineering={engineering} projectant={projectant} revision={revision}
+                  getPrice={getPrice}
+                  hideSendButton={true}
+                />
+                
+                <div className="mt-8 flex flex-col sm:flex-row items-center gap-4">
+                  <button 
+                    onClick={() => setModalOpen(true)} 
+                    className="w-full sm:w-auto flex-1 bg-red-600 hover:bg-red-700 text-white font-black px-6 py-4 rounded-2xl flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(239,68,68,0.4)] hover:shadow-[0_0_30px_rgba(239,68,68,0.6)] active:scale-95 transition-all text-lg"
+                  >
+                    <span>{t('sendQuote')}</span>
+                    <Send className="w-5 h-5" />
+                  </button>
+                  <div className="w-full sm:w-auto">
+                    <SaveQuoteButton domNazov={house.name} domKod={phCode} domId={effectiveDomId} celkovaCena={totalPrice} konfiguratorData={konfigData} />
+                  </div>
+                </div>
+              </div>
             </div>
-
-            {/* Sumárna tabuľka so Scrollbarom */}
-            <div className="bg-slate-900 border border-white/10 p-5 rounded-3xl shadow-2xl mb-5 max-h-[calc(100vh-320px)] overflow-y-auto custom-scrollbar">
-              <ProstoHouseSummary
-                house={house} t={t} isA0Compliant={isA0Compliant} totalPrice={totalPrice} onSendQuote={() => setModalOpen(true)}
-                mountingIdx={mountingIdx} extensionIdx={extensionIdx} insulationIdx={insulationIdx} foundationIdx={foundationIdx}
-                interiorIdx={interiorIdx} doorsIdx={doorsIdx} facadeIdx={facadeIdx}
-                electricity={electricity} water={water} sanita={sanita} boiler={boiler}
-                heatPump={heatPump} recuperation={recuperation} windowLamination={windowLamination} windowTint={windowTint}
-                roofWindows={roofWindows} fixWindows={fixWindows} tiltWindowsBig={tiltWindowsBig} tiltWindowsSmall={tiltWindowsSmall}
-                interiorDoorsCount={interiorDoorsCount} laminateFloors={laminateFloors} floorHeating={floorHeating}
-                networks={networks} engineering={engineering} projectant={projectant} revision={revision}
-                getPrice={getPrice}
-                hideSendButton={true}
-              />
-            </div>
-
-            {/* Akčné tlačidlá v pravom stĺpci */}
-            <div className="space-y-3">
-              <button 
-                onClick={() => setModalOpen(true)} 
-                className="w-full bg-red-600 hover:bg-red-700 text-white font-black px-6 py-4 rounded-2xl flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(239,68,68,0.4)] hover:shadow-[0_0_30px_rgba(239,68,68,0.6)] active:scale-95 transition-all text-lg"
-              >
-                <span>{t('sendQuote')}</span>
-                <Send className="w-5 h-5" />
-              </button>
-              <SaveQuoteButton domNazov={house.name} domKod={phCode} domId={effectiveDomId} celkovaCena={totalPrice} konfiguratorData={konfigData} />
-            </div>
-          </div>
 
         </div>
       </div>
 
-      {/* MOBILNÝ STICKY FOOTER (Zobrazený len na malých obrazovkách) */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-xl border-t border-white/10 z-40 p-4 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
-        <div className="max-w-3xl mx-auto flex items-center justify-between gap-4">
-          <div className="flex-1 text-left">
-            <div className="text-[11px] text-slate-400 font-bold uppercase tracking-widest">{t('totalWithVAT')}</div>
-            <div className="text-2xl font-black text-white">{totalPrice.toLocaleString()} €</div>
-          </div>
-          <div className="flex-shrink-0 flex items-center gap-2">
-            <div className="hidden sm:block">
-              <SaveQuoteButton domNazov={house.name} domKod={phCode} domId={effectiveDomId} celkovaCena={totalPrice} konfiguratorData={konfigData} />
+      {/* STICKY FOOTER (Floating pill na desktope, full-width bar na mobile) */}
+      <div className="fixed bottom-0 left-0 right-0 lg:bottom-6 lg:left-1/2 lg:-translate-x-1/2 lg:w-auto z-40 animate-in slide-in-from-bottom-10 duration-500">
+        <div className="bg-slate-900/95 lg:bg-slate-900/90 backdrop-blur-xl border-t lg:border border-white/10 p-4 lg:py-3 lg:px-6 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] lg:shadow-[0_20px_50px_rgba(0,0,0,0.5)] lg:rounded-3xl transition-all">
+          <div className="max-w-4xl mx-auto flex items-center justify-between gap-4 lg:gap-8">
+            <div className="flex-1 text-left lg:flex lg:items-baseline lg:gap-3">
+              <div className="text-[11px] lg:text-xs text-slate-400 font-bold uppercase tracking-widest">{t('totalWithVAT')}</div>
+              <div className="text-2xl lg:text-3xl font-black text-white whitespace-nowrap">{totalPrice.toLocaleString()} €</div>
             </div>
-            <button 
-              onClick={() => setModalOpen(true)} 
-              className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-xl flex items-center gap-2 shadow-[0_0_20px_rgba(239,68,68,0.4)] active:scale-95 transition-all"
-            >
-              <span className="hidden sm:inline">{t('sendQuote')}</span>
-              <Send className="w-5 h-5 sm:hidden" />
-            </button>
+            <div className="flex-shrink-0 flex items-center gap-2">
+              <div className="hidden sm:block">
+                <SaveQuoteButton domNazov={house.name} domKod={phCode} domId={effectiveDomId} celkovaCena={totalPrice} konfiguratorData={konfigData} />
+              </div>
+              <button 
+                onClick={() => setModalOpen(true)} 
+                className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-xl flex items-center gap-2 shadow-[0_0_20px_rgba(239,68,68,0.4)] active:scale-95 transition-all whitespace-nowrap"
+              >
+                <span className="hidden sm:inline">{t('sendQuote')}</span>
+                <Send className="w-5 h-5 sm:hidden" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
