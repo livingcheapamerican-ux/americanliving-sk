@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -19,7 +19,6 @@ import KonfiguratorGaleria from './KonfiguratorGaleria';
 const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmin, onPriceChange, icon: Icon }) => (
   <button onClick={onClick} className={`relative flex flex-col p-4 rounded-2xl border-2 transition-all duration-300 w-full text-left active:scale-[0.98] gap-3 ${selected ? 'border-red-500 bg-red-500/10 shadow-[0_0_20px_rgba(239,68,68,0.15)] scale-[1.02]' : 'border-white/10 bg-slate-900 hover:border-white/20 hover:bg-slate-800'}`}>
     <div className="flex items-start gap-4 w-full">
-      {/* Animated Icon Container */}
       {Icon && (
         <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-500 ${selected ? 'bg-red-500 text-white shadow-lg shadow-red-500/30 rotate-3' : 'bg-slate-800 text-slate-400'}`}>
           <Icon className={`w-6 h-6 transition-transform duration-500 ${selected ? 'scale-110' : 'scale-100'}`} />
@@ -35,7 +34,6 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
       </div>
       
       <div className="flex flex-col items-end flex-shrink-0">
-        {/* Checkbox circle inside card */}
         <div className={`w-6 h-6 mb-2 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${selected ? 'border-red-500 bg-red-500 scale-110' : 'border-slate-700 bg-slate-950'}`}>
           {selected && <Check className="w-4 h-4 text-white" />}
         </div>
@@ -135,11 +133,25 @@ const SectionLabel = ({ label, color = 'gray' }) => {
   );
 };
 
+const BigSectionHeader = ({ title, description, icon: Icon }) => (
+  <div className="mb-8 border-b border-white/10 pb-6 mt-16 first:mt-0">
+    <div className="flex items-start gap-4">
+      <div className="w-12 h-12 flex-shrink-0 bg-red-500/10 border border-red-500/30 rounded-2xl flex items-center justify-center shadow-[0_0_15px_rgba(239,68,68,0.2)]">
+        <Icon className="w-6 h-6 text-red-500" />
+      </div>
+      <div>
+        <h2 className="text-2xl lg:text-3xl font-black text-white tracking-tight mb-2">{title}</h2>
+        {description && <p className="text-slate-400 text-sm lg:text-base leading-relaxed">{description}</p>}
+      </div>
+    </div>
+  </div>
+);
+
 const ContactModal = ({ isOpen, onClose, onSubmit, isSubmitting, t }) => {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-      <div className="bg-slate-900 border border-white/10 rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200">
+      <div className="bg-slate-900 border border-white/10 rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto custom-scrollbar animate-in zoom-in-95 duration-200">
         <button onClick={onClose} className="absolute top-4 right-4 p-2 bg-slate-800 rounded-full text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"><X className="w-5 h-5" /></button>
         <h2 className="text-2xl font-bold mb-2 text-white">{t('inquiryForm')}</h2>
         <p className="text-slate-400 mb-8">{t('inquiryFormDesc')}</p>
@@ -158,7 +170,7 @@ const ContactModal = ({ isOpen, onClose, onSubmit, isSubmitting, t }) => {
   );
 };
 
-// ── Hlavný Wizard komponent ────────────────────────────────────────────────
+// ── Hlavný Komponent (Continuous Scroll) ────────────────────────────────────────────────
 
 export default function ProstoHouseKonfigurator({ house, houseCode, dom: domProp }) {
   const { language } = useLanguage();
@@ -185,44 +197,7 @@ export default function ProstoHouseKonfigurator({ house, houseCode, dom: domProp
 
   const hasExtension = house.options.extension && house.options.extension.length > 0;
 
-  // Wizard state & Ref pre Scroll Fix
-  const [currentStep, setCurrentStep] = useState(0);
-  const konfiguratorTopRef = useRef(null);
-  
-  const wizardSteps = [
-    { id: 'ucel', title: t('selectProjectType') || 'Účel stavby', icon: Home },
-    { id: 'zaklady', title: 'Základy a Konštrukcia', icon: Hammer },
-    { id: 'okna', title: 'Okná a Dvere', icon: DoorOpen },
-    { id: 'fasada', title: 'Zateplenie a Fasáda', icon: Thermometer },
-    { id: 'interier', title: 'Interiér a Siete', icon: Layout },
-    { id: 'finale', title: t('services') || 'Súhrn a Služby', icon: CheckCircle }
-  ];
-
-  const totalSteps = wizardSteps.length;
-
-  const scrollToTop = () => {
-    if (konfiguratorTopRef.current) {
-      // Odrátame offset pre prípadnú pevnú hlavičku menu
-      const yOffset = -80; 
-      const y = konfiguratorTopRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({ top: y, behavior: 'smooth' });
-    }
-  };
-
-  const handleNext = () => { 
-    if (currentStep < totalSteps - 1) { 
-      setCurrentStep(c => c + 1); 
-      scrollToTop();
-    } 
-  };
-  
-  const handlePrev = () => { 
-    if (currentStep > 0) { 
-      setCurrentStep(c => c - 1); 
-      scrollToTop();
-    } 
-  };
-
+  // Stavy konfigurátora
   const [customPrices, setCustomPrices] = useState({});
   const [typStavby, setTypStavby] = useState('rekreacna');
 
@@ -392,263 +367,239 @@ export default function ProstoHouseKonfigurator({ house, houseCode, dom: domProp
   };
 
   const phCode = houseCode.replace('ph0', 'PH-0').replace('ph', 'PH-');
-  const CurrentIcon = wizardSteps[currentStep].icon;
 
   return (
-    <div className="pb-32 md:pb-32 bg-slate-950 min-h-screen">
-      {/* Scroll Anchor Ref */}
-      <div ref={konfiguratorTopRef} className="absolute -top-20" />
-
-      {/* Header Wizard Progress */}
-      <div className="bg-slate-900/90 backdrop-blur-xl border-b border-white/10 sticky top-0 z-30 shadow-lg">
-        <div className="max-w-3xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between gap-4 mb-4">
-            <div className="flex-1 min-w-0">
-              <h1 className="text-lg sm:text-xl font-black text-white leading-tight flex items-center gap-2">
-                {house.name}
-                {isA0Compliant && <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] px-2 py-0.5 rounded-full uppercase tracking-widest hidden sm:inline-block">A0 Cert</span>}
-              </h1>
-            </div>
-            <button onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))} className="md:hidden flex-shrink-0 relative p-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95" aria-label="AI Chatbot">
-              <MessageCircle className="w-5 h-5 text-red-500" />
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-600 rounded-full text-[8px] font-black text-white flex items-center justify-center border-2 border-slate-900">AI</span>
-            </button>
-          </div>
+    <div className="bg-slate-950 min-h-screen pb-32 lg:pb-16 font-['Outfit']">
+      
+      <div className="container mx-auto px-4 py-8 lg:py-12 max-w-7xl">
+        <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 relative items-start">
           
-          {/* Progress Bar */}
-          <div className="flex flex-col gap-2">
-            <div className="flex justify-between text-xs font-bold text-slate-400">
-              <span className="text-red-400 flex items-center gap-1.5 uppercase tracking-widest">
-                <CurrentIcon className="w-4 h-4" />
-                {wizardSteps[currentStep].title}
-              </span>
-              <span>Krok {currentStep + 1} z {totalSteps}</span>
-            </div>
-            <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden flex">
-              {wizardSteps.map((_, i) => (
-                <div key={i} className={`h-full flex-1 border-r border-slate-900 last:border-r-0 transition-all duration-500 ${i <= currentStep ? 'bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.8)]' : 'bg-transparent'}`} />
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content Area */}
-      <div className="max-w-3xl mx-auto px-4 py-6 md:py-8 space-y-6">
-        
-        {/* STEP 1: Účel stavby */}
-        {currentStep === 0 && (
-          <div className="animate-in fade-in slide-in-from-right-4 duration-500">
-            <div className="mb-6">
-              <h2 className="text-2xl font-black text-white mb-2">Základné rozhodnutie</h2>
-              <p className="text-slate-400">Na aký účel plánujete dom využívať? Toto rozhodnutie nám pomôže automaticky predvybrať technológie potrebné pre stavebné povolenie.</p>
-            </div>
-            <div className="grid sm:grid-cols-2 gap-4 mb-6">
-              <button onClick={() => setTypStavby('rekreacna')} className={`p-6 rounded-2xl border-2 transition-all duration-300 flex flex-col items-center gap-4 active:scale-95 ${typStavby === 'rekreacna' ? 'border-blue-500 bg-blue-500/10 shadow-[0_0_30px_rgba(59,130,246,0.15)] scale-[1.02]' : 'border-white/10 bg-slate-900 hover:border-white/20 hover:bg-slate-800'}`}>
-                <div className={`p-4 rounded-2xl transition-all duration-500 ${typStavby === 'rekreacna' ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/40 rotate-3' : 'bg-slate-800 text-slate-400'}`}>
-                  <Sun className={`w-10 h-10 transition-transform ${typStavby === 'rekreacna' ? 'scale-110' : ''}`} />
-                </div>
-                <div className="text-center">
-                  <span className={`block text-lg font-black mb-1 transition-colors ${typStavby === 'rekreacna' ? 'text-blue-400' : 'text-slate-300'}`}>{t('recreationalBuilding')}</span>
-                  <span className="text-sm text-slate-500">Chata, víkendový dom. Nevyžaduje energetický certifikát A0.</span>
-                </div>
-                <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all ${typStavby === 'rekreacna' ? 'border-blue-500 bg-blue-500 scale-110' : 'border-slate-700 bg-slate-950'}`}>
-                  {typStavby === 'rekreacna' && <Check className="w-5 h-5 text-white" />}
-                </div>
-              </button>
-              <button onClick={() => setTypStavby('rodinny_dom')} className={`p-6 rounded-2xl border-2 transition-all duration-300 flex flex-col items-center gap-4 active:scale-95 ${typStavby === 'rodinny_dom' ? 'border-emerald-500 bg-emerald-500/10 shadow-[0_0_30px_rgba(16,185,129,0.15)] scale-[1.02]' : 'border-white/10 bg-slate-900 hover:border-white/20 hover:bg-slate-800'}`}>
-                <div className={`p-4 rounded-2xl relative transition-all duration-500 ${typStavby === 'rodinny_dom' ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/40 -rotate-3' : 'bg-slate-800 text-slate-400'}`}>
-                  <Home className={`w-10 h-10 transition-transform ${typStavby === 'rodinny_dom' ? 'scale-110' : ''}`} />
-                  <span className="absolute -top-3 -right-3 bg-emerald-600 text-white text-[10px] px-2 py-1 rounded-full font-black border-2 border-slate-900 animate-pulse">A0</span>
-                </div>
-                <div className="text-center">
-                  <span className={`block text-lg font-black mb-1 transition-colors ${typStavby === 'rodinny_dom' ? 'text-emerald-400' : 'text-slate-300'}`}>{t('familyHouseA0')}</span>
-                  <span className="text-sm text-slate-500">Trvalé bývanie. Splnený zákonný štandard (zateplenie, čerpadlo, rekuperácia).</span>
-                </div>
-                <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all ${typStavby === 'rodinny_dom' ? 'border-emerald-500 bg-emerald-500 scale-110' : 'border-slate-700 bg-slate-950'}`}>
-                  {typStavby === 'rodinny_dom' && <Check className="w-5 h-5 text-white" />}
-                </div>
-              </button>
-            </div>
-            <A0StatusHint isA0Compliant={isA0Compliant} insulationIdx={insulationIdx} heatPump={heatPump} recuperation={recuperation} projectant={projectant} onGoToSection={() => {}} t={t} />
-          </div>
-        )}
-
-        {/* STEP 2: Konštrukcia a Základy */}
-        {currentStep === 1 && (
-          <div className="animate-in fade-in slide-in-from-right-4 duration-500 space-y-6">
-            <div className="mb-6">
-              <h2 className="text-2xl font-black text-white mb-2">Hrubá stavba a Konštrukcia</h2>
-              <p className="text-slate-400">Vyberte si spôsob dodania a typ založenia stavby.</p>
-            </div>
+          {/* ĽAVÝ STĹPEC: Plynulý formulár konfigurátora */}
+          <div className="lg:col-span-8 space-y-4">
             
-            {hasExtension && (
-              <>
-                <SectionLabel label={t('houseExtension')} color="teal" />
-                <div className="grid grid-cols-2 gap-3">
-                  {house.options.extension.map((opt, i) => {
-                    const labels = { 0: t('noExtension'), 1: '+1,2 m', 2: '+2,4 m', 3: '+3,6 m', 4: '+4,8 m' };
-                    return <OptionCard key={i} icon={Maximize} label={labels[i] || opt.label} price={getPrice('extension', i, opt.price)} selected={extensionIdx === i} onClick={() => setExtensionIdx(i)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('extension', i, p)} />;
-                  })}
+            {/* Mobilná hlavička domu */}
+            <div className="lg:hidden mb-8">
+              <h1 className="text-3xl font-black text-white">{house.name}</h1>
+              {isA0Compliant && <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] px-2 py-0.5 rounded-full uppercase tracking-widest mt-2 inline-block font-bold">A0 Certifikát</span>}
+            </div>
+
+            {/* SEKCIA 1: Účel stavby */}
+            <div className="mb-12">
+              <BigSectionHeader title="Základné rozhodnutie" description="Na aký účel plánujete dom využívať? Toto rozhodnutie nám pomôže automaticky predvybrať technológie potrebné pre stavebné povolenie." icon={Home} />
+              
+              <div className="grid sm:grid-cols-2 gap-4">
+                <button onClick={() => setTypStavby('rekreacna')} className={`p-6 rounded-2xl border-2 transition-all duration-300 flex flex-col items-center gap-4 active:scale-95 ${typStavby === 'rekreacna' ? 'border-blue-500 bg-blue-500/10 shadow-[0_0_30px_rgba(59,130,246,0.15)] scale-[1.02]' : 'border-white/10 bg-slate-900 hover:border-white/20 hover:bg-slate-800'}`}>
+                  <div className={`p-4 rounded-2xl transition-all duration-500 ${typStavby === 'rekreacna' ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/40 rotate-3' : 'bg-slate-800 text-slate-400'}`}>
+                    <Sun className={`w-10 h-10 transition-transform ${typStavby === 'rekreacna' ? 'scale-110' : ''}`} />
+                  </div>
+                  <div className="text-center">
+                    <span className={`block text-lg font-black mb-1 transition-colors ${typStavby === 'rekreacna' ? 'text-blue-400' : 'text-slate-300'}`}>{t('recreationalBuilding')}</span>
+                    <span className="text-sm text-slate-500">Chata, víkendový dom. Nevyžaduje energetický certifikát A0.</span>
+                  </div>
+                  <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all ${typStavby === 'rekreacna' ? 'border-blue-500 bg-blue-500 scale-110' : 'border-slate-700 bg-slate-950'}`}>
+                    {typStavby === 'rekreacna' && <Check className="w-5 h-5 text-white" />}
+                  </div>
+                </button>
+                <button onClick={() => setTypStavby('rodinny_dom')} className={`p-6 rounded-2xl border-2 transition-all duration-300 flex flex-col items-center gap-4 active:scale-95 ${typStavby === 'rodinny_dom' ? 'border-emerald-500 bg-emerald-500/10 shadow-[0_0_30px_rgba(16,185,129,0.15)] scale-[1.02]' : 'border-white/10 bg-slate-900 hover:border-white/20 hover:bg-slate-800'}`}>
+                  <div className={`p-4 rounded-2xl relative transition-all duration-500 ${typStavby === 'rodinny_dom' ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/40 -rotate-3' : 'bg-slate-800 text-slate-400'}`}>
+                    <Home className={`w-10 h-10 transition-transform ${typStavby === 'rodinny_dom' ? 'scale-110' : ''}`} />
+                    <span className="absolute -top-3 -right-3 bg-emerald-600 text-white text-[10px] px-2 py-1 rounded-full font-black border-2 border-slate-900 animate-pulse">A0</span>
+                  </div>
+                  <div className="text-center">
+                    <span className={`block text-lg font-black mb-1 transition-colors ${typStavby === 'rodinny_dom' ? 'text-emerald-400' : 'text-slate-300'}`}>{t('familyHouseA0')}</span>
+                    <span className="text-sm text-slate-500">Trvalé bývanie. Splnený zákonný štandard (zateplenie, čerpadlo, rekuperácia).</span>
+                  </div>
+                  <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all ${typStavby === 'rodinny_dom' ? 'border-emerald-500 bg-emerald-500 scale-110' : 'border-slate-700 bg-slate-950'}`}>
+                    {typStavby === 'rodinny_dom' && <Check className="w-5 h-5 text-white" />}
+                  </div>
+                </button>
+              </div>
+              <div className="mt-6">
+                <A0StatusHint isA0Compliant={isA0Compliant} insulationIdx={insulationIdx} heatPump={heatPump} recuperation={recuperation} projectant={projectant} onGoToSection={() => {}} t={t} />
+              </div>
+            </div>
+
+            {/* SEKCIA 2: Konštrukcia a Základy */}
+            <div className="mb-12">
+              <BigSectionHeader title="Hrubá stavba a Konštrukcia" description="Vyberte si spôsob dodania a typ založenia stavby." icon={Hammer} />
+              <div className="space-y-6">
+                {hasExtension && (
+                  <div>
+                    <SectionLabel label={t('houseExtension')} color="teal" />
+                    <div className="grid grid-cols-2 gap-3">
+                      {house.options.extension.map((opt, i) => {
+                        const labels = { 0: t('noExtension'), 1: '+1,2 m', 2: '+2,4 m', 3: '+3,6 m', 4: '+4,8 m' };
+                        return <OptionCard key={i} icon={Maximize} label={labels[i] || opt.label} price={getPrice('extension', i, opt.price)} selected={extensionIdx === i} onClick={() => setExtensionIdx(i)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('extension', i, p)} />;
+                      })}
+                    </div>
+                  </div>
+                )}
+                <div>
+                  <SectionLabel label={t('foundations')} color="amber" />
+                  <div className="space-y-3">
+                    {house.options.foundation.map((opt, i) => {
+                      const labels = { 0: t('noFoundations'), 1: t('pilotsFootings'), 2: t('foundationSlab'), 3: t('stripFoundations') };
+                      const descs = { 0: t('noFoundationsDesc'), 1: t('pilotsFootingsDesc'), 2: t('foundationSlabDesc'), 3: t('stripFoundationsDesc') };
+                      return <OptionCard key={i} icon={Layers} label={labels[i]} price={getPrice('foundation', i, opt.price)} description={descs[i]} selected={foundationIdx === i} onClick={() => setFoundationIdx(i)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('foundation', i, p)} />;
+                    })}
+                  </div>
                 </div>
-              </>
-            )}
-
-            <SectionLabel label={t('foundations')} color="amber" />
-            <div className="space-y-3">
-              {house.options.foundation.map((opt, i) => {
-                const labels = { 0: t('noFoundations'), 1: t('pilotsFootings'), 2: t('foundationSlab'), 3: t('stripFoundations') };
-                const descs = { 0: t('noFoundationsDesc'), 1: t('pilotsFootingsDesc'), 2: t('foundationSlabDesc'), 3: t('stripFoundationsDesc') };
-                return <OptionCard key={i} icon={Layers} label={labels[i]} price={getPrice('foundation', i, opt.price)} description={descs[i]} selected={foundationIdx === i} onClick={() => setFoundationIdx(i)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('foundation', i, p)} />;
-              })}
-            </div>
-
-            <SectionLabel label={t('shellAssembly')} color="orange" />
-            <div className="space-y-3">
-              {house.options.mounting.map((opt, i) => (
-                <OptionCard key={i} icon={Wrench} label={i === 0 ? t('noAssemblySelf') : t('withAssembly')} price={getPrice('mounting', i, opt.price)} description={i === 0 ? t('selfAssemblyDesc') : t('proAssemblyDesc')} selected={mountingIdx === i} onClick={() => setMountingIdx(i)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('mounting', i, p)} />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* STEP 3: Okná a Dvere */}
-        {currentStep === 2 && (
-          <div className="animate-in fade-in slide-in-from-right-4 duration-500 space-y-6">
-            <div className="mb-6">
-              <h2 className="text-2xl font-black text-white mb-2">Okná a Vstupné dvere</h2>
-              <p className="text-slate-400">Prispôsobte si presklenie a bezpečnosť vášho nového domu.</p>
-            </div>
-
-            <SectionLabel label={t('entryDoors')} color="red" />
-            <div className="space-y-3">
-              {house.options.doors.map((opt, i) => {
-                const labels = { 0: t('doorsStandard'), 1: t('doorsMetal2Locks'), 2: t('doorsPlasticMetal') };
-                const descs = { 0: t('doorsStandardDesc'), 1: t('doorsMetal2LocksDesc'), 2: t('doorsPlasticMetalDesc') };
-                return <OptionCard key={i} icon={DoorOpen} label={labels[i]} price={getPrice('doors', i, opt.price)} description={descs[i]} selected={doorsIdx === i} onClick={() => setDoorsIdx(i)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('doors', i, p)} />;
-              })}
-            </div>
-
-            <SectionLabel label={t('additionalWindows')} color="blue" />
-            <div className="space-y-3">
-              {[
-                { l: t('roofWindow'), p: getPrice('addon', 'roofWindow', house.addons.roofWindow), v: roofWindows, s: setRoofWindows, k: 'roofWindow', i: Sun },
-                { l: t('fixedWindow'), p: getPrice('addon', 'fixWindow', house.addons.fixWindow), v: fixWindows, s: setFixWindows, k: 'fixWindow', i: Layout },
-                { l: t('tiltWindowBig'), p: getPrice('addon', 'tiltWindowBig', house.addons.tiltWindowBig), v: tiltWindowsBig, s: setTiltWindowsBig, k: 'tiltWindowBig', i: Layout },
-                { l: t('tiltWindowSmall'), p: getPrice('addon', 'tiltWindowSmall', house.addons.tiltWindowSmall), v: tiltWindowsSmall, s: setTiltWindowsSmall, k: 'tiltWindowSmall', i: Layout }
-              ].map((item, idx) => (
-                <CounterRow key={idx} icon={item.i} label={item.l} price={item.p} value={item.v} onChange={item.s} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', item.k, p)} />
-              ))}
-            </div>
-
-            <SectionLabel label="Úprava okien" color="purple" />
-            <div className="space-y-3">
-              <AddonRow icon={Paintbrush} label={t('windowLamination')} price={getPrice('addon', 'windowLamination', house.addons.windowLamination)} checked={windowLamination} onChange={() => setWindowLamination(!windowLamination)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'windowLamination', p)} t={t} />
-              <AddonRow icon={SunDim} label={t('tintedGlass')} price={getPrice('addon', 'windowTint', house.addons.windowTint)} checked={windowTint} onChange={() => setWindowTint(!windowTint)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'windowTint', p)} t={t} />
-            </div>
-          </div>
-        )}
-
-        {/* STEP 4: Zateplenie a Fasáda */}
-        {currentStep === 3 && (
-          <div className="animate-in fade-in slide-in-from-right-4 duration-500 space-y-6">
-            <div className="mb-6">
-              <h2 className="text-2xl font-black text-white mb-2">Zateplenie a Fasáda</h2>
-              <p className="text-slate-400">Izolácia je kľúčová. Pre trvalé bývanie (A0) odporúčame hrubšie zateplenie.</p>
-            </div>
-
-            <SectionLabel label={t('insulationType')} color="blue" />
-            <div className="space-y-3">
-              {house.options.insulation.map((opt, i) => {
-                const labels = { 0: t('yearRound150mm'), 1: t('enhanced200mm'), 2: t('premium250mm'), 3: t('extra300mm') };
-                const descs = { 0: t('yearRound150mmDesc'), 1: t('enhanced200mmDesc'), 2: t('premium250mmDesc'), 3: t('extra300mmDesc') };
-                return <OptionCard key={i} icon={Thermometer} label={labels[i] || opt.label} price={getPrice('insulation', i, opt.price)} description={descs[i] || opt.description} selected={insulationIdx === i} onClick={() => setInsulationIdx(i)} isA0={opt.label.includes('250 mm')} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('insulation', i, p)} />;
-              })}
-            </div>
-
-            <SectionLabel label={t('facade')} color="purple" />
-            <div className="space-y-3">
-              {house.options.facade.map((opt, i) => (
-                <OptionCard key={i} icon={Paintbrush} label={i === 0 ? t('facadeStandard') : t('facadeStucco')} price={getPrice('facade', i, opt.price)} description={i === 0 ? t('facadeStandardDesc') : t('facadeStuccoDesc')} selected={facadeIdx === i} onClick={() => setFacadeIdx(i)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('facade', i, p)} />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* STEP 5: Interiér a Siete */}
-        {currentStep === 4 && (
-          <div className="animate-in fade-in slide-in-from-right-4 duration-500 space-y-6">
-            <div className="mb-6">
-              <h2 className="text-2xl font-black text-white mb-2">Interiér a Siete</h2>
-              <p className="text-slate-400">Vyberte si stupeň dokončenia interiéru a rozvody technológií.</p>
-            </div>
-
-            <SectionLabel label={t('interiorFinish')} color="emerald" />
-            <div className="space-y-3">
-              {house.options.interior.map((opt, i) => {
-                const labels = { 0: t('noInterior'), 1: t('interiorWood'), 2: t('interiorDrywall') };
-                const descs = { 0: t('noInteriorDesc'), 1: t('interiorWoodDesc'), 2: t('interiorDrywallDesc') };
-                return <OptionCard key={i} icon={Layout} label={labels[i]} price={getPrice('interior', i, opt.price)} description={descs[i]} selected={interiorIdx === i} onClick={() => setInteriorIdx(i)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('interior', i, p)} />;
-              })}
-            </div>
-
-            <SectionLabel label="Podlahy a Interiérové Dvere" color="amber" />
-            <div className="space-y-3">
-              <CounterRow icon={DoorOpen} label={t('interiorDoorsCount')} price={getPrice('addon', 'interiorDoor', house.addons.interiorDoor)} value={interiorDoorsCount} onChange={setInteriorDoorsCount} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'interiorDoor', p)} />
-              <AddonRow icon={Layers} label={t('laminateFloors')} price={getPrice('addon', 'laminateFloors', house.addons.laminateFloors)} checked={laminateFloors} onChange={() => setLaminateFloors(!laminateFloors)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'laminateFloors', p)} t={t} />
-              <AddonRow icon={Flame} label={t('floorHeating')} price={getPrice('addon', 'floorHeating', house.addons.floorHeating)} checked={floorHeating} onChange={() => setFloorHeating(!floorHeating)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'floorHeating', p)} t={t} />
-            </div>
-
-            <SectionLabel label={t('pipes')} color="gray" />
-            <div className="space-y-3">
-              <AddonRow icon={Zap} label={t('electricalWiring')} price={getPrice('addon', 'electricity', house.addons.electricity)} checked={electricity} onChange={() => setElectricity(!electricity)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'electricity', p)} t={t} />
-              <AddonRow icon={Droplet} label={t('waterDrainage')} price={getPrice('addon', 'water', house.addons.water)} checked={water} onChange={() => setWater(!water)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'water', p)} t={t} />
-              <AddonRow icon={Droplet} label={t('sanitary')} price={getPrice('addon', 'sanita', house.addons.sanita)} checked={sanita} onChange={() => setSanita(!sanita)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'sanita', p)} t={t} />
-              <AddonRow icon={Flame} label={t('boiler')} price={getPrice('addon', 'boiler', house.addons.boiler)} checked={boiler} onChange={() => setBoiler(!boiler)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'boiler', p)} t={t} />
-            </div>
-
-            <SectionLabel label={t('a0Standard')} color="green" />
-            <div className="space-y-3">
-              <AddonRow icon={Sun} label={t('heatPump')} price={getPrice('addon', 'heatPump', house.addons.heatPump)} checked={heatPump} onChange={() => setHeatPump(!heatPump)} locked={typStavby === 'rodinny_dom'} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'heatPump', p)} t={t} />
-              <AddonRow icon={Wind} label={t('recuperation')} price={getPrice('addon', 'recuperation', house.addons.recuperation)} checked={recuperation} onChange={() => setRecuperation(!recuperation)} locked={typStavby === 'rodinny_dom'} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'recuperation', p)} t={t} />
-            </div>
-          </div>
-        )}
-
-        {/* STEP 6: Služby a Galéria (Finále) */}
-        {currentStep === 5 && (
-          <div className="animate-in fade-in slide-in-from-right-4 duration-500 space-y-8">
-            <div>
-              <h2 className="text-2xl font-black text-white mb-2">Finálne Zhrnutie</h2>
-              <p className="text-slate-400">Prezrite si galériu, vyberte doplnkové služby a odošlite nezáväzný dopyt.</p>
-            </div>
-
-            <div className="bg-slate-900 border border-white/10 p-6 rounded-3xl">
-              <SectionLabel label={t('documentation')} color="gray" />
-              <div className="space-y-3 mb-8">
-                <AddonRow icon={FileText} label={t('projectant')} price={getPrice('addon', 'projectant', house.addons.projectant)} checked={projectant} onChange={() => setProjectant(!projectant)} locked={typStavby === 'rodinny_dom'} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'projectant', p)} t={t} />
-                <AddonRow icon={Settings} label={t('engineering')} description={t('engineeringDesc')} price={getPrice('addon', 'engineering', house.addons.engineering)} checked={engineering} onChange={() => setEngineering(!engineering)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'engineering', p)} t={t} />
-                <AddonRow icon={CheckCircle} label={t('revisions')} price={getPrice('addon', 'revision', house.addons.revision)} checked={revision} onChange={() => {}} disabled={true} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'revision', p)} t={t} />
-                <AddonRow icon={Zap} label={t('networkConnections')} price={getPrice('addon', 'networks', house.addons.networks)} checked={networks} onChange={() => setNetworks(!networks)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'networks', p)} t={t} />
-              </div>
-
-              <SectionLabel label={t('freeServices')} color="gray" />
-              <div className="space-y-3 mb-8">
-                <AddonRow icon={Home} label={t('realEstate')} price={0} checked={realEstate} onChange={() => setRealEstate(!realEstate)} t={t} />
-                <AddonRow icon={Sun} label={t('landSearch')} price={0} checked={landSearch} onChange={() => setLandSearch(!landSearch)} t={t} />
-                <AddonRow icon={FileText} label={t('financing')} price={0} checked={financing} onChange={() => setFinancing(!financing)} t={t} />
+                <div>
+                  <SectionLabel label={t('shellAssembly')} color="orange" />
+                  <div className="space-y-3">
+                    {house.options.mounting.map((opt, i) => (
+                      <OptionCard key={i} icon={Wrench} label={i === 0 ? t('noAssemblySelf') : t('withAssembly')} price={getPrice('mounting', i, opt.price)} description={i === 0 ? t('selfAssemblyDesc') : t('proAssemblyDesc')} selected={mountingIdx === i} onClick={() => setMountingIdx(i)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('mounting', i, p)} />
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
 
-            {effectiveDom && (
+            {/* SEKCIA 3: Okná a Dvere */}
+            <div className="mb-12">
+              <BigSectionHeader title="Okná a Vstupné dvere" description="Prispôsobte si presklenie a bezpečnosť vášho nového domu." icon={DoorOpen} />
+              <div className="space-y-6">
+                <div>
+                  <SectionLabel label={t('entryDoors')} color="red" />
+                  <div className="space-y-3">
+                    {house.options.doors.map((opt, i) => {
+                      const labels = { 0: t('doorsStandard'), 1: t('doorsMetal2Locks'), 2: t('doorsPlasticMetal') };
+                      const descs = { 0: t('doorsStandardDesc'), 1: t('doorsMetal2LocksDesc'), 2: t('doorsPlasticMetalDesc') };
+                      return <OptionCard key={i} icon={DoorOpen} label={labels[i]} price={getPrice('doors', i, opt.price)} description={descs[i]} selected={doorsIdx === i} onClick={() => setDoorsIdx(i)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('doors', i, p)} />;
+                    })}
+                  </div>
+                </div>
+                <div>
+                  <SectionLabel label={t('additionalWindows')} color="blue" />
+                  <div className="space-y-3">
+                    {[
+                      { l: t('roofWindow'), p: getPrice('addon', 'roofWindow', house.addons.roofWindow), v: roofWindows, s: setRoofWindows, k: 'roofWindow', i: Sun },
+                      { l: t('fixedWindow'), p: getPrice('addon', 'fixWindow', house.addons.fixWindow), v: fixWindows, s: setFixWindows, k: 'fixWindow', i: Layout },
+                      { l: t('tiltWindowBig'), p: getPrice('addon', 'tiltWindowBig', house.addons.tiltWindowBig), v: tiltWindowsBig, s: setTiltWindowsBig, k: 'tiltWindowBig', i: Layout },
+                      { l: t('tiltWindowSmall'), p: getPrice('addon', 'tiltWindowSmall', house.addons.tiltWindowSmall), v: tiltWindowsSmall, s: setTiltWindowsSmall, k: 'tiltWindowSmall', i: Layout }
+                    ].map((item, idx) => (
+                      <CounterRow key={idx} icon={item.i} label={item.l} price={item.p} value={item.v} onChange={item.s} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', item.k, p)} />
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <SectionLabel label="Úprava okien" color="purple" />
+                  <div className="space-y-3">
+                    <AddonRow icon={Paintbrush} label={t('windowLamination')} price={getPrice('addon', 'windowLamination', house.addons.windowLamination)} checked={windowLamination} onChange={() => setWindowLamination(!windowLamination)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'windowLamination', p)} t={t} />
+                    <AddonRow icon={SunDim} label={t('tintedGlass')} price={getPrice('addon', 'windowTint', house.addons.windowTint)} checked={windowTint} onChange={() => setWindowTint(!windowTint)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'windowTint', p)} t={t} />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* SEKCIA 4: Zateplenie a Fasáda */}
+            <div className="mb-12">
+              <BigSectionHeader title="Zateplenie a Fasáda" description="Izolácia je kľúčová. Pre trvalé bývanie (A0) odporúčame hrubšie zateplenie." icon={Thermometer} />
+              <div className="space-y-6">
+                <div>
+                  <SectionLabel label={t('insulationType')} color="blue" />
+                  <div className="space-y-3">
+                    {house.options.insulation.map((opt, i) => {
+                      const labels = { 0: t('yearRound150mm'), 1: t('enhanced200mm'), 2: t('premium250mm'), 3: t('extra300mm') };
+                      const descs = { 0: t('yearRound150mmDesc'), 1: t('enhanced200mmDesc'), 2: t('premium250mmDesc'), 3: t('extra300mmDesc') };
+                      return <OptionCard key={i} icon={Thermometer} label={labels[i] || opt.label} price={getPrice('insulation', i, opt.price)} description={descs[i] || opt.description} selected={insulationIdx === i} onClick={() => setInsulationIdx(i)} isA0={opt.label.includes('250 mm')} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('insulation', i, p)} />;
+                    })}
+                  </div>
+                </div>
+                <div>
+                  <SectionLabel label={t('facade')} color="purple" />
+                  <div className="space-y-3">
+                    {house.options.facade.map((opt, i) => (
+                      <OptionCard key={i} icon={Paintbrush} label={i === 0 ? t('facadeStandard') : t('facadeStucco')} price={getPrice('facade', i, opt.price)} description={i === 0 ? t('facadeStandardDesc') : t('facadeStuccoDesc')} selected={facadeIdx === i} onClick={() => setFacadeIdx(i)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('facade', i, p)} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* SEKCIA 5: Interiér a Siete */}
+            <div className="mb-12">
+              <BigSectionHeader title="Interiér a Siete" description="Vyberte si stupeň dokončenia interiéru a rozvody technológií." icon={Layout} />
+              <div className="space-y-6">
+                <div>
+                  <SectionLabel label={t('interiorFinish')} color="emerald" />
+                  <div className="space-y-3">
+                    {house.options.interior.map((opt, i) => {
+                      const labels = { 0: t('noInterior'), 1: t('interiorWood'), 2: t('interiorDrywall') };
+                      const descs = { 0: t('noInteriorDesc'), 1: t('interiorWoodDesc'), 2: t('interiorDrywallDesc') };
+                      return <OptionCard key={i} icon={Layout} label={labels[i]} price={getPrice('interior', i, opt.price)} description={descs[i]} selected={interiorIdx === i} onClick={() => setInteriorIdx(i)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('interior', i, p)} />;
+                    })}
+                  </div>
+                </div>
+                <div>
+                  <SectionLabel label="Podlahy a Interiérové Dvere" color="amber" />
+                  <div className="space-y-3">
+                    <CounterRow icon={DoorOpen} label={t('interiorDoorsCount')} price={getPrice('addon', 'interiorDoor', house.addons.interiorDoor)} value={interiorDoorsCount} onChange={setInteriorDoorsCount} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'interiorDoor', p)} />
+                    <AddonRow icon={Layers} label={t('laminateFloors')} price={getPrice('addon', 'laminateFloors', house.addons.laminateFloors)} checked={laminateFloors} onChange={() => setLaminateFloors(!laminateFloors)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'laminateFloors', p)} t={t} />
+                    <AddonRow icon={Flame} label={t('floorHeating')} price={getPrice('addon', 'floorHeating', house.addons.floorHeating)} checked={floorHeating} onChange={() => setFloorHeating(!floorHeating)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'floorHeating', p)} t={t} />
+                  </div>
+                </div>
+                <div>
+                  <SectionLabel label={t('pipes')} color="gray" />
+                  <div className="space-y-3">
+                    <AddonRow icon={Zap} label={t('electricalWiring')} price={getPrice('addon', 'electricity', house.addons.electricity)} checked={electricity} onChange={() => setElectricity(!electricity)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'electricity', p)} t={t} />
+                    <AddonRow icon={Droplet} label={t('waterDrainage')} price={getPrice('addon', 'water', house.addons.water)} checked={water} onChange={() => setWater(!water)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'water', p)} t={t} />
+                    <AddonRow icon={Droplet} label={t('sanitary')} price={getPrice('addon', 'sanita', house.addons.sanita)} checked={sanita} onChange={() => setSanita(!sanita)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'sanita', p)} t={t} />
+                    <AddonRow icon={Flame} label={t('boiler')} price={getPrice('addon', 'boiler', house.addons.boiler)} checked={boiler} onChange={() => setBoiler(!boiler)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'boiler', p)} t={t} />
+                  </div>
+                </div>
+                <div>
+                  <SectionLabel label={t('a0Standard')} color="green" />
+                  <div className="space-y-3">
+                    <AddonRow icon={Sun} label={t('heatPump')} price={getPrice('addon', 'heatPump', house.addons.heatPump)} checked={heatPump} onChange={() => setHeatPump(!heatPump)} locked={typStavby === 'rodinny_dom'} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'heatPump', p)} t={t} />
+                    <AddonRow icon={Wind} label={t('recuperation')} price={getPrice('addon', 'recuperation', house.addons.recuperation)} checked={recuperation} onChange={() => setRecuperation(!recuperation)} locked={typStavby === 'rodinny_dom'} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'recuperation', p)} t={t} />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* SEKCIA 6: Služby a Dokumentácia */}
+            <div className="mb-12">
+              <BigSectionHeader title="Súhrn a Služby" description="Vyberte doplnkové služby pre bezstarostnú realizáciu." icon={CheckCircle} />
               <div className="bg-slate-900 border border-white/10 p-6 rounded-3xl">
-                <h3 className="text-lg font-black text-white mb-4">{t('photoGalleryAndFloorPlans')}</h3>
-                <KonfiguratorGaleria dom={effectiveDom} facadeIdx={facadeIdx} interiorIdx={interiorIdx} />
+                <SectionLabel label={t('documentation')} color="gray" />
+                <div className="space-y-3 mb-8">
+                  <AddonRow icon={FileText} label={t('projectant')} price={getPrice('addon', 'projectant', house.addons.projectant)} checked={projectant} onChange={() => setProjectant(!projectant)} locked={typStavby === 'rodinny_dom'} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'projectant', p)} t={t} />
+                  <AddonRow icon={Settings} label={t('engineering')} description={t('engineeringDesc')} price={getPrice('addon', 'engineering', house.addons.engineering)} checked={engineering} onChange={() => setEngineering(!engineering)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'engineering', p)} t={t} />
+                  <AddonRow icon={CheckCircle} label={t('revisions')} price={getPrice('addon', 'revision', house.addons.revision)} checked={revision} onChange={() => {}} disabled={true} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'revision', p)} t={t} />
+                  <AddonRow icon={Zap} label={t('networkConnections')} price={getPrice('addon', 'networks', house.addons.networks)} checked={networks} onChange={() => setNetworks(!networks)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'networks', p)} t={t} />
+                </div>
+
+                <SectionLabel label={t('freeServices')} color="gray" />
+                <div className="space-y-3">
+                  <AddonRow icon={Home} label={t('realEstate')} price={0} checked={realEstate} onChange={() => setRealEstate(!realEstate)} t={t} />
+                  <AddonRow icon={Sun} label={t('landSearch')} price={0} checked={landSearch} onChange={() => setLandSearch(!landSearch)} t={t} />
+                  <AddonRow icon={FileText} label={t('financing')} price={0} checked={financing} onChange={() => setFinancing(!financing)} t={t} />
+                </div>
+              </div>
+            </div>
+
+            {/* Galéria na záver */}
+            {effectiveDom && (
+              <div className="mb-12">
+                <BigSectionHeader title="Fotogaléria a Pôdorysy" description="Prezrite si vizualizácie k vašej vybranej konfigurácii." icon={Eye} />
+                <div className="bg-slate-900 border border-white/10 p-6 rounded-3xl">
+                  <KonfiguratorGaleria dom={effectiveDom} facadeIdx={facadeIdx} interiorIdx={interiorIdx} />
+                </div>
               </div>
             )}
 
-            {/* Desktop Summary View embedded in the last step */}
-            <div className="hidden md:block bg-slate-900 border border-white/10 p-6 rounded-3xl shadow-2xl">
+          </div>
+
+          {/* PRAVÝ STĹPEC: Sticky Sumár pre Desktop */}
+          <div className="hidden lg:block lg:col-span-4 sticky top-28">
+            <div className="mb-6">
+              <h2 className="text-2xl font-black text-white leading-tight break-words">{house.name}</h2>
+              {isA0Compliant && <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] px-2 py-0.5 rounded-full uppercase tracking-widest mt-2 inline-block font-bold">A0 Certifikát</span>}
+            </div>
+
+            {/* Sumárna tabuľka so Scrollbarom */}
+            <div className="bg-slate-900 border border-white/10 p-5 rounded-3xl shadow-2xl mb-5 max-h-[calc(100vh-320px)] overflow-y-auto custom-scrollbar">
               <ProstoHouseSummary
                 house={house} t={t} isA0Compliant={isA0Compliant} totalPrice={totalPrice} onSendQuote={() => setModalOpen(true)}
                 mountingIdx={mountingIdx} extensionIdx={extensionIdx} insulationIdx={insulationIdx} foundationIdx={foundationIdx}
@@ -659,53 +610,44 @@ export default function ProstoHouseKonfigurator({ house, houseCode, dom: domProp
                 interiorDoorsCount={interiorDoorsCount} laminateFloors={laminateFloors} floorHeating={floorHeating}
                 networks={networks} engineering={engineering} projectant={projectant} revision={revision}
                 getPrice={getPrice}
+                hideSendButton={true}
               />
             </div>
+
+            {/* Akčné tlačidlá v pravom stĺpci */}
+            <div className="space-y-3">
+              <button 
+                onClick={() => setModalOpen(true)} 
+                className="w-full bg-red-600 hover:bg-red-700 text-white font-black px-6 py-4 rounded-2xl flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(239,68,68,0.4)] hover:shadow-[0_0_30px_rgba(239,68,68,0.6)] active:scale-95 transition-all text-lg"
+              >
+                <span>{t('sendQuote')}</span>
+                <Send className="w-5 h-5" />
+              </button>
+              <SaveQuoteButton domNazov={house.name} domKod={phCode} domId={effectiveDomId} celkovaCena={totalPrice} konfiguratorData={konfigData} />
+            </div>
           </div>
-        )}
+
+        </div>
       </div>
 
-      {/* Navigation Sticky Footer */}
-      <div className="fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-xl border-t border-white/10 z-40 p-4 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+      {/* MOBILNÝ STICKY FOOTER (Zobrazený len na malých obrazovkách) */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-xl border-t border-white/10 z-40 p-4 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
         <div className="max-w-3xl mx-auto flex items-center justify-between gap-4">
-          <div className="flex-shrink-0">
-            <button 
-              onClick={handlePrev} 
-              disabled={currentStep === 0}
-              className="px-4 py-3 rounded-xl border border-white/10 text-slate-300 font-bold active:scale-95 transition-all flex items-center gap-2 disabled:opacity-30 disabled:active:scale-100 hover:bg-slate-800"
-            >
-              <ChevronLeft className="w-5 h-5" />
-              <span className="hidden sm:inline">Späť</span>
-            </button>
-          </div>
-
-          <div className="flex-1 text-center">
+          <div className="flex-1 text-left">
             <div className="text-[11px] text-slate-400 font-bold uppercase tracking-widest">{t('totalWithVAT')}</div>
             <div className="text-2xl font-black text-white">{totalPrice.toLocaleString()} €</div>
           </div>
-
           <div className="flex-shrink-0 flex items-center gap-2">
-            {currentStep === totalSteps - 1 ? (
-              <button 
-                onClick={() => setModalOpen(true)} 
-                className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-xl flex items-center gap-2 shadow-[0_0_20px_rgba(239,68,68,0.4)] active:scale-95 transition-all"
-              >
-                <span className="hidden sm:inline">{t('sendQuote')}</span>
-                <Send className="w-5 h-5 sm:hidden" />
-              </button>
-            ) : (
-              <button 
-                onClick={handleNext} 
-                className="bg-slate-100 hover:bg-white text-slate-900 font-bold px-6 py-3 rounded-xl flex items-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.1)] active:scale-95 transition-all"
-              >
-                <span className="hidden sm:inline">Ďalej</span>
-                <ChevronRight className="w-5 h-5" />
-              </button>
-            )}
-            
-            <div className="hidden md:block">
+            <div className="hidden sm:block">
               <SaveQuoteButton domNazov={house.name} domKod={phCode} domId={effectiveDomId} celkovaCena={totalPrice} konfiguratorData={konfigData} />
             </div>
+            <button 
+              onClick={() => setModalOpen(true)} 
+              className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-xl flex items-center gap-2 shadow-[0_0_20px_rgba(239,68,68,0.4)] active:scale-95 transition-all"
+            >
+              <span className="hidden sm:inline">{t('sendQuote')}</span>
+              <Send className="w-5 h-5 sm:hidden" />
+            </button>
           </div>
         </div>
       </div>
