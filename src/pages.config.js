@@ -81,6 +81,7 @@ import AdminUploadFotiekDomov from './pages/AdminUploadFotiekDomov';
 import AdminUserManagement from './pages/AdminUserManagement';
 import AdminVerifikaciaUdajov from './pages/AdminVerifikaciaUdajov';
 import AdminWatermark from './pages/AdminWatermark';
+import AdminZnalostnaBaza from './pages/AdminZnalostnaBaza';
 import AkoToFunguje from './pages/AkoToFunguje';
 import AutoPrekladBlogov from './pages/AutoPrekladBlogov';
 import AutoRegeneraciaPrekladov from './pages/AutoRegeneraciaPrekladov';
@@ -173,6 +174,7 @@ export const PAGES = {
     "AdminUserManagement": AdminUserManagement,
     "AdminVerifikaciaUdajov": AdminVerifikaciaUdajov,
     "AdminWatermark": AdminWatermark,
+    "AdminZnalostnaBaza": AdminZnalostnaBaza,
     "AkoToFunguje": AkoToFunguje,
     "AutoPrekladBlogov": AutoPrekladBlogov,
     "AutoRegeneraciaPrekladov": AutoRegeneraciaPrekladov,

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import {
   Users, FileText, MessageCircle, Calendar, Search, Filter,
   ChevronRight, CheckCircle, AlertCircle, Clock, XCircle,
-  Eye, Shield, Home, TrendingUp, BarChart2
+  Eye, Shield, Home, TrendingUp, BarChart2, Brain
 } from 'lucide-react';
 import QuoteDashboardAnalytics from '@/components/admin/QuoteDashboardAnalytics';
 import { Button } from '@/components/ui/button';
@@ -105,6 +105,17 @@ export default function AdminMojeKonto() {
                 <div className="text-xs text-white/80 mt-0.5">{stat.label}</div>
               </div>
             ))}
+          </div>
+
+          <div className="mt-6 flex gap-3">
+            <Link to="/AdminZnalostnaBaza" className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm">
+              <Brain className="w-4 h-4" />
+              AI Znalostná Báza
+            </Link>
+            <Link to="/AdminGoogleDrive" className="inline-flex items-center gap-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm">
+              <FileText className="w-4 h-4" />
+              Správa Dokumentov
+            </Link>
           </div>
         </div>
       </div>
