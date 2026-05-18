@@ -164,7 +164,7 @@ export default function ProstoHouseKonfigurator({ house, houseCode, dom: domProp
   const effectiveDomId = domProp?.id || domFromDb?.id || domIdFromUrl;
 
   const { data: user } = useQuery({ queryKey: ['current-user'], queryFn: () => base44.auth.me().catch(() => null) });
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = user?.role === 'admin' || user?.super_admin === true;
 
   const hasExtension = house.options.extension && house.options.extension.length > 0;
 

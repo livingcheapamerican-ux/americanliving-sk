@@ -915,7 +915,7 @@ export default function AdminDokumenty() {
 
   const vyrobcovia = ["American Living", "JAK Modules", "Ticab house", "Prosto House", "Domki z Gór"];
 
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = user?.role === 'admin' || user?.super_admin === true;
 
   if (userLoading) {
     return (

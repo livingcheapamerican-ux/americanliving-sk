@@ -37,7 +37,7 @@ export default function AutoSEOTrigger() {
     };
 
     // Spusti len ak je admin a ešte sa nespustilo dnes
-    if (user?.role === 'admin') {
+    if (user?.role === 'admin' || user?.super_admin === true) {
       const lastRun = localStorage.getItem('lastSEORun');
       const today = new Date().toDateString();
       

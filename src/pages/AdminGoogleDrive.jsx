@@ -91,7 +91,7 @@ export default function AdminGoogleDrive() {
     return `${mb.toFixed(1)} MB`;
   };
 
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = user?.role === 'admin' || user?.super_admin === true;
 
   if (!isAdmin) {
     return (

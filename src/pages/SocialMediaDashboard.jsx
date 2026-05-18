@@ -174,7 +174,7 @@ export default function SocialMediaDashboard() {
     queryFn: () => base44.auth.me()
   });
 
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = user?.role === 'admin' || user?.super_admin === true;
 
   const { data: metrics = [], isLoading } = useQuery({
     queryKey: ['social-media-metrics'],

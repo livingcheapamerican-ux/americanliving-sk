@@ -29,7 +29,7 @@ export default function Blog() {
     queryFn: () => base44.auth.me()
   });
 
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = user?.role === 'admin' || user?.super_admin === true;
 
   const kategorieLabels = {
     novinky: t('blogNews'),

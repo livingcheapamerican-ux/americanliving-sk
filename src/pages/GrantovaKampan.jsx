@@ -79,14 +79,14 @@ export default function GrantovaKampan() {
         r.poznamka && r.poznamka.includes('Dotácia Americana')
       );
     },
-    enabled: user?.role === 'admin'
+    enabled: user?.role === 'admin' || user?.super_admin === true
   });
 
   // Fetch all houses to calculate correct subsidy
   const { data: houses } = useQuery({
     queryKey: ['houses-for-subsidy'],
     queryFn: () => base44.entities.Dom.list(),
-    enabled: user?.role === 'admin'
+    enabled: user?.role === 'admin' || user?.super_admin === true
   });
 
   // Delete request mutation

@@ -24,7 +24,7 @@ export default function AdminPixelSettings() {
   const { data: capiLogs = [] } = useQuery({
     queryKey: ['capi-logs'],
     queryFn: () => base44.entities.CAPILog.list('-created_date', 20),
-    enabled: user?.role === 'admin',
+    enabled: user?.role === 'admin' || user?.super_admin === true,
     refetchInterval: 30000
   });
 
@@ -34,7 +34,7 @@ export default function AdminPixelSettings() {
       const configs = await base44.entities.AppConfiguration.filter({ config_key: 'meta_pixel' });
       return configs[0] || null;
     },
-    enabled: user?.role === 'admin'
+    enabled: user?.role === 'admin' || user?.super_admin === true
   });
 
   React.useEffect(() => {

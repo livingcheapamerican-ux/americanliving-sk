@@ -298,7 +298,7 @@ export default function DetailDomu() {
     queryFn: () => base44.auth.me().catch(() => null)
   });
 
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = user?.role === 'admin' || user?.super_admin === true;
   const isSuperAdmin = user?.super_admin === true;
   const canManage = isAdmin || isSuperAdmin;
 

@@ -257,7 +257,7 @@ export default function AdminUploadFotiekDomov() {
     }
   };
 
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = user?.role === 'admin' || user?.super_admin === true;
   const isSuperAdmin = user?.super_admin === true;
 
   if (!isAdmin && !isSuperAdmin) {

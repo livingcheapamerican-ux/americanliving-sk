@@ -123,7 +123,7 @@ function LayoutContent({ children }) {
   }, []);
 
   const isActive = (path) => location.pathname === path;
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = user?.role === 'admin' || user?.super_admin === true;
 
   const navItems = [
     { name: t('home'), path: createPageUrl("Domov"), icon: Home },

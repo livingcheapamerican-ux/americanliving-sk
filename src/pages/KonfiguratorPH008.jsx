@@ -299,7 +299,7 @@ export default function KonfiguratorPH008({ dom: domProp, isAdmin: isAdminProp }
     enabled: !isAdminProp
   });
 
-  const isAdmin = isAdminProp ?? (user?.role === 'admin');
+  const isAdmin = isAdminProp ?? (user?.role === 'admin' || user?.super_admin === true);
 
   const [customPrices, setCustomPrices] = useState({});
   const [typStavby, setTypStavby] = useState('rekreacna');
