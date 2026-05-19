@@ -23,13 +23,11 @@ export default function AdminZnalostnaBaza() {
   });
 
   // Načítanie System Promptu z konfigurácie
-  const { data: configPrompt, isLoading: promptLoading } = useQuery({
-    queryKey: ['ai_system_prompt'],
+  const { data: configDoc, isLoading: promptLoading } = useQuery({
+    queryKey: ['ai_system_prompt_doc'],
     queryFn: async () => {
-      // Sort by created_date desc to always get the newest if there are duplicates
-      const result = await base44.entities.AppConfiguration.filter({ config_key: 'ai_system_prompt' });
+      const result = await base44.entities.Dokument.filter({ nazov: 'SYSTEM_PROMPT_CONFIG' });
       if (result && result.length > 0) {
-        // Find the newest one just in case
         return result.sort((a, b) => new Date(b.created_date) - new Date(a.created_date))[0];
       }
       return null;
@@ -37,52 +35,41 @@ export default function AdminZnalostnaBaza() {
   });
 
   // Helper na ziskanie textu z configu
-  const getPromptText = (config) => {
-    if (!config) return "";
-    
-    // Fallback to config_value or just read from popis directly
-    const val = config.popis || config.config_value;
-    if (typeof val === 'string') {
-      try {
-        const parsed = JSON.parse(val);
-        return parsed.prompt || val;
-      } catch {
-        return val !== 'Hlavné inštrukcie pre AI agentov (System Prompt)' ? val : "";
-      }
-    }
-    if (val && typeof val === 'object' && val.prompt) {
-      return val.prompt;
-    }
-    return "";
+  const getPromptText = (doc) => {
+    return doc?.popis || "";
   };
 
   // Načítanie dokumentov, ktoré majú príznak pre_chatbota: true
-  const { data: documents = [], isLoading: docsLoading } = useQuery({
+  const { data: rawDocuments = [], isLoading: docsLoading } = useQuery({
     queryKey: ['znalosti-dokumenty'],
     queryFn: () => base44.entities.Dokument.filter({ pre_chatbota: true })
   });
 
+  // Odfiltrovanie system promptu z normalnych dokumentov
+  const documents = rawDocuments.filter(d => d.nazov !== 'SYSTEM_PROMPT_CONFIG');
+
   const savePromptMutation = useMutation({
     mutationFn: async (content) => {
-      // Because AppConfiguration UPDATE silently fails due to backend RLS restrictions,
-      // we must find all existing rows, try to delete them, and CREATE a fresh one.
-      const existing = await base44.entities.AppConfiguration.filter({ config_key: 'ai_system_prompt' });
+      // Because AppConfiguration is completely broken/missing columns, we hijack a special Dokument to store it reliably
+      const existing = await base44.entities.Dokument.filter({ nazov: 'SYSTEM_PROMPT_CONFIG' });
+      
+      let res;
       if (existing && existing.length > 0) {
-        for (const row of existing) {
-          try { await base44.entities.AppConfiguration.delete(row.id); } catch (e) { console.warn("Failed to delete old config", e); }
-        }
+        res = await base44.entities.Dokument.update(existing[0].id, { popis: content });
+      } else {
+        res = await base44.entities.Dokument.create({
+          nazov: 'SYSTEM_PROMPT_CONFIG',
+          popis: content,
+          pre_chatbota: true,
+          subor_url: 'internal://system-config'
+        });
       }
-
-      const res = await base44.entities.AppConfiguration.create({
-        config_key: 'ai_system_prompt',
-        popis: content
-      });
       
       if (res && res.error) throw new Error(res.error.message || JSON.stringify(res.error));
       return res;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['ai_system_prompt'] });
+      queryClient.invalidateQueries({ queryKey: ['ai_system_prompt_doc'] });
       setIsEditingPrompt(false);
       toast.success("Inštrukcie pre AI boli úspešne uložené");
     },
@@ -180,12 +167,6 @@ export default function AdminZnalostnaBaza() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* DEBUG BANNER FOR DIAGNOSTICS */}
-            <div className="lg:col-span-3 bg-red-100 p-4 rounded text-xs font-mono break-all text-red-900 border border-red-300">
-              <strong>DEBUG RAW DB STATE:</strong><br/>
-              {promptLoading ? "Loading..." : (configPrompt === null ? "NULL (No row in database)" : JSON.stringify(configPrompt, null, 2))}
-            </div>
-
             {/* Ľavý stĺpec: Inštrukcie (System Prompt) */}
             <div className="lg:col-span-2 space-y-6">
               <Card className="p-6 border-indigo-100 shadow-md">
@@ -196,7 +177,7 @@ export default function AdminZnalostnaBaza() {
                   </div>
                   {!isEditingPrompt ? (
                     <Button variant="outline" size="sm" onClick={() => {
-                      setPromptContent(getPromptText(configPrompt));
+                      setPromptContent(getPromptText(configDoc));
                       setIsEditingPrompt(true);
                     }}>
                       Upraviť inštrukcie
@@ -231,7 +212,7 @@ export default function AdminZnalostnaBaza() {
                       />
                     ) : (
                       <div className="bg-gray-50 p-4 rounded-lg border border-gray-100 whitespace-pre-wrap font-mono text-sm text-gray-700 min-h-[150px]">
-                        {getPromptText(configPrompt) || "Zatiaľ nie sú definované žiadne inštrukcie."}
+                        {getPromptText(configDoc) || "Zatiaľ nie sú definované žiadne inštrukcie."}
                       </div>
                     )}
                   </>
