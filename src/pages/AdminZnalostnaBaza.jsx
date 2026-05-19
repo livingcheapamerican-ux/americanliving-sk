@@ -59,9 +59,9 @@ export default function AdminZnalostnaBaza() {
       const payload = { config_value: { prompt: content } };
       let res;
       if (configPrompt?.id) {
-        res = await base44.entities.AppConfiguration.update(configPrompt.id, payload);
+        res = await base44.asServiceRole.entities.AppConfiguration.update(configPrompt.id, payload);
       } else {
-        res = await base44.entities.AppConfiguration.create({
+        res = await base44.asServiceRole.entities.AppConfiguration.create({
           config_key: 'ai_system_prompt',
           config_value: { prompt: content },
           popis: 'Hlavné inštrukcie pre AI agentov (System Prompt)'
