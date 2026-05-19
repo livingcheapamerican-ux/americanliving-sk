@@ -7,15 +7,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
-import { Sparkles, Loader2, Home, ArrowRight, CheckCircle, TrendingUp, Calculator } from "lucide-react";
+import { Sparkles, Loader2, Home, ArrowRight, CheckCircle, TrendingUp, Calculator, Search } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { useLanguage } from "../components/LanguageContext";
 import ImageWithWatermark from "../components/ImageWithWatermark";
 
 export default function OdporucanieDomov() {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const [preferences, setPreferences] = useState({
     budget: 100000,
     rooms: 3,
@@ -32,6 +33,19 @@ export default function OdporucanieDomov() {
     queryFn: () => base44.entities.Dom.list('poradie'),
     staleTime: 300000,
   });
+
+  const handleKatalogSearch = () => {
+    const params = new URLSearchParams();
+    if (preferences.budget < 300000) params.set("cena_max", preferences.budget.toString());
+    if (preferences.rooms < 6) params.set("izby", preferences.rooms.toString());
+    
+    const terms = [preferences.style, preferences.purpose, preferences.region].filter(Boolean).join(" ");
+    if (terms) {
+      params.set("hladanie", terms);
+    }
+    
+    navigate(`${createPageUrl("Katalog")}?${params.toString()}`);
+  };
 
   const handleGetRecommendations = async () => {
     setIsAnalyzing(true);
@@ -322,24 +336,41 @@ POVINNÉ PRAVIDLÁ:
                   />
                 </div>
 
-                {/* Submit Button */}
-                <Button
-                  onClick={handleGetRecommendations}
-                  disabled={isAnalyzing}
-                  className="w-full bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-primary text-white font-bold py-6 text-lg"
-                >
-                  {isAnalyzing ? (
-                    <>
-                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                      {t('aiAnalyzing')}
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="w-5 h-5 mr-2" />
-                      {t('getAIRecommendations')}
-                    </>
-                  )}
-                </Button>
+                {/* Submit Buttons */}
+                <div className="flex flex-col gap-4 mt-8 pt-4 border-t border-gray-100">
+                  <Button
+                    onClick={handleKatalogSearch}
+                    className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-6 text-lg shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1"
+                  >
+                    <Search className="w-6 h-6 mr-2" />
+                    Vyhľadať v katalógu
+                  </Button>
+                  
+                  <div className="relative flex py-2 items-center">
+                    <div className="flex-grow border-t border-gray-200"></div>
+                    <span className="flex-shrink-0 mx-4 text-gray-400 text-sm font-medium">ALEBO</span>
+                    <div className="flex-grow border-t border-gray-200"></div>
+                  </div>
+
+                  <Button
+                    onClick={handleGetRecommendations}
+                    disabled={isAnalyzing}
+                    variant="outline"
+                    className="w-full bg-gradient-to-r from-red-50 to-orange-50 hover:from-red-100 hover:to-orange-100 border-2 border-red-200 text-red-700 font-bold py-6 text-base transition-all"
+                  >
+                    {isAnalyzing ? (
+                      <>
+                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                        {t('aiAnalyzing')}
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-5 h-5 mr-2 text-orange-500" />
+                        {t('getAIRecommendations')}
+                      </>
+                    )}
+                  </Button>
+                </div>
               </div>
             </Card>
           </motion.div>
