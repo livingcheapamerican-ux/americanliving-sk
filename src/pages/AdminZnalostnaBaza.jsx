@@ -57,15 +57,18 @@ export default function AdminZnalostnaBaza() {
   const savePromptMutation = useMutation({
     mutationFn: async (content) => {
       const payload = { config_value: { prompt: content } };
+      let res;
       if (configPrompt?.id) {
-        return await base44.entities.AppConfiguration.update(configPrompt.id, payload);
+        res = await base44.entities.AppConfiguration.update(configPrompt.id, payload);
       } else {
-        return await base44.entities.AppConfiguration.create({
+        res = await base44.entities.AppConfiguration.create({
           config_key: 'ai_system_prompt',
           config_value: { prompt: content },
           popis: 'Hlavné inštrukcie pre AI agentov (System Prompt)'
         });
       }
+      if (res && res.error) throw new Error(res.error.message || JSON.stringify(res.error));
+      return res;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ai_system_prompt'] });
@@ -210,6 +213,8 @@ export default function AdminZnalostnaBaza() {
                     ) : (
                       <div className="bg-gray-50 p-4 rounded-lg border border-gray-100 whitespace-pre-wrap font-mono text-sm text-gray-700 min-h-[150px]">
                         {promptContent || "Zatiaľ nie sú definované žiadne inštrukcie."}
+                        <br/><br/>
+                        <span className="text-xs text-red-500">DEBUG DB INFO: {JSON.stringify(configPrompt)}</span>
                       </div>
                     )}
                   </>
