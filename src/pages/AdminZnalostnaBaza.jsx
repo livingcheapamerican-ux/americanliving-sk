@@ -28,12 +28,25 @@ export default function AdminZnalostnaBaza() {
     queryFn: async () => {
       const result = await base44.entities.AppConfiguration.filter({ config_key: 'ai_system_prompt' });
       if (result && result.length > 0) {
-        setPromptContent(result[0].config_value || "");
         return result[0];
       }
       return null;
     }
   });
+
+  React.useEffect(() => {
+    if (configPrompt && !isEditingPrompt) {
+      // Check if it's stored as an object { prompt: "..." } or raw string
+      const val = configPrompt.config_value;
+      if (val && typeof val === 'object' && val.prompt) {
+        setPromptContent(val.prompt);
+      } else if (typeof val === 'string') {
+        setPromptContent(val);
+      } else {
+        setPromptContent("");
+      }
+    }
+  }, [configPrompt, isEditingPrompt]);
 
   // Načítanie dokumentov, ktoré majú príznak pre_chatbota: true
   const { data: documents = [], isLoading: docsLoading } = useQuery({
@@ -43,12 +56,13 @@ export default function AdminZnalostnaBaza() {
 
   const savePromptMutation = useMutation({
     mutationFn: async (content) => {
+      const payload = { config_value: { prompt: content } };
       if (configPrompt?.id) {
-        return await base44.entities.AppConfiguration.update(configPrompt.id, { config_value: content });
+        return await base44.entities.AppConfiguration.update(configPrompt.id, payload);
       } else {
         return await base44.entities.AppConfiguration.create({
           config_key: 'ai_system_prompt',
-          config_value: content,
+          config_value: { prompt: content },
           popis: 'Hlavné inštrukcie pre AI agentov (System Prompt)'
         });
       }
@@ -168,7 +182,7 @@ export default function AdminZnalostnaBaza() {
                     <div className="flex gap-2">
                       <Button variant="ghost" size="sm" onClick={() => {
                         setIsEditingPrompt(false);
-                        setPromptContent(configPrompt?.config_value || "");
+                        setPromptContent(configPrompt?.config_value?.prompt || (typeof configPrompt?.config_value === 'string' ? configPrompt.config_value : ""));
                       }}>
                         Zrušiť
                       </Button>
