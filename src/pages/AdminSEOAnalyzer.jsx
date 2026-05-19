@@ -21,6 +21,9 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import AEOGEOAuditor from "../components/seo/AEOGEOAuditor";
+
 export default function AdminSEOAnalyzer() {
   const [url, setUrl] = useState("");
   const [pageTitle, setPageTitle] = useState("");
@@ -89,57 +92,70 @@ export default function AdminSEOAnalyzer() {
           <p className="text-gray-600">Analyzuj a optimalizuj SEO tvojich stránok pomocou AI</p>
         </div>
 
-        {/* Formulár na analýzu */}
-        <Card className="p-6 mb-6 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
-          <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-blue-600" />
-            Nová SEO Analýza
-          </h3>
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-semibold text-gray-700 mb-2 block">URL stránky *</label>
-              <Input
-                placeholder="https://..."
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="text-sm font-semibold text-gray-700 mb-2 block">Aktuálny Page Title *</label>
-              <Input
-                placeholder="Názov stránky"
-                value={pageTitle}
-                onChange={(e) => setPageTitle(e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="text-sm font-semibold text-gray-700 mb-2 block">Obsah stránky (voliteľné)</label>
-              <Textarea
-                placeholder="Skopíruj hlavný textový obsah stránky pre lepšiu AI analýzu..."
-                value={pageContent}
-                onChange={(e) => setPageContent(e.target.value)}
-                rows={6}
-              />
-            </div>
-            <Button 
-              onClick={handleAnalyze}
-              disabled={analyzeMutation.isPending}
-              className="w-full bg-blue-600 hover:bg-blue-700"
-            >
-              {analyzeMutation.isPending ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  AI analyzuje...
-                </>
-              ) : (
-                <>
-                  <Sparkles className="w-4 h-4 mr-2" />
-                  Analyzovať s AI
-                </>
-              )}
-            </Button>
-          </div>
-        </Card>
+        <Tabs defaultValue="classic" className="w-full mb-8">
+          <TabsList className="mb-4">
+            <TabsTrigger value="classic">🔍 Klasické SEO</TabsTrigger>
+            <TabsTrigger value="aeo_geo">🤖 AEO & GEO Audítor</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="classic" className="space-y-6">
+            {/* Formulár na analýzu */}
+            <Card className="p-6 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
+              <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-blue-600" />
+                Nová SEO Analýza
+              </h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm font-semibold text-gray-700 mb-2 block">URL stránky *</label>
+                  <Input
+                    placeholder="https://..."
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-gray-700 mb-2 block">Aktuálny Page Title *</label>
+                  <Input
+                    placeholder="Názov stránky"
+                    value={pageTitle}
+                    onChange={(e) => setPageTitle(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-gray-700 mb-2 block">Obsah stránky (voliteľné)</label>
+                  <Textarea
+                    placeholder="Skopíruj hlavný textový obsah stránky pre lepšiu AI analýzu..."
+                    value={pageContent}
+                    onChange={(e) => setPageContent(e.target.value)}
+                    rows={6}
+                  />
+                </div>
+                <Button 
+                  onClick={handleAnalyze}
+                  disabled={analyzeMutation.isPending}
+                  className="w-full bg-blue-600 hover:bg-blue-700"
+                >
+                  {analyzeMutation.isPending ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      AI analyzuje...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      Analyzovať s AI
+                    </>
+                  )}
+                </Button>
+              </div>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="aeo_geo">
+            <AEOGEOAuditor />
+          </TabsContent>
+        </Tabs>
 
         {/* Výsledky analýz */}
         <div className="space-y-4">
