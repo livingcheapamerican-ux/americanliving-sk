@@ -42,9 +42,16 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
             <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-20 text-sm font-bold text-red-400 bg-transparent outline-none" />
           </div>
         ) : (
-          <span className={`text-base font-black whitespace-nowrap transition-colors duration-300 ${selected ? 'text-red-400' : isStandard ? 'text-emerald-400' : 'text-slate-500'}`}>
-            {isStandard ? 'Základný štandard (Bez príplatku)' : `+${price.toLocaleString()} €`}
-          </span>
+          <div className="text-right flex flex-col items-end justify-center">
+            <span className={`block font-black transition-colors duration-300 ${selected ? 'text-base text-red-400' : isStandard ? 'text-sm text-emerald-400' : 'text-base text-slate-500'}`}>
+              {isStandard ? 'Základný štandard' : `+${price.toLocaleString()} €`}
+            </span>
+            {isStandard && (
+              <span className={`block text-[10px] uppercase font-bold tracking-wider mt-0.5 ${selected ? 'text-red-400/80' : 'text-emerald-500/80'}`}>
+                (Bez príplatku)
+              </span>
+            )}
+          </div>
         )}
       </div>
     </div>
@@ -76,9 +83,16 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
             <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-20 text-sm font-bold text-red-400 bg-transparent outline-none" />
           </div>
         ) : (
-          <span className={`text-base font-black whitespace-nowrap transition-colors duration-300 ${locked ? 'text-emerald-400' : price === 0 ? 'text-emerald-400' : 'text-slate-400'}`}>
-            {price === 0 ? 'Základný štandard (Bez príplatku)' : `+${price.toLocaleString()} €`}
-          </span>
+          <div className="text-right flex flex-col items-end justify-center">
+            <span className={`block font-black transition-colors duration-300 ${locked ? 'text-sm text-emerald-400' : price === 0 ? 'text-sm text-emerald-400' : 'text-base text-slate-400'}`}>
+              {price === 0 ? 'Základný štandard' : `+${price.toLocaleString()} €`}
+            </span>
+            {price === 0 && (
+              <span className={`block text-[10px] uppercase font-bold tracking-wider mt-0.5 ${locked ? 'text-emerald-500/80' : 'text-emerald-500/80'}`}>
+                (Bez príplatku)
+              </span>
+            )}
+          </div>
         )}
       </div>
     </div>
