@@ -1808,7 +1808,7 @@ export default function DetailDomu() {
       {!isJAKModules && (
         <FloatingPrice 
           price={isTicabhouse ? (ticabKonfiguracia?.celkovaCena || dom.zakladna_cena) : (isProstoHouse ? (prostoKonfiguracia?.celkovaCena || dom.zakladna_cena) : calculatedPrice)} 
-          isVisible={showCalculator || isTicabhouse} 
+          isVisible={showCalculator || isTicabhouse || isProstoHouse} 
           onSendQuote={handleSendQuote}
           dom={dom}
         />
