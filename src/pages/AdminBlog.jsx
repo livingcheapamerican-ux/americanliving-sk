@@ -23,7 +23,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Plus, Edit, Trash2, Eye, EyeOff, Calendar, FileSearch, Sparkles, Languages } from "lucide-react";
+import { Plus, Edit, Trash2, Eye, EyeOff, Calendar, FileSearch, Sparkles, Languages, Bot } from "lucide-react";
 import { format } from "date-fns";
 import { sk } from "date-fns/locale";
 import { toast } from "sonner";
@@ -161,13 +161,20 @@ export default function AdminBlog() {
               Zobraziť verejný blog
             </Link>
           </div>
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="bg-primary" onClick={() => setEditingPost(null)}>
-                <Plus className="w-4 h-4 mr-2" />
-                Nový článok
-              </Button>
-            </DialogTrigger>
+          <div className="flex gap-2">
+            <Button asChild variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50">
+              <Link to={createPageUrl("AdminAIBlogGenerator")}>
+                <Sparkles className="w-4 h-4 mr-2" />
+                AI Generátor
+              </Link>
+            </Button>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-primary" onClick={() => setEditingPost(null)}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Nový článok
+                </Button>
+              </DialogTrigger>
             <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>{editingPost ? 'Upraviť článok' : 'Nový článok'}</DialogTitle>

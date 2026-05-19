@@ -54,6 +54,7 @@ import AdminAnalyzaDomov from './pages/AdminAnalyzaDomov';
 import AdminAnalyzaOdchodov from './pages/AdminAnalyzaOdchodov';
 import AdminAnalyzaSessions from './pages/AdminAnalyzaSessions';
 import AdminBlog from './pages/AdminBlog';
+import AdminAIBlogGenerator from './pages/AdminAIBlogGenerator';
 import AdminCennik from './pages/AdminCennik';
 import AdminCreditMonitor from './pages/AdminCreditMonitor';
 import AdminDokumenty from './pages/AdminDokumenty';
@@ -147,6 +148,7 @@ export const PAGES = {
     "AdminAnalyzaOdchodov": AdminAnalyzaOdchodov,
     "AdminAnalyzaSessions": AdminAnalyzaSessions,
     "AdminBlog": AdminBlog,
+    "AdminAIBlogGenerator": AdminAIBlogGenerator,
     "AdminCennik": AdminCennik,
     "AdminCreditMonitor": AdminCreditMonitor,
     "AdminDokumenty": AdminDokumenty,
