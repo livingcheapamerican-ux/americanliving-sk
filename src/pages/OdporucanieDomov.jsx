@@ -134,7 +134,8 @@ TVOJA ÚLOHA
 
 POVINNÉ PRAVIDLÁ:
 - ❌ NEODPORÚČAJ JAK Modules
-- ✅ house_id a house_nazov MUSIA presne zodpovedať DB záznamu
+- ✅ house_id MUSÍ byť skutočné UUID (napr. '5f9b3b9a-...') z poskytnutej databázy. Nikdy si ho nevymýšľaj!
+- ✅ house_nazov MUSÍ presne zodpovedať DB záznamu.
 - ✅ Ak klient zmienil hypotéku → len domy s kategoria="rodinne_domy"
 - ✅ Odporuč domy z rôznych výrobcov ak možné`;
 
@@ -167,15 +168,25 @@ POVINNÉ PRAVIDLÁ:
       const validatedRecommendations = {
         ...result,
         recommendations: result.recommendations?.filter(rec => {
-          const house = publicHouses.find(h => h.id === rec.house_id);
+          let house = publicHouses.find(h => h.id === rec.house_id);
+          
+          // Ak nesedí ID, skús nájsť podľa názvu (AI mohlo halucinovať ID)
+          if (!house && rec.house_nazov) {
+            house = publicHouses.find(h => h.nazov?.toLowerCase() === rec.house_nazov?.toLowerCase());
+          }
+
           if (!house) {
             console.warn('⚠️ AI odporučilo neexistujúci dom:', rec.house_id, rec.house_nazov);
             return false;
           }
+          
           // Overenie zhody názvov
           if (rec.house_nazov && house.nazov !== rec.house_nazov) {
             console.warn('⚠️ Nesúlad názvov:', 'DB:', house.nazov, 'AI:', rec.house_nazov);
           }
+          
+          // Pre istotu nastav správne ID z databázy
+          rec.house_id = house.id;
           return true;
         }) || []
       };
