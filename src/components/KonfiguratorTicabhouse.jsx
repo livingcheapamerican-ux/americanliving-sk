@@ -43,7 +43,7 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
           </div>
         ) : (
           <span className={`text-base font-black whitespace-nowrap transition-colors duration-300 ${selected ? 'text-red-400' : isStandard ? 'text-emerald-400' : 'text-slate-500'}`}>
-            {isStandard ? 'Základný štandard' : `+${price.toLocaleString()} €`}
+            {isStandard ? 'Základný štandard (Bez príplatku)' : `+${price.toLocaleString()} €`}
           </span>
         )}
       </div>
@@ -77,7 +77,7 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
           </div>
         ) : (
           <span className={`text-base font-black whitespace-nowrap transition-colors duration-300 ${locked ? 'text-emerald-400' : price === 0 ? 'text-emerald-400' : 'text-slate-400'}`}>
-            {price === 0 ? 'Základný štandard' : `+${price.toLocaleString()} €`}
+            {price === 0 ? 'Základný štandard (Bez príplatku)' : `+${price.toLocaleString()} €`}
           </span>
         )}
       </div>
