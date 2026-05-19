@@ -428,7 +428,7 @@ export default function Domov() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-2xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-2 sm:mb-4 leading-tight text-white" 
-              style={{ WebkitTextStroke: '2px black', textShadow: '0px 10px 30px rgba(0,0,0,1)' }}
+              style={{ textShadow: '4px 4px 20px rgba(0,0,0,0.9)' }}
             >
               {t('heroHeadline')}
             </motion.h1>
@@ -438,7 +438,7 @@ export default function Domov() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
               className="text-sm sm:text-xl md:text-2xl mb-1.5 sm:mb-4 font-semibold text-white" 
-              style={{ WebkitTextStroke: '1px black', textShadow: '0px 5px 20px rgba(0,0,0,1)' }}
+              style={{ textShadow: '3px 3px 15px rgba(0,0,0,0.9)' }}
             >
               {t('heroSubheadline')}
             </motion.p>
@@ -447,8 +447,8 @@ export default function Domov() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="hidden sm:block text-sm sm:text-lg md:text-xl mb-4 sm:mb-8 text-white leading-relaxed max-w-2xl font-bold" 
-              style={{ WebkitTextStroke: '0.5px black', textShadow: '0px 5px 15px rgba(0,0,0,1)' }}
+              className="hidden sm:block text-sm sm:text-lg md:text-xl mb-4 sm:mb-8 text-slate-300 leading-relaxed max-w-2xl font-light" 
+              style={{ textShadow: '2px 2px 10px rgba(0,0,0,0.8)' }}
             >
               {t('everythingYouNeed')}
             </motion.p>
