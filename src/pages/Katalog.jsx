@@ -199,7 +199,7 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
                     <p className="text-xs sm:text-sm font-bold text-red-500/70 line-through">
                       {dom.zakladna_cena?.toLocaleString('sk-SK')} €
                     </p>
-                    <p className="text-lg sm:text-xl font-black text-emerald-400 group-hover:text-emerald-300 transition-colors">
+                    <p className="text-lg sm:text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-600 group-hover:from-emerald-300 group-hover:to-emerald-500 transition-all drop-shadow-sm">
                       {Math.round(dom.zakladna_cena * 0.95)?.toLocaleString('sk-SK')} €
                     </p>
                   </div>
@@ -210,7 +210,7 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
                 </div>
               ) : (
                 <div>
-                  <p className="text-lg sm:text-xl font-black text-white group-hover:text-red-100 transition-colors">
+                  <p className="text-lg sm:text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-600 group-hover:from-red-300 group-hover:to-red-500 transition-all drop-shadow-sm">
                     {dom.zakladna_cena?.toLocaleString('sk-SK')} €
                   </p>
                   <p className="text-[8px] sm:text-[10px] text-slate-500 mt-1">vrátane DPH</p>
@@ -600,7 +600,7 @@ export default function Katalog() {
                       </Button>
                     </Link>
                     <a href="tel:+421905138124">
-                      <Button size="sm" variant="outline" className="bg-transparent border border-white text-white hover:bg-white hover:text-red-700 font-bold text-xs px-3 py-1.5 h-auto">
+                      <Button size="sm" variant="outline" className="bg-white/10 backdrop-blur-md border border-white/30 text-white hover:bg-white/20 hover:text-white font-bold text-xs px-3 py-1.5 h-auto transition-all shadow-lg">
                         <Phone className="mr-1 w-3 h-3" />
                         Volať
                       </Button>
@@ -616,12 +616,12 @@ export default function Katalog() {
       <div className="container mx-auto px-2 sm:px-4 py-6 sm:py-12 max-w-full overflow-hidden">
         {/* Tabs pre kategórie */}
         <Tabs value={kategoriaFilter} onValueChange={setKategoriaFilter} className="mb-4 sm:mb-6">
-          <TabsList className={`grid w-full max-w-xl mx-auto h-8 sm:h-10 ${canManage ? 'grid-cols-4' : 'grid-cols-3'}`}>
-            <TabsTrigger value="vsetky" className="text-xs sm:text-sm">{t('all')} ({verejneDomy.length})</TabsTrigger>
-            <TabsTrigger value="rodinne_domy" className="text-xs sm:text-sm">{t('familyHouses')} ({rodinneDomy.length})</TabsTrigger>
-            <TabsTrigger value="mobilne_domy" className="text-xs sm:text-sm">{t('mobileHouses')} ({mobilneDomy.length})</TabsTrigger>
+          <TabsList className={`grid w-full max-w-xl mx-auto h-10 sm:h-12 bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-full p-1 shadow-xl ${canManage ? 'grid-cols-4' : 'grid-cols-3'}`}>
+            <TabsTrigger value="vsetky" className="text-xs sm:text-sm rounded-full data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-500 data-[state=active]:to-red-700 data-[state=active]:text-white transition-all duration-300">{t('all')} ({verejneDomy.length})</TabsTrigger>
+            <TabsTrigger value="rodinne_domy" className="text-xs sm:text-sm rounded-full data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-500 data-[state=active]:to-red-700 data-[state=active]:text-white transition-all duration-300">{t('familyHouses')} ({rodinneDomy.length})</TabsTrigger>
+            <TabsTrigger value="mobilne_domy" className="text-xs sm:text-sm rounded-full data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-500 data-[state=active]:to-red-700 data-[state=active]:text-white transition-all duration-300">{t('mobileHouses')} ({mobilneDomy.length})</TabsTrigger>
             {canManage && (
-              <TabsTrigger value="skryte" className="text-xs sm:text-sm">{t('hidden')} ({skryteDomy.length})</TabsTrigger>
+              <TabsTrigger value="skryte" className="text-xs sm:text-sm rounded-full data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-500 data-[state=active]:to-red-700 data-[state=active]:text-white transition-all duration-300">{t('hidden')} ({skryteDomy.length})</TabsTrigger>
             )}
           </TabsList>
         </Tabs>
@@ -631,9 +631,9 @@ export default function Katalog() {
           <motion.aside
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
-            className="lg:w-72 flex-shrink-0">
-
-            <Card className="p-3 sm:p-5 sticky top-24 shadow-2xl bg-slate-900 border-white/10 max-w-full overflow-hidden">
+            className="lg:w-72 flex-shrink-0 relative">
+            <div className="absolute inset-0 bg-red-600/10 blur-[50px] pointer-events-none rounded-full" />
+            <Card className="p-3 sm:p-5 sticky top-24 shadow-2xl bg-slate-900/80 backdrop-blur-2xl border-white/10 max-w-full overflow-hidden relative z-10">
               <div className="flex items-center gap-2 mb-3 sm:mb-4">
                 <Filter className="w-4 h-4 text-primary" />
                 <h2 className="text-base sm:text-lg font-bold text-white">{t('filters')}</h2>

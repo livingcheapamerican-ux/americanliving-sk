@@ -1029,7 +1029,7 @@ export default function DetailDomu() {
 
             {/* Rozmery - presunute z pravej strany */}
             {dom.rozmery && (
-              <Card className="p-3 sm:p-4 bg-slate-900 border border-white/10 shadow-xl backdrop-blur-sm">
+              <Card className="p-3 sm:p-4 bg-slate-900 border border-white/10 shadow-xl backdrop-blur-sm hover:border-red-500/30 hover:shadow-[0_0_20px_rgba(239,68,68,0.15)] transition-all duration-300">
                 <h3 className="text-sm sm:text-base font-bold text-white mb-2 sm:mb-3">{t('outerDimensions')}</h3>
                 <div className="grid grid-cols-3 gap-2 sm:gap-3 text-center">
                   <div>
@@ -1067,7 +1067,7 @@ export default function DetailDomu() {
 
             {/* Štandardná výbava pre JAK Modules - presunute z pravej strany */}
             {isJAKModules && (
-              <Card className="p-3 sm:p-4 bg-slate-900 border border-white/10 shadow-xl backdrop-blur-sm">
+              <Card className="p-3 sm:p-4 bg-slate-900 border border-white/10 shadow-xl backdrop-blur-sm hover:border-emerald-500/30 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all duration-300">
                 <h3 className="text-sm sm:text-base font-bold text-emerald-400 mb-2 sm:mb-3">✔ {t('mainFeatures')}</h3>
                 <div className="space-y-2 text-xs sm:text-sm text-slate-300">
                   <div className="flex items-start gap-2">

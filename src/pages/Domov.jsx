@@ -1165,7 +1165,7 @@ export default function Domov() {
               </Link>
               <Link to={createPageUrl("Kontakt")} className="w-full sm:w-auto">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                  <Button size="lg" variant="outline" className="w-full sm:w-auto bg-transparent border-2 border-white/20 text-white hover:bg-white/10 hover:text-white font-bold text-sm sm:text-lg px-6 sm:px-12 py-4 sm:py-7">
+                  <Button size="lg" variant="outline" className="w-full sm:w-auto bg-white/5 backdrop-blur-md border border-white/20 text-white hover:bg-white/15 hover:text-white font-bold text-sm sm:text-lg px-6 sm:px-12 py-4 sm:py-7 shadow-lg transition-all duration-300">
                     <Phone className="mr-1 w-4 h-4 sm:mr-2 sm:w-6 sm:h-6" />
                     {t('contact')}
                   </Button>
