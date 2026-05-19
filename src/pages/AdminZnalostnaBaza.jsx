@@ -36,8 +36,8 @@ export default function AdminZnalostnaBaza() {
 
   // Helper na ziskanie textu z configu
   const getPromptText = (doc) => {
-    if (!doc || !doc.hodnota) return "";
-    return typeof doc.hodnota === 'string' ? doc.hodnota : (doc.hodnota.prompt || "");
+    if (!doc || !doc.watermark_text) return "";
+    return doc.watermark_text;
   };
 
   // Načítanie dokumentov, ktoré majú príznak pre_chatbota: true
@@ -51,16 +51,16 @@ export default function AdminZnalostnaBaza() {
 
   const savePromptMutation = useMutation({
     mutationFn: async (content) => {
-      // Use SiteSettings because it's a proven generic configuration table with 'klic' and 'hodnota' columns
+      // Use SiteSettings and hijack the 'watermark_text' column because it's a known text column
       const existing = await base44.entities.SiteSettings.filter({ klic: 'ai_system_prompt' });
       
       let res;
       if (existing && existing.length > 0) {
-        res = await base44.entities.SiteSettings.update(existing[0].id, { hodnota: { prompt: content } });
+        res = await base44.entities.SiteSettings.update(existing[0].id, { watermark_text: content });
       } else {
         res = await base44.entities.SiteSettings.create({
           klic: 'ai_system_prompt',
-          hodnota: { prompt: content }
+          watermark_text: content
         });
       }
       

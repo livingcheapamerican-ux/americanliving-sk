@@ -87,8 +87,8 @@ export default function MojaPonuka() {
       let systemPrompt = null;
       try {
         const config = await base44.entities.SiteSettings.filter({ klic: 'ai_system_prompt' });
-        if (config && config.length > 0 && config[0].hodnota) {
-          systemPrompt = typeof config[0].hodnota === 'string' ? config[0].hodnota : config[0].hodnota.prompt;
+        if (config && config.length > 0 && config[0].watermark_text) {
+          systemPrompt = config[0].watermark_text;
         }
       } catch (e) {
         console.warn("Failed to load custom system prompt", e);
