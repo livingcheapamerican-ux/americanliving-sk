@@ -34,27 +34,25 @@ export default function AdminZnalostnaBaza() {
     }
   });
 
-  React.useEffect(() => {
-    if (configPrompt && !isEditingPrompt) {
-      const val = configPrompt.ai_system_prompt_text || configPrompt.config_value;
-      if (val && typeof val === 'object' && val.prompt) {
-        setPromptContent(val.prompt);
-      } else if (typeof val === 'string') {
-        try {
-          const parsed = JSON.parse(val);
-          if (parsed && parsed.prompt) {
-            setPromptContent(parsed.prompt);
-          } else {
-            setPromptContent(val);
-          }
-        } catch (e) {
-          setPromptContent(val);
-        }
-      } else {
-        setPromptContent("");
+  // Helper na ziskanie textu z configu
+  const getPromptText = (config) => {
+    if (!config) return "";
+    if (config.ai_system_prompt_text) return config.ai_system_prompt_text;
+    
+    const val = config.config_value;
+    if (typeof val === 'string') {
+      try {
+        const parsed = JSON.parse(val);
+        return parsed.prompt || val;
+      } catch {
+        return val;
       }
     }
-  }, [configPrompt, isEditingPrompt]);
+    if (val && typeof val === 'object' && val.prompt) {
+      return val.prompt;
+    }
+    return "";
+  };
 
   // Načítanie dokumentov, ktoré majú príznak pre_chatbota: true
   const { data: documents = [], isLoading: docsLoading } = useQuery({
@@ -187,14 +185,16 @@ export default function AdminZnalostnaBaza() {
                     <h2 className="text-xl font-bold text-gray-800">Pravidlá správania agenta</h2>
                   </div>
                   {!isEditingPrompt ? (
-                    <Button variant="outline" size="sm" onClick={() => setIsEditingPrompt(true)}>
+                    <Button variant="outline" size="sm" onClick={() => {
+                      setPromptContent(getPromptText(configPrompt));
+                      setIsEditingPrompt(true);
+                    }}>
                       Upraviť inštrukcie
                     </Button>
                   ) : (
                     <div className="flex gap-2">
                       <Button variant="ghost" size="sm" onClick={() => {
                         setIsEditingPrompt(false);
-                        setPromptContent(configPrompt?.config_value?.prompt || (typeof configPrompt?.config_value === 'string' ? configPrompt.config_value : ""));
                       }}>
                         Zrušiť
                       </Button>
@@ -221,9 +221,7 @@ export default function AdminZnalostnaBaza() {
                       />
                     ) : (
                       <div className="bg-gray-50 p-4 rounded-lg border border-gray-100 whitespace-pre-wrap font-mono text-sm text-gray-700 min-h-[150px]">
-                        {promptContent || "Zatiaľ nie sú definované žiadne inštrukcie."}
-                        <br/><br/>
-                        <span className="text-xs text-red-500">DEBUG DB INFO: {JSON.stringify(configPrompt)}</span>
+                        {getPromptText(configPrompt) || "Zatiaľ nie sú definované žiadne inštrukcie."}
                       </div>
                     )}
                   </>
