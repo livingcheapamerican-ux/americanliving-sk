@@ -22,7 +22,7 @@ import {
 import { toast } from "sonner";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import AEOGEOAuditor from "../components/seo/AEOGEOAuditor";
+import AutoAEOGEOProcessor from "../components/seo/AutoAEOGEOProcessor";
 
 export default function AdminSEOAnalyzer() {
   const [url, setUrl] = useState("");
@@ -153,7 +153,7 @@ export default function AdminSEOAnalyzer() {
           </TabsContent>
 
           <TabsContent value="aeo_geo">
-            <AEOGEOAuditor />
+            <AutoAEOGEOProcessor />
           </TabsContent>
         </Tabs>
 

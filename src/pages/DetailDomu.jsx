@@ -532,6 +532,11 @@ export default function DetailDomu() {
             {JSON.stringify(faqSchemaData)}
           </script>
         )}
+        {dom?.aeo_geo_data?.faq_schema && (
+          <script type="application/ld+json">
+            {JSON.stringify(dom.aeo_geo_data.faq_schema)}
+          </script>
+        )}
         {reviewSchemaData && (
           <script type="application/ld+json">
             {JSON.stringify(reviewSchemaData)}
