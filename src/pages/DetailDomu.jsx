@@ -315,6 +315,15 @@ export default function DetailDomu() {
   const isSuperAdmin = user?.super_admin === true;
   const canManage = isAdmin || isSuperAdmin;
 
+  const handleSendQuote = async (data) => {
+    return await base44.entities.Dopyt.create({
+      ...data,
+      typ_dopytu: "konfigurator_floating",
+      dom_id: dom.id,
+      konfiguracny_kod: JSON.stringify(isTicabhouse ? ticabKonfiguracia : isProstoHouse ? prostoKonfiguracia : null)
+    });
+  };
+
   // Scroll na vrch pri načítaní stránky
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -1796,7 +1805,14 @@ export default function DetailDomu() {
       </div>
 
       {/* Floating Price Display - len ak nie je JAK Modules */}
-      {!isJAKModules && <FloatingPrice price={calculatedPrice} isVisible={showCalculator} />}
+      {!isJAKModules && (
+        <FloatingPrice 
+          price={isTicabhouse ? (ticabKonfiguracia?.celkovaCena || dom.zakladna_cena) : (isProstoHouse ? (prostoKonfiguracia?.celkovaCena || dom.zakladna_cena) : calculatedPrice)} 
+          isVisible={showCalculator || isTicabhouse} 
+          onSendQuote={handleSendQuote}
+          dom={dom}
+        />
+      )}
 
       {/* Lightbox */}
       <GaleriaLightbox

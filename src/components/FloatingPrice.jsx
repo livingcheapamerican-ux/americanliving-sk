@@ -45,7 +45,7 @@ export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyro
       // Backend functions vracajú objekt s .data property
       const result = response?.data || response;
       
-      if (result?.success) {
+      if (result?.success || result?.id) {
         toast.success('✓ Cenová ponuka odoslaná na váš email');
         setFormData({ meno: "", email: "", telefon: "", obec: "", poznamka: "" });
         setShowContactModal(false);
