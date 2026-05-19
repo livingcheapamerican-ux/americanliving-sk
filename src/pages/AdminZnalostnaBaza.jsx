@@ -36,7 +36,7 @@ export default function AdminZnalostnaBaza() {
 
   React.useEffect(() => {
     if (configPrompt && !isEditingPrompt) {
-      const val = configPrompt.config_value;
+      const val = configPrompt.ai_system_prompt_text || configPrompt.config_value;
       if (val && typeof val === 'object' && val.prompt) {
         setPromptContent(val.prompt);
       } else if (typeof val === 'string') {
@@ -64,15 +64,15 @@ export default function AdminZnalostnaBaza() {
 
   const savePromptMutation = useMutation({
     mutationFn: async (content) => {
-      // Stringify the object to prevent the ORM from dropping it if the column is type text or strict json
-      const payload = { config_value: JSON.stringify({ prompt: content }) };
+      // Use a new column ai_system_prompt_text to bypass any type corruption on config_value
+      const payload = { ai_system_prompt_text: content };
       let res;
       if (configPrompt?.id) {
         res = await base44.entities.AppConfiguration.update(configPrompt.id, payload);
       } else {
         res = await base44.entities.AppConfiguration.create({
           config_key: 'ai_system_prompt',
-          config_value: { prompt: content },
+          ai_system_prompt_text: content,
           popis: 'Hlavné inštrukcie pre AI agentov (System Prompt)'
         });
       }
