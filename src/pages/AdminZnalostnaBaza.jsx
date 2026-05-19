@@ -37,15 +37,15 @@ export default function AdminZnalostnaBaza() {
   // Helper na ziskanie textu z configu
   const getPromptText = (config) => {
     if (!config) return "";
-    if (config.ai_system_prompt_text) return config.ai_system_prompt_text;
     
-    const val = config.config_value;
+    // Fallback to config_value or just read from popis directly
+    const val = config.popis || config.config_value;
     if (typeof val === 'string') {
       try {
         const parsed = JSON.parse(val);
         return parsed.prompt || val;
       } catch {
-        return val;
+        return val !== 'Hlavné inštrukcie pre AI agentov (System Prompt)' ? val : "";
       }
     }
     if (val && typeof val === 'object' && val.prompt) {
@@ -62,16 +62,15 @@ export default function AdminZnalostnaBaza() {
 
   const savePromptMutation = useMutation({
     mutationFn: async (content) => {
-      // Use a new column ai_system_prompt_text to bypass any type corruption on config_value
-      const payload = { ai_system_prompt_text: content };
+      // Use the popis column to securely store the prompt data without backend schema rejection
+      const payload = { popis: content };
       let res;
       if (configPrompt?.id) {
         res = await base44.entities.AppConfiguration.update(configPrompt.id, payload);
       } else {
         res = await base44.entities.AppConfiguration.create({
           config_key: 'ai_system_prompt',
-          ai_system_prompt_text: content,
-          popis: 'Hlavné inštrukcie pre AI agentov (System Prompt)'
+          popis: content
         });
       }
       if (res && res.error) throw new Error(res.error.message || JSON.stringify(res.error));
