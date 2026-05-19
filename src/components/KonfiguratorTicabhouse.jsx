@@ -14,69 +14,78 @@ import {
 const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmin, onPriceChange, icon: Icon }) => {
   const isStandard = price === 0;
   return (
-  <button onClick={onClick} className={`relative flex flex-col p-5 rounded-3xl border-2 transition-all duration-500 w-full text-left active:scale-[0.98] gap-4 overflow-hidden group ${selected ? 'border-red-500 bg-gradient-to-br from-red-500/10 to-red-900/10 shadow-[0_0_30px_rgba(239,68,68,0.2)] scale-[1.02] backdrop-blur-md' : isStandard ? 'border-emerald-500/30 bg-emerald-500/5 hover:border-emerald-500/50 hover:bg-emerald-500/10 backdrop-blur-sm' : 'border-white/5 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.05] backdrop-blur-sm'}`}>
+  <button onClick={onClick} className={`relative flex flex-col p-5 rounded-3xl border-2 transition-all duration-500 w-full text-left active:scale-[0.98] gap-2 overflow-hidden group ${selected ? 'border-red-500 bg-gradient-to-br from-red-500/10 to-red-900/10 shadow-[0_0_30px_rgba(239,68,68,0.2)] scale-[1.02] backdrop-blur-md' : isStandard ? 'border-emerald-500/30 bg-emerald-500/5 hover:border-emerald-500/50 hover:bg-emerald-500/10 backdrop-blur-sm' : 'border-white/5 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.05] backdrop-blur-sm'}`}>
     {selected && <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-orange-500 opacity-80" />}
-    <div className="flex items-start gap-4 w-full relative z-10">
-      {Icon && (
-        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all duration-500 ${selected ? 'bg-gradient-to-br from-red-500 to-red-700 text-white shadow-xl shadow-red-500/30 rotate-3' : 'bg-white/5 text-slate-400 group-hover:text-slate-300 group-hover:scale-110'}`}>
-          <Icon className={`w-7 h-7 transition-transform duration-500 ${selected ? 'scale-110' : 'scale-100'}`} />
-        </div>
-      )}
-      
-      <div className="flex-1 min-w-0 mt-1">
-        <div className="flex items-center gap-2 flex-wrap mb-1.5">
-          <span className={`font-black text-lg transition-colors duration-300 ${selected ? 'text-white' : 'text-slate-200'}`}>{label}</span>
-          {isA0 && <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.2)]">A0 Certifikácia</span>}
-        </div>
-        {description && <p className="text-sm text-slate-400 leading-relaxed">{description}</p>}
-      </div>
-      
-      <div className="flex flex-col items-end flex-shrink-0">
-        <div className={`w-7 h-7 mb-3 rounded-full border-2 flex items-center justify-center transition-all duration-500 ${selected ? 'border-red-500 bg-red-500 scale-110 shadow-lg shadow-red-500/40' : 'border-slate-700 bg-slate-950/50'}`}>
-          {selected && <Check className="w-4 h-4 text-white" />}
-        </div>
-        
-        {isAdmin && onPriceChange ? (
-          <div className="flex items-center gap-1 bg-slate-950/80 border border-red-500/30 rounded px-2 py-1 mt-1 backdrop-blur-md" onClick={e => e.stopPropagation()}>
-            <span className="text-xs text-slate-500">€</span>
-            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-20 text-sm font-bold text-red-400 bg-transparent outline-none" />
-          </div>
-        ) : (
-          <div className="text-right flex flex-col items-end justify-center">
-            <span className={`block font-black transition-colors duration-300 ${selected ? 'text-base text-red-400' : isStandard ? 'text-sm text-emerald-400' : 'text-base text-slate-500'}`}>
-              {isStandard ? 'Základný štandard' : `+${price.toLocaleString()} €`}
-            </span>
-            {isStandard && (
-              <span className={`block text-[10px] uppercase font-bold tracking-wider mt-0.5 ${selected ? 'text-red-400/80' : 'text-emerald-500/80'}`}>
-                (Bez príplatku)
-              </span>
-            )}
+    
+    {/* Horná časť: Ikona, Názov a Checkbox */}
+    <div className="flex items-start justify-between gap-4 w-full relative z-10">
+      <div className="flex items-start gap-3 flex-1 min-w-0">
+        {Icon && (
+          <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all duration-500 ${selected ? 'bg-gradient-to-br from-red-500 to-red-700 text-white shadow-xl shadow-red-500/30 rotate-3' : 'bg-white/5 text-slate-400 group-hover:text-slate-300 group-hover:scale-110'}`}>
+            <Icon className={`w-6 h-6 sm:w-7 sm:h-7 transition-transform duration-500 ${selected ? 'scale-110' : 'scale-100'}`} />
           </div>
         )}
+        <div className="flex-1 mt-1">
+          <div className="flex items-center gap-2 flex-wrap mb-1.5">
+            <span className={`font-black text-base sm:text-lg transition-colors duration-300 ${selected ? 'text-white' : 'text-slate-200'}`}>{label}</span>
+            {isA0 && <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.2)]">A0 Certifikácia</span>}
+          </div>
+          {description && <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">{description}</p>}
+        </div>
       </div>
+      
+      <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all duration-500 mt-1 ${selected ? 'border-red-500 bg-red-500 scale-110 shadow-lg shadow-red-500/40' : 'border-slate-700 bg-slate-950/50'}`}>
+        {selected && <Check className="w-3 h-3 sm:w-4 sm:h-4 text-white" />}
+      </div>
+    </div>
+    
+    {/* Spodná časť: Cena */}
+    <div className="w-full flex justify-end relative z-10 pt-2 mt-2 border-t border-white/5">
+      {isAdmin && onPriceChange ? (
+        <div className="flex items-center gap-1 bg-slate-950/80 border border-red-500/30 rounded px-2 py-1 backdrop-blur-md" onClick={e => e.stopPropagation()}>
+          <span className="text-xs text-slate-500">€</span>
+          <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-20 text-sm font-bold text-red-400 bg-transparent outline-none" />
+        </div>
+      ) : (
+        <div className="text-right flex flex-col items-end justify-center">
+          <span className={`block font-black transition-colors duration-300 ${selected ? 'text-base text-red-400' : isStandard ? 'text-sm text-emerald-400' : 'text-base text-slate-500'}`}>
+            {isStandard ? 'Základný štandard' : `+${price.toLocaleString()} €`}
+          </span>
+          {isStandard && (
+            <span className={`block text-[10px] uppercase font-bold tracking-wider mt-0.5 ${selected ? 'text-red-400/80' : 'text-emerald-500/80'}`}>
+              (Bez príplatku)
+            </span>
+          )}
+        </div>
+      )}
     </div>
   </button>
   );
 };
 
 const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = false, isAdmin, onPriceChange, description, t, icon: Icon }) => (
-  <button onClick={!disabled && !locked ? onChange : undefined} className={`flex items-center justify-between p-4 rounded-2xl border-2 transition-all duration-500 w-full active:scale-[0.98] group overflow-hidden relative ${locked ? 'border-emerald-500/30 bg-emerald-500/5 cursor-not-allowed' : checked ? 'border-red-500 bg-gradient-to-r from-red-500/10 to-transparent shadow-[0_0_20px_rgba(239,68,68,0.1)] scale-[1.01] backdrop-blur-md' : disabled ? 'border-white/5 bg-slate-900/50 opacity-60 cursor-not-allowed' : 'border-white/5 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.05] backdrop-blur-sm'}`}>
+  <button onClick={!disabled && !locked ? onChange : undefined} className={`flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-2xl border-2 transition-all duration-500 w-full active:scale-[0.98] group overflow-hidden relative gap-4 ${locked ? 'border-emerald-500/30 bg-emerald-500/5 cursor-not-allowed' : checked ? 'border-red-500 bg-gradient-to-r from-red-500/10 to-transparent shadow-[0_0_20px_rgba(239,68,68,0.1)] scale-[1.01] backdrop-blur-md' : disabled ? 'border-white/5 bg-slate-900/50 opacity-60 cursor-not-allowed' : 'border-white/5 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.05] backdrop-blur-sm'}`}>
     {checked && !locked && <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500" />}
-    <div className="flex items-center gap-4 relative z-10">
-      <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors duration-500 ${locked ? 'bg-emerald-500/20 text-emerald-400' : checked ? 'bg-gradient-to-br from-red-500 to-red-600 text-white shadow-lg shadow-red-500/20' : 'bg-white/5 text-slate-400 group-hover:scale-110 transition-transform duration-300'}`}>
-        {Icon ? <Icon className={`w-6 h-6 transition-transform duration-500 ${checked ? 'scale-110' : 'scale-100'}`} /> : (locked ? <Lock className="w-5 h-5" /> : <CheckSquare className="w-5 h-5" />)}
+    
+    <div className="flex items-start sm:items-center gap-4 w-full relative z-10">
+      <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors duration-500 ${locked ? 'bg-emerald-500/20 text-emerald-400' : checked ? 'bg-gradient-to-br from-red-500 to-red-600 text-white shadow-lg shadow-red-500/20' : 'bg-white/5 text-slate-400 group-hover:scale-110 transition-transform duration-300'}`}>
+        {Icon ? <Icon className={`w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-500 ${checked ? 'scale-110' : 'scale-100'}`} /> : (locked ? <Lock className="w-4 h-4 sm:w-5 sm:h-5" /> : <CheckSquare className="w-4 h-4 sm:w-5 sm:h-5" />)}
       </div>
-      <div className="text-left">
-        <span className={`font-bold text-lg block transition-colors duration-300 ${checked || locked ? 'text-white' : 'text-slate-300'}`}>{label}</span>
-        {description && <p className="text-sm text-slate-400 mt-1 leading-relaxed">{description}</p>}
-        {locked && <span className="text-[11px] uppercase font-bold text-emerald-500 tracking-wider flex items-center gap-1 mt-1"><CheckCircle className="w-3 h-3" /> {t ? t('requiredForA0') : 'Vyžadované pre A0'}</span>}
+      <div className="text-left flex-1 pr-4">
+        <span className={`font-bold text-base sm:text-lg block transition-colors duration-300 ${checked || locked ? 'text-white' : 'text-slate-300'}`}>{label}</span>
+        {description && <p className="text-xs sm:text-sm text-slate-400 mt-1 leading-relaxed">{description}</p>}
+        {locked && <span className="text-[10px] sm:text-[11px] uppercase font-bold text-emerald-500 tracking-wider flex items-center gap-1 mt-1"><CheckCircle className="w-3 h-3" /> {t ? t('requiredForA0') : 'Vyžadované pre A0'}</span>}
       </div>
-    </div>
-    <div className="flex items-center gap-4 ml-3 flex-shrink-0 relative z-10">
-      <div className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-all duration-300 ${locked ? 'bg-emerald-500 border-emerald-500' : checked ? 'bg-red-500 border-red-500 scale-110' : 'bg-slate-950/50 border-slate-700'}`}>
+      
+      {/* Checkbox na mobile zobrazený hore vedľa nadpisu, na desktope skrytý */}
+      <div className={`sm:hidden w-6 h-6 mt-1 rounded border-2 flex items-center justify-center transition-all duration-300 flex-shrink-0 ${locked ? 'bg-emerald-500 border-emerald-500' : checked ? 'bg-red-500 border-red-500 scale-110' : 'bg-slate-950/50 border-slate-700'}`}>
         {locked ? <Lock className="w-4 h-4 text-white" /> : checked && <Check className="w-4 h-4 text-white" />}
       </div>
-      <div className="flex-shrink-0 min-w-[70px] text-right">
+    </div>
+    
+    {/* Cena presunutá na samostatný riadok na mobile, na desktope vpravo */}
+    <div className="flex items-center justify-end w-full sm:w-auto pt-3 sm:pt-0 border-t border-white/5 sm:border-0 relative z-10 gap-4">
+      <div className="flex-shrink-0 text-right">
         {isAdmin && onPriceChange ? (
           <div className="flex items-center gap-1 bg-slate-950/80 border border-red-500/30 rounded px-2 py-1 backdrop-blur-sm" onClick={e => e.stopPropagation()}>
             <span className="text-xs text-slate-500">€</span>
@@ -94,6 +103,11 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
             )}
           </div>
         )}
+      </div>
+      
+      {/* Checkbox na desktope zobrazený vpravo od ceny */}
+      <div className={`hidden sm:flex w-6 h-6 rounded border-2 items-center justify-center transition-all duration-300 flex-shrink-0 ${locked ? 'bg-emerald-500 border-emerald-500' : checked ? 'bg-red-500 border-red-500 scale-110' : 'bg-slate-950/50 border-slate-700'}`}>
+        {locked ? <Lock className="w-4 h-4 text-white" /> : checked && <Check className="w-4 h-4 text-white" />}
       </div>
     </div>
   </button>
