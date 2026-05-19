@@ -36,12 +36,20 @@ export default function AdminZnalostnaBaza() {
 
   React.useEffect(() => {
     if (configPrompt && !isEditingPrompt) {
-      // Check if it's stored as an object { prompt: "..." } or raw string
       const val = configPrompt.config_value;
       if (val && typeof val === 'object' && val.prompt) {
         setPromptContent(val.prompt);
       } else if (typeof val === 'string') {
-        setPromptContent(val);
+        try {
+          const parsed = JSON.parse(val);
+          if (parsed && parsed.prompt) {
+            setPromptContent(parsed.prompt);
+          } else {
+            setPromptContent(val);
+          }
+        } catch (e) {
+          setPromptContent(val);
+        }
       } else {
         setPromptContent("");
       }
@@ -56,7 +64,8 @@ export default function AdminZnalostnaBaza() {
 
   const savePromptMutation = useMutation({
     mutationFn: async (content) => {
-      const payload = { config_value: { prompt: content } };
+      // Stringify the object to prevent the ORM from dropping it if the column is type text or strict json
+      const payload = { config_value: JSON.stringify({ prompt: content }) };
       let res;
       if (configPrompt?.id) {
         res = await base44.entities.AppConfiguration.update(configPrompt.id, payload);
