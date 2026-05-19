@@ -313,6 +313,7 @@ export default function AdminBlog() {
               </form>
             </DialogContent>
           </Dialog>
+          </div>
         </div>
 
         {/* Posts List */}
