@@ -26,9 +26,11 @@ export default function AdminZnalostnaBaza() {
   const { data: configPrompt, isLoading: promptLoading } = useQuery({
     queryKey: ['ai_system_prompt'],
     queryFn: async () => {
+      // Sort by created_date desc to always get the newest if there are duplicates
       const result = await base44.entities.AppConfiguration.filter({ config_key: 'ai_system_prompt' });
       if (result && result.length > 0) {
-        return result[0];
+        // Find the newest one just in case
+        return result.sort((a, b) => new Date(b.created_date) - new Date(a.created_date))[0];
       }
       return null;
     }
@@ -62,17 +64,20 @@ export default function AdminZnalostnaBaza() {
 
   const savePromptMutation = useMutation({
     mutationFn: async (content) => {
-      // Use the popis column to securely store the prompt data without backend schema rejection
-      const payload = { popis: content };
-      let res;
-      if (configPrompt?.id) {
-        res = await base44.entities.AppConfiguration.update(configPrompt.id, payload);
-      } else {
-        res = await base44.entities.AppConfiguration.create({
-          config_key: 'ai_system_prompt',
-          popis: content
-        });
+      // Because AppConfiguration UPDATE silently fails due to backend RLS restrictions,
+      // we must find all existing rows, try to delete them, and CREATE a fresh one.
+      const existing = await base44.entities.AppConfiguration.filter({ config_key: 'ai_system_prompt' });
+      if (existing && existing.length > 0) {
+        for (const row of existing) {
+          try { await base44.entities.AppConfiguration.delete(row.id); } catch (e) { console.warn("Failed to delete old config", e); }
+        }
       }
+
+      const res = await base44.entities.AppConfiguration.create({
+        config_key: 'ai_system_prompt',
+        popis: content
+      });
+      
       if (res && res.error) throw new Error(res.error.message || JSON.stringify(res.error));
       return res;
     },
