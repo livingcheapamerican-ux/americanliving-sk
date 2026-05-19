@@ -26,9 +26,9 @@ export default function AdminZnalostnaBaza() {
   const { data: configDoc, isLoading: promptLoading } = useQuery({
     queryKey: ['ai_system_prompt_doc'],
     queryFn: async () => {
-      const result = await base44.entities.Dokument.filter({ nazov: 'SYSTEM_PROMPT_CONFIG' });
+      const result = await base44.entities.SiteSettings.filter({ klic: 'ai_system_prompt' });
       if (result && result.length > 0) {
-        return result.sort((a, b) => new Date(b.created_date) - new Date(a.created_date))[0];
+        return result[0];
       }
       return null;
     }
@@ -36,7 +36,8 @@ export default function AdminZnalostnaBaza() {
 
   // Helper na ziskanie textu z configu
   const getPromptText = (doc) => {
-    return doc?.popis || "";
+    if (!doc || !doc.hodnota) return "";
+    return typeof doc.hodnota === 'string' ? doc.hodnota : (doc.hodnota.prompt || "");
   };
 
   // Načítanie dokumentov, ktoré majú príznak pre_chatbota: true
@@ -45,23 +46,21 @@ export default function AdminZnalostnaBaza() {
     queryFn: () => base44.entities.Dokument.filter({ pre_chatbota: true })
   });
 
-  // Odfiltrovanie system promptu z normalnych dokumentov
+  // Odfiltrovanie system promptu z normalnych dokumentov (just in case any leaked)
   const documents = rawDocuments.filter(d => d.nazov !== 'SYSTEM_PROMPT_CONFIG');
 
   const savePromptMutation = useMutation({
     mutationFn: async (content) => {
-      // Because AppConfiguration is completely broken/missing columns, we hijack a special Dokument to store it reliably
-      const existing = await base44.entities.Dokument.filter({ nazov: 'SYSTEM_PROMPT_CONFIG' });
+      // Use SiteSettings because it's a proven generic configuration table with 'klic' and 'hodnota' columns
+      const existing = await base44.entities.SiteSettings.filter({ klic: 'ai_system_prompt' });
       
       let res;
       if (existing && existing.length > 0) {
-        res = await base44.entities.Dokument.update(existing[0].id, { popis: content });
+        res = await base44.entities.SiteSettings.update(existing[0].id, { hodnota: { prompt: content } });
       } else {
-        res = await base44.entities.Dokument.create({
-          nazov: 'SYSTEM_PROMPT_CONFIG',
-          popis: content,
-          pre_chatbota: true,
-          subor_url: 'internal://system-config'
+        res = await base44.entities.SiteSettings.create({
+          klic: 'ai_system_prompt',
+          hodnota: { prompt: content }
         });
       }
       
