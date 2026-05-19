@@ -10,6 +10,12 @@ export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyro
   const [formData, setFormData] = useState({ meno: "", email: "", telefon: "", obec: "", poznamka: "" });
   const [sending, setSending] = useState(false);
 
+  React.useEffect(() => {
+    const handleOpen = () => setShowContactModal(true);
+    window.addEventListener('open-contact-modal', handleOpen);
+    return () => window.removeEventListener('open-contact-modal', handleOpen);
+  }, []);
+
   const handleSendQuote = async () => {
     if (!formData.email || !formData.meno || !formData.telefon || !formData.obec) {
       toast.error('Vyplňte všetky povinné polia');

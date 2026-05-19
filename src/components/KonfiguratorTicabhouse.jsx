@@ -11,8 +11,10 @@ import {
 } from "lucide-react";
 
 // ── Glassmorphism Komponenty ──────────────────────────────────────────────
-const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmin, onPriceChange, icon: Icon }) => (
-  <button onClick={onClick} className={`relative flex flex-col p-5 rounded-3xl border-2 transition-all duration-500 w-full text-left active:scale-[0.98] gap-4 overflow-hidden group ${selected ? 'border-red-500 bg-gradient-to-br from-red-500/10 to-red-900/10 shadow-[0_0_30px_rgba(239,68,68,0.2)] scale-[1.02] backdrop-blur-md' : 'border-white/5 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.05] backdrop-blur-sm'}`}>
+const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmin, onPriceChange, icon: Icon }) => {
+  const isStandard = price === 0;
+  return (
+  <button onClick={onClick} className={`relative flex flex-col p-5 rounded-3xl border-2 transition-all duration-500 w-full text-left active:scale-[0.98] gap-4 overflow-hidden group ${selected ? 'border-red-500 bg-gradient-to-br from-red-500/10 to-red-900/10 shadow-[0_0_30px_rgba(239,68,68,0.2)] scale-[1.02] backdrop-blur-md' : isStandard ? 'border-emerald-500/30 bg-emerald-500/5 hover:border-emerald-500/50 hover:bg-emerald-500/10 backdrop-blur-sm' : 'border-white/5 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.05] backdrop-blur-sm'}`}>
     {selected && <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-orange-500 opacity-80" />}
     <div className="flex items-start gap-4 w-full relative z-10">
       {Icon && (
@@ -40,14 +42,15 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
             <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-20 text-sm font-bold text-red-400 bg-transparent outline-none" />
           </div>
         ) : (
-          <span className={`text-base font-black whitespace-nowrap transition-colors duration-300 ${selected ? 'text-red-400' : 'text-slate-500'}`}>
-            {price === 0 ? 'V cene' : `+${price.toLocaleString()} €`}
+          <span className={`text-base font-black whitespace-nowrap transition-colors duration-300 ${selected ? 'text-red-400' : isStandard ? 'text-emerald-400' : 'text-slate-500'}`}>
+            {isStandard ? 'Základný štandard' : `+${price.toLocaleString()} €`}
           </span>
         )}
       </div>
     </div>
   </button>
-);
+  );
+};
 
 const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = false, isAdmin, onPriceChange, description, t, icon: Icon }) => (
   <button onClick={!disabled && !locked ? onChange : undefined} className={`flex items-center justify-between p-4 rounded-2xl border-2 transition-all duration-500 w-full active:scale-[0.98] group overflow-hidden relative ${locked ? 'border-emerald-500/30 bg-emerald-500/5 cursor-not-allowed' : checked ? 'border-red-500 bg-gradient-to-r from-red-500/10 to-transparent shadow-[0_0_20px_rgba(239,68,68,0.1)] scale-[1.01] backdrop-blur-md' : disabled ? 'border-white/5 bg-slate-900/50 opacity-60 cursor-not-allowed' : 'border-white/5 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.05] backdrop-blur-sm'}`}>
@@ -73,8 +76,8 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
             <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-20 text-sm font-bold text-red-400 bg-transparent outline-none" />
           </div>
         ) : (
-          <span className={`text-base font-black whitespace-nowrap transition-colors duration-300 ${locked ? 'text-emerald-400' : 'text-slate-400'}`}>
-            {price === 0 ? '0 €' : `+${price.toLocaleString()} €`}
+          <span className={`text-base font-black whitespace-nowrap transition-colors duration-300 ${locked ? 'text-emerald-400' : price === 0 ? 'text-emerald-400' : 'text-slate-400'}`}>
+            {price === 0 ? 'Základný štandard' : `+${price.toLocaleString()} €`}
           </span>
         )}
       </div>
@@ -495,42 +498,23 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
   };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start w-full relative mt-8 font-sans">
-      
-      {/* ĽAVÉ MENU - Scroll Spy */}
-      <aside className="hidden lg:block w-64 flex-shrink-0 sticky top-24 h-[calc(100vh-8rem)] overflow-y-auto custom-scrollbar rounded-3xl bg-slate-950 border border-white/10 p-4 shadow-2xl z-40">
-        <div className="text-xs font-black text-slate-500 uppercase tracking-widest mb-4 px-2">{t('yourConfig') || 'Konfigurácia'}</div>
-        <nav className="flex flex-col gap-1 relative">
-          <div className="absolute left-6 top-6 bottom-6 w-px bg-slate-800 -z-10" />
-          {sections.map((section, idx) => (
-            <button
-              key={idx}
-              onClick={() => scrollToSection(idx)}
-              className={`flex items-center gap-3 w-full text-left p-2.5 rounded-xl transition-all duration-300 group ${
-                activeSection === idx ? 'bg-white/10 shadow-lg' : 'hover:bg-white/5'
-              }`}
-            >
-              <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-500 ${
-                activeSection === idx 
-                  ? 'bg-red-500 text-white shadow-[0_0_15px_rgba(239,68,68,0.4)] scale-110' 
-                  : activeSection > idx
-                    ? 'bg-slate-800 text-slate-400'
-                    : 'bg-slate-900 border border-white/5 text-slate-600'
-              }`}>
-                {activeSection > idx ? <Check className="w-4 h-4" /> : <section.icon className="w-4 h-4" />}
-              </div>
-              <span className={`text-sm font-bold transition-colors duration-300 ${
-                activeSection === idx ? 'text-white' : activeSection > idx ? 'text-slate-300' : 'text-slate-500'
-              }`}>
-                {section.title}
-              </span>
-            </button>
-          ))}
-        </nav>
-      </aside>
+    <div className="flex flex-col w-full relative mt-8 font-sans">
+      {/* Vysvetlenie Štandardu */}
+      <div className="w-full bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-6 mb-8 flex gap-4 items-start shadow-lg">
+        <div className="bg-emerald-500/20 p-3 rounded-full text-emerald-400">
+          <CheckCircle className="w-6 h-6" />
+        </div>
+        <div>
+          <h3 className="text-lg font-bold text-white mb-1">Prémiový drevodom v základnej cene</h3>
+          <p className="text-sm text-slate-300 leading-relaxed">
+            Domy Ticab House sú štandardne dodávané ako prémiové drevodomy s kvalitným dreveným obkladom fasády aj interiéru. Tento luxusný drevený štandard je už zahrnutý v základnej cene. Priplácate si výlučne iba za zmeny štandardu (napr. ak chcete vymeniť drevo za sadrokartón).
+          </p>
+        </div>
+      </div>
 
-      {/* HLAVNÝ OBSAH */}
-      <div className="flex-1 min-w-0 w-full space-y-12 pb-32">
+      <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start w-full relative">
+        {/* ĽAVÝ STĹPEC - Možnosti (cca 65%) */}
+        <div className="flex-1 min-w-0 w-full lg:w-[65%] space-y-12 pb-32">
         
         {/* 0. Účel stavby */}
         <section id="section-0" className="scroll-mt-32">
@@ -811,14 +795,86 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
         </section>
 
       </div>
+        
+        {/* PRAVÝ STĹPEC - Sticky Účtenka */}
+        <aside className="hidden lg:block w-[35%] flex-shrink-0 sticky top-24 h-[calc(100vh-8rem)] overflow-y-auto custom-scrollbar z-40">
+          <div className="bg-slate-900 border border-white/10 rounded-3xl p-6 shadow-2xl flex flex-col h-full">
+            <h3 className="text-lg font-black text-white mb-4 border-b border-white/10 pb-4">Zhrnutie konfigurácie</h3>
+            
+            <div className="flex-1 overflow-y-auto pr-2 space-y-3 mb-6 text-sm">
+              <div className="flex justify-between text-slate-300">
+                <span>Základná cena domu</span>
+                <span className="font-bold text-white">{dom?.zakladna_cena?.toLocaleString('sk-SK')} €</span>
+              </div>
+              
+              {totalPrice > (dom?.zakladna_cena || 0) && (
+                <div className="pt-2 border-t border-white/5 space-y-2">
+                  <div className="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-2 mt-4">Príplatková výbava:</div>
+                  {izolaciaStien !== "150mm" && CENY[`izolacia_stien_${izolaciaStien}`] > 0 && (
+                    <div className="flex justify-between text-slate-400"><span>Izolácia stien {izolaciaStien}</span><span>+{CENY[`izolacia_stien_${izolaciaStien}`]} €</span></div>
+                  )}
+                  {izolaciaPodlahy !== "150mm" && CENY[`izolacia_podlahy_${izolaciaPodlahy}`] > 0 && (
+                    <div className="flex justify-between text-slate-400"><span>Izolácia podlahy {izolaciaPodlahy}</span><span>+{CENY[`izolacia_podlahy_${izolaciaPodlahy}`]} €</span></div>
+                  )}
+                  {izolaciaStropu !== "150mm" && CENY[`izolacia_stropu_${izolaciaStropu}`] > 0 && (
+                    <div className="flex justify-between text-slate-400"><span>Izolácia stropu {izolaciaStropu}</span><span>+{CENY[`izolacia_stropu_${izolaciaStropu}`]} €</span></div>
+                  )}
+                  {tepelneCerpadlo === "ano" && <div className="flex justify-between text-slate-400"><span>Tepelné čerpadlo</span><span>+{CENY.tepelne_cerpadlo} €</span></div>}
+                  {pripravaNaRekuperaciu && <div className="flex justify-between text-slate-400"><span>Príprava na rekuperáciu</span><span>+{CENY.pripravaNaRekuperaciu} €</span></div>}
+                  {rekuperacia === "ano" && <div className="flex justify-between text-slate-400"><span>Rekuperácia</span><span>+{CENY.rekuperacia} €</span></div>}
+                  {podlahovoKurenie && <div className="flex justify-between text-slate-400"><span>Podlahové kúrenie</span><span>+{CENY.podlahove_kurenie} €</span></div>}
+                  {klimatizacia && <div className="flex justify-between text-slate-400"><span>Klimatizácia</span><span>+{CENY.klimatizacia} €</span></div>}
+                  {pripravaNaKrb && <div className="flex justify-between text-slate-400"><span>Príprava na krb</span><span>+{CENY.pripravaKrb} €</span></div>}
+                  {ochranaKachle && <div className="flex justify-between text-slate-400"><span>Ochrana (Kachle)</span><span>+{CENY.ochranaKachle} €</span></div>}
+                  {fasada !== "drevo_smrek" && <div className="flex justify-between text-slate-400"><span>Fasáda: {fasada}</span><span>+{CENY[`fasada_${fasada}`]} €</span></div>}
+                  {strecha !== "korugovan_plech" && <div className="flex justify-between text-slate-400"><span>Strecha: falcovaný profil</span><span>+{CENY.strecha_falcovane} €</span></div>}
+                  {odkvapy === "ano" && <div className="flex justify-between text-slate-400"><span>Odkvapy</span><span>+{CENY.odkvapy} €</span></div>}
+                  {vchodoveDvere === "kovove" && <div className="flex justify-between text-slate-400"><span>Vchodové dvere: kovové</span><span>+{CENY.dvere_kovove} €</span></div>}
+                  {obkladStien !== "smrek_8cm" && <div className="flex justify-between text-slate-400"><span>Obklad stien: {obkladStien}</span><span>+{CENY[`obklad_stien_${obkladStien}`] || CENY[`obklad_${obkladStien}`]} €</span></div>}
+                  {interieroveDvere === "posuvne" && <div className="flex justify-between text-slate-400"><span>Interiérové dvere posuvné</span><span>+{CENY.dvere_posuvne} €</span></div>}
+                  {elektro !== "eu" && <div className="flex justify-between text-slate-400"><span>Elektroinštalácia: {elektro}</span><span>+{CENY[`elektro_${elektro}`]} €</span></div>}
+                  {bleskozvod && <div className="flex justify-between text-slate-400"><span>Bleskozvod</span><span>+{CENY.bleskozvod} €</span></div>}
+                  {prepat && <div className="flex justify-between text-slate-400"><span>Prepäťová ochrana</span><span>+{CENY.prepat} €</span></div>}
+                  {pripravaNaSolarnePanely && <div className="flex justify-between text-slate-400"><span>Príprava na solárne panely</span><span>+{CENY.pripravaNaSolarnePanely} €</span></div>}
+                  {sprchovyKut === "radaway" && <div className="flex justify-between text-slate-400"><span>Sprchový kút Radaway</span><span>+{CENY.sprchovyKut} €</span></div>}
+                  {vana && <div className="flex justify-between text-slate-400"><span>Vaňa</span><span>+{CENY.vana} €</span></div>}
+                  {bateria === "grohe" && <div className="flex justify-between text-slate-400"><span>Batérie Grohe</span><span>+{CENY.bateria} €</span></div>}
+                  {skrinka && <div className="flex justify-between text-slate-400"><span>Skrinka s umývadlom</span><span>+{CENY.skrinka} €</span></div>}
+                  {inziniering && <div className="flex justify-between text-slate-400"><span>Inžiniering</span><span>+{CENY.inziniering} €</span></div>}
+                  {projektACertifikacia && <div className="flex justify-between text-slate-400"><span>Projekt a certifikácia</span><span>+{CENY.projektACertifikacia} €</span></div>}
+                  {revizia && <div className="flex justify-between text-slate-400"><span>Revízia</span><span>+{CENY.revizia} €</span></div>}
+                  {zaklady !== "bez" && <div className="flex justify-between text-slate-400"><span>Základy: {zaklady}</span><span>+{CENY[`zaklady_${zaklady}`]} €</span></div>}
+                  {montaz && <div className="flex justify-between text-slate-400"><span>Montáž domu</span><span>+{CENY.montaz} €</span></div>}
+                  {doprava && dopravaViditelna && <div className="flex justify-between text-slate-400"><span>Doprava</span><span>+{CENY.doprava} €</span></div>}
+                </div>
+              )}
+            </div>
+
+            <div className="mt-auto border-t border-white/10 pt-4">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-slate-400">Celková cena</span>
+                <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-600">{totalPrice.toLocaleString('sk-SK')} €</span>
+              </div>
+              <button 
+                onClick={() => window.dispatchEvent(new CustomEvent('open-contact-modal'))} 
+                className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold rounded-xl py-3 shadow-lg transition-all"
+              >
+                <Send className="inline-block w-4 h-4 mr-2" />
+                Poslať ponuku
+              </button>
+            </div>
+          </div>
+        </aside>
+      </div>
       
-      {/* Plávajúca cena */}
+      {/* Plávajúca cena (Iba pre mobilné zariadenia) */}
       <FloatingPrice 
         price={totalPrice} 
         isVisible={true} 
         onSendQuote={handleSendQuoteFromFloating}
         dom={dom}
         vyrobca="Ticab house"
+        mobileOnly={true}
       />
     </div>
   );
