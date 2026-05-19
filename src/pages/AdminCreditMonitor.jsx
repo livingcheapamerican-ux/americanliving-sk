@@ -96,11 +96,11 @@ export default function AdminCreditMonitor() {
   const handleSaveLimit = async () => {
     try {
       if (config) {
-        await base44.asServiceRole.entities.AppConfiguration.update(config.id, {
+        await base44.entities.AppConfiguration.update(config.id, {
           config_value: { limit: parseInt(tempLimit) }
         });
       } else {
-        await base44.asServiceRole.entities.AppConfiguration.create({
+        await base44.entities.AppConfiguration.create({
           config_key: "credit_daily_limit",
           config_value: { limit: parseInt(tempLimit) }
         });
