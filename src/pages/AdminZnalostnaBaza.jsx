@@ -180,6 +180,12 @@ export default function AdminZnalostnaBaza() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* DEBUG BANNER FOR DIAGNOSTICS */}
+            <div className="lg:col-span-3 bg-red-100 p-4 rounded text-xs font-mono break-all text-red-900 border border-red-300">
+              <strong>DEBUG RAW DB STATE:</strong><br/>
+              {promptLoading ? "Loading..." : (configPrompt === null ? "NULL (No row in database)" : JSON.stringify(configPrompt, null, 2))}
+            </div>
+
             {/* Ľavý stĺpec: Inštrukcie (System Prompt) */}
             <div className="lg:col-span-2 space-y-6">
               <Card className="p-6 border-indigo-100 shadow-md">
