@@ -65,9 +65,25 @@ export default function Chatbot() {
 
   const initConversation = async () => {
     try {
+      // Fetch dynamic system prompt from SiteSettings
+      let systemPrompt = null;
+      try {
+        const config = await base44.entities.SiteSettings.filter({ klic: 'ai_system_prompt' });
+        if (config && config.length > 0 && config[0].hodnota) {
+          systemPrompt = typeof config[0].hodnota === 'string' ? config[0].hodnota : config[0].hodnota.prompt;
+        }
+      } catch (e) {
+        console.warn("Failed to load custom system prompt", e);
+      }
+
+      const metadata = { name: "Chatbot konverzácia" };
+      if (systemPrompt) {
+        metadata.system_prompt = systemPrompt;
+      }
+
       const conversation = await base44.agents.createConversation({
         agent_name: "american_living_assistant",
-        metadata: { name: "Chatbot konverzácia" }
+        metadata: metadata
       });
       setConversationId(conversation.id);
     } catch (err) {
