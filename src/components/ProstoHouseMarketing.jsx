@@ -91,7 +91,7 @@ export default function ProstoHouseMarketing() {
           <h3 className="text-xl font-bold text-white">Objavte Svet Domov ProstoHouse</h3>
           <p className="text-slate-400 text-sm leading-relaxed">
             Od kompaktných riešení (31 m²) až po priestranné rodinné domy (220 m²). 
-            Ponúkame populárne štýly ako <strong className="text-white">Barnhouse</strong> alebo <strong className="text-white">A-FRAME</strong> s možnosťou tradičnej omietky, vďaka čomu dom navonok pôsobí ako murovaný. 
+            Ponúkame populárne štýly ako <strong className="text-white">Barnhouse</strong> (s možnosťou tradičnej omietky, vďaka čomu dom navonok pôsobí ako murovaný) alebo <strong className="text-white">A-FRAME</strong>. 
             American Living s.r.o. funguje ako váš projektový manažér a preberá starosti s výstavbou na seba.
           </p>
         </div>
