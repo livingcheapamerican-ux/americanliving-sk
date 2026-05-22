@@ -5,17 +5,16 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     
     // Povolíme aj neprihláseným používateľom
-    let user = null;
     try {
-      user = await base44.auth.me();
-    } catch (e) {
+      await base44.auth.me();
+    } catch (_e) {
       // Používateľ nie je prihlásený - pokračujeme aj tak
     }
 
     const { message, context, history } = await req.json();
 
     // Načítaj všetky databázové entity pre knowledge base
-    const [domy, blogy, konfigTexty, dokumenty, insights, sessions, dopyty, brainRules] = await Promise.all([
+    const [domy, blogy, konfigTexty, dokumenty, _insights, sessions, dopyty, brainRules] = await Promise.all([
       base44.asServiceRole.entities.Dom.list().catch(() => []),
       base44.asServiceRole.entities.BlogPost.list().catch(() => []),
       base44.asServiceRole.entities.KonfiguratorText.list().catch(() => []),
@@ -70,7 +69,7 @@ Deno.serve(async (req) => {
     })).slice(0, 20);
 
     // Analýza záujmu klientov
-    const topHouses = {};
+    const topHouses: Record<string, number> = {};
     sessions.forEach(s => {
       s.dom_interactions?.forEach(i => {
         topHouses[i.dom_nazov] = (topHouses[i.dom_nazov] || 0) + 1;
@@ -86,8 +85,8 @@ Deno.serve(async (req) => {
       .join('\n');
 
     // FUZZY SEARCH - Nájdi dom v správe používateľa
-    const findSimilarHouse = (query) => {
-      const normalizeText = (text) => text.toLowerCase()
+    const findSimilarHouse = (query: string) => {
+      const normalizeText = (text: string) => text.toLowerCase()
         .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
         .replace(/[^a-z0-9\s]/g, "");
       
@@ -152,6 +151,41 @@ POUŽÍVATEĽ SA PÝTA NA DOM: "${foundHouse.nazov}"
 - konfigurator_custom_ceny_prosto_house (Prosto): ${JSON.stringify(foundHouse.konfigurator_custom_ceny_prosto_house || {}, null, 2)}
 `;
     }
+
+    // Priprav pravidlá z MarketingBrain
+    const brainRulesKnowledge = brainRules.length > 0
+      ? `🧠 DÔLEŽITÉ MARKETINGOVÉ A PREDAJNÉ SMERNICE:
+${brainRules.map((r, i) => `${i + 1}. [Kategória: ${r.category}] ${r.content_text}`).join('\n')}`
+      : '';
+
+    // Priprav kompaktné znalosti z dokumentov
+    const dokumentyKnowledgeText = dokumentyKnowledge.length > 0
+      ? `📄 DOKUMENTY A SÚBORY:
+${dokumentyKnowledge.map((d, i) => `${i + 1}. ${d.nazov} (${d.typ}) - ${d.zhrnutie || ''}. Kľúčové info: ${d.klucove_info || 'N/A'}`).join('\n')}`
+      : '';
+
+    // Priprav najpopulárnejšie domy a najčastejšie otázky
+    const popularDomyText = topDomyNazvy.length > 0
+      ? `📈 AKTUALITY O ZÁUJME KLIENTOV:
+Najpopulárnejšie domy na našom webe za poslednú dobu sú: ${topDomyNazvy.join(', ')}.`
+      : '';
+
+    const castoOtazkyText = castoKladeneOtazky
+      ? `❓ POSLEDNÉ TÉMY, KTORÉ ZÁKAZNÍCI RIEŠILI:
+${castoKladeneOtazky}`
+      : '';
+
+    // Priprav blogové vedomosti
+    const blogyText = blogyKnowledge.length > 0
+      ? `📚 BLOGY A ČLÁNKY (NAŠE ZNALOSTI):
+${blogyKnowledge.map((b, i) => `${i + 1}. [${b.kategoria}] ${b.nazov} - ${b.perex}`).join('\n')}`
+      : '';
+
+    // Priprav konfigurátor vedomosti
+    const konfigText = konfigKnowledge.length > 0
+      ? `⚙️ INFO O POLOŽKÁCH V KONFIGURÁTORE:
+${konfigKnowledge.map(k => `• ${k.nazov} (${k.vyrobca}): ${k.popis}`).join('\n')}`
+      : '';
 
     // Systémový prompt pre AI asistenta
     const systemPrompt = `Si AI KONZULTANT pre American Living - distribútor modulárnych a montovaných domov.
@@ -236,12 +270,24 @@ Pre výpočet cien a príplatkov pracuj VÝHRADNE s reálnymi dátami z polí "k
      - Inžiniering/Projekt: 'addon-networks', 'addon-engineering', 'addon-projectant', 'addon-revision'
      - Doprava: u Prosto House je doprava po celom Slovensku ZADARMO!
 
-📋 KOMPLETNÝ ZOZNAM VŠETKÝCH \${domyKnowledge.length} DOSTUPNÝCH DOMOV:
-\${domyKnowledge.map(d => \`• \${d.nazov} (\${d.vyrobca}, \${d.cena}€, \${d.plocha}m²)\`).join('\\n')}
+${brainRulesKnowledge}
 
-\${houseContext}
+${dokumentyKnowledgeText}
 
-KONTEXT: \${context}
+${popularDomyText}
+
+${castoOtazkyText}
+
+${blogyText}
+
+${konfigText}
+
+📋 KOMPLETNÝ ZOZNAM VŠETKÝCH ${domyKnowledge.length} DOSTUPNÝCH DOMOV:
+${domyKnowledge.map(d => `• ${d.nazov} (${d.vyrobca}, ${d.cena}€, ${d.plocha}m²)`).join('\n')}
+
+${houseContext}
+
+KONTEXT: ${context}
 
 Odpovedaj v slovenčine, priateľsky, stručne, s emoji.`;
 
@@ -299,7 +345,7 @@ Odpovedz na používateľovu správu. Ak ide o pomoc s formulárom, navrhni konk
     console.error('AI Asistent Error:', error);
     return Response.json({ 
       response: "Prepáč, momentálne nemôžem odpovedať. Skús to prosím neskôr.",
-      error: error.message 
+      error: error instanceof Error ? error.message : String(error)
     }, { status: 500 });
   }
 });
