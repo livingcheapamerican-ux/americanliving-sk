@@ -7,18 +7,63 @@ import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, X, Send, Loader2, ChevronDown, ChevronUp, Lightbulb } from "lucide-react";
 
+const WELCOME_MESSAGE = {
+  role: "assistant",
+  content: "👋 Ahoj! Som Kexo, tvoj AI konzultant. Môžem ti pomôcť s:\n\n🏠 Hľadaním vhodných domov\n💰 Výpočtom hypotéky\n📋 Analýzou pozemkov\n✨ Vysvetlením konfigurátorov\n\nČo ťa zaujíma?"
+};
+
 export default function AIAsistent({ context = "general", onSuggestion = null }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
-  const [messages, setMessages] = useState([
-    {
-      role: "assistant",
-      content: "👋 Ahoj! Som Kexo, tvoj AI konzultant. Môžem ti pomôcť s:\n\n🏠 Hľadaním vhodných domov\n💰 Výpočtom hypotéky\n📋 Analýzou pozemkov\n✨ Vysvetlením konfigurátorov\n\nČo ťa zaujíma?"
-    }
-  ]);
+  const [messages, setMessages] = useState([]);
+  const [conversation, setConversation] = useState(null);
+  const unsubscribeRef = useRef(null);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
+
+  const setupSubscription = (convId) => {
+    if (unsubscribeRef.current) {
+      unsubscribeRef.current();
+    }
+    const unsubscribe = base44.agents.subscribeToConversation(convId, (data) => {
+      setMessages(data.messages || []);
+      const msgs = data.messages || [];
+      if (msgs.length > 0) {
+        const lastMsg = msgs[msgs.length - 1];
+        if (lastMsg.role === 'assistant' && lastMsg.content && lastMsg.content.trim().length > 0) {
+          setIsLoading(false);
+          if (lastMsg.suggestion && onSuggestion) {
+            onSuggestion(lastMsg.suggestion);
+          }
+        }
+      }
+    });
+    unsubscribeRef.current = unsubscribe;
+  };
+
+  useEffect(() => {
+    const savedConvId = localStorage.getItem("base44_aiasistent_conversation_id");
+    if (savedConvId) {
+      base44.agents.getConversation(savedConvId)
+        .then(conv => {
+          if (conv) {
+            setConversation(conv);
+            setMessages(conv.messages || []);
+            setupSubscription(conv.id);
+          }
+        })
+        .catch(err => {
+          console.warn("Failed to load AIAsistent conversation from localStorage:", err);
+          localStorage.removeItem("base44_aiasistent_conversation_id");
+        });
+    }
+    return () => {
+      if (unsubscribeRef.current) {
+        unsubscribeRef.current();
+      }
+    };
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -28,44 +73,46 @@ export default function AIAsistent({ context = "general", onSuggestion = null })
     scrollToBottom();
   }, [messages]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!input || !input.trim() || isLoading) return;
+  const sendMessage = async (text) => {
+    const userMessage = text.trim();
+    if (!userMessage || isLoading) return;
 
-    const userMessage = input.trim();
-    setInput("");
     setMessages(prev => [...prev, { role: "user", content: userMessage }]);
     setIsLoading(true);
 
     try {
-      const response = await base44.functions.invoke('aiAsistent', {
-        message: userMessage,
-        context,
-        history: messages.slice(-5)
-      });
+      let activeConv = conversation;
+      if (!activeConv) {
+        const metadata = {
+          context: context,
+        };
 
-      if (response?.data?.response) {
-        setMessages(prev => [...prev, { 
-          role: "assistant", 
-          content: response.data.response,
-          suggestion: response.data.suggestion
-        }]);
-
-        if (response.data.suggestion && onSuggestion) {
-          onSuggestion(response.data.suggestion);
-        }
-      } else {
-        throw new Error('Neplatná odpoveď z AI');
+        activeConv = await base44.agents.createConversation({
+          agent_name: 'american_living_assistant',
+          metadata: metadata
+        });
+        localStorage.setItem('base44_aiasistent_conversation_id', activeConv.id);
+        setConversation(activeConv);
+        setupSubscription(activeConv.id);
       }
+
+      await base44.agents.addMessage(activeConv, { role: 'user', content: userMessage });
     } catch (error) {
       console.error('AI Asistent Error:', error);
+      setIsLoading(false);
       setMessages(prev => [...prev, { 
         role: "assistant", 
         content: "😊 Prepáč, mám momentálne technické problémy. Skús to prosím o chvíľu.\n\nAk problém pretrváva, kontaktuj nás priamo na +421 905 138 124." 
       }]);
-    } finally {
-      setIsLoading(false);
     }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!input || !input.trim()) return;
+    const text = input;
+    setInput("");
+    sendMessage(text);
   };
 
   const quickQuestions = [
@@ -74,6 +121,8 @@ export default function AIAsistent({ context = "general", onSuggestion = null })
     "Ako pridať dom?",
     "Ako funguje konfigurátor?"
   ];
+
+  const displayMessages = messages.length > 0 ? messages : [WELCOME_MESSAGE];
 
   return (
     <>
@@ -146,7 +195,7 @@ export default function AIAsistent({ context = "general", onSuggestion = null })
                 <>
                   {/* Messages */}
                   <div className="h-96 overflow-y-auto p-4 bg-gray-50 space-y-4">
-                    {messages.map((msg, idx) => (
+                    {displayMessages.map((msg, idx) => (
                       <motion.div
                         key={idx}
                         initial={{ opacity: 0, y: 10 }}
@@ -186,7 +235,7 @@ export default function AIAsistent({ context = "general", onSuggestion = null })
                   </div>
 
                   {/* Quick Questions */}
-                  {messages.length <= 2 && (
+                  {messages.length <= 1 && (
                     <div className="p-3 border-t border-gray-200 bg-white">
                       <p className="text-xs text-gray-600 mb-2 font-medium">Rýchle otázky:</p>
                       <div className="flex flex-wrap gap-2">

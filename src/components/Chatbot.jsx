@@ -39,12 +39,54 @@ export default function Chatbot() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
-  const [messages, setMessages] = useState([WELCOME_MESSAGE]);
+  const [messages, setMessages] = useState([]);
+  const [conversation, setConversation] = useState(null);
+  const unsubscribeRef = useRef(null);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+
+  const setupSubscription = (convId) => {
+    if (unsubscribeRef.current) {
+      unsubscribeRef.current();
+    }
+    const unsubscribe = base44.agents.subscribeToConversation(convId, (data) => {
+      setMessages(data.messages || []);
+      const msgs = data.messages || [];
+      if (msgs.length > 0) {
+        const lastMsg = msgs[msgs.length - 1];
+        if (lastMsg.role === 'assistant' && lastMsg.content && lastMsg.content.trim().length > 0) {
+          setIsLoading(false);
+        }
+      }
+    });
+    unsubscribeRef.current = unsubscribe;
+  };
+
+  useEffect(() => {
+    const savedConvId = localStorage.getItem("base44_chatbot_conversation_id");
+    if (savedConvId) {
+      base44.agents.getConversation(savedConvId)
+        .then(conv => {
+          if (conv) {
+            setConversation(conv);
+            setMessages(conv.messages || []);
+            setupSubscription(conv.id);
+          }
+        })
+        .catch(err => {
+          console.warn("Failed to load conversation from localStorage:", err);
+          localStorage.removeItem("base44_chatbot_conversation_id");
+        });
+    }
+    return () => {
+      if (unsubscribeRef.current) {
+        unsubscribeRef.current();
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (isOpen && !isMinimized) {
@@ -64,83 +106,56 @@ export default function Chatbot() {
     }
   }, [messages, isMinimized]);
 
-  const handleSubmit = async (e) => {
-    e?.preventDefault();
-    const userMessage = input.trim();
+  const sendMessage = async (text) => {
+    const userMessage = text.trim();
     if (!userMessage || isLoading) return;
 
-    setInput("");
     setMessages(prev => [...prev, { role: "user", content: userMessage }]);
     setIsLoading(true);
     setError(null);
 
     try {
-      const response = await base44.functions.invoke('aiAsistent', {
-        message: userMessage,
-        context: isKonfigurator ? 'konfigurator' : 'general',
-        history: messages.slice(-10).map(m => ({ role: m.role, content: m.content }))
-      });
+      let activeConv = conversation;
+      if (!activeConv) {
+        const metadata = {
+          context: isKonfigurator ? 'konfigurator' : 'general',
+        };
 
-      if (response?.data?.response) {
-        setMessages(prev => [...prev, { 
-          role: "assistant", 
-          content: response.data.response,
-          suggestion: response.data.suggestion
-        }]);
-      } else {
-        throw new Error('Neplatná odpoveď z AI');
+        activeConv = await base44.agents.createConversation({
+          agent_name: 'american_living_assistant',
+          metadata: metadata
+        });
+        localStorage.setItem('base44_chatbot_conversation_id', activeConv.id);
+        setConversation(activeConv);
+        setupSubscription(activeConv.id);
       }
+
+      await base44.agents.addMessage(activeConv, { role: 'user', content: userMessage });
     } catch (err) {
       console.error("Chyba pri komunikácii s Kexom:", err);
       setError("Nepodarilo sa odoslať správu. Skúste znova.");
+      setIsLoading(false);
       setMessages(prev => [...prev, { 
         role: "assistant", 
         content: "😊 Prepáčte, mám momentálne technické problémy. Skúste to prosím o chvíľu alebo nás kontaktujte telefonicky na +421 905 138 124." 
       }]);
-    } finally {
-      setIsLoading(false);
     }
+  };
+
+  const handleSubmit = (e) => {
+    e?.preventDefault();
+    if (!input.trim()) return;
+    const text = input;
+    setInput("");
+    sendMessage(text);
   };
 
   const handleQuickQuestion = (q) => {
-    handleSubmitWithText(q);
-  };
-
-  const handleSubmitWithText = async (text) => {
-    if (!text.trim() || isLoading) return;
-    setMessages(prev => [...prev, { role: "user", content: text }]);
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const response = await base44.functions.invoke('aiAsistent', {
-        message: text,
-        context: isKonfigurator ? 'konfigurator' : 'general',
-        history: messages.slice(-10).map(m => ({ role: m.role, content: m.content }))
-      });
-
-      if (response?.data?.response) {
-        setMessages(prev => [...prev, { 
-          role: "assistant", 
-          content: response.data.response,
-          suggestion: response.data.suggestion
-        }]);
-      } else {
-        throw new Error('Neplatná odpoveď z AI');
-      }
-    } catch (err) {
-      console.error("Chyba pri komunikácii s Kexom:", err);
-      setError("Nepodarilo sa odoslať správu. Skúste znova.");
-      setMessages(prev => [...prev, { 
-        role: "assistant", 
-        content: "😊 Prepáčte, mám momentálne technické problémy. Skúste to prosím o chvíľu." 
-      }]);
-    } finally {
-      setIsLoading(false);
-    }
+    sendMessage(q);
   };
 
   const showQuickQuestions = messages.length <= 1 && !isLoading;
+  const displayMessages = messages.length > 0 ? messages : [WELCOME_MESSAGE];
 
   return (
     <>
@@ -211,7 +226,7 @@ export default function Chatbot() {
                 <>
                   {/* Messages */}
                   <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 bg-[#08080A]/90 min-h-0">
-                    {messages.map((message, index) => (
+                    {displayMessages.map((message, index) => (
                       <motion.div
                         key={index}
                         initial={{ opacity: 0, y: 8 }}

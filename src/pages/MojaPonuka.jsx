@@ -84,27 +84,14 @@ export default function MojaPonuka() {
 
     let conv = conversation;
     if (!conv) {
-      let systemPrompt = null;
-      try {
-        const config = await base44.entities.SiteSettings.filter({ klic: 'ai_system_prompt' });
-        if (config && config.length > 0 && config[0].watermark_text) {
-          systemPrompt = config[0].watermark_text;
-        }
-      } catch (e) {
-        console.warn("Failed to load custom system prompt", e);
-      }
-
       const metadata = {
         user_id: user?.id,
         saved_quote_id: id,
         dom_nazov: quote?.dom_nazov
       };
-      if (systemPrompt) {
-        metadata.system_prompt = systemPrompt;
-      }
 
       conv = await base44.agents.createConversation({
-        agent_name: 'american_living_assistant',
+        agent_name: 'quote_assistant',
         metadata: metadata
       });
       await base44.entities.SavedQuote.update(id, { conversation_id: conv.id });
