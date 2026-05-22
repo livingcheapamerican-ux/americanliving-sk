@@ -120,7 +120,7 @@ PREDAJNÉ ARGUMENTY
 ═══════════════════════════════════════════════════════
 - MUROVANÝ vs MONTOVANÝ: Dom 140m² murovaný: 259 000–294 000€. Montovaný A0: ~172 000€. Úspora 85-120k€!
 - PASCA "DOM NA KĽÚČ": Konkurencia 142 827€ + skryté náklady 29 950€ = reálne 172 777€. American Living = lacnejší + TČ v cene!
-- 8 BEZPLATNÝCH SLUŽIEB: Predaj nehnuteľnosti, hľadanie pozemku, hypotéka, projekt, stavebné povolenie, úradné potvrdenia, stavba, napojenie + kolaudácia.
+- 8 KROKOV K BÝVANIU (SLUŽBY POD JEDNOU STRECHOU): Predaj nehnuteľnosti, hľadanie pozemku, hypotéka, projekt (platená položka v konfigurátore), stavebné povolenie / inžiniering (platená položka v konfigurátore), úradné potvrdenia, stavba, napojenie + kolaudácia. (Projekt a stavebné povolenie / inžiniering sú platené a nie sú zadarmo!)
 
 ═══════════════════════════════════════════════════════
 REGIONÁLNE ŠPECIFIKÁ

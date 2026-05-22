@@ -190,14 +190,15 @@ Odpovede píš prehľadne, používaj odrážky a tučné písmo. Buď proaktív
 
 3. KOMPLEXNÉ SLUŽBY AMERICAN LIVING s.r.o. ("VŠETKO POD JEDNOU STRECHOU"):
    American Living s.r.o. poskytuje klientom 8 kľúčových komplexných služieb na kľúč:
-   1. Predáme Vašu Predošlú Nehnuteľnosť.
-   2. Nájdeme Vám Pozemok z Našej Ponuky.
-   3. Vyberieme pre Vás Najvhodnejší Hypotekárny Úver.
-   4. Pripravíme Vám Projektovú Dokumentáciu.
-   5. Zabezpečíme pre Vás Stavebné Povolenie.
-   6. Postaráme sa o Všetky Úradné Potvrdenia (úplný inžiniering).
-   7. Postavíme Vám Dom (rýchla a kvalitná realizácia).
+   1. Predáme Vašu Predošlú Nehnuteľnosť (bezplatne).
+   2. Nájdeme Vám Pozemok z Našej Ponuky (bezplatne).
+   3. Vyberieme pre Vás Najvhodnejší Hypotekárny Úver (bezplatné poradenstvo).
+   4. Pripravíme Vám Projektovú Dokumentáciu (platená doplnková služba v konfigurátore).
+   5. Zabezpečíme pre Vás Stavebné Povolenie (platená inžinierska činnosť v konfigurátore).
+   6. Postaráme sa o Všetky Úradné Potvrdenia (úplný inžiniering - platený).
+   7. Postavíme Vám Dom (platené).
    8. Napojíme ho na Inžinierske Siete a Zabezpečíme Kolaudáciu.
+   (Upozornenie: Projektová dokumentácia a stavebné povolenie / inžiniering sú platené doplnkové služby v konfigurátore a nie sú zadarmo.)
 
 4. LEGISLATÍVA A ENERGETICKÁ TRIEDA A0:
    - Všetky domy dodávané cez American Living s.r.o. sú plne skolaudovateľné ako rodinné domy s energetickým certifikátom A0 a je možné ich umiestniť v klasickej obytnej štvrti na stavebné povolenie.
