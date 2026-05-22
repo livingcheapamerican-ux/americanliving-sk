@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { 
   ArrowRight, CheckCircle, Home, Zap, Clock, Shield, Euro,
-  FileText, Hammer, Key, Phone, Building2, ChevronRight, Building, Landmark, TrendingUp, Settings, LogIn, Gift, Star, Users
+  FileText, Hammer, Key, Phone, Building2, ChevronRight, Building, Landmark, TrendingUp, Settings, LogIn, Gift, Star, Users,
+  MessageCircle, Send
 } from "lucide-react";
 import { motion } from "framer-motion";
 import HeroSettingsManager from "../components/admin/HeroSettingsManager";
@@ -473,12 +474,15 @@ export default function Domov() {
                     </motion.div>
                   </Button>
                 </Link>
-                <Link to={createPageUrl("Kontakt")} className="w-full sm:w-auto">
-                  <Button size="lg" variant="outline" className="w-full sm:w-auto bg-white/15 backdrop-blur-md border-2 border-white text-white hover:bg-white hover:text-primary font-bold text-base sm:text-lg px-5 sm:px-8 py-4 sm:py-6 shadow-2xl transition-all">
-                    <Phone className="mr-2 w-4 h-4 sm:w-5 sm:h-5" />
-                    {t('consultation')}
-                  </Button>
-                </Link>
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))}
+                  className="w-full sm:w-auto bg-white/15 backdrop-blur-md border-2 border-white text-white hover:bg-white hover:text-slate-900 font-bold text-base sm:text-lg px-5 sm:px-8 py-4 sm:py-6 shadow-2xl transition-all"
+                >
+                  <MessageCircle className="mr-2 w-4 h-4 sm:w-5 sm:h-5" />
+                  {t('consultation')}
+                </Button>
               </div>
             </motion.div>
           </div>
@@ -496,6 +500,131 @@ export default function Domov() {
               }`}
             />
           ))}
+        </div>
+      </section>
+
+      {/* AI Consultation Section - Kexo */}
+      <section className="py-12 sm:py-16 bg-[#08080A] relative overflow-hidden border-b border-[#C5A880]/15">
+        {/* Glow Effects */}
+        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-80 h-80 bg-[#9E2A2B]/10 rounded-full blur-[100px] pointer-events-none"></div>
+        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-[#C5A880]/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-5xl mx-auto">
+            <div className="bg-gradient-to-br from-[#0D0D11]/90 to-[#16161D]/80 backdrop-blur-xl border border-[#C5A880]/20 rounded-3xl p-6 sm:p-12 shadow-[0_0_50px_rgba(197,168,128,0.08)] flex flex-col lg:flex-row items-center gap-8 sm:gap-12">
+              
+              {/* Left Side: Copy & Features */}
+              <div className="flex-1 text-center lg:text-left">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#9E2A2B]/10 border border-[#9E2A2B]/35 text-[#C5A880] text-xs sm:text-sm font-bold mb-4 sm:mb-6 animate-pulse">
+                  <span className="w-2 h-2 bg-green-400 rounded-full"></span>
+                  Kexo – AI konzultant online
+                </div>
+                
+                <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-white mb-4 sm:mb-6 leading-tight">
+                  Poraďte sa o svojom dome.<br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C5A880] via-white to-[#C5A880]">
+                    Odpovedáme okamžite!
+                  </span>
+                </h2>
+                
+                <p className="text-sm sm:text-lg text-slate-300 font-light mb-6 sm:mb-8 leading-relaxed max-w-xl">
+                  Náš AI expert <strong className="text-[#C5A880] font-semibold">Kexo</strong> má prístup ku kompletným cenníkom, technickým špecifikáciám a parametrom všetkých domov. Pomôže vám s kalkuláciou ceny na kľúč, výberom technológií aj konfiguráciou.
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8 text-left">
+                  <div className="flex items-start gap-2.5">
+                    <CheckCircle className="w-5 h-5 text-[#C5A880] shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="text-xs sm:text-sm font-bold text-slate-200">Cena na kľúč</h4>
+                      <p className="text-[11px] sm:text-xs text-slate-400">Kompletné sčítanie základov, montáže a inžinieringu.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <CheckCircle className="w-5 h-5 text-[#C5A880] shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="text-xs sm:text-sm font-bold text-slate-200">Moderné technológie</h4>
+                      <p className="text-[11px] sm:text-xs text-slate-400">Všetko o KVH sušenom dreve, CLT a SIP paneloch.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <CheckCircle className="w-5 h-5 text-[#C5A880] shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="text-xs sm:text-sm font-bold text-slate-200">Návod pre konfigurátor</h4>
+                      <p className="text-[11px] sm:text-xs text-slate-400">Pomoc so zostavením rodinného domu A0 krok za krokom.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <CheckCircle className="w-5 h-5 text-[#C5A880] shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="text-xs sm:text-sm font-bold text-slate-200">Hypotéka a financovanie</h4>
+                      <p className="text-[11px] sm:text-xs text-slate-400">Rýchle zistenie možností financovania a splátok.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+                  <Button 
+                    onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))}
+                    size="lg" 
+                    className="bg-gradient-to-r from-[#9E2A2B] to-[#b13536] hover:from-[#b13536] hover:to-[#9E2A2B] text-white font-bold px-8 py-6 rounded-2xl shadow-[0_0_20px_rgba(158,42,43,0.35)] hover:shadow-[0_0_30px_rgba(158,42,43,0.5)] border border-[#C5A880]/30 transition-all text-sm sm:text-base flex items-center justify-center gap-2 group"
+                  >
+                    <MessageCircle className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                    Spustiť konzultáciu s Kexom
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </div>
+              </div>
+
+              {/* Right Side: Chat Mockup Interface */}
+              <div className="w-full lg:w-96 flex-shrink-0">
+                <div className="bg-[#08080A]/90 border border-[#C5A880]/15 rounded-2xl p-4 sm:p-5 shadow-2xl relative overflow-hidden">
+                  <div className="flex items-center gap-3 border-b border-[#C5A880]/10 pb-3 mb-4">
+                    <div className="w-8 h-8 rounded-full bg-[#16161D] border border-[#C5A880]/30 flex items-center justify-center">
+                      <MessageCircle className="w-4 h-4 text-[#C5A880]" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-xs sm:text-sm text-slate-200">Kexo</h3>
+                      <p className="text-[10px] text-green-400 flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span>
+                        Odpovedá okamžite
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className="flex justify-start">
+                      <div className="bg-[#16161D]/80 border border-[#C5A880]/10 rounded-2xl px-3 py-2 text-xs text-slate-300 max-w-[90%]">
+                        👋 Dobrý deň! Som váš AI poradca. Hľadáte celoročný dom, alebo rekreačnú chatku?
+                      </div>
+                    </div>
+                    <div className="flex justify-end">
+                      <div className="bg-[#9E2A2B] rounded-2xl px-3 py-2 text-xs text-slate-100 max-w-[90%]">
+                        Hľadám celoročný dom na kľúč s A0 certifikátom. Čo všetko to obsahuje?
+                      </div>
+                    </div>
+                    <div className="flex justify-start">
+                      <div className="bg-[#16161D]/80 border border-[#C5A880]/10 rounded-2xl px-3 py-2 text-xs text-[#C5A880] max-w-[90%] font-medium">
+                        Kexo: S radosťou vám to prepočítam! U Ticab House to zahŕňa základný model + betónové pásy (+11 825 €) + A0 energetický certifikát (+18 000 €) + legislatívu a projekty (+6 000 €). Montáž je zadarmo...
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-[#C5A880]/10 flex gap-2">
+                    <div className="flex-1 bg-[#16161D] border border-[#C5A880]/15 rounded-xl px-3 py-1.5 text-xs text-slate-500 flex items-center">
+                      Spýtať sa na cenu na kľúč...
+                    </div>
+                    <button 
+                      onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))}
+                      className="bg-[#9E2A2B] hover:bg-[#802021] text-white p-2 rounded-xl"
+                    >
+                      <Send className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
         </div>
       </section>
 

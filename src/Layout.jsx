@@ -169,12 +169,12 @@ function LayoutContent({ children }) {
       </Helmet>
       <style>{`
         :root {
-          --primary: #dc2626;
-          --secondary: #b91c1c;
-          --accent: #B8860B;
-          --dark-brown: #333333;
-          --bg-main: #FFFFFF;
-          --text-main: #333333;
+          --primary: #9E2A2B;
+          --secondary: #802021;
+          --accent: #C5A880;
+          --dark-brown: #0D0D11;
+          --bg-main: #08080A;
+          --text-main: #f1f5f9;
         }
 
         .bg-primary { background-color: var(--primary); }
@@ -760,17 +760,17 @@ function LayoutContent({ children }) {
         </div>
       </header>
 
-      <main className="lg:bg-gray-100 relative" style={{ paddingTop: '2.5rem' }}>
-        <div className="lg:max-w-[1200px] xl:max-w-[1400px] lg:mx-auto bg-white lg:shadow-xl min-h-screen relative z-20">
+      <main className="lg:bg-[#08080A] relative" style={{ paddingTop: '2.5rem' }}>
+        <div className="lg:max-w-[1200px] xl:max-w-[1400px] lg:mx-auto bg-[#08080A] min-h-screen relative z-20">
           {children}
         </div>
       </main>
 
-      <footer className="bg-gray-900 text-white mt-20">
+      <footer className="bg-[#0D0D11] border-t border-[#C5A880]/10 text-white mt-20">
         <div className="container mx-auto px-4 py-12">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div>
-              <div className="bg-white p-4 rounded-lg inline-block mb-4">
+              <div className="p-2 inline-block mb-4 bg-slate-900/40 rounded-lg border border-[#C5A880]/20">
                 <img 
                   src={LOGO_URL} 
                   alt="American Living" 
