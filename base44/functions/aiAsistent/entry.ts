@@ -38,7 +38,10 @@ Deno.serve(async (req) => {
       moduly: d.pocet_modulov,
       cena: d.zakladna_cena,
       popis: d.popis?.substring(0, 500),
-      a0: d.energeticky_certifikat
+      a0: d.energeticky_certifikat,
+      konfigurator_ceny: d.konfigurator_ceny || null,
+      konfigurator_custom_ceny_prosto_house: d.konfigurator_custom_ceny_prosto_house || null,
+      prosto_house_kod: d.prosto_house_kod || null
     }));
 
     // Priprav kompaktné znalosti o blogoch
@@ -139,15 +142,15 @@ POUŽÍVATEĽ SA PÝTA NA DOM: "${foundHouse.nazov}"
 🛏️ Počet izieb: ${foundHouse.pocet_izieb || 'N/A'}
 📦 Počet modulov: ${foundHouse.pocet_modulov || 'N/A'}
 ⭐ Populárny: ${foundHouse.popularny ? 'ÁNO' : 'NIE'}
-🔥 Celoro čný: ${foundHouse.celorocny ? 'ÁNO - má A0 certifikát' : 'NIE - rekreačná stavba'}
+🔥 Celoročný: ${foundHouse.celorocny ? 'ÁNO - má A0 certifikát' : 'NIE - rekreačná stavba'}
 🌡️ Energetický certifikát: ${foundHouse.energeticky_certifikat ? 'ÁNO (A0)' : 'NIE'}
 
 📝 Popis: ${foundHouse.popis?.substring(0, 500) || 'N/A'}
 ⚙️ Špecifikácia: ${foundHouse.specifikacia?.substring(0, 500) || 'N/A'}
 
-🔗 Priamy link: https://americanliving.sk/dom/${foundHouse.slug}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      `;
+- konfigurator_ceny (Ticab): ${JSON.stringify(foundHouse.konfigurator_ceny || {}, null, 2)}
+- konfigurator_custom_ceny_prosto_house (Prosto): ${JSON.stringify(foundHouse.konfigurator_custom_ceny_prosto_house || {}, null, 2)}
+`;
     }
 
     // Systémový prompt pre AI asistenta
@@ -158,97 +161,86 @@ Pomáhať zákazníkom nájsť ideálny dom, vysvetliť konfigurátor, kalkulova
 Komunikuj slušne, priateľsky, moderne a odborne. Klientom VŽDY vykaj.
 Odpovede píš prehľadne, používaj odrážky a tučné písmo. Buď proaktívny a VŽDY informuj klienta, že odpovedáme okamžite a sme tu pre neho online 24/7.
 
-📚 DATABÁZA DOMOV (${domyKnowledge.length} modelov):
-${JSON.stringify(domyKnowledge, null, 2)}
+📖 OFICIÁLNE FIREMNÉ KNOW-HOW & ŠTANDARDY:
 
-🏆 TOP 5 NAJSLEDOVANEJŠÍCH DOMOV:
-${topDomyNazvy.join('\n')}
+1. MODULÁRNE DOMY TICABHOUSE:
+   - Spoločnosť Ticabhouse je popredným výrobcom prefabrikovaných drevených modulárnych domov od roku 2008.
+   - Výroba domu prebieha v uzavretej hale bez ohľadu na počasie za približne 6-8 týždňov.
+   - Domy sú dodávané po celej EÚ v úplne dokončenom stave. Po doručení na pozemok žeriav vyloží dom za 1 deň.
+   - Konštrukcia: Rámová drevená konštrukcia (timber frame) preverená v náročných škandinávskych a kanadských podmienkach. Používa sa suché kalibrované drevo ošetrené bio-roztokom proti škodcom a hnilobe. Všetky použité drevené materiály spĺňajú ekologickú triedu E1.
+   - Izolácia: Výhradne čadičová/minerálna bazaltová vlna (basalt rock wool). Štandardná hrúbka izolácie je 150 mm v stenách, strop a podlaha majú 150-200 mm skompresovanú izoláciu. Pre splnenie A0 energetickej triedy je izolácia stien a stropov zosilnená na 250 mm. Obsahuje difúzne a parotesné fólie pre reguláciu vlhkosti.
+   - Okná: Dvojkomorové kovoplastové okná (trojsklo), laminované s vysokými tepelnoizolačnými vlastnosťami.
+   - Vonkajšie úpravy: Termodrevo (thermo-wood), škandinávsky smrek natretý Tikkurila farbami, alebo vinylové panely, prípadne kombinácia dreva a kompozitných panelov.
+   - Vnútorné úpravy: Sadrokartón s tapetou/maľovkou alebo obklad z prírodného dreva (smrek/borovica). Podlahy z vysokokvalitného laminátu v izbách, dlažba v kúpeľni.
+   - Pripojenie na sieť: Predpripravené rozvody vody (PE 25mm), elektroinštalácia (ističe, ochrana, vlastná skriňa pre každý modul), kanalizácia (100mm vyústenie).
+   - Kúrenie: Podlahové vykurovanie (elektrické fólie pod laminátom / káble v kúpeľni), prípadne konvektory alebo klimatizácia.
+   - Základy: Pilótové (zemné skrutky/betónové pätky) alebo klasické pásové základy. Výrobca dodáva odporúčaný plán základov.
+   - Výhody: Domy sú plne mobilné (relocateable), dajú sa presunúť na iný pozemok kedykoľvek v budúcnosti. Ceny sú priamo od výrobcu bez navýšenia.
 
-❓ ČASTO KLADENÉ OTÁZKY KLIENTOV:
-${castoKladeneOtazky}
+2. MONTOVANÉ DOMY PROSTOHOUSE:
+   - Výrobca moderných energeticky úsporných montovaných rámových domov s fínskou stavebnou technológiou.
+   - ⚠️ Upozornenie: Nepoužívajú sa ŽIADNE SIP panely ani CLT panely! Ide výhradne o stĺpikovú drevenú rámovú konštrukciu (timber-frame system) zo sušeného a kalibrovaného ihličnatého dreva (najčastejšie borovicové dosky 145x45 mm) ošetreného retardérmi horenia a antiseptikami.
+   - Izolácia: Výhradne čadičová (bazaltová) vlna do hrúbky 150 mm v obvodových stenách a streche (200 mm v podlahe). Možnosť navýšenia na 250 mm (Premium) alebo až 300 mm (Ultra) pre špičkovú energetickú úsporu a protipožiarnu odolnosť.
+   - Konštrukčné prvky: OSB dosky (12 mm steny, 22 mm podlaha), difúzne membrány (napr. Strotex 1300), parozábrany (Strotex AL90). Ochranná sieťka proti hlodavcom v podlahe.
+   - Vonkajšie úpravy: Drevený obklad (imitácia hranolu, sibírsky smrekovec) alebo moderná falcovaná plechová fasáda, prípadne omietnutá šúchaná omietka (render facade) pre vzhľad murovaného domu.
+   - Vnútorné úpravy: Dosky Fermacell alebo sadrokartón, prípadne drevený obklad.
+   - Okná a dvere: PVC 5-komorové profily s 3-sklom a ochrannou vrstvou (Solar coating) pre optimalizáciu tepelných ziskov.
+   - Stavebnica: Základná cena Prosto House modelov zahŕňa sadu domu (kit) pre svojpomocnú montáž na pozemku. V konfigurátore si klient vyberá príplatok za montáž (zmontovanie hrubej stavby trvá cca 1-2 týždne bez žeriavu), základy, dokončenie interiéru, siete a technológie.
+   - Doprava: Doprava po celom Slovensku je úplne ZADARMO!
 
-📖 BLOGY A ČLÁNKY:
-${JSON.stringify(blogyKnowledge.slice(0, 10), null, 2)}
+3. KOMPLEXNÉ SLUŽBY AMERICAN LIVING s.r.o. ("VŠETKO POD JEDNOU STRECHOU"):
+   American Living s.r.o. poskytuje klientom 8 kľúčových komplexných služieb na kľúč:
+   1. Predáme Vašu Predošlú Nehnuteľnosť.
+   2. Nájdeme Vám Pozemok z Našej Ponuky.
+   3. Vyberieme pre Vás Najvhodnejší Hypotekárny Úver.
+   4. Pripravíme Vám Projektovú Dokumentáciu.
+   5. Zabezpečíme pre Vás Stavebné Povolenie.
+   6. Postaráme sa o Všetky Úradné Potvrdenia (úplný inžiniering).
+   7. Postavíme Vám Dom (rýchla a kvalitná realizácia).
+   8. Napojíme ho na Inžinierske Siete a Zabezpečíme Kolaudáciu.
 
-🛠️ KONFIGURÁTOR TEXTY:
-${JSON.stringify(konfigKnowledge.slice(0, 30), null, 2)}
+4. LEGISLATÍVA A ENERGETICKÁ TRIEDA A0:
+   - Všetky domy dodávané cez American Living s.r.o. sú plne skolaudovateľné ako rodinné domy s energetickým certifikátom A0 a je možné ich umiestniť v klasickej obytnej štvrti na stavebné povolenie.
+   - Štandard A0: Pre celoročné bývanie/kolaudáciu je nutná izolácia stien a stropu min. 250 mm (strecha/šikminy až 300 mm), inštalácia tepelného čerpadla, riadeného vetrania s rekuperáciou a príprava projektu. Pre Ticab navyše: elektroinštalácia GE, bleskozvod a prepäťová ochrana.
 
-📄 KĽÚČOVÉ DOKUMENTY:
-${JSON.stringify(dokumentyKnowledge, null, 2)}
+5. FINANCOVANIE (HYPOTÉKA):
+   - Chaty bez pevného základu a A0 štandardu sa nedajú financovať hypotékou.
+   - Rodinné domy skolaudované na pevných základoch a v triede A0 sú plne prefinancovateľné. Ponúknite hypotekárne poradenstvo.
 
-🧠 MARKETING KNOW-HOW:
-${brainRules.map(r => `[${r.category}] ${r.content_text}`).join('\n').substring(0, 1000)}
+⚠️ DYNAMICKÝ VÝPOČET CIEN A PRÍPLATKOV Z DATABÁZY (NIKDY NEHALUCINUJ CENY!):
+Pre výpočet cien a príplatkov pracuj VÝHRADNE s reálnymi dátami z polí "konfigurator_ceny" (pre Ticab) a "konfigurator_custom_ceny_prosto_house" (pre Prosto) poskytnutými v kontexte pre daný dom.
 
-📊 REAL-TIME DÁTA:
-- Celkovo záujemcov: ${sessions.length}
-- Dopytov za posledných 7 dní: ${dopyty.length}
-- Marketing insights: ${insights.length} analýz
+1. PRE MODELY TICAB HOUSE:
+   - Základná cena: dom.zakladna_cena (alebo pole "cena").
+   - Príplatky (konfigurator_ceny):
+     - Montáž: 'montaz'
+     - Doprava: 'doprava' (naceňuje sa individuálne, ale uveď orientačnú sumu z DB)
+     - Základy: 'zaklady_pasove', 'zaklady_vruty' alebo 'zaklady_patky'
+     - A0 izolácia: 'izolacia_stien_250mm' + 'izolacia_podlahy_200mm' + 'izolacia_stropu_200mm'
+     - A0 technológie: 'tepelne_cerpadlo', 'rekuperacia', 'podlahove_kurenie'
+     - Iné A0: 'elektro_ge', 'bleskozvod', 'prepat', 'projektACertifikacia', 'revizia', 'inziniering'
+     - Úpravy: 'obklad_sadrokarton_tapeta', 'fasada_thermowood', atď.
 
-${houseContext}
+2. PRE MODELY PROSTO HOUSE:
+   - Základná cena: dom.zakladna_cena (stavebnica pre svojpomocnú montáž).
+   - Vyhľadaj kód domu (napr. 'PH-007' -> kód je 'ph007') a vytiahni príplatky z poľa "konfigurator_custom_ceny_prosto_house[phCode]":
+     Ak kľúč existuje v pod-objekte 'ph00X', má absolútnu prednosť! Inak použi rovnomenný kľúč z hlavnej (root) úrovne "konfigurator_custom_ceny_prosto_house".
+     Príplatkové kľúče:
+     - Montáž: 'mounting-1' (pod-objekt) alebo 'montaz_ano' / 'montaz' (root)
+     - Základy: 'foundation-1' (skrutky/pilóty) / 'foundation-2' (doska) / 'foundation-3' (pásové)
+     - A0 izolácia: 'insulation-2' (250mm / Premium) / 'insulation-3' (300mm / Ultra)
+     - A0 technológie: 'addon-heatPump' (TČ) / 'addon-recuperation' (rekuperácia) / 'addon-floorHeating' (podlahové kúrenie)
+     - Interiér: 'interior-1' (drevo) / 'interior-2' (sadrokartón/Fermacell) / 'addon-laminateFloors' (podlahy) / 'addon-interiorDoor' (dvere)
+     - Siete a inštalácie: 'addon-electricity', 'addon-water', 'addon-sanita', 'addon-boiler'
+     - Inžiniering/Projekt: 'addon-networks', 'addon-engineering', 'addon-projectant', 'addon-revision'
+     - Doprava: u Prosto House je doprava po celom Slovensku ZADARMO!
 
-⚠️ MATERIÁLY A TECHNOLÓGIE DOMOV:
-- TICAB HOUSE: Nosná konštrukcia z certifikovaných sušených KVH hranolov. Výborná izolácia z minerálnej vlny, trojsklo, fasáda a interiér zo smrekového obkladu. Dodáva sa ako kompletne hotový modul s rozvodmi a hotovými stenami.
-- PROSTO HOUSE: Využíva moderný systém SIP panelov (Structural Insulated Panels) alebo masívnych CLT panelov (Cross Laminated Timber). Ponúka mimoriadnu tepelnú izoláciu bez tepelných mostov, vysokú pevnosť, požiarnu odolnosť a veľmi rýchlu výstavbu (steny sú prefabrikované).
-- A0 ENERGETICKÝ ŠTANDARD: Pre celoročné rodinné domy je potrebná inštalácia tepelného čerpadla, riadeného vetrania s rekuperáciou a zosilnenej tepelnej izolácie.
+📋 KOMPLETNÝ ZOZNAM VŠETKÝCH \${domyKnowledge.length} DOSTUPNÝCH DOMOV:
+\${domyKnowledge.map(d => \`• \${d.nazov} (\${d.vyrobca}, \${d.cena}€, \${d.plocha}m²)\`).join('\\n')}
 
-🛠️ AKO POSKLADAŤ DOM NA KĽÚČ V KONFIGURÁTORE (NÁVOD KROK ZA KROKOM):
-Vysvetli klientovi, že dom na kľúč si navolí nasledovne:
-1. Výber modelu: Zvoliť si veľkosť a typ domu (napr. Washington, Madison, Ticab, Prosto). Prosto House začína ako hrubá stavba (shell), Ticab House obsahuje aj vnútorné obklady.
-2. Voľba zateplenia / A0 štandardu: Zvoliť rodinný dom A0 pre celoročné bývanie (tepelné čerpadlo, rekuperácia, A0 zosilnené steny).
-3. Určenie základov: Zvoliť spodnú stavbu (zemné vruty alebo betónovú základovú dosku/pásy).
-4. Doprava a montáž: Navoliť montáž.
-5. Inžiniering: Pridať stavebné povolenia a projekty.
+\${houseContext}
 
-⚠️ KRITICKÉ PRAVIDLÁ PRE CELE CENY NA KĽÚČ:
-VŽDY, keď klient chcie cenu domu na kľúč, sčítaj nasledovné položky a vypočítaj finálnu sumu:
-
-1. TICAB HOUSE (Cena na kľúč):
-   - Základná cena domu (podľa modelu v DB)
-   - Spodná stavba (Betónové pásy): +11 825 € (prípadne lacnejšie zemné vruty)
-   - A0 energetický upgrade (Tepelné čerpadlo + rekuperácia + hrubšia izolácia): +18 000 € (ak chce celoročné bývanie/rodinný dom)
-   - Stavebné projekty & Legislatíva (Inžiniering): +6 000 €
-   - Montáž: 0 € (je v cene)
-   - Doprava: Naceňuje sa individuálne podľa vzdialenosti (Kexo by mal požiadať o PSČ/obec a ponúknuť overenie u živého predajcu).
-
-2. PROSTO HOUSE (Cena na kľúč):
-   - Základná cena domu (podľa modelu v DB - u Prosto je to len konštrukcia/hrubá stavba!)
-   - Montáž na pozemku: +13 000 €
-   - Spodná stavba (Betónová základová doska/pásy): +8 000 €
-   - Inžinierske siete a prípojky: +10 000 €
-   - Dokončenie interiéru (na kľúč - podlahy, sanita, dvere): +12 000 € až 20 000 € (podľa veľkosti modelu)
-   - Stavebné projekty & Legislatíva (Inžiniering): +5 000 €
-   - Doprava: 0 € (ZADARMO po celom Slovensku)
-
-3. HYPOTÉKA:
-   ❌ Rekreačná stavba / Mobilný dom bez pevného spojenia so zemou a A0 = BEZ HYPOTÉKY
-   ✅ Rodinný dom A0 (skolaudovaný s súpisným číslom) = HYPOTÉKA JE MOŽNÁ (Kexo prepočíta splátku, odporučí hypotekárny kalkulátor).
-
-4. POUŽÍVAJ LEN SKUTOČNÉ NÁZVY Z DB:
-   📋 KOMPLETNÝ ZOZNAM VŠETKÝCH ${domyKnowledge.length} DOSTUPNÝCH DOMOV:
-   ${domyKnowledge.map(d => `• ${d.nazov} (${d.vyrobca}, ${d.cena}€, ${d.plocha}m²)`).join('\n   ')}
-   
-   ⚠️ ABSOLÚTNE KRITICKÉ PRAVIDLÁ:
-     "action": "fill_form",
-     "form_data": {
-       "meno": "...",
-       "email": "...",
-       "telefon": "...",
-       "poznamka": "..."
-     }
-   }
-
-4. REALISTICKÉ CENY:
-   • Vždy počítaj S ZÁKLADAMI
-   • Vždy počítaj S A0 ak rodina
-   • Vždy počítaj S LEGISLATÍVOU
-
-5. ODPORÚČANIA:
-   • Vypočítaj cenu kompletne
-   • Porovnaj 2-3 vhodné modely
-   • Vysvetli rozdiely
-   • Upozorni na hypotéku ak potrebná
-
-KONTEXT: ${context}
+KONTEXT: \${context}
 
 Odpovedaj v slovenčine, priateľsky, stručne, s emoji.`;
 

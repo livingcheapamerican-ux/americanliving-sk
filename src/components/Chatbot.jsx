@@ -10,7 +10,7 @@ import ReactMarkdown from "react-markdown";
 
 const WELCOME_MESSAGE = {
   role: "assistant",
-  content: "👋 Ahoj! Som **Kexo**, váš AI konzultant pre domy na kľúč.\n\n**Odpovedám okamžite!** Viem všetko o našich montovaných a modulárnych domoch, cenách a detailoch. Môžem vám pomôcť s:\n\n🏠 **Výberom a porovnaním domov** (Ticab vs Prosto)\n🛠️ **Kalkuláciou ceny na kľúč** (základy, montáž, prípojky, legislatíva)\n📐 **Technológiami a materiálmi** (KVH rámy, CLT/SIP panely)\n💻 **Prechodom cez konfigurátor** krok za krokom\n\nNa čo sa chcete opýtať?"
+  content: "👋 Ahoj! Som **Kexo**, váš AI konzultant pre domy na kľúč.\n\n**Odpovedám okamžite!** Viem všetko o našich montovaných a modulárnych domoch, cenách a detailoch. Môžem vám pomôcť s:\n\n🏠 **Výberom a porovnaním domov** (Ticab vs Prosto)\n🛠️ **Kalkuláciou ceny na kľúč** (základy, montáž, prípojky, legislatíva)\n📐 **Technológiami a materiálmi** (KVH konštrukcie, bazaltové izolácie)\n💻 **Prechodom cez konfigurátor** krok za krokom\n\nNa čo sa chcete opýtať?"
 };
 
 const QUICK_QUESTIONS = [
@@ -274,7 +274,7 @@ export default function Chatbot() {
                           <Badge
                             key={idx}
                             variant="outline"
-                            className="cursor-pointer bg-[#16161D] border-[#C5A880]/20 text-[#C5A880] hover:bg-[#9E2A2B]/10 hover:border-[#C5A880]/50 hover:text-white transition-colors text-xs py-1 px-2.5"
+                            className="cursor-pointer bg-[#1C1C24] border-[#C5A880]/40 text-[#F5E6D3] hover:bg-[#9E2A2B]/20 hover:border-[#C5A880]/70 hover:text-white transition-colors text-xs py-1.5 px-3 font-medium shadow-sm"
                             onClick={() => handleQuickQuestion(q)}
                           >
                             {q}

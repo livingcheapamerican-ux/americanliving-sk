@@ -543,7 +543,7 @@ export default function Domov() {
                     <CheckCircle className="w-5 h-5 text-[#C5A880] shrink-0 mt-0.5" />
                     <div>
                       <h4 className="text-xs sm:text-sm font-bold text-slate-200">Moderné technológie</h4>
-                      <p className="text-[11px] sm:text-xs text-slate-400">Všetko o KVH sušenom dreve, CLT a SIP paneloch.</p>
+                      <p className="text-[11px] sm:text-xs text-slate-400">Všetko o KVH konštrukcii a bazaltovej izolácii.</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-2.5">
@@ -603,8 +603,8 @@ export default function Domov() {
                       </div>
                     </div>
                     <div className="flex justify-start">
-                      <div className="bg-[#16161D]/80 border border-[#C5A880]/10 rounded-2xl px-3 py-2 text-xs text-[#C5A880] max-w-[90%] font-medium">
-                        Kexo: S radosťou vám to prepočítam! U Ticab House to zahŕňa základný model + betónové pásy (+11 825 €) + A0 energetický certifikát (+18 000 €) + legislatívu a projekty (+6 000 €). Montáž je zadarmo...
+                      <div className="bg-[#16161D]/80 border border-[#C5A880]/10 rounded-2xl px-3 py-2 text-xs text-[#F5E6D3] max-w-[90%] font-medium">
+                        Kexo: S radosťou vám to prepočítam! Zvolený dom v A0 konfigurácii na kľúč bude obsahovať zosilnenú izoláciu stien a stropu (250mm), vykurovanie s tepelným čerpadlom, riadené vetranie s rekuperáciou a vyhotovenie základov. Presnú cenu sčítam priamo z aktuálnych cenníkov pre daný model.
                       </div>
                     </div>
                   </div>
