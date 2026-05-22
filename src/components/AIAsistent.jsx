@@ -16,53 +16,20 @@ export default function AIAsistent({ context = "general", onSuggestion = null })
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [messages, setMessages] = useState([]);
-  const [conversation, setConversation] = useState(null);
-  const unsubscribeRef = useRef(null);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
-  const setupSubscription = (convId) => {
-    if (unsubscribeRef.current) {
-      unsubscribeRef.current();
-    }
-    const unsubscribe = base44.agents.subscribeToConversation(convId, (data) => {
-      setMessages(data.messages || []);
-      const msgs = data.messages || [];
-      if (msgs.length > 0) {
-        const lastMsg = msgs[msgs.length - 1];
-        if (lastMsg.role === 'assistant' && lastMsg.content && lastMsg.content.trim().length > 0) {
-          setIsLoading(false);
-          if (lastMsg.suggestion && onSuggestion) {
-            onSuggestion(lastMsg.suggestion);
-          }
-        }
-      }
-    });
-    unsubscribeRef.current = unsubscribe;
-  };
-
   useEffect(() => {
-    const savedConvId = localStorage.getItem("base44_aiasistent_conversation_id");
-    if (savedConvId) {
-      base44.agents.getConversation(savedConvId)
-        .then(conv => {
-          if (conv) {
-            setConversation(conv);
-            setMessages(conv.messages || []);
-            setupSubscription(conv.id);
-          }
-        })
-        .catch(err => {
-          console.warn("Failed to load AIAsistent conversation from localStorage:", err);
-          localStorage.removeItem("base44_aiasistent_conversation_id");
-        });
-    }
-    return () => {
-      if (unsubscribeRef.current) {
-        unsubscribeRef.current();
+    const savedMessages = localStorage.getItem("base44_aiasistent_messages");
+    if (savedMessages) {
+      try {
+        setMessages(JSON.parse(savedMessages));
+      } catch (err) {
+        console.warn("Failed to load AIAsistent conversation from localStorage:", err);
+        localStorage.removeItem("base44_aiasistent_messages");
       }
-    };
+    }
   }, []);
 
   const scrollToBottom = () => {
@@ -77,33 +44,53 @@ export default function AIAsistent({ context = "general", onSuggestion = null })
     const userMessage = text.trim();
     if (!userMessage || isLoading) return;
 
-    setMessages(prev => [...prev, { role: "user", content: userMessage }]);
+    const currentHistory = [...messages];
+    const newUserMessage = { role: "user", content: userMessage };
+
+    setMessages(prev => {
+      const updated = [...prev, newUserMessage];
+      localStorage.setItem('base44_aiasistent_messages', JSON.stringify(updated));
+      return updated;
+    });
     setIsLoading(true);
 
     try {
-      let activeConv = conversation;
-      if (!activeConv) {
-        const metadata = {
-          context: context,
+      const response = await base44.functions.invoke('aiAsistent', {
+        message: userMessage,
+        context: context,
+        history: currentHistory
+      });
+
+      if (response.data && response.data.response) {
+        const assistantMessage = {
+          role: "assistant",
+          content: response.data.response,
+          suggestion: response.data.suggestion || null
         };
-
-        activeConv = await base44.agents.createConversation({
-          agent_name: 'american_living_assistant',
-          metadata: metadata
+        setMessages(prev => {
+          const updated = [...prev, assistantMessage];
+          localStorage.setItem('base44_aiasistent_messages', JSON.stringify(updated));
+          return updated;
         });
-        localStorage.setItem('base44_aiasistent_conversation_id', activeConv.id);
-        setConversation(activeConv);
-        setupSubscription(activeConv.id);
-      }
 
-      await base44.agents.addMessage(activeConv, { role: 'user', content: userMessage });
+        if (response.data.suggestion && onSuggestion) {
+          onSuggestion(response.data.suggestion);
+        }
+      } else {
+        throw new Error("Neplatná odpoveď z AI asistenta");
+      }
     } catch (error) {
       console.error('AI Asistent Error:', error);
+      setMessages(prev => {
+        const updated = [...prev, { 
+          role: "assistant", 
+          content: "😊 Prepáč, mám momentálne technické problémy. Skús to prosím o chvíľu.\n\nAk problém pretrváva, kontaktuj nás priamo na +421 905 138 124." 
+        }];
+        localStorage.setItem('base44_aiasistent_messages', JSON.stringify(updated));
+        return updated;
+      });
+    } finally {
       setIsLoading(false);
-      setMessages(prev => [...prev, { 
-        role: "assistant", 
-        content: "😊 Prepáč, mám momentálne technické problémy. Skús to prosím o chvíľu.\n\nAk problém pretrváva, kontaktuj nás priamo na +421 905 138 124." 
-      }]);
     }
   };
 

@@ -251,12 +251,6 @@ Odpovedaj v slovenčine, priateľsky, stručne, s emoji.`;
       content: msg.content
     }));
 
-    // Volaj Gemini 2.0 Flash (rovnaký model ako Marketing Director)
-    const GEMINI_API_KEY = Deno.env.get("Gemini_PAID_pro");
-    if (!GEMINI_API_KEY) {
-      throw new Error('Gemini API key not configured');
-    }
-
     const fullPrompt = `${systemPrompt}
 
 HISTÓRIA KONVERZÁCIE:
@@ -265,64 +259,40 @@ ${conversationHistory.map(m => `${m.role}: ${m.content}`).join('\n')}
 NOVÁ SPRÁVA OD POUŽÍVATEĽA:
 ${message}
 
-Odpovedz na používateľovu správu. Ak ide o pomoc s formulárom, navrhni konkrétne hodnoty.
+Odpovedz na používateľovu správu. Ak ide o pomoc s formulárom, navrhni konkrétne hodnoty.`;
 
-VÝSTUP (JSON):
-{
-  "response": "tvoja odpoveď pre používateľa",
-  "suggestion": "konkrétny návrh ak relevantné",
-  "action": "fill_form / navigate / explain"
-}`;
-
+    // Volaj interný InvokeLLM cez platformu Base44
     const startTime = Date.now();
-    const geminiResponse = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{
-            parts: [{ text: fullPrompt }]
-          }],
-          generationConfig: {
-            temperature: 0.7,
-            topK: 40,
-            topP: 0.95,
-            maxOutputTokens: 2048,
-            responseMimeType: "application/json"
+    const llmResponse = await base44.asServiceRole.integrations.Core.InvokeLLM({
+      prompt: fullPrompt,
+      response_json_schema: {
+        type: "object",
+        properties: {
+          response: {
+            type: "string",
+            description: "Tvoja odpoveď pre používateľa v slovenčine s formátovaním markdown."
+          },
+          suggestion: {
+            type: "string",
+            description: "Konkrétny návrh alebo odporúčaná otázka/akcia pre používateľa, ak je relevantná. Inak null."
+          },
+          action: {
+            type: "string",
+            enum: ["fill_form", "navigate", "explain"],
+            description: "Typ akcie: fill_form pre pomoc s konfigurátorom, navigate pre presmerovanie, explain pre bežné vysvetlenie."
           }
-        })
+        },
+        required: ["response", "action"]
       }
-    );
+    });
     const apiCallDuration = Date.now() - startTime;
-
-    if (!geminiResponse.ok) {
-      const errorText = await geminiResponse.text();
-      throw new Error(`Gemini API Error: ${errorText}`);
-    }
-
-    const data = await geminiResponse.json();
-    const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
-    let llmResponse;
-    
-    try {
-      llmResponse = JSON.parse(textResponse);
-    } catch {
-      llmResponse = { response: textResponse };
-    }
-
-    // Vypočítať náklady
-    const estimatedTokens = Math.ceil(fullPrompt.length / 4);
-    const costPer1MTokens = 0.00025;
-    const estimatedCost = (estimatedTokens / 1000000) * costPer1MTokens;
 
     return Response.json({
       response: llmResponse.response || "Prepáč, nerozumiem. Skús sa opýtať inak.",
       suggestion: llmResponse.suggestion || null,
       action: llmResponse.action || "explain",
-      model_used: 'gemini-2.0-flash',
-      api_call_duration_ms: apiCallDuration,
-      estimated_cost_eur: estimatedCost.toFixed(6)
+      model_used: 'platform-default',
+      api_call_duration_ms: apiCallDuration
     });
 
   } catch (error) {
