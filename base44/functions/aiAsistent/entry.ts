@@ -16,10 +16,10 @@ Deno.serve(async (req) => {
 
     // Načítaj všetky databázové entity pre knowledge base
     const [domy, blogy, konfigTexty, dokumenty, insights, sessions, dopyty, brainRules] = await Promise.all([
-      base44.asServiceRole.entities.Dom.list(),
-      base44.asServiceRole.entities.BlogPost.list(),
-      base44.asServiceRole.entities.KonfiguratorText.list(),
-      base44.asServiceRole.entities.Dokument.filter({ pre_chatbota: true }),
+      base44.asServiceRole.entities.Dom.list().catch(() => []),
+      base44.asServiceRole.entities.BlogPost.list().catch(() => []),
+      base44.asServiceRole.entities.KonfiguratorText.list().catch(() => []),
+      base44.asServiceRole.entities.Dokument.filter({ pre_chatbota: true }).catch(() => []),
       base44.asServiceRole.entities.MarketingInsight.list('-created_date', 5).catch(() => []),
       base44.asServiceRole.entities.UserSession.list('-created_date', 30).catch(() => []),
       base44.asServiceRole.entities.Dopyt.list('-created_date', 20).catch(() => []),

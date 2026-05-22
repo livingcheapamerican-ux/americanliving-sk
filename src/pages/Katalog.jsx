@@ -1056,12 +1056,12 @@ export default function Katalog() {
                   <div className="flex flex-col sm:flex-row gap-1.5 sm:gap-3 w-full">
                     <motion.div whileTap={{ scale: 0.95 }} className="flex-1">
                       <Button
-                        variant={dizajnFilter === "murovka" ? "default" : "outline"}
+                        variant={dizajnFilter === "murovka" ? "default" : "ghost"}
                         onClick={() => setDizajnFilter("murovka")}
                         className={`w-full px-2 py-2 sm:px-8 sm:py-4 text-[10px] sm:text-lg font-bold shadow-lg transition-all ${
                           dizajnFilter === "murovka" 
                             ? "bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white border-0" 
-                            : "border-2 border-orange-500 hover:bg-orange-100 text-gray-800"
+                            : "border-2 border-orange-500 !bg-white hover:!bg-orange-100 !text-gray-800 hover:!text-orange-950"
                         }`}
                       >
                         <Building2 className="w-3 h-3 sm:w-6 sm:h-6 mr-1" />
@@ -1071,12 +1071,12 @@ export default function Katalog() {
 
                     <motion.div whileTap={{ scale: 0.95 }} className="flex-1">
                       <Button
-                        variant={dizajnFilter === "drevo" ? "default" : "outline"}
+                        variant={dizajnFilter === "drevo" ? "default" : "ghost"}
                         onClick={() => setDizajnFilter("drevo")}
                         className={`w-full px-2 py-2 sm:px-8 sm:py-4 text-[10px] sm:text-lg font-bold shadow-lg transition-all ${
                           dizajnFilter === "drevo" 
                             ? "bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-700 hover:to-yellow-700 text-white border-0" 
-                            : "border-2 border-amber-500 hover:bg-amber-100 text-gray-800"
+                            : "border-2 border-amber-500 !bg-white hover:!bg-amber-100 !text-gray-800 hover:!text-amber-950"
                         }`}
                       >
                         <TreePine className="w-3 h-3 sm:w-6 sm:h-6 mr-1" />
@@ -1086,12 +1086,12 @@ export default function Katalog() {
 
                     <motion.div whileTap={{ scale: 0.95 }} className="flex-1">
                       <Button
-                        variant={dizajnFilter === "podorys3d" ? "default" : "outline"}
+                        variant={dizajnFilter === "podorys3d" ? "default" : "ghost"}
                         onClick={() => setDizajnFilter("podorys3d")}
                         className={`w-full px-2 py-2 sm:px-8 sm:py-4 text-[10px] sm:text-lg font-bold shadow-lg transition-all ${
                           dizajnFilter === "podorys3d" 
                             ? "bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-0" 
-                            : "border-2 border-purple-500 hover:bg-purple-100 text-gray-800"
+                            : "border-2 border-purple-500 !bg-white hover:!bg-purple-100 !text-gray-800 hover:!text-purple-950"
                         }`}
                       >
                         <Grid3x3 className="w-3 h-3 sm:w-6 sm:h-6 mr-0.5 sm:mr-1" />
