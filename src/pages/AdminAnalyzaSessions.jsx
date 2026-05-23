@@ -141,7 +141,7 @@ export default function AdminAnalyzaSessions() {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 text-gray-900 flex items-center justify-center">
         <Card className="p-8">
           <p className="text-gray-600">Nemáte oprávnenie na prístup k tejto stránke.</p>
         </Card>
@@ -282,7 +282,7 @@ export default function AdminAnalyzaSessions() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
+    <div className="min-h-screen bg-gray-50 text-gray-900 p-4 sm:p-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
@@ -753,7 +753,7 @@ export default function AdminAnalyzaSessions() {
 
                           {/* Expanded Session Details */}
                           {expandedSession === session.id && (
-                            <div className="p-4 border-t space-y-4 bg-gray-100">
+                            <div className="p-4 border-t space-y-4 bg-gray-100 text-gray-900">
                     {/* Device & Tech Info */}
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
@@ -1234,7 +1234,7 @@ export default function AdminAnalyzaSessions() {
                   </div>
 
                   {expandedSession === session.id && (
-                    <div className="p-4 border-t space-y-4 bg-gray-100">
+                    <div className="p-4 border-t space-y-4 bg-gray-100 text-gray-900">
                       {/* Device & Tech Info */}
                       <div>
                         <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
