@@ -308,7 +308,7 @@ export default function AdminAnalyzaSessions() {
                 }
               }}
               variant="outline"
-              className="bg-purple-50 border-purple-300 hover:bg-purple-100"
+              className="bg-purple-50 border-purple-300 text-purple-900 font-bold hover:bg-purple-100 hover:text-purple-950 shadow-sm"
             >
               <Activity className="w-4 h-4 mr-2" />
               🔄 Načítať staré dáta
@@ -327,7 +327,7 @@ export default function AdminAnalyzaSessions() {
                 }
               }}
               variant="outline"
-              className="bg-green-50 border-green-300 hover:bg-green-100"
+              className="bg-green-50 border-green-300 text-green-900 font-bold hover:bg-green-100 hover:text-green-950 shadow-sm"
             >
               <MapPin className="w-4 h-4 mr-2" />
               📍 GPS lokácie
@@ -335,7 +335,7 @@ export default function AdminAnalyzaSessions() {
             <Button
               onClick={() => refetchSessions()}
               variant="outline"
-              className="bg-cyan-50 border-cyan-300 hover:bg-cyan-100"
+              className="bg-cyan-50 border-cyan-300 text-cyan-900 font-bold hover:bg-cyan-100 hover:text-cyan-950 shadow-sm"
             >
               <Settings className="w-4 h-4 mr-2" />
               🔄 Obnoviť
@@ -493,7 +493,7 @@ export default function AdminAnalyzaSessions() {
               <select
                 value={filterDevice}
                 onChange={(e) => setFilterDevice(e.target.value)}
-                className="w-full px-3 py-2 border rounded-md text-sm"
+                className="w-full px-3 py-2 border rounded-md text-sm bg-slate-900 border-white/10 text-white"
               >
                 <option value="all">Všetky</option>
                 <option value="desktop">Desktop</option>
@@ -506,7 +506,7 @@ export default function AdminAnalyzaSessions() {
               <select
                 value={filterTag}
                 onChange={(e) => setFilterTag(e.target.value)}
-                className="w-full px-3 py-2 border rounded-md text-sm"
+                className="w-full px-3 py-2 border rounded-md text-sm bg-slate-900 border-white/10 text-white"
               >
                 <option value="all">Všetky</option>
                 <option value="odrazeny">Odrazený</option>
@@ -599,15 +599,15 @@ export default function AdminAnalyzaSessions() {
                         )}
                       </div>
                       
-                      {visitor.email && <p className="text-sm text-gray-600 mb-2">{visitor.email}</p>}
+                      {visitor.email && <p className="text-sm text-slate-700 font-medium mb-2">{visitor.email}</p>}
                       {visitor.ip && !visitor.email && (
-                        <p className="text-sm text-gray-600 mb-2 flex items-center gap-1">
-                          <Globe className="w-3 h-3" />
+                        <p className="text-sm text-slate-700 font-medium mb-2 flex items-center gap-1">
+                          <Globe className="w-3 h-3 text-slate-600" />
                           IP: {visitor.ip}
                         </p>
                       )}
                       
-                      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 text-xs text-gray-600">
+                      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 text-xs text-slate-800 font-medium">
                         <div className="flex items-center gap-1">
                           <Activity className="w-3 h-3" />
                           {visitor.totalSessions} návštev
@@ -711,21 +711,21 @@ export default function AdminAnalyzaSessions() {
                                   })}
                                 </div>
                                 
-                                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 text-xs text-gray-600">
+                                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 text-xs text-slate-800 font-semibold">
                                   <div className="flex items-center gap-1">
-                                    <Clock className="w-3 h-3" />
+                                    <Clock className="w-3 h-3 text-slate-600" />
                                     {safeFormat(session.start_time, 'dd.MM.yyyy HH:mm', { locale: sk })}
                                   </div>
                                   <div className="flex items-center gap-1">
-                                    <TrendingUp className="w-3 h-3" />
+                                    <TrendingUp className="w-3 h-3 text-slate-600" />
                                     {formatDuration(session.duration_seconds)}
                                   </div>
                                   <div className="flex items-center gap-1">
-                                    <Eye className="w-3 h-3" />
+                                    <Eye className="w-3 h-3 text-slate-600" />
                                     {session.pages_visited?.length || 0} strán
                                   </div>
                                   <div className="flex items-center gap-1">
-                                    <MousePointer className="w-3 h-3" />
+                                    <MousePointer className="w-3 h-3 text-slate-600" />
                                     {session.clicks?.length || 0} kliknutí
                                   </div>
                                   <div className="flex items-center gap-1">
@@ -762,44 +762,44 @@ export default function AdminAnalyzaSessions() {
                       </h4>
                       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                         <div className="bg-white p-3 rounded-lg border">
-                          <p className="text-xs text-gray-500 mb-1">Zariadenie</p>
-                          <div className="flex items-center gap-2">
+                          <p className="text-xs text-slate-500 mb-1 font-medium">Zariadenie</p>
+                          <div className="flex items-center gap-2 text-slate-900">
                             {getDeviceIcon(session.device_info?.device_type)}
-                            <p className="text-sm font-semibold">{session.device_info?.device_type || 'N/A'}</p>
+                            <p className="text-sm font-bold text-slate-950">{session.device_info?.device_type || 'N/A'}</p>
                           </div>
                         </div>
                         <div className="bg-white p-3 rounded-lg border">
-                          <p className="text-xs text-gray-500 mb-1">Prehliadač</p>
-                          <p className="text-sm font-semibold">{session.device_info?.browser} {session.device_info?.browser_version}</p>
+                          <p className="text-xs text-slate-500 mb-1 font-medium">Prehliadač</p>
+                          <p className="text-sm font-bold text-slate-950">{session.device_info?.browser} {session.device_info?.browser_version}</p>
                         </div>
                         <div className="bg-white p-3 rounded-lg border">
-                          <p className="text-xs text-gray-500 mb-1">Operačný systém</p>
-                          <p className="text-sm font-semibold">{session.device_info?.os} {session.device_info?.os_version}</p>
+                          <p className="text-xs text-slate-500 mb-1 font-medium">Operačný systém</p>
+                          <p className="text-sm font-bold text-slate-950">{session.device_info?.os} {session.device_info?.os_version}</p>
                         </div>
                         <div className="bg-white p-3 rounded-lg border">
-                          <p className="text-xs text-gray-500 mb-1">Rozlíšenie</p>
-                          <p className="text-sm font-semibold">
+                          <p className="text-xs text-slate-500 mb-1 font-medium">Rozlíšenie</p>
+                          <p className="text-sm font-bold text-slate-950">
                             {session.device_info?.screen_width}x{session.device_info?.screen_height}
                           </p>
-                          <p className="text-xs text-gray-400">
+                          <p className="text-xs text-slate-600 font-semibold">
                             Viewport: {session.device_info?.viewport_width}x{session.device_info?.viewport_height}
                           </p>
                         </div>
                         <div className="bg-white p-3 rounded-lg border">
-                          <p className="text-xs text-gray-500 mb-1">Časové pásmo</p>
-                          <p className="text-sm font-semibold">{session.device_info?.timezone || 'N/A'}</p>
+                          <p className="text-xs text-slate-500 mb-1 font-medium">Časové pásmo</p>
+                          <p className="text-sm font-bold text-slate-950">{session.device_info?.timezone || 'N/A'}</p>
                         </div>
                         <div className="bg-white p-3 rounded-lg border">
-                          <p className="text-xs text-gray-500 mb-1">Jazyk prehliadača</p>
-                          <p className="text-sm font-semibold">{session.device_info?.language || 'N/A'}</p>
+                          <p className="text-xs text-slate-500 mb-1 font-medium">Jazyk prehliadača</p>
+                          <p className="text-sm font-bold text-slate-950">{session.device_info?.language || 'N/A'}</p>
                         </div>
                         <div className="bg-white p-3 rounded-lg border">
-                          <p className="text-xs text-gray-500 mb-1">Touch</p>
-                          <p className="text-sm font-semibold">{session.device_info?.is_touch ? '✅ Áno' : '❌ Nie'}</p>
+                          <p className="text-xs text-slate-500 mb-1 font-medium">Touch</p>
+                          <p className="text-sm font-bold text-slate-950">{session.device_info?.is_touch ? '✅ Áno' : '❌ Nie'}</p>
                         </div>
                         <div className="bg-white p-3 rounded-lg border">
-                          <p className="text-xs text-gray-500 mb-1">Online status</p>
-                          <p className="text-sm font-semibold">{session.device_info?.online ? '🟢 Online' : '🔴 Offline'}</p>
+                          <p className="text-xs text-slate-500 mb-1 font-medium">Online status</p>
+                          <p className="text-sm font-bold text-slate-950">{session.device_info?.online ? '🟢 Online' : '🔴 Offline'}</p>
                         </div>
                       </div>
                     </div>
@@ -808,25 +808,25 @@ export default function AdminAnalyzaSessions() {
                     {session.location_info && (
                       <div className="bg-gradient-to-r from-green-50 to-teal-50 p-4 rounded-lg border border-green-200">
                         <h4 className="font-semibold text-green-900 mb-3 flex items-center gap-2">
-                          <MapPin className="w-4 h-4" />
+                          <MapPin className="w-4 h-4 text-green-900" />
                           Geografická lokácia (z IP adresy)
                         </h4>
-                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 text-sm">
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 text-sm text-slate-800">
                           <div>
-                            <span className="text-gray-600">IP:</span> <span className="font-semibold">{session.location_info.ip}</span>
+                            <span className="text-slate-600 font-medium">IP:</span> <span className="font-semibold text-slate-900">{session.location_info.ip}</span>
                           </div>
                           <div>
-                            <span className="text-gray-600">Krajina:</span> <span className="font-semibold">{session.location_info.country} ({session.location_info.country_code})</span>
+                            <span className="text-slate-600 font-medium">Krajina:</span> <span className="font-semibold text-slate-900">{session.location_info.country} ({session.location_info.country_code})</span>
                           </div>
                           <div>
-                            <span className="text-gray-600">Región:</span> <span className="font-semibold">{session.location_info.region}</span>
+                            <span className="text-slate-600 font-medium">Región:</span> <span className="font-semibold text-slate-900">{session.location_info.region}</span>
                           </div>
                           <div>
-                            <span className="text-gray-600">Mesto:</span> <span className="font-semibold">{session.location_info.city}</span>
+                            <span className="text-slate-600 font-medium">Mesto:</span> <span className="font-semibold text-slate-900">{session.location_info.city}</span>
                           </div>
                           {session.location_info.latitude && (
                             <div className="col-span-2">
-                              <span className="text-gray-600">Súradnice:</span> <span className="font-semibold">{session.location_info.latitude.toFixed(4)}, {session.location_info.longitude.toFixed(4)}</span>
+                              <span className="text-slate-600 font-medium">Súradnice:</span> <span className="font-semibold text-slate-900">{session.location_info.latitude.toFixed(4)}, {session.location_info.longitude.toFixed(4)}</span>
                             </div>
                           )}
                         </div>
@@ -836,34 +836,34 @@ export default function AdminAnalyzaSessions() {
                     {/* UTM & Referrer */}
                     <div className="grid lg:grid-cols-2 gap-4">
                       {session.referrer && session.referrer !== 'direct' && (
-                        <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                        <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 text-slate-800">
                           <h4 className="font-semibold text-blue-900 mb-2 flex items-center gap-2">
-                            <Navigation className="w-4 h-4" />
+                            <Navigation className="w-4 h-4 text-blue-900" />
                             Referrer (odkiaľ prišiel)
                           </h4>
-                          <p className="text-xs text-blue-800 break-all mb-1">{session.referrer}</p>
-                          <p className="text-xs text-blue-600">Doména: <span className="font-semibold">{session.referrer_domain}</span></p>
+                          <p className="text-xs text-blue-900 font-medium break-all mb-1">{session.referrer}</p>
+                          <p className="text-xs text-blue-700">Doména: <span className="font-bold text-blue-900">{session.referrer_domain}</span></p>
                         </div>
                       )}
                       
                       {session.utm_params && Object.values(session.utm_params).some(v => v) && (
-                        <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
+                        <div className="bg-purple-50 p-4 rounded-lg border border-purple-200 text-slate-800">
                           <h4 className="font-semibold text-purple-900 mb-2 flex items-center gap-2">
-                            <BarChart3 className="w-4 h-4" />
+                            <BarChart3 className="w-4 h-4 text-purple-900" />
                             UTM Kampaň
                           </h4>
                           <div className="space-y-1 text-xs">
                             {session.utm_params.utm_source && (
-                              <div><span className="text-gray-600">Source:</span> <span className="font-semibold">{session.utm_params.utm_source}</span></div>
+                              <div><span className="text-purple-700 font-medium">Source:</span> <span className="font-bold text-purple-900">{session.utm_params.utm_source}</span></div>
                             )}
                             {session.utm_params.utm_medium && (
-                              <div><span className="text-gray-600">Medium:</span> <span className="font-semibold">{session.utm_params.utm_medium}</span></div>
+                              <div><span className="text-purple-700 font-medium">Medium:</span> <span className="font-bold text-purple-900">{session.utm_params.utm_medium}</span></div>
                             )}
                             {session.utm_params.utm_campaign && (
-                              <div><span className="text-gray-600">Campaign:</span> <span className="font-semibold">{session.utm_params.utm_campaign}</span></div>
+                              <div><span className="text-purple-700 font-medium">Campaign:</span> <span className="font-bold text-purple-900">{session.utm_params.utm_campaign}</span></div>
                             )}
                             {session.utm_params.utm_term && (
-                              <div><span className="text-gray-600">Term:</span> <span className="font-semibold">{session.utm_params.utm_term}</span></div>
+                              <div><span className="text-purple-700 font-medium">Term:</span> <span className="font-bold text-purple-900">{session.utm_params.utm_term}</span></div>
                             )}
                           </div>
                         </div>
@@ -874,7 +874,7 @@ export default function AdminAnalyzaSessions() {
                     {session.pages_visited && session.pages_visited.length > 0 && (
                       <div>
                         <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                          <Navigation className="w-4 h-4" />
+                          <Navigation className="w-4 h-4 text-gray-900" />
                           Navigačná cesta ({session.pages_visited.length} strán)
                         </h4>
                         <div className="space-y-2 max-h-96 overflow-y-auto">
@@ -886,28 +886,28 @@ export default function AdminAnalyzaSessions() {
                                     <Badge className="bg-blue-100 text-blue-800 text-xs">#{idx + 1}</Badge>
                                     <p className="text-sm font-semibold text-gray-900">{page.page_name_sk || page.page_title || page.page_url}</p>
                                   </div>
-                                  <p className="text-xs text-gray-500 mb-2">{page.page_url}</p>
-                                  <div className="flex items-center gap-4 text-xs text-gray-600">
+                                  <p className="text-xs text-slate-600 mb-2 font-medium">{page.page_url}</p>
+                                  <div className="flex items-center gap-4 text-xs text-slate-800 font-medium">
                                     <div className="flex items-center gap-1">
-                                      <Clock className="w-3 h-3" />
+                                      <Clock className="w-3 h-3 text-slate-600" />
                                       {formatDuration(page.time_spent_seconds)}
                                     </div>
                                     <div className="flex items-center gap-1">
-                                      <Layers className="w-3 h-3" />
+                                      <Layers className="w-3 h-3 text-slate-600" />
                                       Scroll: {page.scroll_depth_percentage || 0}%
                                     </div>
                                     {page.exit_type && (
-                                      <Badge variant="outline" className="text-xs">
+                                      <div className="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold text-slate-700 border-slate-300 bg-slate-50">
                                         {page.exit_type === 'bounce' && '⚡ Bounce'}
                                         {page.exit_type === 'shallow' && '📄 Shallow'}
                                         {page.exit_type === 'deep_scroll' && '📜 Deep'}
                                         {page.exit_type === 'navigation' && '➡️ Nav'}
                                         {page.exit_type === 'exit' && '🚪 Exit'}
-                                      </Badge>
+                                      </div>
                                     )}
                                   </div>
                                 </div>
-                                <div className="text-right text-xs text-gray-400">
+                                <div className="text-right text-xs text-slate-500 font-medium">
                                   {safeFormat(page.timestamp, 'HH:mm:ss')}
                                   </div>
                                   </div>
@@ -921,23 +921,23 @@ export default function AdminAnalyzaSessions() {
                                   {session.clicks && session.clicks.length > 0 && (
                                   <div>
                                   <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                                  <MousePointer className="w-4 h-4" />
+                                  <MousePointer className="w-4 h-4 text-gray-900" />
                                   Kliknutia ({session.clicks.length})
                                   </h4>
                                   <div className="space-y-1 max-h-64 overflow-y-auto bg-white p-3 rounded-lg border">
                                   {session.clicks.map((click, idx) => (
                                   <div key={idx} className="flex items-center justify-between text-xs hover:bg-gray-50 p-2 rounded">
                                   <div className="flex items-center gap-2 flex-1">
-                                  <Badge variant="outline" className="text-xs">{click.element}</Badge>
-                                  <span className="text-gray-700 truncate max-w-md">{click.text}</span>
+                                  <div className="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold text-slate-850 border-slate-300 bg-slate-50">{click.element}</div>
+                                  <span className="text-slate-900 font-bold truncate max-w-md">{click.text}</span>
                                   {click.page_name_sk && (
-                                  <Badge className="bg-green-50 text-green-700 text-xs">📍 {click.page_name_sk}</Badge>
+                                  <div className="inline-flex items-center rounded-md px-2 py-0.5 bg-green-100 text-green-900 text-xs font-semibold">📍 {click.page_name_sk}</div>
                                   )}
                                   {click.element_id && (
-                                  <Badge className="bg-blue-50 text-blue-700 text-xs">#{click.element_id}</Badge>
+                                  <div className="inline-flex items-center rounded-md px-2 py-0.5 bg-blue-100 text-blue-900 text-xs font-semibold">#{click.element_id}</div>
                                   )}
                                   </div>
-                                  <div className="flex items-center gap-3 text-gray-400">
+                                  <div className="flex items-center gap-3 text-slate-700 font-semibold">
                                   <span>poz: {click.x_position}, {click.y_position}</span>
                                   <span>{safeFormat(click.timestamp, 'HH:mm:ss')}</span>
                                   </div>
@@ -950,12 +950,12 @@ export default function AdminAnalyzaSessions() {
                     {/* Scroll Behavior */}
                     <div className="grid lg:grid-cols-2 gap-4">
                       {session.scroll_depth?.max_percentage !== undefined && (
-                        <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                        <div className="bg-green-50 p-4 rounded-lg border border-green-200 text-slate-800">
                           <h4 className="font-semibold text-green-900 mb-3">📜 Scroll správanie</h4>
                           <div className="space-y-2">
                             <div>
                               <div className="flex items-center justify-between mb-1">
-                                <span className="text-xs text-gray-600">Max. hĺbka</span>
+                                <span className="text-xs text-slate-700 font-medium">Max. hĺbka</span>
                                 <span className="text-sm font-bold text-green-900">{session.scroll_depth.max_percentage}%</span>
                               </div>
                               <div className="flex-1 bg-gray-200 rounded-full h-3">
@@ -967,7 +967,7 @@ export default function AdminAnalyzaSessions() {
                             </div>
                             {session.scroll_events && session.scroll_events.length > 0 && (
                               <div className="mt-3">
-                                <p className="text-xs text-gray-600 mb-1">Míľniky:</p>
+                                <p className="text-xs text-slate-700 font-medium mb-1">Míľniky:</p>
                                 <div className="flex gap-1 flex-wrap">
                                   {session.scroll_events.map((evt, i) => (
                                     <Badge key={i} className="bg-green-100 text-green-800 text-xs">
@@ -982,16 +982,16 @@ export default function AdminAnalyzaSessions() {
                       )}
 
                       {/* Mouse Activity */}
-                      <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
+                      <div className="bg-orange-50 p-4 rounded-lg border border-orange-200 text-slate-800">
                         <h4 className="font-semibold text-orange-900 mb-3">🖱️ Aktivita myši</h4>
                         <div className="space-y-2 text-sm">
                           <div className="flex justify-between">
-                            <span className="text-gray-600">Celkom pohybov:</span>
-                            <span className="font-bold">{session.mouse_movements || 0}</span>
+                            <span className="text-slate-700 font-medium">Celkom pohybov:</span>
+                            <span className="font-bold text-slate-900">{session.mouse_movements || 0}</span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-gray-600">Heatmap bodov:</span>
-                            <span className="font-bold">{session.mouse_heatmap_data?.length || 0}</span>
+                            <span className="text-slate-700 font-medium">Heatmap bodov:</span>
+                            <span className="font-bold text-slate-900">{session.mouse_heatmap_data?.length || 0}</span>
                           </div>
                         </div>
                       </div>
@@ -999,26 +999,26 @@ export default function AdminAnalyzaSessions() {
 
                     {/* Configurator Interactions */}
                     {session.configurator_interactions && session.configurator_interactions.length > 0 && (
-                      <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-lg border border-indigo-200">
+                      <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-lg border border-indigo-200 text-slate-800">
                         <h4 className="font-semibold text-indigo-900 mb-3 flex items-center gap-2">
-                          <Layers className="w-4 h-4" />
+                          <Layers className="w-4 h-4 text-indigo-900" />
                           Konfigurátor ({session.configurator_interactions.length} akcií)
                         </h4>
                         <div className="space-y-2 max-h-48 overflow-y-auto">
                           {session.configurator_interactions.map((interaction, idx) => (
-                            <div key={idx} className="bg-white p-2 rounded text-xs flex items-center justify-between">
-                              <div>
-                                <span className="font-semibold">{interaction.dom_nazov}</span>
-                                <span className="text-gray-600 mx-2">→</span>
-                                <span className="text-indigo-700">{interaction.action}</span>
+                            <div key={idx} className="bg-white p-2 rounded text-xs flex items-center justify-between border border-indigo-100">
+                              <div className="text-slate-900">
+                                <span className="font-bold text-slate-950">{interaction.dom_nazov}</span>
+                                <span className="text-slate-500 mx-2">→</span>
+                                <span className="text-indigo-900 font-semibold">{interaction.action}</span>
                                 {interaction.option_selected && (
-                                  <span className="text-gray-500"> ({interaction.option_selected})</span>
+                                  <span className="text-slate-700 font-medium"> ({interaction.option_selected})</span>
                                 )}
                               </div>
                               {interaction.price_at_time && (
-                                <Badge className="bg-green-100 text-green-800">
+                                <div className="inline-flex items-center rounded px-2 py-0.5 bg-green-100 text-green-950 text-xs font-bold">
                                   {interaction.price_at_time.toLocaleString('sk-SK')} €
-                                </Badge>
+                                </div>
                               )}
                             </div>
                           ))}
@@ -1028,17 +1028,17 @@ export default function AdminAnalyzaSessions() {
 
                     {/* DOM Interactions */}
                     {session.dom_interactions && session.dom_interactions.length > 0 && (
-                      <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                      <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 text-slate-800">
                         <h4 className="font-semibold text-blue-900 mb-3">🏠 Prezerané domy</h4>
                         <div className="space-y-2">
                           {session.dom_interactions.map((interaction, idx) => (
-                            <div key={idx} className="bg-white p-2 rounded text-xs flex items-center justify-between">
-                              <div>
-                                <span className="font-semibold">{interaction.dom_nazov}</span>
-                                <Badge className="ml-2 bg-blue-100 text-blue-800">{interaction.action}</Badge>
+                            <div key={idx} className="bg-white p-2 rounded text-xs flex items-center justify-between border border-blue-100">
+                              <div className="text-slate-900">
+                                <span className="font-bold text-slate-950">{interaction.dom_nazov}</span>
+                                <div className="ml-2 inline-flex items-center rounded px-2 py-0.5 bg-blue-100 text-blue-950 font-bold">{interaction.action}</div>
                               </div>
                               {interaction.duration_seconds > 0 && (
-                                <span className="text-gray-600">{formatDuration(interaction.duration_seconds)}</span>
+                                <span className="text-slate-700 font-semibold">{formatDuration(interaction.duration_seconds)}</span>
                               )}
                             </div>
                           ))}
@@ -1048,44 +1048,44 @@ export default function AdminAnalyzaSessions() {
 
                     {/* Form Interactions */}
                     {session.form_interactions && session.form_interactions.length > 0 && (
-                      <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                      <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200 text-slate-800">
                         <h4 className="font-semibold text-yellow-900 mb-3 flex items-center gap-2">
-                          <FileText className="w-4 h-4" />
+                          <FileText className="w-4 h-4 text-yellow-900" />
                           Formuláre ({session.form_interactions.length} interakcií)
                         </h4>
                         <div className="space-y-2">
                           {session.form_interactions.map((form, idx) => (
-                            <div key={idx} className="bg-white p-2 rounded text-xs">
-                              <div className="flex items-center justify-between">
+                            <div key={idx} className="bg-white p-2 rounded text-xs border border-yellow-100">
+                              <div className="flex items-center justify-between mb-1">
                                 <div className="flex items-center gap-2">
-                                  <span className="font-semibold">{form.form_id}</span>
-                                  <Badge className={form.completed ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}>
+                                  <span className="font-bold text-slate-950">{form.form_id}</span>
+                                  <div className={`inline-flex items-center rounded px-2 py-0.5 font-bold ${form.completed ? "bg-green-100 text-green-950" : "bg-slate-100 text-slate-900"}`}>
                                     {form.action}
-                                  </Badge>
+                                  </div>
                                 </div>
-                                <span className="text-gray-400">{safeFormat(form.timestamp, 'HH:mm:ss')}</span>
-                                </div>
-                                {form.fields_touched && form.fields_touched.length > 0 && (
-                                <p className="text-gray-600 mt-1">Polia: {form.fields_touched.join(', ')}</p>
-                                )}
-                                </div>
-                                ))}
-                                </div>
-                                </div>
-                                )}
+                                <span className="text-slate-600 font-medium">{safeFormat(form.timestamp, 'HH:mm:ss')}</span>
+                              </div>
+                              {form.fields_touched && form.fields_touched.length > 0 && (
+                                <p className="text-slate-700 font-medium mt-1">Polia: {form.fields_touched.join(', ')}</p>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
 
-                                {/* Language Changes */}
-                                {session.language_changes && session.language_changes.length > 0 && (
-                                <div className="bg-teal-50 p-4 rounded-lg border border-teal-200">
-                                <h4 className="font-semibold text-teal-900 mb-2">🌍 Zmeny jazyka</h4>
-                                <div className="space-y-1">
-                                {session.language_changes.map((change, idx) => (
-                                <div key={idx} className="text-xs flex items-center gap-2">
-                                <Badge className="bg-teal-100 text-teal-800">{change.from}</Badge>
-                                <span>→</span>
-                                <Badge className="bg-teal-100 text-teal-800">{change.to}</Badge>
-                                <span className="text-gray-400">{safeFormat(change.timestamp, 'HH:mm:ss')}</span>
-                                </div>
+                    {/* Language Changes */}
+                    {session.language_changes && session.language_changes.length > 0 && (
+                      <div className="bg-teal-50 p-4 rounded-lg border border-teal-200 text-slate-800">
+                        <h4 className="font-semibold text-teal-900 mb-2">🌍 Zmeny jazyka</h4>
+                        <div className="space-y-1">
+                          {session.language_changes.map((change, idx) => (
+                            <div key={idx} className="text-xs flex items-center gap-2">
+                              <div className="inline-flex items-center rounded px-2 py-0.5 bg-teal-100 text-teal-950 font-bold">{change.from}</div>
+                              <span className="text-slate-600 font-bold">→</span>
+                              <div className="inline-flex items-center rounded px-2 py-0.5 bg-teal-100 text-teal-950 font-bold">{change.to}</div>
+                              <span className="text-slate-600 font-medium">{safeFormat(change.timestamp, 'HH:mm:ss')}</span>
+                            </div>
                           ))}
                         </div>
                       </div>
@@ -1093,19 +1093,19 @@ export default function AdminAnalyzaSessions() {
 
                     {/* Errors */}
                     {session.errors_encountered && session.errors_encountered.length > 0 && (
-                      <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+                      <div className="bg-red-50 p-4 rounded-lg border border-red-200 text-slate-800">
                         <h4 className="font-semibold text-red-900 mb-3 flex items-center gap-2">
-                          <AlertTriangle className="w-4 h-4" />
+                          <AlertTriangle className="w-4 h-4 text-red-900" />
                           JavaScript Chyby ({session.errors_encountered.length})
                         </h4>
                         <div className="space-y-2 max-h-48 overflow-y-auto">
                           {session.errors_encountered.map((error, idx) => (
-                            <div key={idx} className="bg-white p-2 rounded text-xs">
-                              <p className="font-semibold text-red-800 mb-1">{error.error_message}</p>
-                              <p className="text-gray-500">{error.page_url}</p>
+                            <div key={idx} className="bg-white p-2 rounded text-xs border border-red-100">
+                              <p className="font-bold text-red-950 mb-1">{error.error_message}</p>
+                              <p className="text-slate-700 font-semibold">{error.page_url}</p>
                               {error.error_stack && (
                                 <details className="mt-2">
-                                  <summary className="cursor-pointer text-red-600">Stack trace</summary>
+                                  <summary className="cursor-pointer text-red-750 font-bold">Stack trace</summary>
                                   <pre className="text-xs bg-gray-900 text-green-400 p-2 rounded mt-1 overflow-auto">
                                     {error.error_stack}
                                   </pre>
@@ -1183,29 +1183,29 @@ export default function AdminAnalyzaSessions() {
                           })}
                         </div>
                         
-                        {session.user_email && <p className="text-sm text-gray-600 mb-2">{session.user_email}</p>}
+                        {session.user_email && <p className="text-sm text-slate-800 font-semibold mb-2">{session.user_email}</p>}
                         {session.location_info?.ip && (
-                          <p className="text-sm text-gray-600 mb-2 flex items-center gap-1">
-                            <Globe className="w-3 h-3" />
+                          <p className="text-sm text-slate-800 font-semibold mb-2 flex items-center gap-1">
+                            <Globe className="w-3 h-3 text-slate-600" />
                             IP: {session.location_info.ip}
                           </p>
                         )}
                         
-                        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 text-xs text-gray-600">
+                        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 text-xs text-slate-800 font-bold">
                           <div className="flex items-center gap-1">
-                            <Clock className="w-3 h-3" />
+                            <Clock className="w-3 h-3 text-slate-600" />
                             {safeFormat(session.start_time, 'dd.MM.yyyy HH:mm', { locale: sk })}
                           </div>
                           <div className="flex items-center gap-1">
-                            <TrendingUp className="w-3 h-3" />
+                            <TrendingUp className="w-3 h-3 text-slate-600" />
                             {formatDuration(session.duration_seconds)}
                           </div>
                           <div className="flex items-center gap-1">
-                            <Eye className="w-3 h-3" />
+                            <Eye className="w-3 h-3 text-slate-600" />
                             {session.pages_visited?.length || 0} strán
                           </div>
                           <div className="flex items-center gap-1">
-                            <MousePointer className="w-3 h-3" />
+                            <MousePointer className="w-3 h-3 text-slate-600" />
                             {session.clicks?.length || 0} kliknutí
                           </div>
                           {session.device_info?.device_type && (
@@ -1243,44 +1243,44 @@ export default function AdminAnalyzaSessions() {
                         </h4>
                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                           <div className="bg-white p-3 rounded-lg border">
-                            <p className="text-xs text-gray-500 mb-1">Zariadenie</p>
-                            <div className="flex items-center gap-2">
+                            <p className="text-xs text-slate-500 mb-1 font-medium">Zariadenie</p>
+                            <div className="flex items-center gap-2 text-slate-900">
                               {getDeviceIcon(session.device_info?.device_type)}
-                              <p className="text-sm font-semibold">{session.device_info?.device_type || 'N/A'}</p>
+                              <p className="text-sm font-bold text-slate-950">{session.device_info?.device_type || 'N/A'}</p>
                             </div>
                           </div>
                           <div className="bg-white p-3 rounded-lg border">
-                            <p className="text-xs text-gray-500 mb-1">Prehliadač</p>
-                            <p className="text-sm font-semibold">{session.device_info?.browser} {session.device_info?.browser_version}</p>
+                            <p className="text-xs text-slate-500 mb-1 font-medium">Prehliadač</p>
+                            <p className="text-sm font-bold text-slate-950">{session.device_info?.browser} {session.device_info?.browser_version}</p>
                           </div>
                           <div className="bg-white p-3 rounded-lg border">
-                            <p className="text-xs text-gray-500 mb-1">Operačný systém</p>
-                            <p className="text-sm font-semibold">{session.device_info?.os} {session.device_info?.os_version}</p>
+                            <p className="text-xs text-slate-500 mb-1 font-medium">Operačný systém</p>
+                            <p className="text-sm font-bold text-slate-950">{session.device_info?.os} {session.device_info?.os_version}</p>
                           </div>
                           <div className="bg-white p-3 rounded-lg border">
-                            <p className="text-xs text-gray-500 mb-1">Rozlíšenie</p>
-                            <p className="text-sm font-semibold">
+                            <p className="text-xs text-slate-500 mb-1 font-medium">Rozlíšenie</p>
+                            <p className="text-sm font-bold text-slate-950">
                               {session.device_info?.screen_width}x{session.device_info?.screen_height}
                             </p>
-                            <p className="text-xs text-gray-400">
+                            <p className="text-xs text-slate-600 font-semibold">
                               Viewport: {session.device_info?.viewport_width}x{session.device_info?.viewport_height}
                             </p>
                           </div>
                           <div className="bg-white p-3 rounded-lg border">
-                            <p className="text-xs text-gray-500 mb-1">Časové pásmo</p>
-                            <p className="text-sm font-semibold">{session.device_info?.timezone || 'N/A'}</p>
+                            <p className="text-xs text-slate-500 mb-1 font-medium">Časové pásmo</p>
+                            <p className="text-sm font-bold text-slate-950">{session.device_info?.timezone || 'N/A'}</p>
                           </div>
                           <div className="bg-white p-3 rounded-lg border">
-                            <p className="text-xs text-gray-500 mb-1">Jazyk prehliadača</p>
-                            <p className="text-sm font-semibold">{session.device_info?.language || 'N/A'}</p>
+                            <p className="text-xs text-slate-500 mb-1 font-medium">Jazyk prehliadača</p>
+                            <p className="text-sm font-bold text-slate-950">{session.device_info?.language || 'N/A'}</p>
                           </div>
                           <div className="bg-white p-3 rounded-lg border">
-                            <p className="text-xs text-gray-500 mb-1">Touch</p>
-                            <p className="text-sm font-semibold">{session.device_info?.is_touch ? '✅ Áno' : '❌ Nie'}</p>
+                            <p className="text-xs text-slate-500 mb-1 font-medium">Touch</p>
+                            <p className="text-sm font-bold text-slate-950">{session.device_info?.is_touch ? '✅ Áno' : '❌ Nie'}</p>
                           </div>
                           <div className="bg-white p-3 rounded-lg border">
-                            <p className="text-xs text-gray-500 mb-1">Online status</p>
-                            <p className="text-sm font-semibold">{session.device_info?.online ? '🟢 Online' : '🔴 Offline'}</p>
+                            <p className="text-xs text-slate-500 mb-1 font-medium">Online status</p>
+                            <p className="text-sm font-bold text-slate-950">{session.device_info?.online ? '🟢 Online' : '🔴 Offline'}</p>
                           </div>
                         </div>
                       </div>
@@ -1289,25 +1289,25 @@ export default function AdminAnalyzaSessions() {
                       {session.location_info && (
                         <div className="bg-gradient-to-r from-green-50 to-teal-50 p-4 rounded-lg border border-green-200">
                           <h4 className="font-semibold text-green-900 mb-3 flex items-center gap-2">
-                            <MapPin className="w-4 h-4" />
+                            <MapPin className="w-4 h-4 text-green-900" />
                             Geografická lokácia (z IP adresy)
                           </h4>
-                          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 text-sm">
+                          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 text-sm text-slate-800">
                             <div>
-                              <span className="text-gray-600">IP:</span> <span className="font-semibold">{session.location_info.ip}</span>
+                              <span className="text-slate-600 font-medium">IP:</span> <span className="font-semibold text-slate-900">{session.location_info.ip}</span>
                             </div>
                             <div>
-                              <span className="text-gray-600">Krajina:</span> <span className="font-semibold">{session.location_info.country} ({session.location_info.country_code})</span>
+                              <span className="text-slate-600 font-medium">Krajina:</span> <span className="font-semibold text-slate-900">{session.location_info.country} ({session.location_info.country_code})</span>
                             </div>
                             <div>
-                              <span className="text-gray-600">Región:</span> <span className="font-semibold">{session.location_info.region}</span>
+                              <span className="text-slate-600 font-medium">Región:</span> <span className="font-semibold text-slate-900">{session.location_info.region}</span>
                             </div>
                             <div>
-                              <span className="text-gray-600">Mesto:</span> <span className="font-semibold">{session.location_info.city}</span>
+                              <span className="text-slate-600 font-medium">Mesto:</span> <span className="font-semibold text-slate-900">{session.location_info.city}</span>
                             </div>
                             {session.location_info.latitude && (
                               <div className="col-span-2">
-                                <span className="text-gray-600">Súradnice:</span> <span className="font-semibold">{session.location_info.latitude.toFixed(4)}, {session.location_info.longitude.toFixed(4)}</span>
+                                <span className="text-slate-600 font-medium">Súradnice:</span> <span className="font-semibold text-slate-900">{session.location_info.latitude.toFixed(4)}, {session.location_info.longitude.toFixed(4)}</span>
                               </div>
                             )}
                           </div>
@@ -1317,34 +1317,34 @@ export default function AdminAnalyzaSessions() {
                       {/* UTM & Referrer */}
                       <div className="grid lg:grid-cols-2 gap-4">
                         {session.referrer && session.referrer !== 'direct' && (
-                          <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                          <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 text-slate-800">
                             <h4 className="font-semibold text-blue-900 mb-2 flex items-center gap-2">
-                              <Navigation className="w-4 h-4" />
+                              <Navigation className="w-4 h-4 text-blue-900" />
                               Referrer (odkiaľ prišiel)
                             </h4>
-                            <p className="text-xs text-blue-800 break-all mb-1">{session.referrer}</p>
-                            <p className="text-xs text-blue-600">Doména: <span className="font-semibold">{session.referrer_domain}</span></p>
+                            <p className="text-xs text-blue-900 font-medium break-all mb-1">{session.referrer}</p>
+                            <p className="text-xs text-blue-700">Doména: <span className="font-bold text-blue-900">{session.referrer_domain}</span></p>
                           </div>
                         )}
                         
                         {session.utm_params && Object.values(session.utm_params).some(v => v) && (
-                          <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
+                          <div className="bg-purple-50 p-4 rounded-lg border border-purple-200 text-slate-800">
                             <h4 className="font-semibold text-purple-900 mb-2 flex items-center gap-2">
-                              <BarChart3 className="w-4 h-4" />
+                              <BarChart3 className="w-4 h-4 text-purple-900" />
                               UTM Kampaň
                             </h4>
                             <div className="space-y-1 text-xs">
                               {session.utm_params.utm_source && (
-                                <div><span className="text-gray-600">Source:</span> <span className="font-semibold">{session.utm_params.utm_source}</span></div>
+                                <div><span className="text-purple-700 font-medium">Source:</span> <span className="font-bold text-purple-900">{session.utm_params.utm_source}</span></div>
                               )}
                               {session.utm_params.utm_medium && (
-                                <div><span className="text-gray-600">Medium:</span> <span className="font-semibold">{session.utm_params.utm_medium}</span></div>
+                                <div><span className="text-purple-700 font-medium">Medium:</span> <span className="font-bold text-purple-900">{session.utm_params.utm_medium}</span></div>
                               )}
                               {session.utm_params.utm_campaign && (
-                                <div><span className="text-gray-600">Campaign:</span> <span className="font-semibold">{session.utm_params.utm_campaign}</span></div>
+                                <div><span className="text-purple-700 font-medium">Campaign:</span> <span className="font-bold text-purple-900">{session.utm_params.utm_campaign}</span></div>
                               )}
                               {session.utm_params.utm_term && (
-                                <div><span className="text-gray-600">Term:</span> <span className="font-semibold">{session.utm_params.utm_term}</span></div>
+                                <div><span className="text-purple-700 font-medium">Term:</span> <span className="font-bold text-purple-900">{session.utm_params.utm_term}</span></div>
                               )}
                             </div>
                           </div>
@@ -1355,7 +1355,7 @@ export default function AdminAnalyzaSessions() {
                       {session.pages_visited && session.pages_visited.length > 0 && (
                         <div>
                           <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                            <Navigation className="w-4 h-4" />
+                            <Navigation className="w-4 h-4 text-gray-900" />
                             Navigačná cesta ({session.pages_visited.length} strán)
                           </h4>
                           <div className="space-y-2 max-h-96 overflow-y-auto">
@@ -1367,28 +1367,28 @@ export default function AdminAnalyzaSessions() {
                                       <Badge className="bg-blue-100 text-blue-800 text-xs">#{idx + 1}</Badge>
                                       <p className="text-sm font-semibold text-gray-900">{page.page_name_sk || page.page_title || page.page_url}</p>
                                     </div>
-                                    <p className="text-xs text-gray-500 mb-2">{page.page_url}</p>
-                                    <div className="flex items-center gap-4 text-xs text-gray-600">
+                                    <p className="text-xs text-slate-600 mb-2 font-medium">{page.page_url}</p>
+                                    <div className="flex items-center gap-4 text-xs text-slate-800 font-medium">
                                       <div className="flex items-center gap-1">
-                                        <Clock className="w-3 h-3" />
+                                        <Clock className="w-3 h-3 text-slate-600" />
                                         {formatDuration(page.time_spent_seconds)}
                                       </div>
                                       <div className="flex items-center gap-1">
-                                        <Layers className="w-3 h-3" />
+                                        <Layers className="w-3 h-3 text-slate-600" />
                                         Scroll: {page.scroll_depth_percentage || 0}%
                                       </div>
                                       {page.exit_type && (
-                                        <Badge variant="outline" className="text-xs">
+                                        <div className="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold text-slate-700 border-slate-300 bg-slate-50">
                                           {page.exit_type === 'bounce' && '⚡ Bounce'}
                                           {page.exit_type === 'shallow' && '📄 Shallow'}
                                           {page.exit_type === 'deep_scroll' && '📜 Deep'}
                                           {page.exit_type === 'navigation' && '➡️ Nav'}
                                           {page.exit_type === 'exit' && '🚪 Exit'}
-                                        </Badge>
+                                        </div>
                                       )}
                                     </div>
                                   </div>
-                                  <div className="text-right text-xs text-gray-400">
+                                  <div className="text-right text-xs text-slate-500 font-medium">
                                     {safeFormat(page.timestamp, 'HH:mm:ss')}
                                   </div>
                                 </div>
@@ -1402,23 +1402,23 @@ export default function AdminAnalyzaSessions() {
                       {session.clicks && session.clicks.length > 0 && (
                         <div>
                           <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                            <MousePointer className="w-4 h-4" />
+                            <MousePointer className="w-4 h-4 text-gray-900" />
                             Kliknutia ({session.clicks.length})
                           </h4>
                           <div className="space-y-1 max-h-64 overflow-y-auto bg-white p-3 rounded-lg border">
                             {session.clicks.map((click, idx) => (
                               <div key={idx} className="flex items-center justify-between text-xs hover:bg-gray-50 p-2 rounded">
                                 <div className="flex items-center gap-2 flex-1">
-                                  <Badge variant="outline" className="text-xs">{click.element}</Badge>
-                                  <span className="text-gray-700 truncate max-w-md">{click.text}</span>
+                                  <div className="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold text-slate-855 border-slate-300 bg-slate-50">{click.element}</div>
+                                  <span className="text-slate-900 font-bold truncate max-w-md">{click.text}</span>
                                   {click.page_name_sk && (
-                                    <Badge className="bg-green-50 text-green-700 text-xs">📍 {click.page_name_sk}</Badge>
+                                    <div className="inline-flex items-center rounded-md px-2 py-0.5 bg-green-100 text-green-900 text-xs font-semibold">📍 {click.page_name_sk}</div>
                                   )}
                                   {click.element_id && (
-                                    <Badge className="bg-blue-50 text-blue-700 text-xs">#{click.element_id}</Badge>
+                                    <div className="inline-flex items-center rounded-md px-2 py-0.5 bg-blue-100 text-blue-900 text-xs font-semibold">#{click.element_id}</div>
                                   )}
                                 </div>
-                                <div className="flex items-center gap-3 text-gray-400">
+                                <div className="flex items-center gap-3 text-slate-700 font-semibold">
                                   <span>poz: {click.x_position}, {click.y_position}</span>
                                   <span>{safeFormat(click.timestamp, 'HH:mm:ss')}</span>
                                 </div>
@@ -1431,12 +1431,12 @@ export default function AdminAnalyzaSessions() {
                       {/* Scroll Behavior */}
                       <div className="grid lg:grid-cols-2 gap-4">
                         {session.scroll_depth?.max_percentage !== undefined && (
-                          <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                          <div className="bg-green-50 p-4 rounded-lg border border-green-200 text-slate-800">
                             <h4 className="font-semibold text-green-900 mb-3">📜 Scroll správanie</h4>
                             <div className="space-y-2">
                               <div>
                                 <div className="flex items-center justify-between mb-1">
-                                  <span className="text-xs text-gray-600">Max. hĺbka</span>
+                                  <span className="text-xs text-slate-700 font-medium">Max. hĺbka</span>
                                   <span className="text-sm font-bold text-green-900">{session.scroll_depth.max_percentage}%</span>
                                 </div>
                                 <div className="flex-1 bg-gray-200 rounded-full h-3">
@@ -1448,7 +1448,7 @@ export default function AdminAnalyzaSessions() {
                               </div>
                               {session.scroll_events && session.scroll_events.length > 0 && (
                                 <div className="mt-3">
-                                  <p className="text-xs text-gray-600 mb-1">Míľniky:</p>
+                                  <p className="text-xs text-slate-700 font-medium mb-1">Míľniky:</p>
                                   <div className="flex gap-1 flex-wrap">
                                     {session.scroll_events.map((evt, i) => (
                                       <Badge key={i} className="bg-green-100 text-green-800 text-xs">
@@ -1463,16 +1463,16 @@ export default function AdminAnalyzaSessions() {
                         )}
 
                         {/* Mouse Activity */}
-                        <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
+                        <div className="bg-orange-50 p-4 rounded-lg border border-orange-200 text-slate-800">
                           <h4 className="font-semibold text-orange-900 mb-3">🖱️ Aktivita myši</h4>
                           <div className="space-y-2 text-sm">
                             <div className="flex justify-between">
-                              <span className="text-gray-600">Celkom pohybov:</span>
-                              <span className="font-bold">{session.mouse_movements || 0}</span>
+                              <span className="text-slate-700 font-medium">Celkom pohybov:</span>
+                              <span className="font-bold text-slate-900">{session.mouse_movements || 0}</span>
                             </div>
                             <div className="flex justify-between">
-                              <span className="text-gray-600">Heatmap bodov:</span>
-                              <span className="font-bold">{session.mouse_heatmap_data?.length || 0}</span>
+                              <span className="text-slate-700 font-medium">Heatmap bodov:</span>
+                              <span className="font-bold text-slate-900">{session.mouse_heatmap_data?.length || 0}</span>
                             </div>
                           </div>
                         </div>
@@ -1480,26 +1480,26 @@ export default function AdminAnalyzaSessions() {
 
                       {/* Configurator Interactions */}
                       {session.configurator_interactions && session.configurator_interactions.length > 0 && (
-                        <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-lg border border-indigo-200">
+                        <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-lg border border-indigo-200 text-slate-800">
                           <h4 className="font-semibold text-indigo-900 mb-3 flex items-center gap-2">
-                            <Layers className="w-4 h-4" />
+                            <Layers className="w-4 h-4 text-indigo-900" />
                             Konfigurátor ({session.configurator_interactions.length} akcií)
                           </h4>
                           <div className="space-y-2 max-h-48 overflow-y-auto">
                             {session.configurator_interactions.map((interaction, idx) => (
-                              <div key={idx} className="bg-white p-2 rounded text-xs flex items-center justify-between">
-                                <div>
-                                  <span className="font-semibold">{interaction.dom_nazov}</span>
-                                  <span className="text-gray-600 mx-2">→</span>
-                                  <span className="text-indigo-700">{interaction.action}</span>
+                              <div key={idx} className="bg-white p-2 rounded text-xs flex items-center justify-between border border-indigo-100">
+                                <div className="text-slate-900">
+                                  <span className="font-bold text-slate-950">{interaction.dom_nazov}</span>
+                                  <span className="text-slate-500 mx-2">→</span>
+                                  <span className="text-indigo-900 font-semibold">{interaction.action}</span>
                                   {interaction.option_selected && (
-                                    <span className="text-gray-500"> ({interaction.option_selected})</span>
+                                    <span className="text-slate-700 font-medium"> ({interaction.option_selected})</span>
                                   )}
                                 </div>
                                 {interaction.price_at_time && (
-                                  <Badge className="bg-green-100 text-green-800">
+                                  <div className="inline-flex items-center rounded px-2 py-0.5 bg-green-100 text-green-950 text-xs font-bold">
                                     {interaction.price_at_time.toLocaleString('sk-SK')} €
-                                  </Badge>
+                                  </div>
                                 )}
                               </div>
                             ))}
@@ -1509,17 +1509,17 @@ export default function AdminAnalyzaSessions() {
 
                       {/* DOM Interactions */}
                       {session.dom_interactions && session.dom_interactions.length > 0 && (
-                        <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                        <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 text-slate-800">
                           <h4 className="font-semibold text-blue-900 mb-3">🏠 Prezerané domy</h4>
                           <div className="space-y-2">
                             {session.dom_interactions.map((interaction, idx) => (
-                              <div key={idx} className="bg-white p-2 rounded text-xs flex items-center justify-between">
-                                <div>
-                                  <span className="font-semibold">{interaction.dom_nazov}</span>
-                                  <Badge className="ml-2 bg-blue-100 text-blue-800">{interaction.action}</Badge>
+                              <div key={idx} className="bg-white p-2 rounded text-xs flex items-center justify-between border border-blue-100">
+                                <div className="text-slate-900">
+                                  <span className="font-bold text-slate-950">{interaction.dom_nazov}</span>
+                                  <div className="ml-2 inline-flex items-center rounded px-2 py-0.5 bg-blue-100 text-blue-950 font-bold">{interaction.action}</div>
                                 </div>
                                 {interaction.duration_seconds > 0 && (
-                                  <span className="text-gray-600">{formatDuration(interaction.duration_seconds)}</span>
+                                  <span className="text-slate-700 font-semibold">{formatDuration(interaction.duration_seconds)}</span>
                                 )}
                               </div>
                             ))}
@@ -1529,25 +1529,25 @@ export default function AdminAnalyzaSessions() {
 
                       {/* Form Interactions */}
                       {session.form_interactions && session.form_interactions.length > 0 && (
-                        <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                        <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200 text-slate-800">
                           <h4 className="font-semibold text-yellow-900 mb-3 flex items-center gap-2">
-                            <FileText className="w-4 h-4" />
+                            <FileText className="w-4 h-4 text-yellow-900" />
                             Formuláre ({session.form_interactions.length} interakcií)
                           </h4>
                           <div className="space-y-2">
                             {session.form_interactions.map((form, idx) => (
-                              <div key={idx} className="bg-white p-2 rounded text-xs">
-                                <div className="flex items-center justify-between">
+                              <div key={idx} className="bg-white p-2 rounded text-xs border border-yellow-100">
+                                <div className="flex items-center justify-between mb-1">
                                   <div className="flex items-center gap-2">
-                                    <span className="font-semibold">{form.form_id}</span>
-                                    <Badge className={form.completed ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}>
+                                    <span className="font-bold text-slate-950">{form.form_id}</span>
+                                    <div className={`inline-flex items-center rounded px-2 py-0.5 font-bold ${form.completed ? "bg-green-100 text-green-950" : "bg-slate-100 text-slate-900"}`}>
                                       {form.action}
-                                    </Badge>
+                                    </div>
                                   </div>
-                                  <span className="text-gray-400">{safeFormat(form.timestamp, 'HH:mm:ss')}</span>
+                                  <span className="text-slate-600 font-medium">{safeFormat(form.timestamp, 'HH:mm:ss')}</span>
                                 </div>
                                 {form.fields_touched && form.fields_touched.length > 0 && (
-                                  <p className="text-gray-600 mt-1">Polia: {form.fields_touched.join(', ')}</p>
+                                  <p className="text-slate-700 font-medium mt-1">Polia: {form.fields_touched.join(', ')}</p>
                                 )}
                               </div>
                             ))}
@@ -1557,15 +1557,15 @@ export default function AdminAnalyzaSessions() {
 
                       {/* Language Changes */}
                       {session.language_changes && session.language_changes.length > 0 && (
-                        <div className="bg-teal-50 p-4 rounded-lg border border-teal-200">
+                        <div className="bg-teal-50 p-4 rounded-lg border border-teal-200 text-slate-800">
                           <h4 className="font-semibold text-teal-900 mb-2">🌍 Zmeny jazyka</h4>
                           <div className="space-y-1">
                             {session.language_changes.map((change, idx) => (
                               <div key={idx} className="text-xs flex items-center gap-2">
-                                <Badge className="bg-teal-100 text-teal-800">{change.from}</Badge>
-                                <span>→</span>
-                                <Badge className="bg-teal-100 text-teal-800">{change.to}</Badge>
-                                <span className="text-gray-400">{safeFormat(change.timestamp, 'HH:mm:ss')}</span>
+                                <div className="inline-flex items-center rounded px-2 py-0.5 bg-teal-100 text-teal-950 font-bold">{change.from}</div>
+                                <span className="text-slate-600 font-bold">→</span>
+                                <div className="inline-flex items-center rounded px-2 py-0.5 bg-teal-100 text-teal-950 font-bold">{change.to}</div>
+                                <span className="text-slate-600 font-medium">{safeFormat(change.timestamp, 'HH:mm:ss')}</span>
                               </div>
                             ))}
                           </div>
@@ -1574,19 +1574,19 @@ export default function AdminAnalyzaSessions() {
 
                       {/* Errors */}
                       {session.errors_encountered && session.errors_encountered.length > 0 && (
-                        <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+                        <div className="bg-red-50 p-4 rounded-lg border border-red-200 text-slate-800">
                           <h4 className="font-semibold text-red-900 mb-3 flex items-center gap-2">
-                            <AlertTriangle className="w-4 h-4" />
+                            <AlertTriangle className="w-4 h-4 text-red-900" />
                             JavaScript Chyby ({session.errors_encountered.length})
                           </h4>
                           <div className="space-y-2 max-h-48 overflow-y-auto">
                             {session.errors_encountered.map((error, idx) => (
-                              <div key={idx} className="bg-white p-2 rounded text-xs">
-                                <p className="font-semibold text-red-800 mb-1">{error.error_message}</p>
-                                <p className="text-gray-500">{error.page_url}</p>
+                              <div key={idx} className="bg-white p-2 rounded text-xs border border-red-100">
+                                <p className="font-bold text-red-950 mb-1">{error.error_message}</p>
+                                <p className="text-slate-700 font-semibold">{error.page_url}</p>
                                 {error.error_stack && (
                                   <details className="mt-2">
-                                    <summary className="cursor-pointer text-red-600">Stack trace</summary>
+                                    <summary className="cursor-pointer text-red-750 font-bold">Stack trace</summary>
                                     <pre className="text-xs bg-gray-900 text-green-400 p-2 rounded mt-1 overflow-auto">
                                       {error.error_stack}
                                     </pre>
