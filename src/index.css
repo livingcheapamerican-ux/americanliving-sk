@@ -166,3 +166,9 @@ button:focus-visible {
   background-color: hsl(var(--primary)) !important;
   color: #ffffff !important;
 }
+.catalog-tab[data-state=inactive] {
+  color: rgb(15, 23, 42) !important;
+}
+.dark .catalog-tab[data-state=inactive] {
+  color: rgb(226, 232, 240) !important;
+}
