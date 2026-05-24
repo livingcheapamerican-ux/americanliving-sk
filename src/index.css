@@ -160,3 +160,9 @@ button:focus-visible {
     @apply bg-background text-foreground;
   }
 }
+
+/* Catalog Page Tabs Active State Override */
+.catalog-tab[data-state=active] {
+  background-color: hsl(var(--primary)) !important;
+  color: #ffffff !important;
+}

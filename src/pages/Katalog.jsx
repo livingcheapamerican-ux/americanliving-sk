@@ -617,11 +617,11 @@ export default function Katalog() {
         {/* Tabs pre kategórie */}
         <Tabs value={kategoriaFilter} onValueChange={setKategoriaFilter} className="mb-4 sm:mb-6">
           <TabsList className={`grid w-full max-w-xl mx-auto h-10 sm:h-12 bg-card/50 backdrop-blur-xl border border-border rounded-full p-1 shadow-xl ${canManage ? 'grid-cols-4' : 'grid-cols-3'}`}>
-            <TabsTrigger value="vsetky" className="text-xs sm:text-sm rounded-full text-muted-foreground data-[state=active]:!bg-primary data-[state=active]:!text-white transition-all duration-300">{t('all')} ({verejneDomy.length})</TabsTrigger>
-            <TabsTrigger value="rodinne_domy" className="text-xs sm:text-sm rounded-full text-muted-foreground data-[state=active]:!bg-primary data-[state=active]:!text-white transition-all duration-300">{t('familyHouses')} ({rodinneDomy.length})</TabsTrigger>
-            <TabsTrigger value="mobilne_domy" className="text-xs sm:text-sm rounded-full text-muted-foreground data-[state=active]:!bg-primary data-[state=active]:!text-white transition-all duration-300">{t('mobileHouses')} ({mobilneDomy.length})</TabsTrigger>
+            <TabsTrigger value="vsetky" className="catalog-tab text-xs sm:text-sm rounded-full text-muted-foreground transition-all duration-300">{t('all')} ({verejneDomy.length})</TabsTrigger>
+            <TabsTrigger value="rodinne_domy" className="catalog-tab text-xs sm:text-sm rounded-full text-muted-foreground transition-all duration-300">{t('familyHouses')} ({rodinneDomy.length})</TabsTrigger>
+            <TabsTrigger value="mobilne_domy" className="catalog-tab text-xs sm:text-sm rounded-full text-muted-foreground transition-all duration-300">{t('mobileHouses')} ({mobilneDomy.length})</TabsTrigger>
             {canManage && (
-              <TabsTrigger value="skryte" className="text-xs sm:text-sm rounded-full text-muted-foreground data-[state=active]:!bg-primary data-[state=active]:!text-white transition-all duration-300">{t('hidden')} ({skryteDomy.length})</TabsTrigger>
+              <TabsTrigger value="skryte" className="catalog-tab text-xs sm:text-sm rounded-full text-muted-foreground transition-all duration-300">{t('hidden')} ({skryteDomy.length})</TabsTrigger>
             )}
           </TabsList>
         </Tabs>
