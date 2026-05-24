@@ -1210,7 +1210,7 @@ export default function KonfiguratorFlatDoubleInline({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.4 }}
         >
-        <Card className="overflow-hidden border-0 shadow-lg bg-gradient-to-br from-slate-50 via-white to-slate-50">
+        <Card className="overflow-hidden border border-border shadow-lg bg-card text-foreground">
                       <div className="relative">
                         {/* Dekoratívny gradient */}
           <div className="absolute top-0 left-0 right-0 h-1 sm:h-1.5 bg-gradient-to-r from-green-500 via-emerald-400 to-teal-500"></div>
@@ -1222,16 +1222,16 @@ export default function KonfiguratorFlatDoubleInline({
           <div className="relative p-4 sm:p-8 md:p-10">
               <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 sm:gap-8">
                 <div className="flex-1">
-                  <p className="text-green-400 text-[10px] sm:text-sm font-semibold uppercase tracking-wider mb-1 sm:mb-2">{t('yourConfiguration')}</p>
-                  <h3 className="text-xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">{dom?.nazov || 'Flat Double 142m²'}</h3>
-                  <p className="text-slate-400 text-xs sm:text-base mb-4">{t('completeCalculation')}</p>
+                  <p className="text-green-600 dark:text-green-400 text-[10px] sm:text-sm font-semibold uppercase tracking-wider mb-1 sm:mb-2">{t('yourConfiguration')}</p>
+                  <h3 className="text-xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-1 sm:mb-2">{dom?.nazov || 'Flat Double 142m²'}</h3>
+                  <p className="text-slate-650 dark:text-slate-400 text-xs sm:text-base mb-4">{t('completeCalculation')}</p>
                   {projektA0 && !a0Odporucania && (
                     <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-[10px] sm:text-sm py-1 sm:py-1.5 px-2 sm:px-4 shadow-lg shadow-green-500/30">✓ {t('meetsA0')}</Badge>
                   )}
                 
                 {/* Zoznam vybraných položiek */}
-                <div className="mt-4 sm:mt-6 bg-slate-800/50 rounded-xl p-3 sm:p-4 border border-slate-700/50 max-h-[300px] overflow-y-auto">
-                  <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-3">{t('selectedItems')}</p>
+                <div className="mt-4 sm:mt-6 bg-slate-50 dark:bg-slate-800/50 rounded-xl p-3 sm:p-4 border border-slate-200 dark:border-slate-700/50 max-h-[300px] overflow-y-auto">
+                  <p className="text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase tracking-wider mb-3">{t('selectedItems')}</p>
                   <div className="space-y-1">
                     {selectedItems.map((item, index) => {
                       const isBase = item.section === "base";
@@ -1246,38 +1246,38 @@ export default function KonfiguratorFlatDoubleInline({
                           {showHrubaDivider && dosiahnuteUrovne.hrubaStavba && (
                             <div className="py-1.5">
                               <div className="flex items-center gap-2">
-                                <Package className="w-3 h-3 text-amber-400" />
-                                <span className="text-[10px] sm:text-xs font-bold text-amber-400 uppercase tracking-wider">{t('roughConstruction')}</span>
+                                <Package className="w-3 h-3 text-amber-600 dark:text-amber-400" />
+                                <span className="text-[10px] sm:text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">{t('roughConstruction')}</span>
                               </div>
                             </div>
                           )}
                           {showHolodomDivider && dosiahnuteUrovne.holodom && (
                             <div className="py-1.5">
                               <div className="flex items-center gap-2">
-                                <Hammer className="w-3 h-3 text-blue-400" />
-                                <span className="text-[10px] sm:text-xs font-bold text-blue-400 uppercase tracking-wider">{t('holodomLabel')}</span>
+                                <Hammer className="w-3 h-3 text-blue-650 dark:text-blue-400" />
+                                <span className="text-[10px] sm:text-xs font-bold text-blue-700 dark:text-blue-400 uppercase tracking-wider">{t('holodomLabel')}</span>
                               </div>
                             </div>
                           )}
                           {showKlucDivider && dosiahnuteUrovne.domNaKluc && (
                             <div className="py-1.5">
                               <div className="flex items-center gap-2">
-                                <Key className="w-3 h-3 text-emerald-400" />
-                                <span className="text-[10px] sm:text-xs font-bold text-emerald-400 uppercase tracking-wider">{t('turnkeyLabel')}</span>
+                                <Key className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                                <span className="text-[10px] sm:text-xs font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">{t('turnkeyLabel')}</span>
                               </div>
                             </div>
                           )}
                           {showDocsDivider && (
                             <div className="py-1.5">
                               <div className="flex items-center gap-2">
-                                <FileText className="w-3 h-3 text-purple-400" />
-                                <span className="text-[10px] sm:text-xs font-bold text-purple-400 uppercase tracking-wider">{t('documentationLabel')}</span>
+                                <FileText className="w-3 h-3 text-purple-600 dark:text-purple-400" />
+                                <span className="text-[10px] sm:text-xs font-bold text-purple-700 dark:text-purple-400 uppercase tracking-wider">{t('documentationLabel')}</span>
                               </div>
                             </div>
                           )}
-                          <div className={`flex justify-between items-center py-1 px-2 rounded text-[11px] sm:text-sm ${isBase ? 'bg-blue-500/20 border border-blue-500/30' : item.selected ? 'hover:bg-slate-700/30' : 'opacity-50'}`}>
-                            <span className={`${isBase ? 'text-blue-300 font-semibold' : item.selected ? 'text-slate-300' : 'text-slate-500 line-through'} flex-1 pr-2`}>{item.name}</span>
-                            <span className={`${isBase ? 'text-blue-300' : item.selected ? 'text-green-400' : 'text-slate-500'} font-semibold whitespace-nowrap`}>
+                          <div className={`flex justify-between items-center py-1 px-2 rounded text-[11px] sm:text-sm ${isBase ? 'bg-blue-500/10 dark:bg-blue-500/20 border border-blue-500/20 dark:border-blue-500/30' : item.selected ? 'hover:bg-slate-200/50 dark:hover:bg-slate-700/30' : 'opacity-50'}`}>
+                            <span className={`${isBase ? 'text-blue-750 dark:text-blue-300 font-semibold' : item.selected ? 'text-slate-800 dark:text-slate-300' : 'text-slate-400 dark:text-slate-500 line-through'} flex-1 pr-2`}>{item.name}</span>
+                            <span className={`${isBase ? 'text-blue-750 dark:text-blue-300' : item.selected ? 'text-green-700 dark:text-green-400' : 'text-slate-450 dark:text-slate-500'} font-semibold whitespace-nowrap`}>
                               {item.selected ? formatPrice(item.price) : 'NIE'}
                             </span>
                           </div>
@@ -1288,14 +1288,14 @@ export default function KonfiguratorFlatDoubleInline({
                 </div>
               </div>
               <div className="text-right p-3 sm:p-6 bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-xl sm:rounded-2xl border border-green-500/20 lg:min-w-[280px]">
-                <p className="text-slate-400 mb-1 sm:mb-2 text-[10px] sm:text-sm">{t('totalWithVAT')}</p>
-                <p className="text-3xl sm:text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400">
+                <p className="text-slate-600 dark:text-slate-400 mb-1 sm:mb-2 text-[10px] sm:text-sm">{t('totalWithVAT')}</p>
+                <p className="text-3xl sm:text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-emerald-600 to-teal-655 dark:from-green-400 dark:via-emerald-400 dark:to-teal-400">
                   {formatPrice(totalPrice)}
                 </p>
               </div>
             </div>
 
-            <div className="mt-6 sm:mt-10 pt-4 sm:pt-8 border-t border-slate-700/50 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+            <div className="mt-6 sm:mt-10 pt-4 sm:pt-8 border-t border-border flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
               <Button 
                 size="lg" 
                 onClick={() => setShowContactModal(true)}

@@ -423,34 +423,34 @@ export default function DotaciaAmericana() {
                   <Home className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-serif font-black text-emerald-400">
+                  <h2 className="text-xl font-serif font-black text-emerald-600 dark:text-emerald-400">
                     Program AMBASSADOR
                   </h2>
-                  <p className="text-xs text-emerald-500 font-bold">
+                  <p className="text-xs text-emerald-700 dark:text-emerald-500 font-bold">
                     {t('dotaciaHeroLeftSubtitle')}
                   </p>
                 </div>
               </div>
-              <p className="text-sm text-slate-300 mb-4 leading-relaxed">
+              <p className="text-sm text-slate-600 dark:text-slate-300 mb-4 leading-relaxed">
                 {t('dotaciaHeroLeftDesc')}
               </p>
               <div className="space-y-2 mb-4">
                 <div className="flex items-start gap-2 bg-emerald-500/10 p-2 rounded">
                   <CheckCircle className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
-                  <p className="text-xs font-bold text-emerald-400">{t('dotaciaGrant')}</p>
+                  <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400">{t('dotaciaGrant')}</p>
                 </div>
                 <div className="flex items-start gap-2 bg-emerald-500/10 p-2 rounded">
                   <CheckCircle className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
-                  <p className="text-xs font-bold text-emerald-400">{t('dotaciaBonusEnergy')}</p>
+                  <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400">{t('dotaciaBonusEnergy')}</p>
                 </div>
               </div>
-              {/* Energodotácia banner - mobile */}
-              <div className="mt-3 p-3 bg-blue-900/20 border-2 border-blue-500/30 rounded-lg">
+              {/* Energodotácia banner - mobile ambassador */}
+              <div className="mt-3 p-3 bg-blue-500/10 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-500/30 rounded-lg">
                 <div className="flex items-start gap-2">
-                  <Zap className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                  <Zap className="w-4 h-4 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-xs font-black text-blue-400">⚡ {energoT.title}</p>
-                    <p className="text-xs text-blue-300 mt-0.5">{energoT.ambassador}</p>
+                    <p className="text-xs font-black text-blue-700 dark:text-blue-400">⚡ {energoT.title}</p>
+                    <p className="text-xs text-blue-800 dark:text-blue-300 mt-0.5">{energoT.ambassador}</p>
                   </div>
                 </div>
               </div>
@@ -458,7 +458,7 @@ export default function DotaciaAmericana() {
                 onClick={() => setModalType('rodina')}
                 className="w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-bold mt-3"
               >
-                Overiť nárok
+                Požiadať o dotované bývanie
                 <ArrowRight className="ml-2 w-4 h-4" />
               </Button>
             </Card>
@@ -470,34 +470,34 @@ export default function DotaciaAmericana() {
                   <TrendingUp className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-serif font-black text-yellow-400">
+                  <h2 className="text-xl font-serif font-black text-yellow-600 dark:text-yellow-450">
                     Program PARTNER
                   </h2>
-                  <p className="text-xs text-yellow-400 font-bold">
+                  <p className="text-xs text-yellow-700 dark:text-yellow-500 font-bold">
                     {t('dotaciaHeroRightSubtitle')}
                   </p>
                 </div>
               </div>
-              <p className="text-sm text-slate-300 mb-4 leading-relaxed">
+              <p className="text-sm text-slate-600 dark:text-slate-300 mb-4 leading-relaxed">
                 {t('dotaciaHeroRightDesc')}
               </p>
               <div className="space-y-2 mb-4">
                 <div className="flex items-start gap-2 bg-yellow-500/10 p-2 rounded">
-                  <CheckCircle className="w-4 h-4 text-yellow-500 flex-shrink-0 mt-0.5" />
-                  <p className="text-xs font-bold text-yellow-400">{t('dotaciaGrant')}</p>
+                  <CheckCircle className="w-4 h-4 text-yellow-600 dark:text-yellow-500 flex-shrink-0 mt-0.5" />
+                  <p className="text-xs font-bold text-yellow-600 dark:text-yellow-400">{t('dotaciaGrant')}</p>
                 </div>
                 <div className="flex items-start gap-2 bg-yellow-500/10 p-2 rounded">
-                  <CheckCircle className="w-4 h-4 text-yellow-500 flex-shrink-0 mt-0.5" />
-                  <p className="text-xs font-bold text-yellow-400">{t('dotaciaInvestorBonusMarketing')}</p>
+                  <CheckCircle className="w-4 h-4 text-yellow-600 dark:text-yellow-500 flex-shrink-0 mt-0.5" />
+                  <p className="text-xs font-bold text-yellow-600 dark:text-yellow-400">{t('dotaciaInvestorBonusMarketing')}</p>
                 </div>
               </div>
               {/* Energodotácia banner - mobile investor */}
-              <div className="mt-3 p-3 bg-blue-900/20 border-2 border-blue-500/30 rounded-lg">
+              <div className="mt-3 p-3 bg-blue-500/10 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-500/30 rounded-lg">
                 <div className="flex items-start gap-2">
-                  <Zap className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                  <Zap className="w-4 h-4 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-xs font-black text-blue-400">⚡ {energoT.title}</p>
-                    <p className="text-xs text-blue-300 mt-0.5">{energoT.investor}</p>
+                    <p className="text-xs font-black text-blue-700 dark:text-blue-400">⚡ {energoT.title}</p>
+                    <p className="text-xs text-blue-800 dark:text-blue-300 mt-0.5">{energoT.investor}</p>
                   </div>
                 </div>
               </div>
@@ -559,13 +559,13 @@ export default function DotaciaAmericana() {
                 transition={{ duration: 0.3 }}
                 className="bg-card backdrop-blur-xl p-6 rounded-xl border border-border shadow-xl w-full max-w-md"
               >
-                <h2 className="text-2xl lg:text-3xl font-serif font-bold text-white mb-2 leading-tight">
+                <h2 className="text-2xl lg:text-3xl font-serif font-bold text-slate-900 dark:text-white mb-2 leading-tight">
                   {t('dotaciaHeroLeft')}
                 </h2>
-                <p className="text-base text-emerald-400 mb-2 font-sans font-bold">
+                <p className="text-base text-emerald-600 dark:text-emerald-400 mb-2 font-sans font-bold">
                   {t('dotaciaHeroLeftSubtitle')}
                 </p>
-                <p className="text-sm text-slate-300 mb-4 font-sans leading-relaxed">
+                <p className="text-sm text-slate-600 dark:text-slate-300 mb-4 font-sans leading-relaxed">
                   {t('dotaciaHeroLeftDesc')}
                 </p>
                 {/* Energodotácia - Ambassador desktop */}
@@ -638,13 +638,13 @@ export default function DotaciaAmericana() {
                 transition={{ duration: 0.3 }}
                 className="bg-card backdrop-blur-xl p-6 rounded-xl border border-border shadow-xl w-full max-w-md"
               >
-                <h2 className="text-2xl lg:text-3xl font-serif font-bold text-white mb-2 drop-shadow-xl leading-tight">
+                <h2 className="text-2xl lg:text-3xl font-serif font-bold text-slate-900 dark:text-white mb-2 drop-shadow-xl leading-tight">
                   {t('dotaciaHeroRight')}
                 </h2>
-                <p className="text-base text-white/95 mb-2 drop-shadow-lg font-sans font-medium">
+                <p className="text-base text-yellow-600 dark:text-yellow-400 mb-2 drop-shadow-lg font-sans font-medium">
                   {t('dotaciaHeroRightSubtitle')}
                 </p>
-                <p className="text-sm text-white/85 mb-4 drop-shadow-lg font-sans leading-relaxed">
+                <p className="text-sm text-slate-600 dark:text-slate-300 mb-4 drop-shadow-lg font-sans leading-relaxed">
                   {t('dotaciaHeroRightDesc')}
                 </p>
                 {/* Energodotácia - Investor desktop */}
@@ -861,7 +861,7 @@ export default function DotaciaAmericana() {
               {/* Form */}
               <form onSubmit={handleSubmit} className="space-y-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">{t('dotaciaFormName')}</label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">{t('dotaciaFormName')}</label>
                   <Input
                     type="text"
                     placeholder={t('dotaciaFormNamePlaceholder')}
@@ -873,11 +873,11 @@ export default function DotaciaAmericana() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     {t('dotaciaFormTypeGrant')} <span className="text-red-600">*</span>
                   </label>
                   <Select value={formData.typ_grantu} onValueChange={(value) => setFormData({ ...formData, typ_grantu: value })} required>
-                    <SelectTrigger className="text-xs sm:text-sm h-10">
+                    <SelectTrigger className="text-xs sm:text-sm h-10 text-foreground">
                       <SelectValue placeholder={t('dotaciaFormTypeGrantPlaceholder')} />
                     </SelectTrigger>
                     <SelectContent>
@@ -892,9 +892,9 @@ export default function DotaciaAmericana() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">{t('dotaciaFormHouse')}</label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">{t('dotaciaFormHouse')}</label>
                   <Select value={formData.dom_id} onValueChange={(value) => setFormData({ ...formData, dom_id: value })}>
-                    <SelectTrigger className="text-xs sm:text-sm h-10">
+                    <SelectTrigger className="text-xs sm:text-sm h-10 text-foreground">
                       <SelectValue placeholder={t('dotaciaFormHousePlaceholder')} />
                     </SelectTrigger>
                     <SelectContent>
@@ -911,11 +911,11 @@ export default function DotaciaAmericana() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     {t('dotaciaFormFinancing')} <span className="text-red-600">*</span>
                   </label>
                   <Select value={formData.forma_financovania} onValueChange={(value) => setFormData({ ...formData, forma_financovania: value })} required>
-                    <SelectTrigger className="text-xs sm:text-sm h-10">
+                    <SelectTrigger className="text-xs sm:text-sm h-10 text-foreground">
                       <SelectValue placeholder={t('dotaciaFormFinancingPlaceholder')} />
                     </SelectTrigger>
                     <SelectContent>
@@ -928,7 +928,7 @@ export default function DotaciaAmericana() {
 
                 {modalType === 'rodina' && (
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1">
+                    <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                       {t('dotaciaFormLocation')} <span className="text-red-600">*</span>
                     </label>
                     <Input
@@ -944,7 +944,7 @@ export default function DotaciaAmericana() {
 
                 {modalType === 'investor' && (
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1">{t('dotaciaFormBudget')}</label>
+                    <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">{t('dotaciaFormBudget')}</label>
                     <Input
                       type="text"
                       placeholder={t('dotaciaFormBudgetPlaceholder')}
@@ -956,7 +956,7 @@ export default function DotaciaAmericana() {
                 )}
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Email</label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Email</label>
                   <Input
                     type="email"
                     placeholder="jan.novak@example.com"
@@ -968,7 +968,7 @@ export default function DotaciaAmericana() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">{t('phone')}</label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">{t('phone')}</label>
                   <Input
                     type="tel"
                     placeholder="+421 XXX XXX XXX"
@@ -1151,7 +1151,7 @@ export default function DotaciaAmericana() {
                       value={formData.lokalita}
                       onChange={(e) => setFormData({ ...formData, lokalita: e.target.value })}
                       required
-                      className="text-base p-4 font-sans bg-slate-900 border-white/10 text-white placeholder:text-slate-500"
+                      className="text-sm sm:text-base p-3 sm:p-4 font-sans bg-background border-border text-foreground placeholder:text-muted-foreground min-h-[48px]"
                     />
                     <p className="text-xs text-red-600 mt-1 font-sans font-semibold">
                       {t('dotaciaFormLocationRequired')}

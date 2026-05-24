@@ -361,10 +361,10 @@ export default function KonfiguratorContactModal({
 
             {/* Pravá strana - Formulár */}
             <div className="w-full md:w-1/2 p-3 overflow-y-auto flex flex-col max-h-[95vh]">
-              <h3 className="text-base font-bold text-gray-800 mb-1 flex-shrink-0">
+              <h3 className="text-base font-bold text-foreground mb-1 flex-shrink-0">
                 {t('contactDetails')}
               </h3>
-              <p className="text-gray-500 text-xs mb-2 flex-shrink-0">
+              <p className="text-muted-foreground text-xs mb-2 flex-shrink-0">
                 {t('fillFormWeContact')}
               </p>
 
@@ -377,7 +377,7 @@ export default function KonfiguratorContactModal({
                     value={formData.meno}
                     onChange={(e) => setFormData({ ...formData, meno: e.target.value })}
                     placeholder={t('fullNamePlaceholder')}
-                    className="mt-1 h-8 sm:h-10 text-xs sm:text-sm !text-gray-900 placeholder:text-gray-500"
+                    className="mt-1 h-8 sm:h-10 text-xs sm:text-sm text-foreground placeholder:text-muted-foreground/60 bg-background border-input"
                   />
                 </div>
 
@@ -390,7 +390,7 @@ export default function KonfiguratorContactModal({
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder={t('emailPlaceholder')}
-                    className="mt-1 h-8 sm:h-10 text-xs sm:text-sm !text-gray-900 placeholder:text-gray-500"
+                    className="mt-1 h-8 sm:h-10 text-xs sm:text-sm text-foreground placeholder:text-muted-foreground/60 bg-background border-input"
                   />
                 </div>
 
@@ -402,7 +402,7 @@ export default function KonfiguratorContactModal({
                     value={formData.telefon}
                     onChange={(e) => setFormData({ ...formData, telefon: e.target.value })}
                     placeholder={t('phonePlaceholder')}
-                    className="mt-1 h-8 sm:h-10 text-xs sm:text-sm !text-gray-900 placeholder:text-gray-500"
+                    className="mt-1 h-8 sm:h-10 text-xs sm:text-sm text-foreground placeholder:text-muted-foreground/60 bg-background border-input"
                   />
                 </div>
 
@@ -414,7 +414,7 @@ export default function KonfiguratorContactModal({
                     value={formData.obec}
                     onChange={(e) => setFormData({ ...formData, obec: e.target.value })}
                     placeholder={t('cityPlaceholder')}
-                    className="mt-1 h-8 sm:h-10 text-xs sm:text-sm !text-gray-900 placeholder:text-gray-500"
+                    className="mt-1 h-8 sm:h-10 text-xs sm:text-sm text-foreground placeholder:text-muted-foreground/60 bg-background border-input"
                   />
                 </div>
 
@@ -426,7 +426,7 @@ export default function KonfiguratorContactModal({
                     onChange={(e) => setFormData({ ...formData, poznamka: e.target.value })}
                     placeholder={t('notePlaceholder')}
                     rows={2}
-                    className="mt-1 text-xs sm:text-sm !text-gray-900 placeholder:text-gray-500"
+                    className="mt-1 text-xs sm:text-sm text-foreground placeholder:text-muted-foreground/60 bg-background border-input"
                   />
                 </div>
 

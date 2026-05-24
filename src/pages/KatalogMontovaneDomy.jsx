@@ -391,7 +391,7 @@ export default function KatalogMontovaneDomy() {
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/10 text-red-400 border border-red-500/20 text-sm font-bold mb-6">
               <Star className="w-4 h-4" /> {mt.badge}
             </div>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white mb-6 leading-tight tracking-tight">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 dark:text-white mb-6 leading-tight tracking-tight">
               Moderné <span className="text-red-500">{mt.h1Title}</span> na kľúč
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed">
@@ -401,7 +401,7 @@ export default function KatalogMontovaneDomy() {
               <Button size="lg" className="bg-red-600 hover:bg-red-700 text-white px-8 h-14 text-lg rounded-xl w-full sm:w-auto" asChild>
                 <Link to="#nasa-ponuka">{mt.showModels}</Link>
               </Button>
-              <Button size="lg" variant="outline" className="border-slate-600 text-white hover:bg-slate-800 px-8 h-14 text-lg rounded-xl w-full sm:w-auto" asChild>
+              <Button size="lg" variant="outline" className="text-slate-800 dark:text-white border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 px-8 h-14 text-lg rounded-xl w-full sm:w-auto" asChild>
                 <Link to={createPageUrl("Katalog")}>{mt.viewAllButton}</Link>
               </Button>
             </div>

@@ -379,7 +379,7 @@ export default function KatalogModularneDomy() {
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-sm font-bold mb-6">
               <Sparkles className="w-4 h-4" /> {mt.badge}
             </div>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white mb-6 leading-tight tracking-tight">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 dark:text-white mb-6 leading-tight tracking-tight">
               Moderné <span className="text-blue-500">{mt.h1Title}</span> a Tiny House
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed">

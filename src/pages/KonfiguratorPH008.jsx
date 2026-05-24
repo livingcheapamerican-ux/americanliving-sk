@@ -314,32 +314,32 @@ const ContactModal = ({ isOpen, onClose, onSubmit, isSubmitting, t }) => {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-      <div className="bg-white rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200">
-        <button onClick={onClose} className="absolute top-4 right-4 p-2 bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors">
+      <div className="bg-card border border-border rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200 text-foreground">
+        <button onClick={onClose} className="absolute top-4 right-4 p-2 bg-muted hover:bg-muted/80 rounded-full text-muted-foreground hover:text-foreground transition-colors">
           <X className="w-5 h-5" />
         </button>
-        <h2 className="text-2xl font-bold mb-2 text-gray-900">{t('inquiryForm')}</h2>
-        <p className="text-gray-500 mb-8">{t('inquiryFormDesc')}</p>
+        <h2 className="text-2xl font-bold mb-2 text-slate-900 dark:text-white">{t('inquiryForm')}</h2>
+        <p className="text-muted-foreground mb-8">{t('inquiryFormDesc')}</p>
         <form onSubmit={onSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">{t('nameSurname')}</label>
-            <input required type="text" placeholder="Jozef Novák" name="name" className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all" />
+            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">{t('nameSurname')}</label>
+            <input required type="text" placeholder="Jozef Novák" name="name" className="w-full px-4 py-3 bg-background border border-input text-foreground rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all placeholder:text-muted-foreground" />
           </div>
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">{t('email')}</label>
-            <input required type="email" placeholder="jozef@example.com" name="email" className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all" />
+            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">{t('email')}</label>
+            <input required type="email" placeholder="jozef@example.com" name="email" className="w-full px-4 py-3 bg-background border border-input text-foreground rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all placeholder:text-muted-foreground" />
           </div>
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">{t('phone')}</label>
-            <input required type="tel" placeholder="+421 900 000 000" name="phone" className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all" />
+            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">{t('phone')}</label>
+            <input required type="tel" placeholder="+421 900 000 000" name="phone" className="w-full px-4 py-3 bg-background border border-input text-foreground rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all placeholder:text-muted-foreground" />
           </div>
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">{t('city')}</label>
-            <input required type="text" placeholder="Bratislava" name="city" className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all" />
+            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">{t('city')}</label>
+            <input required type="text" placeholder="Bratislava" name="city" className="w-full px-4 py-3 bg-background border border-input text-foreground rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all placeholder:text-muted-foreground" />
           </div>
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">{t('note')}</label>
-            <textarea name="note" rows={3} placeholder="Mám záujem o..." className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all"></textarea>
+            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">{t('note')}</label>
+            <textarea name="note" rows={3} placeholder="Mám záujem o..." className="w-full px-4 py-3 bg-background border border-input text-foreground rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all placeholder:text-muted-foreground"></textarea>
           </div>
           <button
             type="submit"

@@ -576,7 +576,7 @@ export default function DetailDomu() {
             </div>
           </div>
           {/* Názov domu - mobilné zobrazenie */}
-          <h2 className="lg:hidden text-lg font-bold text-white mt-2">
+          <h2 className="lg:hidden text-lg font-bold text-slate-900 dark:text-white mt-2">
             {dom.nazov}
           </h2>
         </div>
@@ -688,7 +688,7 @@ export default function DetailDomu() {
 
             {/* Editorial Popis */}
             {dom.popis && (
-              <div className="prose prose-invert prose-lg max-w-none mb-10 mt-6 leading-relaxed text-slate-300">
+              <div className="prose dark:prose-invert prose-lg max-w-none mb-10 mt-6 leading-relaxed text-slate-700 dark:text-slate-300">
                 <TranslatedDescription 
                   description={dom.popis} 
                   language={language}
@@ -706,7 +706,7 @@ export default function DetailDomu() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3">
                   {dom.podorys_2d && (
                     <div>
-                      <p className="text-xs sm:text-sm font-semibold text-slate-300 mb-1 sm:mb-2">{t('twoD')} {t('floorPlan')}</p>
+                      <p className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1 sm:mb-2">{t('twoD')} {t('floorPlan')}</p>
                       <div 
                         className="rounded-lg overflow-hidden bg-muted border border-border cursor-pointer"
                         onClick={() => openLightbox([dom.podorys_2d, dom.podorys_3d].filter(Boolean), 0)}
@@ -750,7 +750,7 @@ export default function DetailDomu() {
               <div className="space-y-10 sm:space-y-16 my-10 sm:my-16">
                 {dom.galerie.filter(g => g.fotky && g.fotky.length > 0).map((galeria, index) => (
                   <div key={index} className="w-full">
-                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 border-l-4 border-red-500 pl-4 tracking-tight">
+                    <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-4 sm:mb-6 border-l-4 border-red-500 pl-4 tracking-tight">
                       {getGaleriaLabel(galeria.typ)}
                     </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
@@ -1208,7 +1208,7 @@ export default function DetailDomu() {
                     </div>
                   ) : (
                     <>
-                      <p className="text-3xl font-black text-white">{dom.zakladna_cena?.toLocaleString('sk-SK')} €</p>
+                      <p className="text-3xl font-black text-slate-900 dark:text-white">{dom.zakladna_cena?.toLocaleString('sk-SK')} €</p>
                       <p className="text-xs text-slate-400 mt-0.5">{t('withVAT')}</p>
                     </>
                   )}
@@ -1223,10 +1223,10 @@ export default function DetailDomu() {
                   {dom.typ_domu === 'modularny' ? t('modular') : dom.typ_domu === 'montovany' ? t('prefab') : t('mobile')}
                 </Badge>
               </div>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 sm:mb-3 break-words hidden lg:block">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-2 sm:mb-3 break-words hidden lg:block">
                 {dom.nazov}
               </h1>
-              <p className="text-base sm:text-lg font-semibold text-slate-300 mb-3 hidden lg:block">{t('ceilingHeight270A0')}</p>
+              <p className="text-base sm:text-lg font-semibold text-slate-700 dark:text-slate-300 mb-3 hidden lg:block">{t('ceilingHeight270A0')}</p>
               
               {/* Desktop verzia - cena */}
               <div className="hidden lg:block bg-slate-900 p-5 rounded-xl border border-white/10 shadow-xl backdrop-blur-sm">
