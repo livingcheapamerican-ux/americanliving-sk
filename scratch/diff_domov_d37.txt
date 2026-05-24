@@ -1,0 +1,436 @@
+commit d37a8abf2495dc73305f0551d90ab46ba1ba2545
+Author: Richard Kovac <living.cheap.american@gmail.com>
+Date:   Sun May 24 16:49:48 2026 +0200
+
+    feat: redesign hero screen to split layout, add lookbook facade switcher and trust grid
+
+diff --git a/src/pages/Domov.jsx b/src/pages/Domov.jsx
+index 77befae1..1d50727e 100644
+--- a/src/pages/Domov.jsx
++++ b/src/pages/Domov.jsx
+@@ -54,13 +54,23 @@ const DEFAULT_HERO_IMAGES = [
+ const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/376b4bd9f_okruhlelogo.png";
+ 
+ export default function Domov() {
+-  const [currentSlide, setCurrentSlide] = useState(0);
+   const [showSettings, setShowSettings] = useState(false);
+   const [selectedService, setSelectedService] = useState(null);
+   const [serviceModalOpen, setServiceModalOpen] = useState(false);
+   const { t, language } = useLanguage();
+   const sp = socialProofT[language] || socialProofT.sk;
+   const dv = dotaciaVerifyT[language] || dotaciaVerifyT.sk;
++
++  // Facade lookbook options
++  const [selectedFacade, setSelectedFacade] = useState("anthracite");
++  const facadeOptions = [
++    { id: "anthracite", name: "Falcovaný plech", desc: "Moderný antracit", img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?fm=webp&auto=format,compress&w=800&q=75" },
++    { id: "wood", name: "Drevený obklad", desc: "Severský smrek", img: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?fm=webp&auto=format,compress&w=800&q=75" },
++    { id: "stucco", name: "Šúchaná omietka", desc: "Svetlý exteriér", img: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?fm=webp&auto=format,compress&w=800&q=75" }
++  ];
++  const selectedFacadeImage = useMemo(() => {
++    return facadeOptions.find(o => o.id === selectedFacade)?.img || facadeOptions[0].img;
++  }, [selectedFacade]);
+   
+   const { data: domy = [] } = useQuery({
+     queryKey: ['domy-popularne'],
+@@ -107,15 +117,6 @@ export default function Domov() {
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+     [heroSettings?.hero_images?.join(',')]
+   );
+-  
+-  const heroInterval = heroSettings?.hero_interval || 5000;
+-
+-  useEffect(() => {
+-    const interval = setInterval(() => {
+-      setCurrentSlide((prev) => (prev + 1) % heroImages.length);
+-    }, heroInterval);
+-    return () => clearInterval(interval);
+-  }, [heroImages.length, heroInterval]);
+ 
+   const vyhody = [
+     {
+@@ -378,128 +379,279 @@ export default function Domov() {
+ 
+ 
+       {/* Hero Section */}
+-      <section className="relative h-[80vh] sm:h-[100vh] min-h-[500px] sm:min-h-[700px] overflow-hidden bg-slate-950 pt-8 sm:pt-0">
+-        
+-        {heroImages.map((img, index) => (
+-          <div
+-            key={index}
+-            className="absolute inset-0 transition-opacity duration-1000"
+-            style={{ 
+-              zIndex: index === currentSlide ? 1 : 0,
+-              opacity: index === currentSlide ? 1 : 0 
+-            }}
+-          >
+-            {/* LCP: first hero is eager + high priority; rest are lazy */}
+-            <img
+-              src={img}
+-              alt={`Modulárny dom - American Living ${index + 1}`}
+-              className="w-full h-full object-cover"
+-              width={1200}
+-              height={675}
+-              loading={index === 0 ? "eager" : "lazy"}
+-              fetchpriority={index === 0 ? "high" : undefined}
+-              decoding={index === 0 ? "sync" : "async"}
+-            />
+-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
+-          </div>
+-        ))}
++      <section className="relative min-h-[90vh] lg:min-h-screen overflow-hidden bg-slate-950 pt-20 lg:pt-28 pb-12 flex items-center">
++        {/* Ambient background glows */}
++        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-red-900/10 rounded-full blur-[150px] pointer-events-none" />
++        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-[#C5A880]/5 rounded-full blur-[150px] pointer-events-none" />
+ 
+-        <div className="relative z-10 container mx-auto px-4 h-full flex items-end sm:items-center pb-12 sm:pb-0">
+-          <div className="w-full max-w-3xl text-white">
+-            {/* Logo v hero sekcii */}
+-            <motion.div 
+-              initial={{ opacity: 0, scale: 0.8 }}
+-              animate={{ opacity: 1, scale: 1 }}
+-              transition={{ duration: 0.8 }}
+-              className="mb-3 sm:mb-8"
+-            >
+-              <img 
++        <div className="relative z-10 container mx-auto px-4">
++          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
++            
++            {/* Left Column: Copywriting & CTAs */}
++            <div className="lg:col-span-7 flex flex-col text-left">
++              {/* Logo & Small Badge */}
++              <div className="flex items-center gap-3 mb-6 flex-wrap">
++                <motion.img 
++                  initial={{ opacity: 0, scale: 0.8 }}
++                  animate={{ opacity: 1, scale: 1 }}
++                  transition={{ duration: 0.6 }}
+                   src={LOGO_URL} 
+                   alt="American Living" 
+-                  className="h-10 sm:h-20 md:h-28 w-auto drop-shadow-2xl rounded-full"
+-                  width={112}
+-                  height={112}
++                  className="h-10 sm:h-14 w-auto drop-shadow-lg rounded-full"
++                  width={56}
++                  height={56}
+                   loading="eager"
+-                  fetchpriority="high"
+                 />
+-            </motion.div>
+-            
+-            <motion.h1 
+-              initial={{ opacity: 0, y: 30 }}
+-              animate={{ opacity: 1, y: 0 }}
+-              transition={{ duration: 0.8, delay: 0.2 }}
+-              className="text-2xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-2 sm:mb-4 leading-tight text-white" 
+-              style={{ textShadow: '4px 4px 20px rgba(0,0,0,0.9)' }}
+-            >
+-              {t('heroHeadline')}
+-            </motion.h1>
+-            
+-            <motion.p 
+-              initial={{ opacity: 0, y: 30 }}
+-              animate={{ opacity: 1, y: 0 }}
+-              transition={{ duration: 0.8, delay: 0.4 }}
+-              className="text-sm sm:text-xl md:text-2xl mb-1.5 sm:mb-4 font-semibold text-white" 
+-              style={{ textShadow: '3px 3px 15px rgba(0,0,0,0.9)' }}
+-            >
+-              {t('heroSubheadline')}
+-            </motion.p>
+-            
+-            <motion.p 
+-              initial={{ opacity: 0, y: 30 }}
+-              animate={{ opacity: 1, y: 0 }}
+-              transition={{ duration: 0.8, delay: 0.6 }}
+-              className="hidden sm:block text-sm sm:text-lg md:text-xl mb-4 sm:mb-8 text-slate-300 leading-relaxed max-w-2xl font-light" 
+-              style={{ textShadow: '2px 2px 10px rgba(0,0,0,0.8)' }}
+-            >
+-              {t('everythingYouNeed')}
+-            </motion.p>
+-            
+-            <motion.div 
+-              initial={{ opacity: 0, y: 30 }}
+-              animate={{ opacity: 1, y: 0 }}
+-              transition={{ duration: 0.8, delay: 0.8 }}
+-            >
+-              <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
++                <motion.div
++                  initial={{ opacity: 0, x: -10 }}
++                  animate={{ opacity: 1, x: 0 }}
++                  transition={{ duration: 0.6, delay: 0.1 }}
++                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-slate-300"
++                >
++                  <span className="w-2 h-2 rounded-full bg-[#C5A880] animate-pulse"></span>
++                  <span>Prémiové americké bývanie na kľúč</span>
++                </motion.div>
++              </div>
++
++              {/* Main Headline */}
++              <motion.h1 
++                initial={{ opacity: 0, y: 25 }}
++                animate={{ opacity: 1, y: 0 }}
++                transition={{ duration: 0.8, delay: 0.2 }}
++                className="text-3xl sm:text-5xl md:text-6xl font-black text-white mb-6 leading-[1.1] tracking-tight text-white"
++                style={{ textShadow: '2px 2px 10px rgba(0,0,0,0.8)' }}
++              >
++                Americké bývanie bez starostí a bez kompromisov
++              </motion.h1>
++
++              {/* Subheadline */}
++              <motion.p 
++                initial={{ opacity: 0, y: 25 }}
++                animate={{ opacity: 1, y: 0 }}
++                transition={{ duration: 0.8, delay: 0.4 }}
++                className="text-base sm:text-xl text-slate-300 mb-8 leading-relaxed font-light max-w-2xl"
++              >
++                Nízkoenergetické montované a modulárne domy s garantovaným dodaním do 12 týždňov, možnosťou 100% financovania a prevádzkovým grantom.
++              </motion.p>
++
++              {/* CTAs */}
++              <motion.div 
++                initial={{ opacity: 0, y: 25 }}
++                animate={{ opacity: 1, y: 0 }}
++                transition={{ duration: 0.8, delay: 0.6 }}
++                className="flex flex-col sm:flex-row gap-4 mb-10"
++              >
+                 <Link to={createPageUrl("Katalog")} className="w-full sm:w-auto">
+-                  <Button size="lg" className="relative w-full sm:w-auto bg-gradient-to-r from-red-600 via-primary to-red-600 hover:from-red-700 hover:via-secondary hover:to-red-700 text-white font-black text-lg sm:text-2xl px-6 sm:px-14 py-5 sm:py-9 shadow-[0_0_30px_rgba(239,68,68,0.6)] border-2 sm:border-4 border-white animate-pulse transition-all group">
+-                    <Home className="mr-2 w-5 h-5 sm:w-7 sm:h-7 group-hover:rotate-12 transition-transform" />
+-                    {t('houseCatalogButton')}
+-                    <ArrowRight className="ml-2 w-5 h-5 sm:w-7 sm:h-7 group-hover:translate-x-2 transition-transform" />
+-                    <motion.div
+-                      animate={{ scale: [1, 1.1, 1] }}
+-                      transition={{ duration: 2, repeat: Infinity }}
+-                      className="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 bg-yellow-400 text-red-900 text-[9px] sm:text-xs font-black px-2 py-0.5 sm:px-3 sm:py-1 rounded-full rotate-12 shadow-lg border-2 border-white"
+-                    >
+-                      {t('seeHousesNow')}
+-                    </motion.div>
++                  <Button size="lg" className="relative w-full sm:w-auto bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-black text-lg px-8 py-7 shadow-[0_0_30px_rgba(220,38,38,0.4)] border border-red-500/50 transition-all rounded-2xl flex items-center justify-center gap-2 group">
++                    <Home className="w-5 h-5 group-hover:rotate-12 transition-transform" />
++                    <span>Zobraziť Katalóg Domov</span>
++                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                   </Button>
+                 </Link>
+                 <Button 
+                   size="lg" 
+                   variant="outline" 
+                   onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))}
+-                  className="w-full sm:w-auto bg-white/15 backdrop-blur-md border-2 border-white text-white hover:bg-white hover:text-slate-900 font-bold text-base sm:text-lg px-5 sm:px-8 py-4 sm:py-6 shadow-2xl transition-all"
++                  className="w-full sm:w-auto bg-white/5 hover:bg-white/10 text-white border border-white/20 font-bold text-base px-8 py-7 rounded-2xl transition-all flex items-center justify-center gap-2"
+                 >
+-                  <MessageCircle className="mr-2 w-4 h-4 sm:w-5 sm:h-5" />
+-                  {t('consultation')}
++                  <MessageCircle className="w-5 h-5" />
++                  <span>Konzultácia s Kexom</span>
+                 </Button>
+-              </div>
+-            </motion.div>
++              </motion.div>
++
++              {/* Quick Navigation Cards */}
++              <motion.div
++                initial={{ opacity: 0, y: 20 }}
++                animate={{ opacity: 1, y: 0 }}
++                transition={{ duration: 0.8, delay: 0.8 }}
++                className="grid grid-cols-3 gap-3 pt-6 border-t border-white/10 max-w-lg"
++              >
++                {[
++                  { name: "Prosto House", desc: "Barn & A-Frame", path: "Katalog" },
++                  { name: "Ticab house", desc: "Modulárne domy", path: "Katalog" },
++                  { name: "JAK Modules", desc: "Prémiový lepený GL24", path: "Katalog" }
++                ].map((cat, i) => (
++                  <Link key={i} to={createPageUrl(cat.path)} className="group p-3 rounded-xl bg-white/5 border border-white/10 hover:border-[#C5A880]/40 hover:bg-white/[0.08] transition-all">
++                    <p className="text-xs font-bold text-white group-hover:text-[#C5A880] transition-colors">{cat.name}</p>
++                    <p className="text-[10px] text-slate-400 mt-0.5">{cat.desc}</p>
++                  </Link>
++                ))}
++              </motion.div>
++            </div>
++
++            {/* Right Column: Interactive Lookbook (Color Swapper) & Floating Tags */}
++            <div className="lg:col-span-5 relative">
++              <motion.div
++                initial={{ opacity: 0, scale: 0.95 }}
++                animate={{ opacity: 1, scale: 1 }}
++                transition={{ duration: 0.8, delay: 0.4 }}
++                className="relative bg-slate-900/50 backdrop-blur-md border border-white/10 rounded-3xl p-4 sm:p-6 shadow-2xl overflow-hidden group"
++              >
++                {/* Lookbook main image wrapper */}
++                <div className="aspect-[4/3] rounded-2xl overflow-hidden relative border border-white/5">
++                  <img 
++                    src={selectedFacadeImage} 
++                    alt="Prémiový dom - Prosto House Barnhouse"
++                    className="w-full h-full object-cover transition-all duration-700" 
++                    loading="eager"
++                  />
++                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
++                  
++                  {/* Floating stats tag 1 (top-left) */}
++                  <motion.div 
++                    animate={{ y: [0, -5, 0] }}
++                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
++                    className="absolute top-4 left-4 bg-slate-950/85 backdrop-blur-md border border-white/10 rounded-xl px-3 py-2 flex items-center gap-2 shadow-lg"
++                  >
++                    <div className="w-8 h-8 rounded-lg bg-[#C5A880]/15 flex items-center justify-center border border-[#C5A880]/30">
++                      <Clock className="w-4 h-4 text-[#C5A880]" />
++                    </div>
++                    <div>
++                      <p className="text-[10px] text-slate-400 font-medium">Záruka odovzdania</p>
++                      <p className="text-xs font-black text-white">Do 12 týždňov</p>
++                    </div>
++                  </motion.div>
++
++                  {/* Floating stats tag 2 (bottom-right) */}
++                  <motion.div 
++                    animate={{ y: [0, 5, 0] }}
++                    transition={{ duration: 4, delay: 2, repeat: Infinity, ease: "easeInOut" }}
++                    className="absolute bottom-4 right-4 bg-slate-950/85 backdrop-blur-md border-[#C5A880]/30 rounded-xl px-3 py-2 flex items-center gap-2 shadow-lg"
++                  >
++                    <div className="w-8 h-8 rounded-lg bg-emerald-500/15 flex items-center justify-center border border-emerald-500/30">
++                      <Star className="w-4 h-4 text-emerald-400" />
++                    </div>
++                    <div>
++                      <p className="text-[10px] text-slate-400 font-medium">Bývanie v A0</p>
++                      <p className="text-xs font-black text-emerald-400">Súkromný grant</p>
++                    </div>
++                  </motion.div>
++                </div>
++
++                {/* Lookbook info & controls */}
++                <div className="mt-4 sm:mt-6">
++                  <div className="flex items-center justify-between mb-4">
++                    <div>
++                      <h3 className="text-base sm:text-lg font-bold text-white">Prosto House - Barnhouse</h3>
++                      <p className="text-xs text-slate-400">Prispôsobte si exteriér a farbu fasády</p>
++                    </div>
++                    <Link to={createPageUrl("Katalog")}>
++                      <Button variant="ghost" size="sm" className="text-xs text-[#C5A880] hover:text-white p-0 hover:bg-transparent flex items-center gap-1">
++                        <span>Konfigurovať v katalógu</span>
++                        <ChevronRight className="w-4 h-4" />
++                      </Button>
++                    </Link>
++                  </div>
++
++                  {/* Facade switcher controls */}
++                  <div className="flex gap-2">
++                    {facadeOptions.map((opt) => (
++                      <button
++                        key={opt.id}
++                        onClick={() => setSelectedFacade(opt.id)}
++                        className={`flex-1 py-2 px-3 rounded-xl border text-center transition-all ${
++                          selectedFacade === opt.id 
++                            ? 'bg-[#C5A880] border-[#C5A880] text-slate-950 font-black' 
++                            : 'bg-white/5 border-white/10 text-slate-300 hover:bg-white/10 hover:border-white/20'
++                        }`}
++                      >
++                        <p className="text-[11px] leading-tight font-bold">{opt.name}</p>
++                        <p className={`text-[9px] leading-tight ${selectedFacade === opt.id ? 'text-slate-950/80' : 'text-slate-500'}`}>{opt.desc}</p>
++                      </button>
++                    ))}
++                  </div>
++                </div>
++              </motion.div>
++            </div>
++
+           </div>
+         </div>
++      </section>
+ 
+-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex gap-3">
+-          {heroImages.map((_, index) => (
+-            <motion.button
+-              key={index}
+-              onClick={() => setCurrentSlide(index)}
+-              whileHover={{ scale: 1.2 }}
+-              whileTap={{ scale: 0.9 }}
+-              className={`h-3 rounded-full transition-all duration-300 ${
+-                index === currentSlide ? 'bg-white w-10' : 'bg-white/50 w-3 hover:bg-white/80'
+-              }`}
+-            />
+-          ))}
++      {/* Trust Grid: Tri hlavné záruky a predajné argumenty */}
++      <section className="py-8 sm:py-12 bg-slate-950 relative border-b border-white/5">
++        <div className="container mx-auto px-4">
++          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
++            
++            {/* Stĺpec 1: Súkromný Grant */}
++            <motion.div 
++              initial={{ opacity: 0, y: 20 }}
++              whileInView={{ opacity: 1, y: 0 }}
++              viewport={{ once: true }}
++              className="bg-gradient-to-br from-slate-900/60 to-slate-950/60 border border-emerald-500/20 hover:border-emerald-500/40 rounded-2xl p-6 transition-all duration-300 relative overflow-hidden group shadow-lg"
++            >
++              <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-2xl group-hover:bg-emerald-500/10 transition-all pointer-events-none" />
++              <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center mb-4">
++                <Euro className="w-6 h-6 text-emerald-400" />
++              </div>
++              <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
++                Súkromný Grant Americana
++              </h3>
++              <p className="text-sm text-slate-400 leading-relaxed font-light">
++                Získajte jednorazový príspevok na zníženie istiny pri podpise zmluvy a dlhodobý prevádzkový grant na kompenzáciu energií po odovzdaní domu.
++              </p>
++              <Link to={createPageUrl("DotaciaAmericana")} className="mt-4 inline-flex items-center gap-1 text-xs text-emerald-400 hover:text-white transition-colors font-bold">
++                <span>Viac o grante</span>
++                <ArrowRight className="w-3 h-3" />
++              </Link>
++            </motion.div>
++
++            {/* Stĺpec 2: 100% Financovanie */}
++            <motion.div 
++              initial={{ opacity: 0, y: 20 }}
++              whileInView={{ opacity: 1, y: 0 }}
++              viewport={{ once: true }}
++              transition={{ delay: 0.1 }}
++              className="bg-gradient-to-br from-slate-900/60 to-slate-950/60 border border-[#C5A880]/20 hover:border-[#C5A880]/40 rounded-2xl p-6 transition-all duration-300 relative overflow-hidden group shadow-lg"
++            >
++              <div className="absolute top-0 right-0 w-24 h-24 bg-[#C5A880]/5 rounded-full blur-2xl group-hover:bg-[#C5A880]/10 transition-all pointer-events-none" />
++              <div className="w-12 h-12 rounded-xl bg-[#C5A880]/10 border border-[#C5A880]/25 flex items-center justify-center mb-4">
++                <Building className="w-6 h-6 text-[#C5A880]" />
++              </div>
++              <h3 className="text-lg font-bold text-white mb-2">
++                100% Financovanie bez úspor
++              </h3>
++              <p className="text-sm text-slate-400 leading-relaxed font-light">
++                Nemáte našetrený kapitál? Žiadny problém. Máme pripravený model financovania, ktorý pokrýva kompletnú výstavbu a pozemok bez nutnosti vlastných úspor.
++              </p>
++              <button 
++                onClick={() => {
++                  window.dispatchEvent(new CustomEvent('openChatbotWithContext', {
++                    detail: { message: "Chcem zistiť viac o modeli 100% financovania bez našetrených úspor." }
++                  }));
++                }}
++                className="mt-4 inline-flex items-center gap-1 text-[#C5A880] hover:text-white transition-colors font-bold text-xs"
++              >
++                <span>Spýtať sa na financovanie</span>
++                <ArrowRight className="w-3 h-3" />
++              </button>
++            </motion.div>
++
++            {/* Stĺpec 3: Garancia Výstavby */}
++            <motion.div 
++              initial={{ opacity: 0, y: 20 }}
++              whileInView={{ opacity: 1, y: 0 }}
++              viewport={{ once: true }}
++              transition={{ delay: 0.2 }}
++              className="bg-gradient-to-br from-slate-900/60 to-slate-950/60 border border-red-500/20 hover:border-red-500/40 rounded-2xl p-6 transition-all duration-300 relative overflow-hidden group shadow-lg"
++            >
++              <div className="absolute top-0 right-0 w-24 h-24 bg-red-500/5 rounded-full blur-2xl group-hover:bg-red-500/10 transition-all pointer-events-none" />
++              <div className="w-12 h-12 rounded-xl bg-red-500/10 border border-red-500/25 flex items-center justify-center mb-4">
++                <Clock className="w-6 h-6 text-red-400" />
++              </div>
++              <h3 className="text-lg font-bold text-white mb-2">
++                Odovzdanie do 12 týždňov
++              </h3>
++              <p className="text-sm text-slate-400 leading-relaxed font-light">
++                Garantujeme zmluvné odovzdanie hrubej stavby na kľúč do 12 týždňov od právoplatného stavebného povolenia a dokončenia základov.
++              </p>
++              <Link to={createPageUrl("AkoToFunguje")} className="mt-4 inline-flex items-center gap-1 text-xs text-red-400 hover:text-white transition-colors font-bold">
++                <span>Ako to funguje</span>
++                <ArrowRight className="w-3 h-3" />
++              </Link>
++            </motion.div>
++
++          </div>
+         </div>
+       </section>
+ 

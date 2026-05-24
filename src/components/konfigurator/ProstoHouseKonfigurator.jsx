@@ -16,22 +16,37 @@ import KonfiguratorGaleria from './KonfiguratorGaleria';
 
 // ── Glassmorphism Komponenty s Ikonami a Animáciami ─────────────────────────────────────
 
-const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmin, onPriceChange, icon: Icon, onShowGallery }) => (
-  <div onClick={onClick} className={`relative flex flex-col p-5 rounded-3xl border-2 transition-all duration-500 w-full text-left active:scale-[0.98] gap-4 overflow-hidden group cursor-pointer ${selected ? 'border-red-500 bg-gradient-to-br from-red-500/10 to-red-900/10 shadow-[0_0_30px_rgba(239,68,68,0.2)] scale-[1.02] backdrop-blur-md' : 'border-white/5 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.05] backdrop-blur-sm'}`}>
+const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmin, onPriceChange, icon: Icon, onShowGallery }) => {
+  const isStandard = price === 0;
+  return (
+  <div 
+    onClick={onClick} 
+    className={`relative flex flex-col p-5 rounded-3xl border-2 transition-all duration-500 w-full text-left active:scale-[0.98] gap-4 overflow-hidden group cursor-pointer backdrop-blur-md ${
+      selected 
+        ? 'border-red-500 bg-red-500/10 dark:bg-gradient-to-br dark:from-red-500/10 dark:to-red-900/10 shadow-[0_0_30px_rgba(239,68,68,0.2)] scale-[1.02]' 
+        : isStandard 
+          ? 'border-emerald-500/30 bg-emerald-500/5 hover:border-emerald-500/50 hover:bg-emerald-500/10' 
+          : 'border-slate-200 dark:border-white/5 bg-white dark:bg-white/[0.02] hover:border-slate-350 dark:hover:border-white/20 hover:bg-slate-50 dark:hover:bg-white/[0.05]'
+    }`}
+  >
     {selected && <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-orange-500 opacity-80" />}
     <div className="flex items-start gap-4 w-full relative z-10">
       {Icon && (
-        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all duration-500 ${selected ? 'bg-gradient-to-br from-red-500 to-red-700 text-white shadow-xl shadow-red-500/30 rotate-3' : 'bg-white/5 text-slate-400 group-hover:text-slate-300 group-hover:scale-110'}`}>
+        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all duration-500 ${
+          selected 
+            ? 'bg-gradient-to-br from-red-500 to-red-700 text-white shadow-xl shadow-red-500/30 rotate-3' 
+            : 'bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 group-hover:scale-110'
+        }`}>
           <Icon className={`w-7 h-7 transition-transform duration-500 ${selected ? 'scale-110' : 'scale-100'}`} />
         </div>
       )}
       
       <div className="flex-1 min-w-0 mt-1">
         <div className="flex items-center gap-2 flex-wrap mb-1.5">
-          <span className={`font-black text-lg transition-colors duration-300 ${selected ? 'text-white' : 'text-slate-200'}`}>{label}</span>
-          {isA0 && <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.2)]">A0 Certifikácia</span>}
+          <span className={`font-black text-lg transition-colors duration-300 ${selected ? 'text-red-955 dark:text-white' : 'text-slate-800 dark:text-slate-200'}`}>{label}</span>
+          {isA0 && <span className="bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.2)]">A0 Certifikácia</span>}
         </div>
-        {description && <p className="text-sm text-slate-400 leading-relaxed mb-2">{description}</p>}
+        {description && <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-2">{description}</p>}
         {onShowGallery && (
           <button
             onClick={(e) => {
@@ -47,7 +62,11 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
       </div>
       
       <div className="flex flex-col items-end flex-shrink-0">
-        <div className={`w-7 h-7 mb-3 rounded-full border-2 flex items-center justify-center transition-all duration-500 ${selected ? 'border-red-500 bg-red-500 scale-110 shadow-lg shadow-red-500/40' : 'border-slate-700 bg-slate-950/50'}`}>
+        <div className={`w-7 h-7 mb-3 rounded-full border-2 flex items-center justify-center transition-all duration-500 ${
+          selected 
+            ? 'border-red-500 bg-red-500 scale-110 shadow-lg shadow-red-500/40' 
+            : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950/50'
+        }`}>
           {selected && <Check className="w-4 h-4 text-white" />}
         </div>
         
@@ -57,30 +76,58 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
             <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-20 text-sm font-bold text-red-400 bg-transparent outline-none" />
           </div>
         ) : (
-          <span className={`text-base font-black whitespace-nowrap transition-colors duration-300 ${selected ? 'text-red-400' : 'text-slate-500'}`}>
+          <span className={`text-base font-black whitespace-nowrap transition-colors duration-300 ${
+            selected 
+              ? 'text-red-600 dark:text-red-400' 
+              : isStandard 
+                ? 'text-sm text-emerald-600 dark:text-emerald-400' 
+                : 'text-slate-600 dark:text-slate-500'
+          }`}>
             {price === 0 ? 'V cene' : `+${price.toLocaleString()} €`}
           </span>
         )}
       </div>
     </div>
   </div>
-);
+  );
+};
 
 const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = false, isAdmin, onPriceChange, description, t, icon: Icon }) => (
-  <button onClick={!disabled && !locked ? onChange : undefined} className={`flex items-center justify-between p-4 rounded-2xl border-2 transition-all duration-500 w-full active:scale-[0.98] group overflow-hidden relative ${locked ? 'border-emerald-500/30 bg-emerald-500/5 cursor-not-allowed' : checked ? 'border-red-500 bg-gradient-to-r from-red-500/10 to-transparent shadow-[0_0_20px_rgba(239,68,68,0.1)] scale-[1.01] backdrop-blur-md' : disabled ? 'border-white/5 bg-slate-900/50 opacity-60 cursor-not-allowed' : 'border-white/5 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.05] backdrop-blur-sm'}`}>
+  <button 
+    onClick={!disabled && !locked ? onChange : undefined} 
+    className={`flex items-center justify-between p-4 rounded-2xl border-2 transition-all duration-500 w-full active:scale-[0.98] group overflow-hidden relative ${
+      locked 
+        ? 'border-emerald-500/30 bg-emerald-500/5 cursor-not-allowed shadow-[0_0_20px_rgba(16,185,129,0.15)] backdrop-blur-md' 
+        : checked 
+          ? 'border-red-500 bg-red-500/5 dark:bg-gradient-to-r dark:from-red-500/10 dark:to-transparent shadow-[0_0_20px_rgba(239,68,68,0.1)] scale-[1.01] backdrop-blur-md' 
+          : disabled 
+            ? 'border-slate-200 dark:border-white/5 bg-slate-100/50 dark:bg-slate-900/50 opacity-60 cursor-not-allowed' 
+            : 'border-slate-200 dark:border-white/5 bg-white dark:bg-white/[0.02] hover:border-slate-350 dark:hover:border-white/20 hover:bg-slate-50 dark:hover:bg-white/[0.05] backdrop-blur-sm'
+    }`}
+  >
     {checked && !locked && <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500" />}
     <div className="flex items-center gap-4 relative z-10">
-      <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors duration-500 ${locked ? 'bg-emerald-500/20 text-emerald-400' : checked ? 'bg-gradient-to-br from-red-500 to-red-600 text-white shadow-lg shadow-red-500/20' : 'bg-white/5 text-slate-400 group-hover:scale-110 transition-transform duration-300'}`}>
+      <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors duration-500 ${
+        locked 
+          ? 'bg-emerald-500/20 text-emerald-400' 
+          : checked 
+            ? 'bg-gradient-to-br from-red-500 to-red-600 text-white shadow-lg shadow-red-500/20' 
+            : 'bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 group-hover:scale-110 transition-transform duration-300'
+      }`}>
         {Icon ? <Icon className={`w-6 h-6 transition-transform duration-500 ${checked ? 'scale-110' : 'scale-100'}`} /> : (locked ? <Lock className="w-5 h-5" /> : <CheckSquare className="w-5 h-5" />)}
       </div>
       <div className="text-left">
-        <span className={`font-bold text-lg block transition-colors duration-300 ${checked || locked ? 'text-white' : 'text-slate-300'}`}>{label}</span>
-        {description && <p className="text-sm text-slate-400 mt-1 leading-relaxed">{description}</p>}
+        <span className={`font-bold text-lg block transition-colors duration-300 ${
+          checked || locked ? 'text-red-955 dark:text-white' : 'text-slate-800 dark:text-slate-200'
+        }`}>{label}</span>
+        {description && <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">{description}</p>}
         {locked && <span className="text-[11px] uppercase font-bold text-emerald-500 tracking-wider flex items-center gap-1 mt-1"><CheckCircle className="w-3 h-3" /> {t ? t('requiredForA0') : 'Vyžadované pre A0'}</span>}
       </div>
     </div>
     <div className="flex items-center gap-4 ml-3 flex-shrink-0 relative z-10">
-      <div className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-all duration-300 ${locked ? 'bg-emerald-500 border-emerald-500' : checked ? 'bg-red-500 border-red-500 scale-110' : 'bg-slate-950/50 border-slate-700'}`}>
+      <div className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-all duration-300 ${
+        locked ? 'bg-emerald-500 border-emerald-500' : checked ? 'bg-red-500 border-red-500 scale-110' : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950/50'
+      }`}>
         {locked ? <Lock className="w-4 h-4 text-white" /> : checked && <Check className="w-4 h-4 text-white" />}
       </div>
       <div className="flex-shrink-0 min-w-[70px] text-right">
@@ -90,7 +137,9 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
             <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-20 text-sm font-bold text-red-400 bg-transparent outline-none" />
           </div>
         ) : (
-          <span className={`text-base font-black whitespace-nowrap transition-colors duration-300 ${locked ? 'text-emerald-400' : 'text-slate-400'}`}>
+          <span className={`text-base font-black whitespace-nowrap transition-colors duration-300 ${
+            locked ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-600 dark:text-slate-400'
+          }`}>
             {price === 0 ? '0 €' : `+${price.toLocaleString()} €`}
           </span>
         )}
@@ -100,48 +149,65 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
 );
 
 const CounterRow = ({ label, price, value, onChange, isAdmin, onPriceChange, icon: Icon }) => (
-  <div className="flex items-center justify-between p-4 rounded-2xl border-2 border-white/5 bg-white/[0.02] backdrop-blur-sm transition-all duration-500 hover:border-white/20 group relative overflow-hidden">
+  <div className="flex items-center justify-between p-4 rounded-2xl border-2 border-slate-200 dark:border-white/5 bg-white dark:bg-white/[0.02] backdrop-blur-sm transition-all duration-500 hover:border-slate-300 dark:hover:border-white/20 group relative overflow-hidden">
     {value > 0 && <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500" />}
     <div className="flex items-center gap-4 relative z-10">
       {Icon && (
-        <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors duration-500 ${value > 0 ? 'bg-slate-800 text-white' : 'bg-white/5 text-slate-400 group-hover:scale-110 transition-transform duration-300'}`}>
+        <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors duration-500 ${
+          value > 0 ? 'bg-slate-800 dark:bg-white/10 text-white' : 'bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 group-hover:scale-110 transition-transform duration-300'
+        }`}>
           <Icon className={`w-6 h-6 transition-transform duration-500 ${value > 0 ? 'scale-110' : ''}`} />
         </div>
       )}
       <div>
-        <div className={`font-bold text-lg transition-colors duration-300 ${value > 0 ? 'text-white' : 'text-slate-300'}`}>{label}</div>
+        <div className={`font-bold text-lg transition-colors duration-300 ${
+          value > 0 ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400'
+        }`}>{label}</div>
         {isAdmin && onPriceChange ? (
           <div className="flex items-center gap-1 mt-1">
             <span className="text-xs text-slate-500">€</span>
             <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-16 text-sm font-bold text-red-400 bg-slate-950 outline-none border border-red-500/30 rounded px-1 py-0.5" />
           </div>
         ) : (
-          <div className="text-sm text-red-400 font-bold mt-1">{price} € / ks</div>
+          <div className="text-sm text-red-600 dark:text-red-400 font-bold mt-1">{price} € / ks</div>
         )}
       </div>
     </div>
     <div className="flex items-center gap-4 relative z-10">
-      <button onClick={() => onChange(Math.max(0, value - 1))} className="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center font-bold text-slate-300 active:scale-90 transition-all border border-white/10 backdrop-blur-sm">−</button>
-      <span className={`w-8 text-center font-black text-xl transition-colors duration-300 ${value > 0 ? 'text-white' : 'text-slate-500'}`}>{value}</span>
-      <button onClick={() => onChange(value + 1)} className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 flex items-center justify-center font-bold active:scale-90 transition-all shadow-[0_0_15px_rgba(239,68,68,0.4)]">+</button>
+      <button 
+        onClick={() => onChange(Math.max(0, value - 1))} 
+        className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 flex items-center justify-center font-bold text-slate-800 dark:text-slate-300 active:scale-90 transition-all border border-slate-200 dark:border-white/10 backdrop-blur-sm"
+      >
+        −
+      </button>
+      <span className={`w-8 text-center font-black text-xl transition-colors duration-300 ${
+        value > 0 ? 'text-slate-900 dark:text-white' : 'text-slate-400 dark:text-slate-655'
+      }`}>{value}</span>
+      <button 
+        onClick={() => onChange(value + 1)} 
+        className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 flex items-center justify-center font-bold active:scale-90 transition-all shadow-[0_0_15px_rgba(239,68,68,0.4)]"
+      >
+        +
+      </button>
     </div>
   </div>
 );
 
 const SectionLabel = ({ label, color = 'gray' }) => {
   const colorMap = {
-    'gray': 'text-slate-400',
-    'orange': 'text-orange-400',
-    'teal': 'text-teal-400',
-    'amber': 'text-amber-400',
-    'blue': 'text-blue-400',
-    'purple': 'text-purple-400',
-    'red': 'text-red-400',
-    'emerald': 'text-emerald-400',
-    'green': 'text-green-400'
+    'gray': 'text-slate-600 dark:text-slate-400',
+    'orange': 'text-orange-700 dark:text-orange-400',
+    'teal': 'text-teal-700 dark:text-teal-400',
+    'amber': 'text-amber-700 dark:text-amber-400',
+    'blue': 'text-blue-700 dark:text-blue-400',
+    'purple': 'text-purple-700 dark:text-purple-400',
+    'red': 'text-red-700 dark:text-red-400',
+    'emerald': 'text-emerald-700 dark:text-emerald-400',
+    'green': 'text-green-700 dark:text-green-400',
+    'yellow': 'text-yellow-750 dark:text-yellow-400'
   };
   return (
-    <div className={`text-sm font-black uppercase tracking-widest ${colorMap[color] || 'text-slate-400'} mb-4 mt-10 first:mt-0 flex items-center gap-2`}>
+    <div className={`text-sm font-black uppercase tracking-widest ${colorMap[color] || 'text-slate-600 dark:text-slate-400'} mb-4 mt-10 first:mt-0 flex items-center gap-2`}>
       <span className="w-2 h-2 rounded-full bg-current shadow-[0_0_10px_currentColor]"></span>
       {label}
     </div>
@@ -149,7 +215,7 @@ const SectionLabel = ({ label, color = 'gray' }) => {
 };
 
 const BigSectionHeader = ({ title, description, icon: Icon, stepIdx, totalSteps }) => (
-  <div className="mb-8 border-b border-white/10 pb-6">
+  <div className="mb-8 border-b border-slate-200 dark:border-white/10 pb-6">
     <div className="lg:hidden text-red-500 font-bold uppercase tracking-widest text-xs mb-4 flex items-center gap-2">
       <span className="w-8 h-[2px] bg-red-500"></span>
       Krok {stepIdx + 1} z {totalSteps}
@@ -159,13 +225,12 @@ const BigSectionHeader = ({ title, description, icon: Icon, stepIdx, totalSteps 
         <Icon className="w-6 h-6 lg:w-7 lg:h-7 text-red-500" />
       </div>
       <div>
-        <h2 className="text-2xl lg:text-3xl font-black text-white tracking-tight mb-2">{title}</h2>
-        {description && <p className="text-slate-400 text-sm lg:text-base leading-relaxed">{description}</p>}
+        <h2 className="text-2xl lg:text-3xl font-black text-slate-900 dark:text-white tracking-tight mb-2">{title}</h2>
+        {description && <p className="text-slate-600 dark:text-slate-400 text-sm lg:text-base leading-relaxed">{description}</p>}
       </div>
     </div>
   </div>
 );
-
 const ContactModal = ({ isOpen, onClose, onSubmit, isSubmitting, t }) => {
   if (!isOpen) return null;
   return (

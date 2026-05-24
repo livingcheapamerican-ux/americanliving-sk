@@ -145,7 +145,7 @@ export default function Domov() {
   // Načítaj verejné domy pre FloatingHouses — zdieľaný query s FloatingHouses komponentom
   const { data: verejneDomy = [] } = useQuery({
     queryKey: ['domy-floating-public'],
-    queryFn: () => base44.entities.Dom.filter({ verejny: true }),
+    queryFn: () => base44.entities.Dom.filter({ verejny: true }, 'poradie', 100),
     staleTime: 300000,
   });
 

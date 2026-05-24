@@ -14,7 +14,18 @@ import {
 const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmin, onPriceChange, icon: Icon }) => {
   const isStandard = price === 0;
   return (
-  <button onClick={onClick} className={`relative flex flex-col p-5 rounded-3xl border-2 transition-all duration-500 w-full text-left active:scale-[0.98] gap-2 overflow-hidden group ${selected ? 'border-red-500 bg-gradient-to-br from-red-500/10 to-red-900/10 shadow-[0_0_30px_rgba(239,68,68,0.2)] scale-[1.02] backdrop-blur-md' : isStandard ? 'border-emerald-500/30 bg-emerald-500/5 hover:border-emerald-500/50 hover:bg-emerald-500/10 backdrop-blur-sm' : isA0 ? 'border-blue-500/60 bg-blue-500/10 hover:border-blue-400 hover:bg-blue-500/20 shadow-[0_0_20px_rgba(59,130,246,0.25)] backdrop-blur-md' : 'border-white/5 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.05] backdrop-blur-sm'}`}>
+  <button 
+    onClick={onClick} 
+    className={`relative flex flex-col p-5 rounded-3xl border-2 transition-all duration-500 w-full text-left active:scale-[0.98] gap-2 overflow-hidden group backdrop-blur-md ${
+      selected 
+        ? 'border-red-500 bg-red-500/10 dark:bg-gradient-to-br dark:from-red-500/10 dark:to-red-900/10 shadow-[0_0_30px_rgba(239,68,68,0.2)] scale-[1.02]' 
+        : isStandard 
+          ? 'border-emerald-500/30 bg-emerald-500/5 hover:border-emerald-500/50 hover:bg-emerald-500/10' 
+          : isA0 
+            ? 'border-blue-500/20 dark:border-blue-500/60 bg-blue-50/50 dark:bg-blue-500/10 hover:border-blue-400 hover:bg-blue-500/20 shadow-[0_0_20px_rgba(59,130,246,0.15)] dark:shadow-[0_0_20px_rgba(59,130,246,0.25)]' 
+            : 'border-slate-200 dark:border-white/5 bg-white dark:bg-white/[0.02] hover:border-slate-350 dark:hover:border-white/20 hover:bg-slate-50 dark:hover:bg-white/[0.05]'
+    }`}
+  >
     {selected && <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-orange-500 opacity-80" />}
     {isA0 && !selected && <div className="absolute top-0 left-0 w-full h-1 bg-blue-500 opacity-60 animate-pulse" />}
     
@@ -22,30 +33,50 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
     <div className="flex items-start justify-between gap-4 w-full relative z-10">
       <div className="flex items-start gap-3 flex-1 min-w-0">
         {Icon && (
-          <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all duration-500 ${selected ? 'bg-gradient-to-br from-red-500 to-red-700 text-white shadow-xl shadow-red-500/30 rotate-3' : isA0 ? 'bg-blue-500/20 text-blue-400 group-hover:scale-110 shadow-lg shadow-blue-500/20' : 'bg-white/5 text-slate-400 group-hover:text-slate-300 group-hover:scale-110'}`}>
+          <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all duration-500 ${
+            selected 
+              ? 'bg-gradient-to-br from-red-500 to-red-700 text-white shadow-xl shadow-red-500/30 rotate-3' 
+              : isA0 
+                ? 'bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 group-hover:scale-110 shadow-lg shadow-blue-500/10 dark:shadow-blue-500/20' 
+                : 'bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 group-hover:scale-110'
+          }`}>
             <Icon className={`w-6 h-6 sm:w-7 sm:h-7 transition-transform duration-500 ${selected || isA0 ? 'scale-110' : 'scale-100'}`} />
           </div>
         )}
         <div className="flex-1 mt-1">
           <div className="flex flex-col mb-1.5">
             {isA0 && (
-              <span className="mb-2 inline-flex items-center self-start bg-blue-500/20 text-blue-300 border border-blue-500/40 text-[10px] sm:text-[11px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider shadow-[0_0_15px_rgba(59,130,246,0.3)]">
+              <span className="mb-2 inline-flex items-center self-start bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-500/40 text-[10px] sm:text-[11px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider shadow-[0_0_15px_rgba(59,130,246,0.15)] dark:shadow-[0_0_15px_rgba(59,130,246,0.3)]">
                 ⚠️ Povinné pre Rodinný dom (A0)
               </span>
             )}
-            <span className={`font-black text-base sm:text-lg transition-colors duration-300 ${selected ? 'text-white' : isA0 ? 'text-blue-100' : 'text-slate-200'}`}>{label}</span>
+            <span className={`font-black text-base sm:text-lg transition-colors duration-300 ${
+              selected 
+                ? 'text-red-955 dark:text-white' 
+                : isA0 
+                  ? 'text-blue-900 dark:text-blue-100' 
+                  : 'text-slate-800 dark:text-slate-200'
+            }`}>{label}</span>
           </div>
-          {description && <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">{description}</p>}
+          {description && <p className="text-xs sm:text-sm text-slate-655 dark:text-slate-400 leading-relaxed">{description}</p>}
         </div>
       </div>
       
-      <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all duration-500 mt-1 ${selected ? 'border-red-500 bg-red-500 scale-110 shadow-lg shadow-red-500/40' : isA0 ? 'border-blue-400/50 bg-blue-950/50 shadow-[0_0_10px_rgba(59,130,246,0.2)]' : 'border-slate-700 bg-slate-950/50'}`}>
+      <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all duration-500 mt-1 ${
+        selected 
+          ? 'border-red-500 bg-red-500 scale-110 shadow-lg shadow-red-500/40' 
+          : isA0 
+            ? 'border-blue-400/50 bg-blue-50 dark:bg-blue-955/50 shadow-[0_0_10px_rgba(59,130,246,0.2)]' 
+            : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950/50'
+      }`}>
         {selected && <Check className="w-3 h-3 sm:w-4 sm:h-4 text-white" />}
       </div>
     </div>
     
     {/* Spodná časť: Cena */}
-    <div className={`w-full flex justify-end relative z-10 pt-2 mt-2 border-t ${isA0 && !selected ? 'border-blue-500/20' : 'border-white/5'}`}>
+    <div className={`w-full flex justify-end relative z-10 pt-2 mt-2 border-t ${
+      isA0 && !selected ? 'border-blue-500/20' : 'border-slate-200 dark:border-white/5'
+    }`}>
       {isAdmin && onPriceChange ? (
         <div className="flex items-center gap-1 bg-slate-950/80 border border-red-500/30 rounded px-2 py-1 backdrop-blur-md" onClick={e => e.stopPropagation()}>
           <span className="text-xs text-slate-500">€</span>
@@ -53,11 +84,21 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
         </div>
       ) : (
         <div className="text-right flex flex-col items-end justify-center">
-          <span className={`block font-black transition-colors duration-300 ${selected ? 'text-base text-red-400' : isStandard ? 'text-sm text-emerald-400' : isA0 ? 'text-base text-blue-300' : 'text-base text-slate-500'}`}>
+          <span className={`block font-black transition-colors duration-300 ${
+            selected 
+              ? 'text-base text-red-600 dark:text-red-400' 
+              : isStandard 
+                ? 'text-sm text-emerald-600 dark:text-emerald-400' 
+                : isA0 
+                  ? 'text-base text-blue-600 dark:text-blue-300' 
+                  : 'text-base text-slate-600 dark:text-slate-400'
+          }`}>
             {isStandard ? 'Základný štandard' : `+${price.toLocaleString()} €`}
           </span>
           {isStandard && (
-            <span className={`block text-[10px] uppercase font-bold tracking-wider mt-0.5 ${selected ? 'text-red-400/80' : 'text-emerald-500/80'}`}>
+            <span className={`block text-[10px] uppercase font-bold tracking-wider mt-0.5 ${
+              selected ? 'text-red-500/80' : 'text-emerald-650/80 dark:text-emerald-500/80'
+            }`}>
               (Bez príplatku)
             </span>
           )}
@@ -69,34 +110,65 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
 };
 
 const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = false, isAdmin, onPriceChange, description, t, icon: Icon }) => (
-  <button onClick={!disabled && !locked ? onChange : undefined} className={`flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-2xl border-2 transition-all duration-500 w-full active:scale-[0.98] group overflow-hidden relative gap-4 ${locked ? 'border-blue-500/60 bg-blue-500/10 cursor-not-allowed shadow-[0_0_20px_rgba(59,130,246,0.25)] backdrop-blur-md' : checked ? 'border-red-500 bg-gradient-to-r from-red-500/10 to-transparent shadow-[0_0_20px_rgba(239,68,68,0.1)] scale-[1.01] backdrop-blur-md' : disabled ? 'border-white/5 bg-slate-900/50 opacity-60 cursor-not-allowed' : 'border-white/5 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.05] backdrop-blur-sm'}`}>
+  <button 
+    onClick={!disabled && !locked ? onChange : undefined} 
+    className={`flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-2xl border-2 transition-all duration-500 w-full active:scale-[0.98] group overflow-hidden relative gap-4 ${
+      locked 
+        ? 'border-blue-500/30 bg-blue-50/50 dark:bg-blue-500/10 cursor-not-allowed shadow-[0_0_20px_rgba(59,130,246,0.15)] dark:shadow-[0_0_20px_rgba(59,130,246,0.25)] backdrop-blur-md' 
+        : checked 
+          ? 'border-red-500 bg-red-500/5 dark:bg-gradient-to-r dark:from-red-500/10 dark:to-transparent shadow-[0_0_20px_rgba(239,68,68,0.1)] scale-[1.01] backdrop-blur-md' 
+          : disabled 
+            ? 'border-slate-200 dark:border-white/5 bg-slate-100/50 dark:bg-slate-900/50 opacity-60 cursor-not-allowed' 
+            : 'border-slate-200 dark:border-white/5 bg-white dark:bg-white/[0.02] hover:border-slate-350 dark:hover:border-white/20 hover:bg-slate-50 dark:hover:bg-white/[0.05] backdrop-blur-sm'
+    }`}
+  >
     {checked && !locked && <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500" />}
     {locked && <div className="absolute top-0 left-0 w-full h-1 bg-blue-500 opacity-60 animate-pulse" />}
     
     <div className="flex items-start sm:items-center gap-4 w-full relative z-10">
-      <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors duration-500 ${locked ? 'bg-blue-500/20 text-blue-400 shadow-lg shadow-blue-500/20' : checked ? 'bg-gradient-to-br from-red-500 to-red-600 text-white shadow-lg shadow-red-500/20' : 'bg-white/5 text-slate-400 group-hover:scale-110 transition-transform duration-300'}`}>
+      <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors duration-500 ${
+        locked 
+          ? 'bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 shadow-lg shadow-blue-500/10 dark:shadow-blue-500/20' 
+          : checked 
+            ? 'bg-gradient-to-br from-red-500 to-red-600 text-white shadow-lg shadow-red-500/20' 
+            : 'bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 group-hover:scale-110 transition-transform duration-300'
+      }`}>
         {Icon ? <Icon className={`w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-500 ${checked || locked ? 'scale-110' : 'scale-100'}`} /> : (locked ? <Lock className="w-4 h-4 sm:w-5 sm:h-5" /> : <CheckSquare className="w-4 h-4 sm:w-5 sm:h-5" />)}
       </div>
       <div className="text-left flex-1 pr-4">
         <div className="flex flex-col mb-1.5">
           {locked && (
-            <span className="mb-2 inline-flex items-center self-start bg-blue-500/20 text-blue-300 border border-blue-500/40 text-[10px] sm:text-[11px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider shadow-[0_0_15px_rgba(59,130,246,0.3)]">
+            <span className="mb-2 inline-flex items-center self-start bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-500/40 text-[10px] sm:text-[11px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider shadow-[0_0_15px_rgba(59,130,246,0.15)] dark:shadow-[0_0_15px_rgba(59,130,246,0.3)]">
               ⚠️ Povinné pre Rodinný dom (A0)
             </span>
           )}
-          <span className={`font-bold text-base sm:text-lg block transition-colors duration-300 ${locked ? 'text-blue-100' : checked ? 'text-white' : 'text-slate-300'}`}>{label}</span>
+          <span className={`font-bold text-base sm:text-lg block transition-colors duration-300 ${
+            locked 
+              ? 'text-blue-900 dark:text-blue-100' 
+              : checked 
+                ? 'text-red-955 dark:text-white' 
+                : 'text-slate-800 dark:text-slate-200'
+          }`}>{label}</span>
         </div>
-        {description && <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">{description}</p>}
+        {description && <p className="text-xs sm:text-sm text-slate-655 dark:text-slate-400 leading-relaxed">{description}</p>}
       </div>
       
       {/* Checkbox na mobile zobrazený hore vedľa nadpisu, na desktope skrytý */}
-      <div className={`sm:hidden w-6 h-6 mt-1 rounded border-2 flex items-center justify-center transition-all duration-300 flex-shrink-0 ${locked ? 'border-blue-400/50 bg-blue-950/50 shadow-[0_0_10px_rgba(59,130,246,0.2)]' : checked ? 'border-red-500 bg-red-500 scale-110' : 'border-slate-700 bg-slate-950/50'}`}>
+      <div className={`sm:hidden w-6 h-6 mt-1 rounded border-2 flex items-center justify-center transition-all duration-300 flex-shrink-0 ${
+        locked 
+          ? 'border-blue-400/50 bg-blue-50 dark:bg-blue-950/50 shadow-[0_0_10px_rgba(59,130,246,0.2)]' 
+          : checked 
+            ? 'border-red-500 bg-red-500 scale-110' 
+            : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950/50'
+      }`}>
         {locked ? <Lock className="w-4 h-4 text-white" /> : checked && <Check className="w-4 h-4 text-white" />}
       </div>
     </div>
     
     {/* Cena presunutá na samostatný riadok na mobile, na desktope vpravo */}
-    <div className={`flex items-center justify-end w-full sm:w-auto pt-3 sm:pt-0 border-t ${locked ? 'border-blue-500/20' : 'border-white/5'} sm:border-0 relative z-10 gap-4`}>
+    <div className={`flex items-center justify-end w-full sm:w-auto pt-3 sm:pt-0 border-t ${
+      locked ? 'border-blue-500/20' : 'border-slate-200 dark:border-white/5'
+    } sm:border-0 relative z-10 gap-4`}>
       <div className="flex-shrink-0 text-right">
         {isAdmin && onPriceChange ? (
           <div className="flex items-center gap-1 bg-slate-950/80 border border-red-500/30 rounded px-2 py-1 backdrop-blur-sm" onClick={e => e.stopPropagation()}>
@@ -105,11 +177,19 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
           </div>
         ) : (
           <div className="text-right flex flex-col items-end justify-center">
-            <span className={`block font-black transition-colors duration-300 ${locked ? 'text-base text-blue-300' : price === 0 ? 'text-sm text-emerald-400' : 'text-base text-slate-400'}`}>
+            <span className={`block font-black transition-colors duration-300 ${
+              locked 
+                ? 'text-base text-blue-600 dark:text-blue-300' 
+                : price === 0 
+                  ? 'text-sm text-emerald-600 dark:text-emerald-400' 
+                  : 'text-base text-slate-600 dark:text-slate-400'
+            }`}>
               {price === 0 ? 'Základný štandard' : `+${price.toLocaleString()} €`}
             </span>
             {price === 0 && (
-              <span className={`block text-[10px] uppercase font-bold tracking-wider mt-0.5 ${locked ? 'text-emerald-500/80' : 'text-emerald-500/80'}`}>
+              <span className={`block text-[10px] uppercase font-bold tracking-wider mt-0.5 ${
+                locked ? 'text-emerald-650/80 dark:text-emerald-500/80' : 'text-emerald-655/80 dark:text-emerald-500/80'
+              }`}>
                 (Bez príplatku)
               </span>
             )}
@@ -118,7 +198,13 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
       </div>
       
       {/* Checkbox na desktope zobrazený vpravo od ceny */}
-      <div className={`hidden sm:flex w-6 h-6 rounded border-2 items-center justify-center transition-all duration-300 flex-shrink-0 ${locked ? 'border-blue-400/50 bg-blue-950/50 shadow-[0_0_10px_rgba(59,130,246,0.2)]' : checked ? 'border-red-500 bg-red-500 scale-110' : 'border-slate-700 bg-slate-950/50'}`}>
+      <div className={`hidden sm:flex w-6 h-6 rounded border-2 items-center justify-center transition-all duration-300 flex-shrink-0 ${
+        locked 
+          ? 'border-blue-400/50 bg-blue-50 dark:bg-blue-950/50 shadow-[0_0_10px_rgba(59,130,246,0.2)]' 
+          : checked 
+            ? 'border-red-500 bg-red-500 scale-110' 
+            : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950/50'
+      }`}>
         {locked ? <Lock className="w-4 h-4 text-white" /> : checked && <Check className="w-4 h-4 text-white" />}
       </div>
     </div>
@@ -126,48 +212,65 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
 );
 
 const CounterRow = ({ label, price, value, onChange, isAdmin, onPriceChange, icon: Icon }) => (
-  <div className="flex items-center justify-between p-4 rounded-2xl border-2 border-white/5 bg-white/[0.02] backdrop-blur-sm transition-all duration-500 hover:border-white/20 group relative overflow-hidden">
+  <div className="flex items-center justify-between p-4 rounded-2xl border-2 border-slate-200 dark:border-white/5 bg-white dark:bg-white/[0.02] backdrop-blur-sm transition-all duration-500 hover:border-slate-300 dark:hover:border-white/20 group relative overflow-hidden">
     {value > 0 && <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500" />}
     <div className="flex items-center gap-4 relative z-10">
       {Icon && (
-        <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors duration-500 ${value > 0 ? 'bg-slate-800 text-white' : 'bg-white/5 text-slate-400 group-hover:scale-110 transition-transform duration-300'}`}>
+        <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors duration-500 ${
+          value > 0 ? 'bg-slate-800 dark:bg-white/10 text-white' : 'bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 group-hover:scale-110 transition-transform duration-300'
+        }`}>
           <Icon className={`w-6 h-6 transition-transform duration-500 ${value > 0 ? 'scale-110' : ''}`} />
         </div>
       )}
       <div>
-        <div className={`font-bold text-lg transition-colors duration-300 ${value > 0 ? 'text-white' : 'text-slate-300'}`}>{label}</div>
+        <div className={`font-bold text-lg transition-colors duration-300 ${
+          value > 0 ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400'
+        }`}>{label}</div>
         {isAdmin && onPriceChange ? (
           <div className="flex items-center gap-1 mt-1">
             <span className="text-xs text-slate-500">€</span>
             <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-16 text-sm font-bold text-red-400 bg-slate-950 outline-none border border-red-500/30 rounded px-1 py-0.5" />
           </div>
         ) : (
-          <div className="text-sm text-red-400 font-bold mt-1">{price} € / ks</div>
+          <div className="text-sm text-red-655 dark:text-red-400 font-bold mt-1">{price} € / ks</div>
         )}
       </div>
     </div>
     <div className="flex items-center gap-4 relative z-10">
-      <button onClick={() => onChange(Math.max(0, value - 1))} className="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center font-bold text-slate-300 active:scale-90 transition-all border border-white/10 backdrop-blur-sm">−</button>
-      <span className={`w-8 text-center font-black text-xl transition-colors duration-300 ${value > 0 ? 'text-white' : 'text-slate-500'}`}>{value}</span>
-      <button onClick={() => onChange(value + 1)} className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 flex items-center justify-center font-bold active:scale-90 transition-all shadow-[0_0_15px_rgba(239,68,68,0.4)]">+</button>
+      <button 
+        onClick={() => onChange(Math.max(0, value - 1))} 
+        className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 flex items-center justify-center font-bold text-slate-800 dark:text-slate-300 active:scale-90 transition-all border border-slate-200 dark:border-white/10 backdrop-blur-sm"
+      >
+        −
+      </button>
+      <span className={`w-8 text-center font-black text-xl transition-colors duration-300 ${
+        value > 0 ? 'text-slate-900 dark:text-white' : 'text-slate-450 dark:text-slate-600'
+      }`}>{value}</span>
+      <button 
+        onClick={() => onChange(value + 1)} 
+        className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 flex items-center justify-center font-bold active:scale-90 transition-all shadow-[0_0_15px_rgba(239,68,68,0.4)]"
+      >
+        +
+      </button>
     </div>
   </div>
 );
 
 const SectionLabel = ({ label, color = 'gray' }) => {
   const colorMap = {
-    'gray': 'text-slate-400',
-    'orange': 'text-orange-400',
-    'teal': 'text-teal-400',
-    'amber': 'text-amber-400',
-    'blue': 'text-blue-400',
-    'purple': 'text-purple-400',
-    'red': 'text-red-400',
-    'emerald': 'text-emerald-400',
-    'green': 'text-green-400'
+    'gray': 'text-slate-600 dark:text-slate-400',
+    'orange': 'text-orange-700 dark:text-orange-400',
+    'teal': 'text-teal-700 dark:text-teal-400',
+    'amber': 'text-amber-700 dark:text-amber-400',
+    'blue': 'text-blue-700 dark:text-blue-400',
+    'purple': 'text-purple-700 dark:text-purple-400',
+    'red': 'text-red-750 dark:text-red-400',
+    'emerald': 'text-emerald-700 dark:text-emerald-400',
+    'green': 'text-green-700 dark:text-green-400',
+    'yellow': 'text-yellow-750 dark:text-yellow-400'
   };
   return (
-    <div className={`text-sm font-black uppercase tracking-widest ${colorMap[color] || 'text-slate-400'} mb-4 mt-10 first:mt-0 flex items-center gap-2`}>
+    <div className={`text-sm font-black uppercase tracking-widest ${colorMap[color] || 'text-slate-600 dark:text-slate-400'} mb-4 mt-10 first:mt-0 flex items-center gap-2`}>
       <span className="w-2 h-2 rounded-full bg-current shadow-[0_0_10px_currentColor]"></span>
       {label}
     </div>
@@ -175,7 +278,7 @@ const SectionLabel = ({ label, color = 'gray' }) => {
 };
 
 const BigSectionHeader = ({ title, description, icon: Icon, stepIdx, totalSteps }) => (
-  <div className="mb-8 border-b border-white/10 pb-6">
+  <div className="mb-8 border-b border-slate-200 dark:border-white/10 pb-6">
     <div className="lg:hidden text-red-500 font-bold uppercase tracking-widest text-xs mb-4 flex items-center gap-2">
       <span className="w-8 h-[2px] bg-red-500"></span>
       Krok {stepIdx + 1} z {totalSteps}
@@ -185,13 +288,12 @@ const BigSectionHeader = ({ title, description, icon: Icon, stepIdx, totalSteps 
         <Icon className="w-6 h-6 lg:w-7 lg:h-7 text-red-500" />
       </div>
       <div>
-        <h2 className="text-2xl lg:text-3xl font-black text-white tracking-tight mb-2">{title}</h2>
-        {description && <p className="text-slate-400 text-sm lg:text-base leading-relaxed">{description}</p>}
+        <h2 className="text-2xl lg:text-3xl font-black text-slate-900 dark:text-white tracking-tight mb-2">{title}</h2>
+        {description && <p className="text-slate-600 dark:text-slate-400 text-sm lg:text-base leading-relaxed">{description}</p>}
       </div>
     </div>
   </div>
 );
-
 const ContactModal = ({ isOpen, onClose, onSubmit, isSubmitting, t }) => {
   if (!isOpen) return null;
   return (

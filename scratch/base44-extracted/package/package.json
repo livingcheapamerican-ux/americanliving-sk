@@ -1,0 +1,44 @@
+{
+  "name": "base44",
+  "version": "0.0.52",
+  "description": "Base44 CLI - Unified interface for managing Base44 applications",
+  "type": "module",
+  "bin": {
+    "base44": "./bin/run.js"
+  },
+  "files": [
+    "dist/cli",
+    "dist/assets",
+    "bin"
+  ],
+  "scripts": {
+    "build": "bun run clean && mkdir -p dist/assets && cp -r templates dist/assets/ && bun run infra/build.ts",
+    "build:watch": "bun run clean && mkdir -p dist/assets && cp -r templates dist/assets/ && bun run infra/build.ts --watch",
+    "typecheck": "tsc --noEmit",
+    "dev": "./bin/dev.ts",
+    "start": "./bin/run.js",
+    "clean": "rm -rf dist && mkdir -p dist",
+    "test": "vitest run",
+    "test:npm": "CLI_TEST_RUNNER=npm vitest run",
+    "test:binary": "CLI_TEST_RUNNER=binary vitest run",
+    "test:watch": "vitest",
+    "lint": "cd ../.. && bun run lint",
+    "lint:fix": "cd ../.. && bun run lint:fix",
+    "build:binaries": "bun run infra/build-binaries.ts",
+    "package:binaries": "bun run infra/package-binaries.ts"
+  },
+  "keywords": [
+    "base44",
+    "cli",
+    "command-line"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/base44/cli"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
