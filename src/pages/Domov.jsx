@@ -101,8 +101,14 @@ export default function Domov() {
   const { data: domy = [] } = useQuery({
     queryKey: ['domy-popularne'],
     queryFn: async () => {
-      const all = await base44.entities.Dom.filter({ popularny: true }, 'poradie', 20);
-      return all.filter(dom => dom.verejny !== false).slice(0, 6);
+      const all = await base44.entities.Dom.filter({ verejny: true }, 'poradie', 40);
+      // Sort by popular first, then by base price descending (most lucrative houses in the foreground)
+      const sorted = [...all].sort((a, b) => {
+        if (a.popularny && !b.popularny) return -1;
+        if (!a.popularny && b.popularny) return 1;
+        return (b.zakladna_cena || 0) - (a.zakladna_cena || 0);
+      });
+      return sorted.slice(0, 6);
     },
   });
 
@@ -161,6 +167,80 @@ export default function Domov() {
 
     return fallbacks[selectedHouseId] || fallbacks.barn72;
   }, [selectedHouseId, verejneDomy]);
+
+  // Premium showcase gallery states
+  const [activeShowcaseHouseId, setActiveShowcaseHouseId] = useState("6916ec94c11aacdd15248f07");
+  const [activeShowcaseTab, setActiveShowcaseTab] = useState("exterier");
+  const [lightboxImage, setLightboxImage] = useState(null);
+
+  const premiumHouses = useMemo(() => {
+    const ids = ["6916ec94c11aacdd15248f07", "6916ec94c11aacdd15248f06", "6916ec94c11aacdd15248f0b"];
+    return verejneDomy.filter(d => ids.includes(d.id));
+  }, [verejneDomy]);
+
+  const showcaseImages = useMemo(() => {
+    const house = premiumHouses.find(h => h.id === activeShowcaseHouseId);
+    
+    if (house && house.galerie) {
+      let galleriesToInclude = [];
+      if (activeShowcaseTab === "exterier") {
+        galleriesToInclude = house.galerie.filter(g => g.typ === "exterier_murovka" || g.typ === "exterier_drevo_plech");
+      } else {
+        galleriesToInclude = house.galerie.filter(g => g.typ === "interier_sadrokarton" || g.typ === "interier_drevo");
+      }
+      
+      const photos = [];
+      galleriesToInclude.forEach(g => {
+        if (g.fotky) {
+          g.fotky.forEach(f => {
+            if (!photos.includes(f)) photos.push(f);
+          });
+        }
+      });
+      if (photos.length > 0) return photos.slice(0, 8);
+    }
+    
+    // Static fallbacks if DB is not loaded or has no images
+    const staticGalleries = {
+      "6916ec94c11aacdd15248f07": { // London 144
+        exterier: [
+          "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/25e2796ce_Londonexteriermurovka1.jpeg",
+          "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/9e0922961_Londonexteriermurovka1.jpeg",
+          "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/952c7dee5_Londonexterierdrevoplech1.jpg",
+          "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/25cd528c6_Londonexterierdrevoplech2.jpg"
+        ],
+        interier: [
+          "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/43646a954_Londoninteriersadrokarton1.jpg",
+          "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/e4cf2673e_Londoninterierdrevo1.jpg"
+        ]
+      },
+      "6916ec94c11aacdd15248f06": { // Happy Wife 122
+        exterier: [
+          "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/6e386b445_HappyWifeexteriermurovka4.jpeg",
+          "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/353d1e4f2_HappyWifeexteriermurovka1.jpeg",
+          "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/91acde74e_HappyWifeexterierdrevoplech1.jpeg"
+        ],
+        interier: [
+          "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/c4139ab8c_HappyWifeinteriersadrokarton1.jpeg",
+          "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/4c679c6c0_HappyWifeinterierdrevo1.jpg"
+        ]
+      },
+      "6916ec94c11aacdd15248f0b": { // Alessandria 130
+        exterier: [
+          "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/8ed846999_Alessandriaexteriermurovka9.jpeg",
+          "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/2caab1c05_Alessandriaexteriermurovka1.jpeg",
+          "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/3e683ab92_Alessandriaexterierdrevoplech1.jpeg"
+        ],
+        interier: [
+          "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/318d4f916_Alessandriainteriersadrokarton1.jpeg",
+          "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/82db687c1_Alessandriainterierdrevo1.JPG"
+        ]
+      }
+    };
+    
+    const fallback = staticGalleries[activeShowcaseHouseId] || staticGalleries["6916ec94c11aacdd15248f07"];
+    return activeShowcaseTab === "exterier" ? fallback.exterier : fallback.interier;
+  }, [activeShowcaseHouseId, activeShowcaseTab, premiumHouses]);
 
   const { data: user } = useQuery({
     queryKey: ['current-user'],
@@ -455,6 +535,12 @@ export default function Domov() {
 
       {/* Hero Section */}
       <section className="relative min-h-[90vh] lg:min-h-screen overflow-hidden bg-slate-950 pt-20 lg:pt-28 pb-12 flex items-center">
+        {/* Blueprint architectural grid lines */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px),linear-gradient(to_bottom,#ffffff02_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
+        
+        {/* Subtle blurred background image for depth */}
+        <div className="absolute inset-0 bg-[url('https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/cbd41c122_Barnbazen.jpeg')] bg-cover bg-center opacity-[0.06] blur-[2px] pointer-events-none mix-blend-overlay" />
+
         {/* Ambient background glows */}
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-red-900/10 rounded-full blur-[150px] pointer-events-none" />
         <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-[#C5A880]/5 rounded-full blur-[150px] pointer-events-none" />
@@ -968,6 +1054,137 @@ export default function Domov() {
           </div>
         </section>
       )}
+
+      {/* Premium Showcase Gallery Section */}
+      <section className="py-16 sm:py-24 bg-slate-950 relative border-b border-white/5">
+        {/* Decorative Grid Background */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px),linear-gradient(to_bottom,#ffffff02_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-slate-900/40 via-transparent to-transparent pointer-events-none" />
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <h2 className="text-3xl sm:text-5xl font-black text-white mb-4 leading-tight">
+              Galéria našich najlukratívnejších domov
+            </h2>
+            <p className="text-slate-400 text-sm sm:text-lg font-light leading-relaxed">
+              Pozrite si reálne fotografie a detaily exteriéru a interiéru z našich prémiových montovaných a modulárnych domov.
+            </p>
+          </div>
+
+          {/* House Selector Tabs */}
+          <div className="flex flex-wrap justify-center gap-3 mb-8">
+            {[
+              { id: "6916ec94c11aacdd15248f07", name: "LONDON 144", desc: "Prémiová rodinná vila", price: "od 168 510 €" },
+              { id: "6916ec94c11aacdd15248f06", name: "HAPPY WIFE 122", desc: "Moderný dvojkrídlový dom", price: "od 168 510 €" },
+              { id: "6916ec94c11aacdd15248f0b", name: "ALESSANDRIA 130", desc: "Minimalistický plochostrechý dom", price: "od 110 454 €" }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveShowcaseHouseId(tab.id)}
+                className={`px-6 py-4 rounded-2xl border text-left transition-all ${
+                  activeShowcaseHouseId === tab.id
+                    ? 'bg-gradient-to-br from-slate-900 to-slate-950 border-[#C5A880] text-white shadow-lg shadow-[#C5A880]/10 ring-1 ring-[#C5A880]'
+                    : 'bg-slate-900/30 border-white/5 text-slate-400 hover:border-white/10 hover:text-white'
+                }`}
+              >
+                <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">{tab.desc}</p>
+                <h4 className="text-lg font-black mt-1">{tab.name}</h4>
+                <p className="text-xs text-[#C5A880] font-semibold mt-0.5">{tab.price}</p>
+              </button>
+            ))}
+          </div>
+
+          {/* Tab Selector: Exterior vs Interior */}
+          <div className="flex justify-center mb-10">
+            <div className="bg-slate-900/60 p-1.5 rounded-xl border border-white/5 flex gap-1">
+              <button
+                type="button"
+                onClick={() => setActiveShowcaseTab("exterier")}
+                className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${
+                  activeShowcaseTab === "exterier"
+                    ? 'bg-[#C5A880] text-slate-950 shadow-md'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                Exteriér domov
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveShowcaseTab("interier")}
+                className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${
+                  activeShowcaseTab === "interier"
+                    ? 'bg-[#C5A880] text-slate-950 shadow-md'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                Interiér a dispozícia
+              </button>
+            </div>
+          </div>
+
+          {/* Gallery Image Grid */}
+          {showcaseImages.length > 0 ? (
+            <motion.div 
+              layout
+              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+            >
+              {showcaseImages.map((img, index) => (
+                <motion.div
+                  key={img}
+                  layout
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.4, delay: index * 0.05 }}
+                  onClick={() => setLightboxImage(img)}
+                  className="aspect-[4/3] rounded-2xl overflow-hidden relative border border-white/5 bg-slate-900 cursor-pointer group shadow-xl hover:-translate-y-1 transition-all duration-300"
+                >
+                  <img
+                    src={img}
+                    alt="Vizualizácia / Realizácia"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+                    <div className="w-12 h-12 rounded-full bg-white/15 backdrop-blur-md flex items-center justify-center border border-white/30 text-white">
+                      <ChevronRight className="w-5 h-5" />
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          ) : (
+            <div className="text-center py-12 text-slate-500 bg-slate-900/20 rounded-2xl border border-white/5">
+              Načítavajú sa fotografie z galérie...
+            </div>
+          )}
+        </div>
+
+        {/* Lightbox Modal */}
+        {lightboxImage && (
+          <div 
+            className="fixed inset-0 z-[999] bg-slate-950/98 backdrop-blur-md flex items-center justify-center p-4 cursor-zoom-out"
+            onClick={() => setLightboxImage(null)}
+          >
+            <button
+              onClick={() => setLightboxImage(null)}
+              className="absolute top-6 right-6 text-white hover:text-slate-300 bg-white/10 hover:bg-white/20 p-3 rounded-full border border-white/15 transition-all"
+            >
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <motion.img
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              src={lightboxImage}
+              alt="Detail fotografie"
+              className="max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl border border-white/15 cursor-default"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+        )}
+      </section>
 
       {/* Trusted Partners Section - Overení partneri */}
       <section className="py-12 sm:py-24 bg-slate-950 relative overflow-hidden">
