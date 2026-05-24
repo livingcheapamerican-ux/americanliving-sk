@@ -321,12 +321,86 @@ const ContactModal = ({ isOpen, onClose, onSubmit, isSubmitting, t }) => {
 
 export function LyonSummaryPanel({ 
   ucel, izolaciaStien, izolaciaPodlahy, izolaciaStropu, 
-  tepelneCerpadlo, rekuperacia, podlahovoKurenie, pripravaNaKrb, ochranaKachle,
+  tepelneCerpadlo, rekuperacia, pripravaNaRekuperaciu, podlahovoKurenie, pripravaNaKrb, ochranaKachle, klimatizacia,
   fasada, strecha, odkvapy, okna, vchodoveDvere, obkladStien, interieroveDvere,
-  elektro, bleskozvod, prepat, sprchovyKut, vana, bateria, skrinka, stropKupelna,
+  elektro, bleskozvod, prepat, pripravaNaSolarnePanely, sprchovyKut, vana, bateria, skrinka, stropKupelna,
   inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava,
-  totalPrice, formatPrice, onSubmit, t
+  totalPrice, formatPrice, onSubmit, t,
+  dom, CENY: propCENY,
+  predajNehnutelnosti, hladamPozemok, financneSluzby
 }) {
+  const DEFAULT_CENY = {
+    izolacia_stien_200mm: 1799.16,
+    izolacia_stien_250mm: 1558.17,
+    izolacia_podlahy_200mm: 334.08,
+    izolacia_stropu_200mm: 271.44,
+    tepelne_cerpadlo: 2889.27,
+    pripravaNaRekuperaciu: 512,
+    rekuperacia: 1155.36,
+    podlahovoKurenie: 2253.30,
+    klimatizacia: 902,
+    pripravaKrb: 578.55,
+    ochranaKachle: 1279.77,
+    fasada_omietka: 1580.79,
+    fasada_smrekovec: 3349.50,
+    fasada_falcovane: 4953.78,
+    fasada_thermowood: 6677.25,
+    strecha_falcovane: 3227.70,
+    odkvapy: 1502.49,
+    dvere_kovove: 278.40,
+    obklad_smrek_bez_uzlov: 0,
+    obklad_sadrokarton_tapeta: 7855,
+    obklad_osb_panel: 5279,
+    dvere_posuvne: 427.17,
+    elektro_cz: 460.23,
+    elektro_ge: 1583.40,
+    bleskozvod: 856.08,
+    prepat: 311.46,
+    pripravaNaSolarnePanely: 1305,
+    sprchovyKut: 645.54,
+    vana: 501.12,
+    bateria: 139.20,
+    skrinka: 434.13,
+    strop_kupelna_sadrokarton: 0,
+    inziniering: 2773.56,
+    projektACertifikacia: 3745.35,
+    revizia: 1605.15,
+    zaklady_vruty: 4494.42,
+    zaklady_patky: 2568.24,
+    zaklady_pasove: 11825.04,
+    montaz: 4805.88,
+    doprava: 8927.94
+  };
+
+  const CENY = {
+    ...DEFAULT_CENY,
+    ...(dom?.konfigurator_ceny || propCENY || {})
+  };
+
+  const getFormatCena = (priceKey) => {
+    const cena = CENY[priceKey];
+    if (!cena || cena === 0) return "";
+    return ` (+${cena.toLocaleString('sk-SK', { maximumFractionDigits: 0 })} €)`;
+  };
+
+  const isA0Configuration = () => {
+    return (
+      izolaciaStien === "250mm" &&
+      izolaciaPodlahy === "200mm" &&
+      izolaciaStropu === "200mm" &&
+      tepelneCerpadlo === "ano" &&
+      rekuperacia === "ano" &&
+      elektro === "ge" &&
+      bleskozvod &&
+      prepat &&
+      inziniering &&
+      projektACertifikacia
+    );
+  };
+
+  const isA0 = isA0Configuration();
+  const actualStatus = ucel === "rodinny" && isA0 ? (t?.('familyHouseA0') || "Rodinný dom A0") : (t?.('recreationalBuilding') || "Rekreačná stavba");
+
   return (
     <Card className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white shadow-2xl border-2 border-slate-700 overflow-hidden">
       {/* Header */}
@@ -343,151 +417,292 @@ export function LyonSummaryPanel({
       {/* Scrollable Content */}
       <div className="overflow-y-auto p-4 space-y-4 max-h-[calc(100vh-200px)]">
         {/* Účel */}
-        {ucel && (
-          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-            <p className="text-xs font-semibold text-slate-400 mb-1">{t?.('purposeOfBuilding') || 'ÚČEL STAVBY'}</p>
-            <p className="text-sm font-bold text-white">
-              {ucel === "chata" ? (t?.('recreationalBuilding') || "Rekreačná stavba") : (t?.('familyHouseA0') || "Rodinný dom A0")}
-            </p>
-          </div>
-        )}
+        <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+          <p className="text-xs font-semibold text-slate-400 mb-1">{t?.('purposeOfBuilding') || 'ÚČEL STAVBY'}</p>
+          <p className="text-sm font-bold text-white">
+            {actualStatus}
+          </p>
+        </div>
 
-        {/* Izolácia */}
-        {(izolaciaStien !== "150mm" || izolaciaPodlahy !== "150mm" || izolaciaStropu !== "150mm") && (
-          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-            <p className="text-xs font-semibold text-slate-400 mb-2">{t?.('insulation') || 'IZOLÁCIA'}</p>
-            <div className="space-y-1 text-xs">
-              {izolaciaStien !== "150mm" && <p className="text-slate-300">• {t?.('walls') || 'Steny'} {izolaciaStien}</p>}
-              {izolaciaPodlahy !== "150mm" && <p className="text-slate-300">• {t?.('floors') || 'Podlaha'} {izolaciaPodlahy}</p>}
-              {izolaciaStropu !== "150mm" && <p className="text-slate-300">• {t?.('roof') || 'Strop'} {izolaciaStropu}</p>}
+        {/* Zvolené parametre */}
+        <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700 space-y-3">
+          <div className="text-xs font-bold text-indigo-400 uppercase tracking-widest border-b border-slate-700/50 pb-1.5 mb-1">
+            {t?.('selectedParameters') || 'ZVOLENÉ PARAMETRE'}
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('wallInsulation') || 'Izolácia stien'}</span>
+            <span className="font-semibold text-white">
+              {izolaciaStien === "150mm" ? `150 mm (${t?.('baseConfig') || 'Základ'})` : `${izolaciaStien}${getFormatCena('izolacia_stien_' + izolaciaStien)}`}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('floorInsulation') || 'Izolácia podlahy'}</span>
+            <span className="font-semibold text-white">
+              {izolaciaPodlahy === "150mm" ? `150 mm (${t?.('baseConfig') || 'Základ'})` : `${izolaciaPodlahy}${getFormatCena('izolacia_podlahy_' + izolaciaPodlahy)}`}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('ceilingInsulation') || 'Izolácia stropu'}</span>
+            <span className="font-semibold text-white">
+              {izolaciaStropu === "150mm" ? `150 mm (${t?.('baseConfig') || 'Základ'})` : `${izolaciaStropu}${getFormatCena('izolacia_stropu_' + izolaciaStropu)}`}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('facadeSection') || 'Fasáda'}</span>
+            <span className="font-semibold text-white">
+              {fasada === "drevo_smrek" ? `Severský smrek (${t?.('baseConfig') || 'Základ'})` :
+               fasada === "omietka" ? `Omietka${getFormatCena('fasada_omietka')}` : 
+               fasada === "smrekovec" ? `Červený smrekovec${getFormatCena('fasada_smrekovec')}` :
+               fasada === "falcovane" ? `Falcovaný plech${getFormatCena('fasada_falcovane')}` :
+               `Thermowood${getFormatCena('fasada_thermowood')}`}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('roofSection') || 'Strešná krytina'}</span>
+            <span className="font-semibold text-white">
+              {strecha === "korugovan_plech" ? `Korugovaný plech (${t?.('baseConfig') || 'Základ'})` : `Falcovaný plech${getFormatCena('strecha_falcovane')}`}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('windows') || 'Farba okien'}</span>
+            <span className="font-semibold text-white">
+              {okna === "biele" ? `Biele (${t?.('baseConfig') || 'Základ'})` : 
+               okna === "antracit" ? `Antracit (${t?.('baseConfig') || 'Základ'})` : 
+               `Hnedé (${t?.('baseConfig') || 'Základ'})`}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('vchodoveDvere') || 'Vchodové dvere'}</span>
+            <span className="font-semibold text-white">
+              {vchodoveDvere === "plastove" ? `Plastovo-kovové (${t?.('baseConfig') || 'Základ'})` : `Kovové${getFormatCena('dvere_kovove')}`}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('wallCladding') || 'Obklad stien'}</span>
+            <span className="font-semibold text-white">
+              {obkladStien === "smrek_8cm" ? `Smrek 8cm (${t?.('baseConfig') || 'Základ'})` :
+               obkladStien === "smrek_bez_uzlov" ? `Smrek bez uzlov (${t?.('baseConfig') || 'Základ'})` :
+               obkladStien === "sadrokarton_tapeta" ? `Sadrokartón/Tapeta${getFormatCena('obklad_sadrokarton_tapeta')}` : 
+               `OSB panel${getFormatCena('obklad_osb_panel')}`}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('floorType') || 'Podlaha'}</span>
+            <span className="font-semibold text-white">
+              Laminát ({t?.('baseConfig') || 'Základ'})
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('interiorDoorsType') || 'Interiérové dvere'}</span>
+            <span className="font-semibold text-white">
+              {interieroveDvere === "kridlove" ? `Krídlové (${t?.('baseConfig') || 'Základ'})` : `Posuvné${getFormatCena('dvere_posuvne')}`}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('electricalSection') || 'Elektroinštalácia'}</span>
+            <span className="font-semibold text-white">
+              {elektro === "eu" ? `EU štandard (${t?.('baseConfig') || 'Základ'})` :
+               elektro === "cz" ? `CZ/SK štandard${getFormatCena('elektro_cz')}` : 
+               `Nemecký štandard (A0)${getFormatCena('elektro_ge')}`}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('showerCabin') || 'Sprchový kút'}</span>
+            <span className="font-semibold text-white">
+              {sprchovyKut === "standard" ? `Štandard (${t?.('baseConfig') || 'Základ'})` : `Radaway${getFormatCena('sprchovyKut')}`}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('faucet') || 'Kúpeľňová batéria'}</span>
+            <span className="font-semibold text-white">
+              {bateria === "standard" ? `Štandard (${t?.('baseConfig') || 'Základ'})` : `Grohe${getFormatCena('bateria')}`}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('bathroomCeiling') || 'Strop v kúpeľni'}</span>
+            <span className="font-semibold text-white">
+              {stropKupelna === "drevo" ? `Drevený obklad (${t?.('baseConfig') || 'Základ'})` : `Sadrokartón (${t?.('baseConfig') || 'Základ'})`}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('foundationsSection') || 'Základy'}</span>
+            <span className="font-semibold text-white">
+              {zaklady === "bez" ? `Bez základov (${t?.('baseConfig') || 'Základ'})` :
+               zaklady === "vruty" ? `Zemné skrutky${getFormatCena('zaklady_vruty')}` : 
+               zaklady === "patky" ? `Betónové pätky${getFormatCena('zaklady_patky')}` : 
+               `Pásové základy${getFormatCena('zaklady_pasove')}`}
+            </span>
+          </div>
+        </div>
+
+        {/* Doplnková výbava */}
+        <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700 space-y-3">
+          <div className="text-xs font-bold text-indigo-400 uppercase tracking-widest border-b border-slate-700/50 pb-1.5 mb-1">
+            {t?.('additionalEquipment') || 'DOPLNKOVÁ VÝBAVA'}
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('heatPump') || 'Tepelné čerpadlo'}</span>
+            <span className="font-semibold text-white">
+              {tepelneCerpadlo === "ano" ? `áno${getFormatCena('tepelne_cerpadlo')}` : "nie"}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('recuperationPrep') || 'Príprava na rekuperáciu'}</span>
+            <span className="font-semibold text-white">
+              {pripravaNaRekuperaciu ? `áno${getFormatCena('pripravaNaRekuperaciu')}` : "nie"}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('recuperation') || 'Rekuperácia'}</span>
+            <span className="font-semibold text-white">
+              {rekuperacia === "ano" ? `áno${getFormatCena('rekuperacia')}` : "nie"}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('floorHeating') || 'Podlahové kúrenie'}</span>
+            <span className="font-semibold text-white">
+              {podlahovoKurenie ? `áno${getFormatCena('podlahove_kurenie')}` : "nie"}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('airConditioningPrep') || 'Príprava na klimatizáciu'}</span>
+            <span className="font-semibold text-white">
+              {klimatizacia ? `áno${getFormatCena('klimatizacia')}` : "nie"}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('fireplacePrep') || 'Príprava na krb'}</span>
+            <span className="font-semibold text-white">
+              {pripravaNaKrb ? `áno${getFormatCena('pripravaKrb')}` : "nie"}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('stoveProtection') || 'Ochrana (Kachle)'}</span>
+            <span className="font-semibold text-white">
+              {ochranaKachle ? `áno${getFormatCena('ochranaKachle')}` : "nie"}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('gutters') || 'Odkvapy'}</span>
+            <span className="font-semibold text-white">
+              {odkvapy === "ano" ? `áno${getFormatCena('odkvapy')}` : "nie"}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('lightningRod') || 'Bleskozvod'}</span>
+            <span className="font-semibold text-white">
+              {bleskozvod ? `áno${getFormatCena('bleskozvod')}` : "nie"}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('surgeProtection') || 'Prepäťová ochrana'}</span>
+            <span className="font-semibold text-white">
+              {prepat ? `áno${getFormatCena('prepat')}` : "nie"}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('solarPanelsPrep') || 'Príprava na solárne panely'}</span>
+            <span className="font-semibold text-white">
+              {pripravaNaSolarnePanely ? `áno${getFormatCena('pripravaNaSolarnePanely')}` : "nie"}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('bathtub') || 'Vaňa'}</span>
+            <span className="font-semibold text-white">
+              {vana ? `áno${getFormatCena('vana')}` : "nie"}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('cabinet') || 'Skrinka s umývadlom'}</span>
+            <span className="font-semibold text-white">
+              {skrinka ? `áno${getFormatCena('skrinka')}` : "nie"}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('engineering') || 'Inžiniering'}</span>
+            <span className="font-semibold text-white">
+              {inziniering ? `áno${getFormatCena('inziniering')}` : "nie"}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('projectCertification') || 'Projekt a certifikácia'}</span>
+            <span className="font-semibold text-white">
+              {projektACertifikacia ? `áno${getFormatCena('projektACertifikacia')}` : "nie"}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('revisionDocs') || 'Revízia'}</span>
+            <span className="font-semibold text-white">
+              {revizia ? `áno${getFormatCena('revizia')}` : "nie"}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('assembly') || 'Montáž domu'}</span>
+            <span className="font-semibold text-white">
+              {montaz ? `áno${getFormatCena('montaz')}` : "nie"}
+            </span>
+          </div>
+
+          {dom?.doprava_viditelna !== false && (
+            <div className="flex justify-between text-xs text-slate-350">
+              <span>{t?.('transport') || 'Doprava'}</span>
+              <span className="font-semibold text-white">
+                {doprava ? `áno${getFormatCena('doprava')}` : "nie"}
+              </span>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Vykurovanie */}
-        {(tepelneCerpadlo === "ano" || rekuperacia === "ano" || podlahovoKurenie || pripravaNaKrb || ochranaKachle) && (
-          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-            <p className="text-xs font-semibold text-slate-400 mb-2">{t?.('heating') || 'VYKUROVANIE'}</p>
-            <div className="space-y-1 text-xs">
-              {tepelneCerpadlo === "ano" && <p className="text-slate-300">• {t?.('heatPump') || 'Tepelné čerpadlo'}</p>}
-              {rekuperacia === "ano" && <p className="text-slate-300">• {t?.('recuperation') || 'Rekuperácia'}</p>}
-              {podlahovoKurenie && <p className="text-slate-300">• {t?.('floorHeating') || 'Podlahové kúrenie'}</p>}
-              {pripravaNaKrb && <p className="text-slate-300">• Príprava na krb</p>}
-              {ochranaKachle && <p className="text-slate-300">• Ochrana na kachle</p>}
-            </div>
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('sellPreviousProperty') || 'Predaj predošlej nehnuteľnosti'}</span>
+            <span className="font-semibold text-white">
+              {predajNehnutelnosti ? "áno" : "nie"}
+            </span>
           </div>
-        )}
-
-        {/* Fasáda */}
-        {fasada !== "drevo_smrek" && (
-          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-            <p className="text-xs font-semibold text-slate-400 mb-1">{t?.('facadeSection') || 'FASÁDA'}</p>
-            <p className="text-sm text-slate-300">
-              {fasada === "omietka" ? "Šúchaná omietka" : 
-               fasada === "smrekovec" ? "Smrekovec" :
-               fasada === "falcovane" ? "Falcované panely" : "Thermowood"}
-            </p>
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('wantLandForHouse') || 'Chcem pozemok pod svoj dom'}</span>
+            <span className="font-semibold text-white">
+              {hladamPozemok ? "áno" : "nie"}
+            </span>
           </div>
-        )}
-
-        {/* Strecha */}
-        {(strecha !== "korugovan_plech" || odkvapy === "ano") && (
-          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-            <p className="text-xs font-semibold text-slate-400 mb-2">{t?.('roofSection') || 'STRECHA'}</p>
-            <div className="space-y-1 text-xs">
-              {strecha !== "korugovan_plech" && <p className="text-slate-300">• Falcované panely</p>}
-              {odkvapy === "ano" && <p className="text-slate-300">• Odkvapy</p>}
-            </div>
+          <div className="flex justify-between text-xs text-slate-350">
+            <span>{t?.('financialServicesLoans') || 'Finančné služby'}</span>
+            <span className="font-semibold text-white">
+              {financneSluzby ? "áno" : "nie"}
+            </span>
           </div>
-        )}
-
-        {/* Okná a dvere */}
-        {(okna !== "biele" || vchodoveDvere !== "plastove") && (
-          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-            <p className="text-xs font-semibold text-slate-400 mb-2">{t?.('windowsDoorsSection') || 'OKNÁ A DVERE'}</p>
-            <div className="space-y-1 text-xs">
-              {okna !== "biele" && <p className="text-slate-300">• Okná {okna === "antracit" ? "antracit" : "hnedé"}</p>}
-              {vchodoveDvere !== "plastove" && <p className="text-slate-300">• Kovové dvere</p>}
-            </div>
-          </div>
-        )}
-
-        {/* Interiér */}
-        {(obkladStien !== "smrek_8cm" || interieroveDvere !== "kridlove") && (
-          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-            <p className="text-xs font-semibold text-slate-400 mb-2">{t?.('interiorSection') || 'INTERIÉR'}</p>
-            <div className="space-y-1 text-xs">
-              {obkladStien !== "smrek_8cm" && (
-                <p className="text-slate-300">
-                  • {obkladStien === "smrek_bez_uzlov" ? "Smrek bez uzlov" :
-                     obkladStien === "sadrokarton_tapeta" ? "Sadrokarton + tapeta" : "OSB panel"}
-                </p>
-              )}
-              {interieroveDvere !== "kridlove" && <p className="text-slate-300">• Posuvné dvere</p>}
-            </div>
-          </div>
-        )}
-
-        {/* Elektro */}
-        {(elektro !== "eu" || bleskozvod || prepat) && (
-          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-            <p className="text-xs font-semibold text-slate-400 mb-2">{t?.('electricalSection') || 'ELEKTROINŠTALÁCIA'}</p>
-            <div className="space-y-1 text-xs">
-              {elektro === "cz" && <p className="text-slate-300">• CZ/SK štandard</p>}
-              {elektro === "ge" && <p className="text-slate-300 flex items-center gap-1">• GE štandard <span className="text-green-400">⚡A0</span></p>}
-              {bleskozvod && <p className="text-slate-300 flex items-center gap-1">• Bleskozvod <span className="text-green-400">⚡A0</span></p>}
-              {prepat && <p className="text-slate-300 flex items-center gap-1">• Prepäťová ochrana <span className="text-green-400">⚡A0</span></p>}
-            </div>
-          </div>
-        )}
-
-        {/* Kúpeľňa */}
-        {(sprchovyKut !== "standard" || bateria !== "standard" || vana || skrinka || stropKupelna !== "drevo") && (
-          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-            <p className="text-xs font-semibold text-slate-400 mb-2">{t?.('bathroomSection') || 'KÚPEĽŇA'}</p>
-            <div className="space-y-1 text-xs">
-              {sprchovyKut !== "standard" && <p className="text-slate-300">• Sprcha Radaway</p>}
-              {bateria !== "standard" && <p className="text-slate-300">• Batéria Grohe</p>}
-              {stropKupelna !== "drevo" && <p className="text-slate-300">• Sadrokartónový strop</p>}
-              {vana && <p className="text-slate-300">• Vaňa</p>}
-              {skrinka && <p className="text-slate-300">• Skrinka</p>}
-            </div>
-          </div>
-        )}
-
-        {/* Základy */}
-        {zaklady !== "bez" && (
-          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-            <p className="text-xs font-semibold text-slate-400 mb-1">{t?.('foundationsSection') || 'ZÁKLADY'}</p>
-            <p className="text-sm text-slate-300">
-              {zaklady === "vruty" ? "Zemné vruty" :
-               zaklady === "patky" ? "Betónové pätky" : "Pásové betónové"}
-            </p>
-          </div>
-        )}
-
-        {/* Služby */}
-        {(inziniering || projektACertifikacia || revizia) && (
-          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-            <p className="text-xs font-semibold text-slate-400 mb-2">{t?.('servicesSection') || 'SLUŽBY'}</p>
-            <div className="space-y-1 text-xs">
-              {inziniering && <p className="text-slate-300 flex items-center gap-1">• Inžiniering <span className="text-green-400">⚡A0</span></p>}
-              {projektACertifikacia && <p className="text-slate-300 flex items-center gap-1">• Projekt + Certifikácia <span className="text-green-400">⚡A0</span></p>}
-              {revizia && <p className="text-slate-300">• Revízna dokumentácia</p>}
-            </div>
-          </div>
-        )}
-
-        {/* Realizácia */}
-        {(montaz || doprava) && (
-          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-            <p className="text-xs font-semibold text-slate-400 mb-2">{t?.('realizationSection') || 'REALIZÁCIA'}</p>
-            <div className="space-y-1 text-xs">
-              {montaz && <p className="text-slate-300">• {t?.('assembly') || 'Montáž domu'}</p>}
-              {doprava && <p className="text-slate-300">• {t?.('transport') || 'Doprava modulov'}</p>}
-            </div>
-          </div>
-        )}
+        </div>
       </div>
 
       {/* Total Price */}
