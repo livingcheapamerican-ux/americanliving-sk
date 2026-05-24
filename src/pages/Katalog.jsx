@@ -631,9 +631,9 @@ export default function Katalog() {
           <motion.aside
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
-            className="lg:w-72 flex-shrink-0 relative">
+            className="lg:w-72 flex-shrink-0 relative w-full">
             <div className="absolute inset-0 bg-primary/5 dark:bg-red-600/10 blur-[50px] pointer-events-none rounded-full" />
-            <Card className="p-3 sm:p-5 sticky top-24 shadow-xl bg-card/85 backdrop-blur-2xl border-border max-w-full overflow-hidden relative z-10">
+            <Card className="p-3 sm:p-5 lg:sticky lg:top-24 shadow-xl bg-card/85 backdrop-blur-2xl border-border max-w-full overflow-hidden relative z-10">
               <div className="flex items-center gap-2 mb-3 sm:mb-4">
                 <Filter className="w-4 h-4 text-primary" />
                 <h2 className="text-base sm:text-lg font-bold text-foreground">{t('filters')}</h2>
