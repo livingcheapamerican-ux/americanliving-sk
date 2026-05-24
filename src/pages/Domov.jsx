@@ -1483,7 +1483,7 @@ export default function Domov() {
         <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-[#C5A880]/10 dark:bg-red-950/15 rounded-full blur-[120px] pointer-events-none"></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-5xl mx-auto">
-            <div className="bg-white dark:bg-gradient-to-br dark:from-slate-900/90 dark:to-slate-950/90 border border-slate-200 dark:border-[#C5A880]/30 rounded-3xl p-8 sm:p-12 shadow-md dark:shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 transition-colors duration-300">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-[#C5A880]/30 rounded-3xl p-8 sm:p-12 shadow-md dark:shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 transition-colors duration-300">
               <div className="absolute top-0 left-0 w-3 h-full bg-[#C5A880]"></div>
               
               <div className="flex-1 text-center md:text-left">
@@ -1491,7 +1491,7 @@ export default function Domov() {
                   Chcete si postaviť nový dom a nemáte na to kapitál?
                 </h2>
                 <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-lg font-light leading-relaxed max-w-2xl transition-colors duration-300">
-                  Žiadny problém! Máme model financovania pre tých, ktorí nemajú našetrené. Pomôžeme vám vyriešiть financovanie celej výstavby od A po Z.
+                  Žiadny problém! Máme model financovania pre tých, ktorí nemajú našetrené. Pomôžeme vám vyriešiť financovanie celej výstavby od A po Z.
                 </p>
               </div>
               
