@@ -534,16 +534,17 @@ export default function Domov() {
 
 
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] lg:min-h-screen overflow-hidden bg-slate-950 pt-20 lg:pt-28 pb-12 flex items-center">
+      <section className="relative min-h-[90vh] lg:min-h-screen overflow-hidden bg-[#050508] pt-20 lg:pt-28 pb-12 flex items-center">
         {/* Blueprint architectural grid lines */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px),linear-gradient(to_bottom,#ffffff02_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:5rem_5rem] pointer-events-none" />
         
         {/* Subtle blurred background image for depth */}
-        <div className="absolute inset-0 bg-[url('https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/cbd41c122_Barnbazen.jpeg')] bg-cover bg-center opacity-[0.06] blur-[2px] pointer-events-none mix-blend-overlay" />
+        <div className="absolute inset-0 bg-[url('https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/cbd41c122_Barnbazen.jpeg')] bg-cover bg-center opacity-[0.09] blur-[1px] pointer-events-none mix-blend-overlay" />
 
-        {/* Ambient background glows */}
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-red-900/10 rounded-full blur-[150px] pointer-events-none" />
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-[#C5A880]/5 rounded-full blur-[150px] pointer-events-none" />
+        {/* Ambient background glows - Rich premium gradients */}
+        <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] bg-red-600/15 rounded-full blur-[180px] pointer-events-none" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] bg-[#C5A880]/15 rounded-full blur-[180px] pointer-events-none" />
+        <div className="absolute top-[30%] left-[35%] w-[500px] h-[500px] bg-slate-900/30 rounded-full blur-[150px] pointer-events-none" />
 
         <div className="relative z-10 container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -582,7 +583,10 @@ export default function Domov() {
                 className="text-3xl sm:text-5xl md:text-6xl font-black text-white mb-6 leading-[1.1] tracking-tight"
                 style={{ textShadow: '2px 2px 10px rgba(0,0,0,0.8)' }}
               >
-                Americká technológia bývania bez starostí a bez kompromisov
+                Americká technológia bývania{" "}
+                <span className="bg-gradient-to-r from-[#C5A880] via-[#E2C799] to-[#C5A880] bg-clip-text text-transparent block sm:inline">
+                  bez starostí a bez kompromisov
+                </span>
               </motion.h1>
 
               {/* Subheadline */}
@@ -592,7 +596,7 @@ export default function Domov() {
                 transition={{ duration: 0.8, delay: 0.4 }}
                 className="text-base sm:text-xl text-slate-300 mb-8 leading-relaxed font-light max-w-2xl"
               >
-                Nízkoenergetické montované a modulárne domy s garantovaným dodaním do 12 týždňov, možnosťou 100% financovania a prevádzkovým grantom.
+                Nízkoenergetické montované a modulárne domy s garantovaným dodaním už od 6 do 12 týždňov, možnosťou 100% financovania a prevádzkovým grantom.
               </motion.p>
 
               {/* CTAs */}
@@ -613,7 +617,7 @@ export default function Domov() {
                   size="lg" 
                   variant="outline" 
                   onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))}
-                  className="w-full sm:w-auto bg-white/5 hover:bg-white/10 text-white border border-white/20 font-bold text-base px-8 py-7 rounded-2xl transition-all flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto bg-white/5 hover:bg-[#C5A880]/15 hover:border-[#C5A880]/50 text-white border border-white/15 font-bold text-base px-8 py-7 rounded-2xl transition-all flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(197,168,128,0.15)] backdrop-blur-sm"
                 >
                   <MessageCircle className="w-5 h-5" />
                   <span>Konzultácia s Kexom</span>
@@ -622,7 +626,7 @@ export default function Domov() {
 
               {/* Interactive Quick House Switcher with Real Images */}
               <div className="pt-6 border-t border-white/10 max-w-xl">
-                <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-3">Kliknutím si pozrite najlukratívnejšie modely</p>
+                <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-4">Kliknutím si pozrite najlukratívnejšie modely</p>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -642,20 +646,20 @@ export default function Domov() {
                         // Reset facade to anthracite to avoid missing configurations
                         setSelectedFacade("anthracite");
                       }}
-                      className={`group p-3.5 rounded-2xl border text-left transition-all relative overflow-hidden h-24 flex flex-col justify-end ${
+                      className={`group p-3.5 rounded-2xl border text-left transition-all duration-300 relative overflow-hidden h-24 flex flex-col justify-end ${
                         selectedHouseId === house.id 
-                          ? 'border-[#C5A880] ring-1 ring-[#C5A880] bg-slate-900/80 shadow-lg shadow-[#C5A880]/10' 
-                          : 'border-white/5 bg-slate-950/40 hover:border-white/10'
+                          ? 'border-[#C5A880] ring-1 ring-[#C5A880]/50 bg-slate-900/90 shadow-[0_0_20px_rgba(197,168,128,0.2)] scale-[1.03]' 
+                          : 'border-white/10 bg-slate-950/60 hover:bg-slate-900/40 hover:border-white/20 hover:scale-[1.03] backdrop-blur-sm'
                       }`}
                     >
                       {/* Background image overlay */}
-                      <div className="absolute inset-0 z-0 opacity-20 group-hover:opacity-40 transition-opacity duration-300">
+                      <div className="absolute inset-0 z-0 opacity-35 group-hover:opacity-60 transition-opacity duration-300">
                         <img src={house.img} alt={house.name} className="w-full h-full object-cover" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
                       </div>
                       <div className="relative z-10">
-                        <p className={`text-xs font-black transition-colors ${selectedHouseId === house.id ? 'text-[#C5A880]' : 'text-slate-100'}`}>{house.name}</p>
-                        <p className="text-[9px] text-slate-400 mt-0.5 leading-tight">{house.desc}</p>
+                        <p className={`text-xs font-black transition-colors duration-300 ${selectedHouseId === house.id ? 'text-[#C5A880]' : 'text-slate-100'}`}>{house.name}</p>
+                        <p className="text-[9px] text-slate-400 mt-0.5 leading-tight font-medium">{house.desc}</p>
                       </div>
                     </button>
                   ))}
@@ -669,7 +673,7 @@ export default function Domov() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
-                className="relative bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-3xl p-4 sm:p-6 shadow-2xl overflow-hidden group"
+                className="relative bg-gradient-to-br from-slate-900/50 to-slate-950/70 backdrop-blur-2xl border border-white/15 rounded-3xl p-4 sm:p-6 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)] overflow-hidden group"
               >
                 {/* Lookbook main image wrapper */}
                 <div className="aspect-[4/3] rounded-2xl overflow-hidden relative border border-white/5 bg-slate-950">
@@ -682,18 +686,22 @@ export default function Domov() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
                   
-                  {/* Floating stats tag 1 (top-left) */}
+                  {/* Floating stats tag 1 (top-left) - Dynamic delivery time based on manufacturer */}
                   <motion.div 
                     animate={{ y: [0, -5, 0] }}
                     transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute top-4 left-4 bg-slate-950/85 backdrop-blur-md border border-white/10 rounded-xl px-3 py-2 flex items-center gap-2 shadow-lg"
+                    className="absolute top-4 left-4 bg-slate-950/90 backdrop-blur-md border border-white/15 rounded-xl px-3.5 py-2 flex items-center gap-2 shadow-[0_8px_32px_rgba(0,0,0,0.5)] z-20"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-[#C5A880]/15 flex items-center justify-center border border-[#C5A880]/30">
-                      <Clock className="w-4 h-4 text-[#C5A880]" />
+                    <div className="w-8 h-8 rounded-lg bg-[#C5A880]/20 flex items-center justify-center border border-[#C5A880]/30">
+                       <Clock className="w-4 h-4 text-[#C5A880]" />
                     </div>
                     <div>
-                      <p className="text-[10px] text-slate-400 font-medium">Dodanie na kľúč</p>
-                      <p className="text-xs font-black text-white">Do 12 týždňov</p>
+                      <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">
+                        {currentHouseData.manufacturer?.toLowerCase().includes("ticab") ? "Výroba vo fabrike" : "Dodanie na kľúč"}
+                      </p>
+                      <p className="text-xs font-black text-white">
+                        {currentHouseData.manufacturer?.toLowerCase().includes("ticab") ? "6 týždňov" : "Do 12 týždňov"}
+                      </p>
                     </div>
                   </motion.div>
 
@@ -701,13 +709,13 @@ export default function Domov() {
                   <motion.div 
                     animate={{ y: [0, 5, 0] }}
                     transition={{ duration: 4, delay: 2, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute bottom-4 right-4 bg-slate-950/85 backdrop-blur-md border-[#C5A880]/30 rounded-xl px-3 py-2 flex items-center gap-2 shadow-lg"
+                    className="absolute bottom-4 right-4 bg-slate-950/90 backdrop-blur-md border border-white/15 rounded-xl px-3.5 py-2 flex items-center gap-2 shadow-[0_8px_32px_rgba(0,0,0,0.5)] z-20"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-emerald-500/15 flex items-center justify-center border border-emerald-500/30">
-                      <Star className="w-4 h-4 text-emerald-400" />
+                    <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center border border-emerald-500/35">
+                      <Star className="w-4 h-4 text-emerald-400 animate-pulse" />
                     </div>
                     <div>
-                      <p className="text-[10px] text-slate-400 font-medium">Zastavaná plocha</p>
+                      <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Zastavaná plocha</p>
                       <p className="text-xs font-black text-emerald-400">{currentHouseData.area} m²</p>
                     </div>
                   </motion.div>
@@ -718,12 +726,12 @@ export default function Domov() {
                   <div className="flex items-center justify-between mb-4">
                     <div>
                       <h3 className="text-base sm:text-xl font-bold text-white leading-tight">{currentHouseData.name}</h3>
-                      <p className="text-xs text-slate-400 mt-0.5">
+                      <p className="text-xs text-slate-400 mt-0.5 font-medium">
                         {currentHouseData.rooms} izby • Výrobca: {currentHouseData.manufacturer} • <strong className="text-white">od {currentHouseData.price.toLocaleString()} €</strong>
                       </p>
                     </div>
                     <Link to={`${createPageUrl("DetailDomu")}?id=${currentHouseData.id}`}>
-                      <Button variant="ghost" size="sm" className="text-xs text-[#C5A880] hover:text-white p-0 hover:bg-transparent flex items-center gap-1 font-bold">
+                      <Button variant="ghost" size="sm" className="text-xs text-[#C5A880] hover:text-white p-0 hover:bg-transparent flex items-center gap-1 font-black transition-colors duration-300">
                         <span>Konfigurovať</span>
                         <ChevronRight className="w-4 h-4" />
                       </Button>
@@ -737,17 +745,17 @@ export default function Domov() {
                         key={opt.id}
                         type="button"
                         onClick={() => setSelectedFacade(opt.id)}
-                        className={`flex-1 p-2 rounded-xl border text-left transition-all flex items-center gap-2.5 ${
+                        className={`flex-1 p-2 rounded-xl border text-left transition-all duration-300 flex items-center gap-2.5 hover:scale-[1.02] ${
                           selectedFacade === opt.id 
-                            ? 'bg-[#C5A880]/15 border-[#C5A880] text-white shadow-lg' 
-                            : 'bg-white/5 border-white/10 text-slate-300 hover:bg-white/10 hover:border-white/20'
+                            ? 'bg-[#C5A880]/10 border-[#C5A880] text-white shadow-[0_0_15px_rgba(197,168,128,0.1)]' 
+                            : 'bg-white/5 border-white/10 text-slate-300 hover:bg-white/10 hover:border-white/15'
                         }`}
                       >
-                        <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 border border-white/10 bg-slate-950">
+                        <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 border border-white/10 bg-slate-950 transition-all duration-300">
                           <img src={opt.img} alt={opt.name} className="w-full h-full object-cover" />
                         </div>
                         <div className="min-w-0">
-                          <p className={`text-[11px] leading-tight font-black ${selectedFacade === opt.id ? 'text-[#C5A880]' : 'text-slate-200'}`}>{opt.name}</p>
+                          <p className={`text-[11px] leading-tight font-black transition-colors duration-300 ${selectedFacade === opt.id ? 'text-[#C5A880]' : 'text-slate-200'}`}>{opt.name}</p>
                           <p className="text-[9px] leading-tight text-slate-400 mt-0.5 truncate">{opt.desc}</p>
                         </div>
                       </button>
@@ -833,10 +841,10 @@ export default function Domov() {
                 <Clock className="w-6 h-6 text-red-400" />
               </div>
               <h3 className="text-lg font-bold text-white mb-2">
-                Odovzdanie do 12 týždňov
+                Rýchle odovzdanie stavby
               </h3>
               <p className="text-sm text-slate-400 leading-relaxed font-light">
-                Garantujeme zmluvné odovzdanie hrubej stavby na kľúč do 12 týždňov od právoplatného stavebného povolenia a dokončenia základov.
+                Garantujeme zmluvné odovzdanie vo fabrike už do 6 týždňov pre modulárne stavby a do 12 týždňov na kľúč pre montované domy.
               </p>
               <Link to={createPageUrl("AkoToFunguje")} className="mt-4 inline-flex items-center gap-1 text-xs text-red-400 hover:text-white transition-colors font-bold">
                 <span>Ako to funguje</span>
