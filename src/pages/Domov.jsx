@@ -9,7 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { 
   ArrowRight, CheckCircle, Home, Zap, Clock, Shield, Euro,
   FileText, Hammer, Key, Phone, Building2, ChevronRight, Building, Landmark, TrendingUp, Settings, LogIn, Gift, Star, Users,
-  MessageCircle, Send
+  MessageCircle, Send, Sparkles
 } from "lucide-react";
 import { motion } from "framer-motion";
 import HeroSettingsManager from "../components/admin/HeroSettingsManager";
