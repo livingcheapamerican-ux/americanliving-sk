@@ -76,42 +76,43 @@ button:focus-visible {
 
 @layer base {
   :root {
-    --background: 240 11% 3.5%;
-    --foreground: 240 5% 96%;
-    --card: 240 11% 5.5%;
-    --card-foreground: 240 5% 96%;
-    --popover: 240 11% 3.5%;
-    --popover-foreground: 240 5% 96%;
+    --background: 34 32% 97.5%; /* Warm cream/ivory background */
+    --foreground: 240 10% 8%; /* Rich charcoal text */
+    --card: 0 0% 100%; /* Pure white cards */
+    --card-foreground: 240 10% 8%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 8%;
     --primary: 359 58% 39%; /* #9E2A2B */
     --primary-foreground: 0 0% 98%;
     --secondary: 359 60% 30%; /* #802021 */
     --secondary-foreground: 0 0% 98%;
-    --muted: 240 6% 12%;
-    --muted-foreground: 240 5% 65%;
-    --accent: 35 38% 64%; /* #C5A880 */
-    --accent-foreground: 240 11% 5%;
+    --muted: 34 16% 93%; /* Soft muted warm cream */
+    --muted-foreground: 240 5% 42%;
+    --accent: 35 38% 64%; /* Gold: #C5A880 */
+    --accent-foreground: 240 10% 8%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 6% 12%;
-    --input: 240 6% 12%;
+    --border: 34 16% 87%; /* Warm soft borders */
+    --input: 34 16% 87%;
     --ring: 35 38% 64%;
+    --grid-color: rgba(197, 168, 128, 0.08); /* Warm gold grid lines for light mode */
     --chart-1: 359 58% 39%;
     --chart-2: 35 38% 64%;
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.75rem;
-    --sidebar-background: 240 11% 4.5%;
-    --sidebar-foreground: 240 5% 90%;
+    --sidebar-background: 34 32% 96%;
+    --sidebar-foreground: 240 10% 12%;
     --sidebar-primary: 359 58% 39%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 6% 12%;
-    --sidebar-accent-foreground: 240 5% 96%;
-    --sidebar-border: 240 6% 12%;
+    --sidebar-accent: 34 16% 92%;
+    --sidebar-accent-foreground: 240 10% 8%;
+    --sidebar-border: 34 16% 86%;
     --sidebar-ring: 35 38% 64%;
   }
   .dark {
-    --background: 240 11% 3.5%;
+    --background: 240 11% 3.5%; /* Original midnight dark */
     --foreground: 240 5% 96%;
     --card: 240 11% 5.5%;
     --card-foreground: 240 5% 96%;
@@ -130,6 +131,7 @@ button:focus-visible {
     --border: 240 6% 12%;
     --input: 240 6% 12%;
     --ring: 35 38% 64%;
+    --grid-color: rgba(255, 255, 255, 0.03); /* White grid lines for dark mode */
   }
 }
 

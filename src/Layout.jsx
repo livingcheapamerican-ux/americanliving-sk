@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Home, Grid3x3, Phone, Info, Menu, X, Mail, Settings, FileText, Image, Brain, Upload, ChevronDown, Sparkles, Languages, FileText as BlogIcon, Activity, Zap, Users, Gift, MapPinned, MessageCircle } from "lucide-react";
+import { Home, Grid3x3, Phone, Info, Menu, X, Mail, Settings, FileText, Image, Brain, Upload, ChevronDown, Sparkles, Languages, FileText as BlogIcon, Activity, Zap, Users, Gift, MapPinned, MessageCircle, Sun, Moon } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { AVAILABLE_LANGUAGES } from "./components/LanguageContext";
 import { Button } from "@/components/ui/button";
@@ -25,6 +25,25 @@ function LayoutContent({ children }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { t, language, setLanguage } = useLanguage();
+  
+  // Theme state: default is 'light' (approved by user), persisted in localStorage
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem("theme") || "light";
+  });
+
+  // Apply theme class to document element
+  useEffect(() => {
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === "light" ? "dark" : "light");
+  };
 
   // Noindex meta tag for admin/internal pages
   const noindexPaths = ['/AIMarketingInsights', '/AdminCennik', '/AutoSEOTrigger', '/AdminAnalyzaSessions', '/Admin', '/Test', '/Auto', '/Regeneruj', '/MojeKonto', '/MojaPonuka', '/AdminMojeKonto'];
@@ -163,7 +182,7 @@ function LayoutContent({ children }) {
   const KONFIGA_LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/1a73e4a6c_Konfigaeu.jpg";
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-50 font-['Outfit']">
+    <div className="min-h-screen bg-background text-foreground font-['Outfit'] transition-colors duration-300">
       <Helmet>
         {shouldNoindex && <meta name="robots" content="noindex, nofollow" />}
       </Helmet>
@@ -223,7 +242,7 @@ function LayoutContent({ children }) {
       <header 
         className={`fixed left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'top-4' : 'top-0 sm:top-6'} px-2 sm:px-6`}
       >
-        <div className={`mx-auto max-w-7xl transition-all duration-500 ${(scrolled && !mobileMenuOpen) ? 'bg-slate-900/80 backdrop-blur-xl shadow-2xl shadow-black/50 border border-white/10 rounded-full py-2 px-4' : (mobileMenuOpen ? 'bg-slate-950 border border-white/10 rounded-3xl p-4 shadow-2xl mt-2' : 'bg-transparent py-4 px-4')}`}>
+        <div className={`mx-auto max-w-7xl transition-all duration-500 ${(scrolled && !mobileMenuOpen) ? 'bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 border border-slate-200 dark:border-white/10 rounded-full py-2 px-4' : (mobileMenuOpen ? 'bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-3xl p-4 shadow-2xl mt-2' : 'bg-transparent py-4 px-4')}`}>
           <div className="flex items-center justify-between gap-1 sm:gap-2">
             {/* Mobile - placeholder for layout balance */}
             <div className="sm:hidden w-8" />
@@ -279,7 +298,7 @@ function LayoutContent({ children }) {
                           ? 'bg-gradient-to-r from-red-600 via-red-500 to-red-700 text-white hover:scale-105 shadow-[0_0_20px_rgba(239,68,68,0.4)]'
                         : isKredity
                           ? 'bg-orange-500/20 text-orange-400 hover:bg-orange-500/30'
-                          : 'text-slate-200 hover:text-white hover:bg-white/10'
+                          : 'text-slate-700 dark:text-slate-200 hover:text-red-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10'
                     }`}
                     style={(!isDotacia && !isActive(item.path) && !isKredity) ? { textShadow: '1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 0px 4px 10px rgba(0,0,0,0.9)' } : undefined}
                   >
@@ -297,12 +316,26 @@ function LayoutContent({ children }) {
             </nav>
 
             <div className="hidden sm:flex items-center gap-1 sm:gap-2">
+              {/* Theme Switcher Button */}
+              <button
+                onClick={toggleTheme}
+                type="button"
+                className="flex items-center justify-center p-2 rounded-full border border-slate-200 dark:border-white/10 bg-slate-100/50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-200 hover:bg-[#C5A880]/15 hover:text-[#C5A880] dark:hover:text-[#C5A880] transition-all duration-300 h-9 w-9 mr-1"
+                title={theme === "light" ? "Prepnúť na tmavý režim" : "Prepnúť na svetlý režim"}
+              >
+                {theme === "light" ? (
+                  <Moon className="w-4.5 h-4.5" />
+                ) : (
+                  <Sun className="w-4.5 h-4.5" />
+                )}
+              </button>
+
               {/* Desktop - Language Dropdown */}
               <div className="hidden lg:block mr-2">
                 <Popover>
                   <PopoverTrigger asChild>
-                    <button className="flex items-center gap-2 px-3 py-2 rounded-full bg-slate-800/50 border border-white/10 hover:bg-white/10 transition-all shadow-sm">
-                      <Languages className="w-4 h-4 text-slate-300" />
+                    <button className="flex items-center gap-2 px-3 py-2 rounded-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 hover:bg-slate-200 dark:hover:bg-white/10 transition-all shadow-sm">
+                      <Languages className="w-4 h-4 text-slate-600 dark:text-slate-300" />
                       <span className="text-sm font-medium text-slate-200">
                         {AVAILABLE_LANGUAGES.find(l => l.code === language)?.flag}
                       </span>
@@ -472,6 +505,20 @@ function LayoutContent({ children }) {
             </div>
 
             <div className="lg:hidden flex items-center gap-1">
+              {/* Mobile Theme Switcher Button */}
+              <button
+                onClick={toggleTheme}
+                type="button"
+                className="p-3 rounded-lg min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-slate-100 dark:hover:bg-white/10 active:bg-slate-200 text-slate-700 dark:text-slate-200 transition-colors"
+                title={theme === "light" ? "Tmavý režim" : "Svetlý režim"}
+              >
+                {theme === "light" ? (
+                  <Moon className="w-5 h-5" />
+                ) : (
+                  <Sun className="w-5 h-5" />
+                )}
+              </button>
+
               {/* Mobile - Language Dropdown */}
               <Popover>
                 <PopoverTrigger asChild>
@@ -522,8 +569,8 @@ function LayoutContent({ children }) {
           </div>
 
           {mobileMenuOpen && (
-            <nav className="lg:hidden mt-4 pb-4 border-t border-white/10 pt-4 space-y-2">
-              <div className="md:hidden flex items-center justify-center gap-2 py-3 border-b border-white/10 mb-2">
+            <nav className="lg:hidden mt-4 pb-4 border-t border-slate-200 dark:border-white/10 pt-4 space-y-2">
+              <div className="md:hidden flex items-center justify-center gap-2 py-3 border-b border-slate-200 dark:border-white/10 mb-2">
                 <span className="text-xs text-slate-400 font-medium">Powered by</span>
                 <a 
                   href="https://konfiga.eu" 
@@ -550,7 +597,7 @@ function LayoutContent({ children }) {
                         ? 'bg-red-600/20 text-red-500 border border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.2)]'
                         : isDotacia
                           ? 'bg-gradient-to-r from-red-600 via-red-500 to-red-700 text-white shadow-[0_0_20px_rgba(239,68,68,0.4)]'
-                          : 'text-slate-300 hover:bg-white/10 hover:text-white'
+                          : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-red-500 dark:hover:text-white'
                     }`}
                   >
                     <item.icon className="w-5 h-5" />
@@ -760,8 +807,8 @@ function LayoutContent({ children }) {
         </div>
       </header>
 
-      <main className="lg:bg-[#08080A] relative" style={{ paddingTop: '2.5rem' }}>
-        <div className="lg:max-w-[1200px] xl:max-w-[1400px] lg:mx-auto bg-[#08080A] min-h-screen relative z-20">
+      <main className="lg:bg-background relative transition-colors duration-300" style={{ paddingTop: '2.5rem' }}>
+        <div className="lg:max-w-[1200px] xl:max-w-[1400px] lg:mx-auto bg-background min-h-screen relative z-20 transition-colors duration-300">
           {children}
         </div>
       </main>
