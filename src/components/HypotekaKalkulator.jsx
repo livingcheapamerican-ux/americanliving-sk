@@ -50,23 +50,23 @@ export default function HypotekaKalkulator({
   const celkovaCena = vyskaUveru + celkomPreplatky;
 
   return (
-    <Card className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
+    <Card className="p-3 sm:p-4 bg-card border border-border shadow-xl backdrop-blur-sm">
       <div className="flex items-center gap-2 mb-3">
         <div className="p-2 bg-blue-600 rounded-lg">
           <Calculator className="w-4 h-4 text-white" />
         </div>
         <div>
-          <h3 className="text-base font-bold text-gray-900">{t('mortgageCalculator')}</h3>
+          <h3 className="text-base font-bold text-foreground">{t('mortgageCalculator')}</h3>
         </div>
       </div>
 
       <div className="space-y-3">
         {/* Suma z konfigurácie */}
         <div className="space-y-2">
-          <div className="p-2 bg-gray-100 rounded-lg">
+          <div className="p-2 bg-muted rounded-lg">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-gray-600">{t('totalWithVAT')}:</span>
-              <span className="text-sm font-bold text-gray-800">
+              <span className="text-xs text-muted-foreground">{t('totalWithVAT')}:</span>
+              <span className="text-sm font-bold text-foreground">
                 {celkomSDph.toLocaleString('sk-SK')} €
               </span>
             </div>
@@ -74,9 +74,9 @@ export default function HypotekaKalkulator({
           
           {/* Admin log - výpočet hypotéky */}
           {isAdmin && (
-            <div className="p-2 bg-purple-50 rounded-lg border border-purple-200">
-              <p className="text-xs font-semibold text-purple-900 mb-1">🔧 Admin Log - Hypotéka:</p>
-              <div className="text-[10px] text-purple-800 space-y-0.5">
+            <div className="p-2 bg-purple-500/10 rounded-lg border border-purple-500/20">
+              <p className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-1">🔧 Admin Log - Hypotéka:</p>
+              <div className="text-[10px] text-purple-600/90 dark:text-purple-400/80 space-y-0.5">
                 <p>• Celkom s DPH (zo sidebar): {celkomSDph.toLocaleString('sk-SK')} €</p>
                 <p>• Vlastný vklad ({vlastnyVklad}%): {(celkomSDph * vlastnyVklad / 100).toLocaleString('sk-SK')} €</p>
                 <p className="text-purple-600 font-semibold">• Výška úveru: {vyskaUveru.toLocaleString('sk-SK')} €</p>
@@ -91,7 +91,7 @@ export default function HypotekaKalkulator({
         <div>
           <div className="flex items-center justify-between mb-1">
             <Label className="text-xs">{t('downPayment')}</Label>
-            <span className="text-xs font-semibold text-blue-700">
+            <span className="text-xs font-semibold text-primary">
               {vlastnyVklad}% ({(celkomSDph * vlastnyVklad / 100).toLocaleString('sk-SK')} €)
             </span>
           </div>
@@ -113,7 +113,7 @@ export default function HypotekaKalkulator({
         <div>
           <div className="flex items-center justify-between mb-1">
             <Label className="text-xs">{t('loanTerm')}</Label>
-            <span className="text-xs font-semibold text-blue-700">{dobaSplatnosti} {t('years')}</span>
+            <span className="text-xs font-semibold text-primary">{dobaSplatnosti} {t('years')}</span>
           </div>
           <Slider
             min={5}
@@ -133,7 +133,7 @@ export default function HypotekaKalkulator({
         <div>
           <div className="flex items-center justify-between mb-1">
             <Label className="text-xs">{t('interestRate')}</Label>
-            <span className="text-xs font-semibold text-blue-700">{urokovaSadzba.toFixed(1)}%</span>
+            <span className="text-xs font-semibold text-primary">{urokovaSadzba.toFixed(1)}%</span>
           </div>
           <Slider
             min={1}
@@ -150,27 +150,27 @@ export default function HypotekaKalkulator({
         </div>
 
         {/* Výsledky */}
-        <div className="pt-2 border-t border-blue-200 space-y-2">
-          <div className="bg-blue-600 text-white p-3 rounded-lg">
+        <div className="pt-2 border-t border-border space-y-2">
+          <div className="bg-primary text-primary-foreground p-3 rounded-lg">
             <p className="text-xs opacity-90">{t('monthlyPayment')}</p>
             <p className="text-2xl font-bold">{Math.round(mesacnaSplatka).toLocaleString('sk-SK')} €</p>
           </div>
 
           <div className="grid grid-cols-2 gap-2 text-xs">
-            <div className="bg-gray-100 p-2 rounded">
-              <p className="text-gray-600 mb-0.5 leading-tight">{t('totalPaymentToBank')}</p>
-              <p className="font-bold text-gray-900">{Math.round(celkovaCena).toLocaleString('sk-SK')} €</p>
+            <div className="bg-muted p-2 rounded">
+              <p className="text-muted-foreground mb-0.5 leading-tight">{t('totalPaymentToBank')}</p>
+              <p className="font-bold text-foreground">{Math.round(celkovaCena).toLocaleString('sk-SK')} €</p>
             </div>
-            <div className="bg-gray-100 p-2 rounded">
-              <p className="text-gray-600 mb-0.5">{t('interest')}</p>
-              <p className="font-bold text-orange-600">{Math.round(celkomPreplatky).toLocaleString('sk-SK')} €</p>
+            <div className="bg-muted p-2 rounded">
+              <p className="text-muted-foreground mb-0.5">{t('interest')}</p>
+              <p className="font-bold text-orange-500">{Math.round(celkomPreplatky).toLocaleString('sk-SK')} €</p>
             </div>
           </div>
         </div>
 
         {/* Info */}
-        <div className="p-2 bg-yellow-50 rounded border border-yellow-200">
-          <p className="text-xs text-yellow-800">
+        <div className="p-2 bg-yellow-500/10 rounded border border-yellow-500/20">
+          <p className="text-xs text-yellow-600 dark:text-yellow-450">
             ℹ️ {t('estimatedCalculation')}
           </p>
         </div>

@@ -15,8 +15,41 @@ import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
+
+const dotaciaLocalT = {
+  sk: {
+    selectBestLoan: "{dt.selectBestLoan}",
+    successSent: "{dt.successSent}",
+    successEmailConfirm: "{dt.successEmailConfirm}",
+    selectedHouse: "{dt.selectedHouse}",
+    dotaciaLabel: "{dt.dotaciaLabel}",
+    ourContacts: "{dt.ourContacts}",
+    cash: "{dt.cash}",
+    loanSelf: "{dt.loanSelf}",
+    photoManagerAmbassador: "🏡 {dt.photoManagerAmbassador}",
+    photoManagerPartner: "📈 {dt.photoManagerPartner}",
+    uploading: "{dt.uploading}",
+    uploadPhotos: "{dt.uploadPhotos}"
+  },
+  en: {
+    selectBestLoan: "3. Choose the best loan for me",
+    successSent: "Application successfully sent!",
+    successEmailConfirm: "We have sent a confirmation to your email. We will contact you in the coming days.",
+    selectedHouse: "Your selected house",
+    dotaciaLabel: "Grant:",
+    ourContacts: "Our contacts",
+    cash: "Cash",
+    loanSelf: "Mortgage - self-arranged",
+    photoManagerAmbassador: "🏡 Manage Photos - Ambassador Program",
+    photoManagerPartner: "📈 Manage Photos - Partner Program",
+    uploading: "Uploading...",
+    uploadPhotos: "Upload new photos"
+  }
+};
+
 export default function DotaciaAmericana() {
   const { t, language } = useLanguage();
+  const dt = dotaciaLocalT[language] || dotaciaLocalT.sk;
 
   const energodotaciaTranslations = {
     sk: { title: "ENERGODOTÁCIA pre existujúcich majiteľov", ambassador: "Kúpili ste Ticabhouse dom priamo od výrobcu alebo iného predajcu? Aj vy máte šancu získať Energodotáciu! Stačí sa s nami skontaktovať.", investor: "Vlastníte Ticabhouse dom kúpený kdekoľvek? Zaraďte ho do programu INVESTOR & PARTNER a získajte Energodotáciu!" },
@@ -270,7 +303,7 @@ export default function DotaciaAmericana() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       <Helmet>
         <title>Dotácia Americana – Súkromný grant 5% na modulárny dom | American Living</title>
         <meta name="description" content="Program AMBASSADOR a PARTNER – získajte súkromný grant až 5% z ceny domu od American Living. Dotované bývanie pre rodiny a investorov. Overte si nárok ešte dnes." />
@@ -382,9 +415,9 @@ export default function DotaciaAmericana() {
           </div>
 
           {/* Karty na mobile */}
-          <div className="bg-slate-950 py-8 px-4 space-y-6">
+          <div className="bg-background py-8 px-4 space-y-6 transition-colors duration-300">
             {/* Ambassador Card */}
-            <Card className="p-6 bg-slate-900/50 backdrop-blur-xl border border-emerald-500/30 shadow-[0_0_30px_rgba(16,185,129,0.15)] relative overflow-hidden">
+            <Card className="p-6 bg-card backdrop-blur-xl border border-border shadow-lg relative overflow-hidden">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-green-600 rounded-lg flex items-center justify-center">
                   <Home className="w-6 h-6 text-white" />
@@ -431,7 +464,7 @@ export default function DotaciaAmericana() {
             </Card>
 
             {/* Investor Card */}
-            <Card className="p-6 bg-slate-900/50 backdrop-blur-xl border border-yellow-500/30 shadow-[0_0_30px_rgba(234,179,8,0.15)] relative overflow-hidden">
+            <Card className="p-6 bg-card backdrop-blur-xl border border-border shadow-lg relative overflow-hidden">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-lg flex items-center justify-center">
                   <TrendingUp className="w-6 h-6 text-white" />
@@ -524,7 +557,7 @@ export default function DotaciaAmericana() {
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.3 }}
-                className="bg-slate-950/80 backdrop-blur-xl p-6 rounded-xl border border-emerald-500/30 shadow-[0_0_30px_rgba(16,185,129,0.2)] w-full max-w-md"
+                className="bg-card backdrop-blur-xl p-6 rounded-xl border border-border shadow-xl w-full max-w-md"
               >
                 <h2 className="text-2xl lg:text-3xl font-serif font-bold text-white mb-2 leading-tight">
                   {t('dotaciaHeroLeft')}
@@ -603,7 +636,7 @@ export default function DotaciaAmericana() {
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.3 }}
-                className="bg-slate-950/80 backdrop-blur-xl p-6 rounded-xl border border-yellow-500/30 shadow-[0_0_30px_rgba(234,179,8,0.2)] w-full max-w-md"
+                className="bg-card backdrop-blur-xl p-6 rounded-xl border border-border shadow-xl w-full max-w-md"
               >
                 <h2 className="text-2xl lg:text-3xl font-serif font-bold text-white mb-2 drop-shadow-xl leading-tight">
                   {t('dotaciaHeroRight')}
@@ -807,7 +840,7 @@ export default function DotaciaAmericana() {
         {modalType && (
           <Dialog open={!!modalType} onOpenChange={() => setModalType(null)}>
             <DialogContent
-              className="bg-slate-950 border-white/10 max-h-[90vh] overflow-y-auto p-4 sm:p-6 rounded-xl w-full max-w-lg sm:max-w-xl md:max-w-2xl"
+              className="bg-card border-border max-h-[90vh] overflow-y-auto p-4 sm:p-6 rounded-xl w-full max-w-lg sm:max-w-xl md:max-w-2xl text-foreground"
             >
               <DialogHeader className="pb-1">
                 <DialogTitle className="text-sm sm:text-lg font-serif font-bold text-primary leading-tight pr-6">
@@ -962,7 +995,7 @@ export default function DotaciaAmericana() {
       </AnimatePresence>
 
       {/* SEKCIA: CTA - ŽIADOSŤ O DOTÁCIU */}
-      <section id="cta-section" className="py-10 sm:py-16 md:py-20 bg-slate-950 border-t border-white/10 text-white">
+      <section id="cta-section" className="py-10 sm:py-16 md:py-20 bg-background border-t border-border text-foreground transition-colors duration-300">
         <div className="container mx-auto px-4 sm:px-6 md:px-8">
           <div className="max-w-4xl mx-auto">
             <motion.div
@@ -983,7 +1016,7 @@ export default function DotaciaAmericana() {
                 </h2>
                 <div className="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
                   {/* Pre rodiny */}
-                  <div className="bg-slate-900/95 backdrop-blur-sm rounded-xl p-5 shadow-xl border-2 border-emerald-400">
+                  <div className="bg-card backdrop-blur-sm rounded-xl p-5 shadow-xl border border-border">
                     <div className="flex items-center gap-2 mb-3">
                       <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-green-600 rounded-lg flex items-center justify-center">
                         <Home className="w-6 h-6 text-white" />
@@ -1007,7 +1040,7 @@ export default function DotaciaAmericana() {
                   </div>
 
                   {/* Pre investorov */}
-                  <div className="bg-slate-900/95 backdrop-blur-sm rounded-xl p-5 shadow-xl border-2 border-yellow-400">
+                  <div className="bg-card backdrop-blur-sm rounded-xl p-5 shadow-xl border border-border">
                     <div className="flex items-center gap-2 mb-3">
                       <div className="w-10 h-10 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-lg flex items-center justify-center">
                         <TrendingUp className="w-6 h-6 text-white" />
@@ -1032,7 +1065,7 @@ export default function DotaciaAmericana() {
                 </div>
               </div>
 
-              <div className="bg-slate-900 p-4 sm:p-6 md:p-8 lg:p-10 rounded-2xl shadow-2xl">
+              <div className="bg-card p-4 sm:p-6 md:p-8 lg:p-10 rounded-2xl border border-border shadow-lg">
                 <h3 className="text-lg sm:text-xl md:text-2xl font-serif font-bold text-primary mb-4 sm:mb-6">
                   {t('dotaciaFormSubmit')}
                 </h3>
@@ -1043,7 +1076,7 @@ export default function DotaciaAmericana() {
                     value={formData.meno}
                     onChange={(e) => setFormData({ ...formData, meno: e.target.value })}
                     required
-                    className="text-sm sm:text-base p-3 sm:p-4 font-sans bg-slate-900 border-white/10 text-white placeholder:text-slate-500 min-h-[48px]"
+                    className="text-sm sm:text-base p-3 sm:p-4 font-sans bg-background border-border text-foreground placeholder:text-muted-foreground min-h-[48px]"
                   />
                   <Input
                     type="email"

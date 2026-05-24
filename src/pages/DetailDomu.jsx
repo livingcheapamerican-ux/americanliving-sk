@@ -428,7 +428,7 @@ export default function DetailDomu() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-primary mx-auto mb-4"></div>
           <p className="text-gray-600">{t('loading')}</p>
@@ -439,7 +439,7 @@ export default function DetailDomu() {
 
   if (!dom) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <Helmet>
           <title>Dom nenájdený | American Living</title>
           <meta name="robots" content="noindex, follow" />
@@ -528,7 +528,7 @@ export default function DetailDomu() {
     : window.location.href;
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-50 overflow-x-hidden max-w-full font-['Outfit']">
+    <div className="min-h-screen bg-background text-foreground overflow-x-hidden max-w-full font-['Outfit']">
       <Helmet>
         <link rel="canonical" href={canonicalUrl} />
         {productSchemaData && (
@@ -553,10 +553,10 @@ export default function DetailDomu() {
         )}
       </Helmet>
       {/* Back Button */}
-      <div className="bg-slate-900/80 backdrop-blur-md border-b border-white/10 sticky top-[5rem] lg:top-[6rem] z-[60] shadow-md">
+      <div className="bg-card/85 backdrop-blur-md border-b border-border sticky top-[5rem] lg:top-[6rem] z-[60] shadow-md">
         <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-3">
           <div className="flex items-center justify-between mb-2 sm:mb-0">
-            <Button variant="ghost" size="sm" className="text-white hover:text-red-400 hover:bg-white/5 text-xs sm:text-sm h-8 sm:h-9 font-bold relative z-50 pointer-events-auto" onClick={handleBackToCatalog}>
+            <Button variant="ghost" size="sm" className="text-foreground hover:text-primary hover:bg-muted/50 text-xs sm:text-sm h-8 sm:h-9 font-bold relative z-50 pointer-events-auto" onClick={handleBackToCatalog}>
               <ArrowLeft className="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" />
               <span className="hidden sm:inline">{t('backToCatalog')}</span>
               <span className="sm:hidden">{t('back')}</span>
@@ -607,7 +607,7 @@ export default function DetailDomu() {
               
               <div className="flex gap-3 flex-wrap">
                 {dom.celorocny && (
-                  <Badge className="bg-slate-800/80 backdrop-blur border-white/10 text-white px-4 py-2 text-sm font-bold shadow-xl">✔ {t('yearRound')}</Badge>
+                  <Badge className="bg-card/80 backdrop-blur border border-border text-foreground px-4 py-2 text-sm font-bold shadow-xl">✔ {t('yearRound')}</Badge>
                 )}
                 {dom.energeticky_certifikat && (
                   <Badge className="bg-emerald-500/20 backdrop-blur border border-emerald-500/50 text-emerald-400 px-4 py-2 text-sm font-bold shadow-xl">⚡ {t('certificateA0')}</Badge>
@@ -698,7 +698,7 @@ export default function DetailDomu() {
 
             {/* 2D a 3D Pôdorysy - hneď pod titulnou fotkou */}
             {(dom.podorys_2d || dom.podorys_3d) && (
-              <Card className="p-3 sm:p-4 bg-slate-900 border border-white/10 shadow-xl backdrop-blur-sm">
+              <Card className="p-3 sm:p-4 bg-card border border-border shadow-xl backdrop-blur-sm">
                 <h3 className="text-sm sm:text-base font-bold text-red-400 mb-2 sm:mb-3 flex items-center gap-2">
                   <Grid2x2 className="w-5 h-5 text-red-500" />
                   📐 {t('floorPlans')}
@@ -708,7 +708,7 @@ export default function DetailDomu() {
                     <div>
                       <p className="text-xs sm:text-sm font-semibold text-slate-300 mb-1 sm:mb-2">{t('twoD')} {t('floorPlan')}</p>
                       <div 
-                        className="rounded-lg overflow-hidden bg-slate-950 border border-white/10 cursor-pointer"
+                        className="rounded-lg overflow-hidden bg-muted border border-border cursor-pointer"
                         onClick={() => openLightbox([dom.podorys_2d, dom.podorys_3d].filter(Boolean), 0)}
                       >
                         <ImageWithWatermark
@@ -723,14 +723,14 @@ export default function DetailDomu() {
                    <div>
                      <Button
                        variant="outline"
-                       className="w-full mb-1 sm:mb-2 text-xs sm:text-sm font-bold border border-emerald-500/50 hover:bg-emerald-500/20 text-emerald-400 bg-slate-950 animate-pulse"
+                       className="w-full mb-1 sm:mb-2 text-xs sm:text-sm font-bold border border-emerald-500/50 hover:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 bg-background animate-pulse"
                        onClick={() => openLightbox([dom.podorys_2d, dom.podorys_3d].filter(Boolean), dom.podorys_2d ? 1 : 0)}
                      >
                        <Grid2x2 className="mr-2 w-5 h-5" />
                        🎯 {t('threeDFloorPlan')}
                      </Button>
                       <div 
-                        className="rounded-lg overflow-hidden bg-slate-950 border border-white/10 cursor-pointer"
+                        className="rounded-lg overflow-hidden bg-muted border border-border cursor-pointer"
                         onClick={() => openLightbox([dom.podorys_2d, dom.podorys_3d].filter(Boolean), dom.podorys_2d ? 1 : 0)}
                       >
                         <ImageWithWatermark
@@ -811,7 +811,7 @@ export default function DetailDomu() {
                 </h3>
                 <div className="space-y-2 sm:space-y-3">
                   {dom.podorysy.map((podorysUrl, index) => (
-                    <div key={index} className="rounded-lg overflow-hidden bg-gray-50">
+                    <div key={index} className="rounded-lg overflow-hidden bg-muted">
                       <img
                         src={podorysUrl}
                         alt={(dom.images_seo_map?.[language] || dom.images_seo_map?.['sk'])?.[podorysUrl] || `Pôdorys ${index + 1}`}
@@ -1043,25 +1043,25 @@ export default function DetailDomu() {
 
             {/* Rozmery - presunute z pravej strany */}
             {dom.rozmery && (
-              <Card className="p-3 sm:p-4 bg-slate-900 border border-white/10 shadow-xl backdrop-blur-sm hover:border-red-500/30 hover:shadow-[0_0_20px_rgba(239,68,68,0.15)] transition-all duration-300">
-                <h3 className="text-sm sm:text-base font-bold text-white mb-2 sm:mb-3">{t('outerDimensions')}</h3>
+              <Card className="p-3 sm:p-4 bg-card border border-border shadow-xl backdrop-blur-sm hover:border-red-500/30 hover:shadow-[0_0_20px_rgba(239,68,68,0.15)] transition-all duration-300">
+                <h3 className="text-sm sm:text-base font-bold text-foreground mb-2 sm:mb-3">{t('outerDimensions')}</h3>
                 <div className="grid grid-cols-3 gap-2 sm:gap-3 text-center">
                   <div>
-                    <p className="text-xs text-slate-400 mb-1">{t('width')}</p>
-                    <p className="text-base sm:text-lg font-bold text-white">{dom.rozmery.sirka} m</p>
+                    <p className="text-xs text-muted-foreground mb-1">{t('width')}</p>
+                    <p className="text-base sm:text-lg font-bold text-foreground">{dom.rozmery.sirka} m</p>
                   </div>
                   <div>
-                    <p className="text-xs text-slate-400 mb-1">{t('length')}</p>
-                    <p className="text-base sm:text-lg font-bold text-white">{dom.rozmery.dlzka} m</p>
+                    <p className="text-xs text-muted-foreground mb-1">{t('length')}</p>
+                    <p className="text-base sm:text-lg font-bold text-foreground">{dom.rozmery.dlzka} m</p>
                   </div>
                   <div>
-                    <p className="text-xs text-slate-400 mb-1">{t('height')}</p>
-                    <p className="text-base sm:text-lg font-bold text-white">{dom.rozmery.vyska} m</p>
+                    <p className="text-xs text-muted-foreground mb-1">{t('height')}</p>
+                    <p className="text-base sm:text-lg font-bold text-foreground">{dom.rozmery.vyska} m</p>
                   </div>
                 </div>
                 {dom.vyska_stropu && (
-                  <p className="text-xs sm:text-sm text-slate-400 mt-2 sm:mt-3 text-center">
-                    {t('ceilingHeight')}: <span className="font-semibold text-white">{dom.vyska_stropu}</span>
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-2 sm:mt-3 text-center">
+                    {t('ceilingHeight')}: <span className="font-semibold text-foreground">{dom.vyska_stropu}</span>
                   </p>
                 )}
               </Card>
@@ -1081,9 +1081,9 @@ export default function DetailDomu() {
 
             {/* Štandardná výbava pre JAK Modules - presunute z pravej strany */}
             {isJAKModules && (
-              <Card className="p-3 sm:p-4 bg-slate-900 border border-white/10 shadow-xl backdrop-blur-sm hover:border-emerald-500/30 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all duration-300">
-                <h3 className="text-sm sm:text-base font-bold text-emerald-400 mb-2 sm:mb-3">✔ {t('mainFeatures')}</h3>
-                <div className="space-y-2 text-xs sm:text-sm text-slate-300">
+              <Card className="p-3 sm:p-4 bg-card border border-border shadow-xl backdrop-blur-sm hover:border-emerald-500/30 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all duration-300">
+                <h3 className="text-sm sm:text-base font-bold text-foreground mb-2 sm:mb-3">✔ {t('mainFeatures')}</h3>
+                <div className="space-y-2 text-xs sm:text-sm text-muted-foreground">
                   <div className="flex items-start gap-2">
                     <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
                     <span>{t('gl24Strength')}</span>
@@ -1116,44 +1116,44 @@ export default function DetailDomu() {
 
             {/* Čo obsahuje cena pre JAK Modules - presunute z pravej strany */}
             {isJAKModules && (
-              <Card className="p-3 sm:p-4 bg-slate-900 border border-white/10 shadow-xl backdrop-blur-sm">
-                <h3 className="text-sm sm:text-base font-bold text-blue-400 mb-2 sm:mb-3">💰 {t('whatIncludesPrice')}</h3>
+              <Card className="p-3 sm:p-4 bg-card border border-border shadow-xl backdrop-blur-sm">
+                <h3 className="text-sm sm:text-base font-bold text-foreground mb-2 sm:mb-3">💰 {t('whatIncludesPrice')}</h3>
                 <div className="space-y-2 text-xs sm:text-sm">
                   <div>
-                    <p className="font-semibold text-white mb-1 text-xs sm:text-sm">✔ {t('constructionLabel')}</p>
-                    <ul className="list-disc list-inside text-slate-300 space-y-0.5 ml-2 text-xs sm:text-sm">
+                    <p className="font-semibold text-foreground mb-1 text-xs sm:text-sm">✔ {t('constructionLabel')}</p>
+                    <ul className="list-disc list-inside text-muted-foreground space-y-0.5 ml-2 text-xs sm:text-sm">
                       <li>{t('certifiedPineGl24')}</li>
                       <li>{t('steelProfiles')}</li>
                       <li>{t('insulationCapacity')}</li>
                     </ul>
                   </div>
                   <div>
-                    <p className="font-semibold text-white mb-2">✔ {t('insulationLabel')}</p>
-                    <ul className="list-disc list-inside text-slate-300 space-y-1 ml-2">
+                    <p className="font-semibold text-foreground mb-2">✔ {t('insulationLabel')}</p>
+                    <ul className="list-disc list-inside text-muted-foreground space-y-1 ml-2">
                       <li>{t('purFoam12cm')}</li>
                       <li>{t('mineralWoolHighest')}</li>
                       <li>{t('ecoMaterialsSteico')}</li>
                     </ul>
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-800 mb-2">✔ {t('heatingAc')}</p>
-                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                    <p className="font-semibold text-foreground mb-2">✔ {t('heatingAc')}</p>
+                    <ul className="list-disc list-inside text-muted-foreground space-y-1 ml-2">
                       <li>{t('rotensoAc')}</li>
                       <li>{t('heatingTo25')}</li>
                       <li>{t('infraredHeaters')}</li>
                     </ul>
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-800 mb-2">✔ {t('windowsDoorsLabel')}</p>
-                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                    <p className="font-semibold text-foreground mb-2">✔ {t('windowsDoorsLabel')}</p>
+                    <ul className="list-disc list-inside text-muted-foreground space-y-1 ml-2">
                       <li>{t('pvc6Chamber')}</li>
                       <li>{t('modernAnthracite')}</li>
                       <li>{t('excellentThermal')}</li>
                     </ul>
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-800 mb-2">✔ {t('equipmentLabel')}</p>
-                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                    <p className="font-semibold text-foreground mb-2">✔ {t('equipmentLabel')}</p>
+                    <ul className="list-disc list-inside text-muted-foreground space-y-1 ml-2">
                       <li>{t('completeBathroom')}</li>
                       <li>{t('customKitchenLine')}</li>
                       <li>{t('vinylPanelsKronostep')}</li>
@@ -1161,15 +1161,15 @@ export default function DetailDomu() {
                     </ul>
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-800 mb-2">✔ {t('facadeRoof')}</p>
-                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                    <p className="font-semibold text-foreground mb-2">✔ {t('facadeRoof')}</p>
+                    <ul className="list-disc list-inside text-muted-foreground space-y-1 ml-2">
                       <li>{t('anthraciteWhiteSheet')}</li>
                       <li>{t('facadeTypeChoice')}</li>
                     </ul>
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-800 mb-2">✔ {t('otherLabel')}</p>
-                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                    <p className="font-semibold text-foreground mb-2">✔ {t('otherLabel')}</p>
+                    <ul className="list-disc list-inside text-muted-foreground space-y-1 ml-2">
                       <li>{t('completeDocLabel')}</li>
                       <li>{t('fastAssembly2days')}</li>
                       <li>{t('production60days')}</li>
@@ -1190,19 +1190,19 @@ export default function DetailDomu() {
             <div>
               {/* Mobilná verzia - cena hore */}
               <div className="lg:hidden mb-3">
-                <div className="bg-slate-900 text-white rounded-xl p-4 shadow-xl border border-white/10">
-                  <p className="text-xs mb-1 text-slate-400">{isTicabhouse ? t('basicConfigPrice') : t('priceFromLabel')}</p>
+                <div className="bg-card text-foreground rounded-xl p-4 shadow-xl border border-border">
+                  <p className="text-xs mb-1 text-muted-foreground">{isTicabhouse ? t('basicConfigPrice') : t('priceFromLabel')}</p>
                   {isTicabhouse ? (
                     <div>
                       <div className="flex items-baseline gap-2">
-                        <p className="text-xl font-black text-red-500 line-through">
+                        <p className="text-xl font-black text-red-650 dark:text-red-400 line-through">
                           {dom.zakladna_cena?.toLocaleString('sk-SK')} €
                         </p>
-                        <p className="text-3xl font-black text-green-500">
+                        <p className="text-3xl font-black text-emerald-600 dark:text-emerald-500">
                           {Math.round(dom.zakladna_cena * 0.95)?.toLocaleString('sk-SK')} €
                         </p>
                       </div>
-                      <p className="text-xs text-green-400 font-semibold mt-1">
+                      <p className="text-xs text-emerald-650 dark:text-emerald-450 font-semibold mt-1">
                         💰 s grantom AMERICANA
                       </p>
                     </div>
@@ -1219,7 +1219,7 @@ export default function DetailDomu() {
                 <Badge className="bg-red-500/20 text-red-400 border border-red-500/30 px-2 py-0.5 text-xs">
                   {dom.vyrobca}
                 </Badge>
-                <Badge className="bg-slate-800 text-slate-300 border-white/10 px-2 py-0.5 text-xs">
+                <Badge className="bg-muted text-muted-foreground border-border px-2 py-0.5 text-xs">
                   {dom.typ_domu === 'modularny' ? t('modular') : dom.typ_domu === 'montovany' ? t('prefab') : t('mobile')}
                 </Badge>
               </div>
@@ -1343,17 +1343,17 @@ export default function DetailDomu() {
             </div>
 
             {/* Parametre */}
-            <Card className="p-3 sm:p-4 bg-slate-900 border border-white/10 shadow-xl backdrop-blur-sm">
-              <h3 className="text-sm sm:text-base font-bold text-white mb-2 sm:mb-3">{t('basicParameters')}</h3>
+            <Card className="p-3 sm:p-4 bg-card border border-border shadow-xl backdrop-blur-sm">
+              <h3 className="text-sm sm:text-base font-bold text-foreground mb-2 sm:mb-3">{t('basicParameters')}</h3>
               
               {/* Identifikačné číslo pre Prosto House */}
               {isProstoHouse && dom.prosto_house_kod && (
-                <div className="mb-3 p-3 bg-slate-950 border border-red-500/30 rounded-lg">
+                <div className="mb-3 p-3 bg-muted border border-red-500/30 rounded-lg">
                   <div className="flex items-center gap-2">
                     <Package className="w-5 h-5 text-red-500" />
                     <div>
-                      <p className="text-xs text-slate-400 font-medium">Identifikačné číslo</p>
-                      <p className="text-lg font-black text-white">{dom.prosto_house_kod}</p>
+                      <p className="text-xs text-muted-foreground font-medium">Identifikačné číslo</p>
+                      <p className="text-lg font-black text-foreground">{dom.prosto_house_kod}</p>
                     </div>
                   </div>
                 </div>
@@ -1361,10 +1361,10 @@ export default function DetailDomu() {
               
               <dl className="grid grid-cols-2 gap-2 sm:gap-3">
                 <div className="flex items-center gap-2">
-                  <Home className="w-4 h-4 sm:w-5 sm:h-5 text-slate-400" />
+                  <Home className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
                   <div>
-                    <dt className="text-xs text-slate-500">{t('manufacturer')}</dt>
-                    <dd className="text-sm sm:text-base font-bold text-white">{dom.vyrobca}</dd>
+                    <dt className="text-xs text-muted-foreground">{t('manufacturer')}</dt>
+                    <dd className="text-sm sm:text-base font-bold text-foreground">{dom.vyrobca}</dd>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -1376,8 +1376,8 @@ export default function DetailDomu() {
                                               <Boxes className="w-4 h-4 sm:w-5 sm:h-5 text-amber-500" />
                                             )}
                     <div>
-                      <dt className="text-xs text-slate-500">{t('houseType')}</dt>
-                      <dd className="text-sm sm:text-base font-bold text-white">
+                      <dt className="text-xs text-muted-foreground">{t('houseType')}</dt>
+                      <dd className="text-sm sm:text-base font-bold text-foreground">
                         {dom.typ_domu === 'modularny' ? t('modular') : dom.typ_domu === 'montovany' ? t('prefab') : t('mobile')}
                       </dd>
                     </div>
@@ -1386,8 +1386,8 @@ export default function DetailDomu() {
                   <div className="flex items-center gap-2">
                     <Boxes className="w-4 h-4 sm:w-5 sm:h-5 text-red-500" />
                     <div>
-                      <dt className="text-xs text-slate-500">Moduly</dt>
-                      <dd className="text-sm sm:text-base font-bold text-white">{dom.pocet_modulov}</dd>
+                      <dt className="text-xs text-muted-foreground">Moduly</dt>
+                      <dd className="text-sm sm:text-base font-bold text-foreground">{dom.pocet_modulov}</dd>
                     </div>
                   </div>
                 )}
@@ -1395,24 +1395,24 @@ export default function DetailDomu() {
                   <div className="flex items-center gap-2">
                     <Grid2x2 className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
                     <div>
-                      <dt className="text-xs text-slate-500">{t('rooms')}</dt>
-                      <dd className="text-sm sm:text-base font-bold text-white">{dom.pocet_izieb}</dd>
+                      <dt className="text-xs text-muted-foreground">{t('rooms')}</dt>
+                      <dd className="text-sm sm:text-base font-bold text-foreground">{dom.pocet_izieb}</dd>
                     </div>
                   </div>
                 )}
                 <div className="flex items-center gap-2">
                     <div className="w-5 h-3 sm:w-6 sm:h-4 border-2 border-red-500 rounded-sm" />
                     <div>
-                      <dt className="text-xs text-slate-500">{t('builtArea')}</dt>
-                    <dd className="text-sm sm:text-base font-bold text-white">{dom.zastavana_plocha} m²</dd>
+                      <dt className="text-xs text-muted-foreground">{t('builtArea')}</dt>
+                    <dd className="text-sm sm:text-base font-bold text-foreground">{dom.zastavana_plocha} m²</dd>
                   </div>
                 </div>
                 {dom.uzitkova_plocha && (
                   <div className="flex items-center gap-2">
                     <Maximize2 className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400" />
                     <div>
-                      <dt className="text-xs text-slate-500">{t('usableArea')}</dt>
-                      <dd className="text-sm sm:text-base font-bold text-white">{dom.uzitkova_plocha} m²</dd>
+                      <dt className="text-xs text-muted-foreground">{t('usableArea')}</dt>
+                      <dd className="text-sm sm:text-base font-bold text-foreground">{dom.uzitkova_plocha} m²</dd>
                     </div>
                   </div>
                 )}
@@ -1420,10 +1420,10 @@ export default function DetailDomu() {
                   <div className="flex items-center gap-2">
                     <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500" />
                     <div>
-                      <dt className="text-xs text-slate-500">{t('energyClass')}</dt>
-                      <dd className="text-sm sm:text-base font-bold text-emerald-400">A0</dd>
+                      <dt className="text-xs text-muted-foreground">{t('energyClass')}</dt>
+                      <dd className="text-sm sm:text-base font-bold text-emerald-500 dark:text-emerald-400">A0</dd>
                       {isTicabhouse && (
-                        <p className="text-xs text-slate-500 mt-1">{t('a0CertificateOption')}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{t('a0CertificateOption')}</p>
                       )}
                     </div>
                   </div>
@@ -1436,7 +1436,7 @@ export default function DetailDomu() {
                   <div className="flex items-center gap-2">
                     <Landmark className="w-4 h-4 sm:w-5 sm:h-5 text-teal-600" />
                     <div>
-                      <dt className="text-xs text-gray-500">Terasa</dt>
+                      <dt className="text-xs text-muted-foreground">Terasa</dt>
                       <dd className="text-sm sm:text-base font-bold text-primary">{dom.terasa_plocha} m²</dd>
                     </div>
                   </div>
@@ -1446,8 +1446,8 @@ export default function DetailDomu() {
 
             {/* Obrázok základnej konfigurácie - pre Prosto House - hneď pod parametre */}
             {isProstoHouse && dom.zakladna_konfiguracia_obrazok && (
-              <Card className="p-3 sm:p-4 bg-slate-900 border border-white/10 shadow-xl backdrop-blur-sm">
-                <h3 className="text-sm sm:text-base font-bold text-blue-400 mb-2 sm:mb-3">📸 {t('basicConfiguration') || 'Základná konfigurácia'}</h3>
+              <Card className="p-3 sm:p-4 bg-card border border-border shadow-xl backdrop-blur-sm">
+                <h3 className="text-sm sm:text-base font-bold text-foreground mb-2 sm:mb-3">📸 {t('basicConfiguration') || 'Základná konfigurácia'}</h3>
                 <div className="rounded-lg overflow-hidden shadow-lg">
                   <ImageWithWatermark 
                     src={dom.zakladna_konfiguracia_obrazok} 
@@ -1489,7 +1489,7 @@ export default function DetailDomu() {
                   return <ShellInfoBox basePriceKit={kitPrice} assemblyPrice={assemblyPrice} t={tProsto} />;
                 })()}
                 
-                <p className="text-sm text-blue-400 mt-3 text-center font-medium">
+                <p className="text-sm text-muted-foreground mt-3 text-center font-medium">
                   {t('basicConfigDesc') || 'Základná konfigurácia domu'}
                 </p>
               </Card>
@@ -1497,9 +1497,9 @@ export default function DetailDomu() {
 
             {/* Možnosti využitia - pre Prosto House */}
             {isProstoHouse && (
-              <Card className="p-3 sm:p-4 bg-slate-900 border border-white/10 shadow-xl backdrop-blur-sm">
-                <h3 className="text-sm sm:text-base font-bold text-emerald-400 mb-2 sm:mb-3">✔ {t('usageOptions') || 'Možnosti využitia'}</h3>
-                <ul className="space-y-1.5 sm:space-y-2 text-slate-300">
+              <Card className="p-3 sm:p-4 bg-card border border-border shadow-xl backdrop-blur-sm">
+                <h3 className="text-sm sm:text-base font-bold text-foreground mb-2 sm:mb-3">✔ {t('usageOptions') || 'Možnosti využitia'}</h3>
+                <ul className="space-y-1.5 sm:space-y-2 text-muted-foreground">
                   <li className="flex items-start gap-2 text-xs sm:text-sm">
                     <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
                     <span>{t('familyHouseOption') || 'Rodinný dom s možnosťou kolaudácie'}</span>
@@ -1520,10 +1520,10 @@ export default function DetailDomu() {
             {isProstoHouse && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full max-w-full overflow-hidden">
                 {/* Komplet pre montáž */}
-                <Card className="overflow-hidden border border-amber-500/30 bg-slate-900">
+                <Card className="overflow-hidden border border-amber-500/30 bg-card">
                   <div className="p-3 sm:p-4">
                     <h4 className="font-bold text-amber-500 mb-2 text-xs sm:text-sm">📦 {t('assemblyKit')}</h4>
-                    <ul className="space-y-1 text-xs text-slate-300">
+                    <ul className="space-y-1 text-xs text-muted-foreground">
                       <li>• {t('assemblyWoodenFrame')}</li>
                       <li>• {t('assemblyExteriorWalls')}</li>
                       <li>• {t('assemblyRoof')}</li>
@@ -1534,59 +1534,59 @@ export default function DetailDomu() {
                       <li>• {t('assemblyVaporBarrier')}</li>
                       <li>• {t('assemblyRoughFloor')}</li>
                     </ul>
-                    <p className="text-xs text-amber-700 font-semibold mt-2">{t('paintingPrice')}</p>
+                    <p className="text-xs text-amber-700 dark:text-amber-500 font-semibold mt-2">{t('paintingPrice')}</p>
                   </div>
                 </Card>
 
                 {/* Elektroinstalácia */}
-                <Card className="overflow-hidden border border-yellow-500/30 bg-slate-900">
+                <Card className="overflow-hidden border border-yellow-500/30 bg-card">
                   <div className="p-3 sm:p-4">
                     <h4 className="font-bold text-yellow-500 mb-2 text-xs sm:text-sm">⚡ {t('electrical')}</h4>
-                    <ul className="space-y-1 text-xs text-slate-300">
+                    <ul className="space-y-1 text-xs text-muted-foreground">
                       <li>• {t('electricalCables')}</li>
                       <li>• {t('electricalDistributors')}</li>
                       <li>• {t('electricalConduit')}</li>
                       <li>• {t('electricalBoxes')}</li>
                     </ul>
-                    <p className="text-xs text-red-600 font-semibold mt-2">{t('electricalNotIncluded')}</p>
+                    <p className="text-xs text-red-600 dark:text-red-400 font-semibold mt-2">{t('electricalNotIncluded')}</p>
                   </div>
                 </Card>
 
                 {/* Voda a kanalizácia */}
-                <Card className="overflow-hidden border border-blue-500/30 bg-slate-900">
+                <Card className="overflow-hidden border border-blue-500/30 bg-card">
                   <div className="p-3 sm:p-4">
                     <h4 className="font-bold text-blue-400 mb-2 text-xs sm:text-sm">💧 {t('waterSewage')}</h4>
-                    <ul className="space-y-1 text-xs text-slate-300">
+                    <ul className="space-y-1 text-xs text-muted-foreground">
                       <li>• {t('waterPipes')}</li>
                       <li>• {t('waterValves')}</li>
                       <li>• {t('sewagePipes')}</li>
                       <li>• {t('waterPressureTest')}</li>
                     </ul>
-                    <p className="text-xs text-red-600 font-semibold mt-2">{t('waterNotIncluded')}</p>
+                    <p className="text-xs text-red-600 dark:text-red-400 font-semibold mt-2">{t('waterNotIncluded')}</p>
                   </div>
                 </Card>
 
                 {/* Základy */}
-                <Card className="overflow-hidden border border-orange-500/30 bg-slate-900">
+                <Card className="overflow-hidden border border-orange-500/30 bg-card">
                   <div className="p-3 sm:p-4">
                     <h4 className="font-bold text-orange-400 mb-2 text-xs sm:text-sm">🏗️ {t('foundationsTitle')}</h4>
-                    <ul className="space-y-1 text-xs text-slate-300">
+                    <ul className="space-y-1 text-xs text-muted-foreground">
                       <li>• {t('foundationsTypes')}</li>
                       <li>• {t('foundationsMinPrice')}</li>
                       <li>• {t('foundationsFinalPrice')}</li>
                     </ul>
-                    <p className="text-xs text-red-600 font-semibold mt-2">{t('foundationsNotIncluded')}</p>
+                    <p className="text-xs text-red-600 dark:text-red-400 font-semibold mt-2">{t('foundationsNotIncluded')}</p>
                   </div>
                 </Card>
 
                 {/* Interiér finiš */}
-                <Card className="overflow-hidden border border-emerald-500/30 bg-slate-900">
+                <Card className="overflow-hidden border border-emerald-500/30 bg-card">
                   <div className="p-3 sm:p-4">
                     <h4 className="font-bold text-emerald-400 mb-2 text-xs sm:text-sm">🏠 {t('interiorFinish')}</h4>
-                    <ul className="space-y-1 text-xs text-slate-300">
+                    <ul className="space-y-1 text-xs text-muted-foreground">
                       <li>• {t('interiorPartitions')}</li>
                     </ul>
-                    <p className="text-xs text-red-600 font-semibold mt-2">{t('interiorPainting')}</p>
+                    <p className="text-xs text-red-600 dark:text-red-400 font-semibold mt-2">{t('interiorPainting')}</p>
                   </div>
                 </Card>
               </div>
@@ -1658,20 +1658,20 @@ export default function DetailDomu() {
             <div className="space-y-2 sm:space-y-3">
 
               <Link to={createPageUrl("Kontakt")}>
-                <Button size="lg" variant="outline" className="w-full border-2 border-red-500 text-red-400 hover:bg-red-500/20 font-semibold text-sm sm:text-base py-4 sm:py-5 bg-slate-950">
+                <Button size="lg" variant="outline" className="w-full border-2 border-red-500 text-red-550 hover:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-500/20 font-semibold text-sm sm:text-base py-4 sm:py-5 bg-card">
                   <Mail className="mr-2 w-4 h-4 sm:w-5 sm:h-5" />
                   {t('contactUsButton')}
                 </Button>
               </Link>
               <a href="tel:+421905138124">
-                <Button size="lg" variant="outline" className="w-full border-2 border-white/20 text-slate-300 hover:bg-white/5 font-semibold text-sm sm:text-base py-4 sm:py-5 bg-slate-950">
+                <Button size="lg" variant="outline" className="w-full border-2 border-border text-foreground hover:bg-muted font-semibold text-sm sm:text-base py-4 sm:py-5 bg-card">
                   <Phone className="mr-2 w-4 h-4 sm:w-5 sm:h-5" />
                   +421 905 138 124
                 </Button>
               </a>
 
               {/* Social Share Buttons */}
-              <Card className="p-3 sm:p-4 bg-slate-900 border border-white/10 shadow-xl backdrop-blur-sm">
+              <Card className="p-3 sm:p-4 bg-card border border-border shadow-xl backdrop-blur-sm">
                 <div className="flex items-center gap-2 mb-2">
                   <Share2 className="w-4 h-4 text-slate-300" />
                   <h3 className="text-xs sm:text-sm font-bold text-white">{t('shareHouse') || 'Zdieľať dom'}</h3>
@@ -1724,11 +1724,11 @@ export default function DetailDomu() {
             {isTicabhouse && !dom.nazov?.toLowerCase().includes("tiny house") && (
               <div className="space-y-4">
                 {/* Informácia o grante */}
-                <Card className="bg-slate-900 border border-emerald-500/30 p-3 sm:p-4 shadow-xl">
+                <Card className="bg-card border border-emerald-500/30 p-3 sm:p-4 shadow-xl">
                   <div className="flex items-start gap-2">
-                    <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                    <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 dark:text-emerald-500 flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-xs sm:text-sm text-slate-300 font-sans leading-tight">
+                      <p className="text-xs sm:text-sm text-muted-foreground font-sans leading-tight">
                         {t('dotaciaNotice')}
                       </p>
                     </div>

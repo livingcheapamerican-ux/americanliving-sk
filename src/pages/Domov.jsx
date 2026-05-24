@@ -53,12 +53,87 @@ const DEFAULT_HERO_IMAGES = [
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/376b4bd9f_okruhlelogo.png";
 
+
+const localShowcaseT = {
+  sk: {
+    galleryTitle: "{gt.galleryTitle}",
+    galleryDesc: "{gt.galleryDesc}",
+    exterier: "{gt.exterier}",
+    interier: "{gt.interier}",
+    noCapitalTitle: "{gt.noCapitalTitle}",
+    noCapitalDesc: "{gt.noCapitalDesc}",
+    askKexoFinancing: "{gt.askKexoFinancing}",
+    trustGrantTitle: "{gt.trustGrantTitle}",
+    trustGrantDesc: "{gt.trustGrantDesc}",
+    trustGrantLink: "{gt.trustGrantLink}",
+    trustFinanceTitle: "{gt.trustFinanceTitle}",
+    trustFinanceDesc: "{gt.trustFinanceDesc}",
+    trustFinanceButton: "{gt.trustFinanceButton}",
+    trustBuildTitle: "{gt.trustBuildTitle}",
+    trustBuildDesc: "{gt.trustBuildDesc}",
+    trustBuildLink: "{gt.trustBuildLink}",
+    socialRealEst: "{gt.socialRealEst}",
+    socialRealEstDesc: "Aby ste mohli stavať nové, často musíte najprv dobre predať to staré. Postaráme sa o kompletný realitný servis vašej súčasnej nehnuteľnosti.",
+    socialLand: "{gt.socialLand}",
+    socialLandDesc: "Nájdeme pre vás pozemok, ktorý nie je len \"staviteľný\" na papieri, ale je optimálny pre vybranú technológiu domu.",
+    socialFinance: "{gt.socialFinance}",
+    socialFinanceDesc: "Stavba domu vyžaduje špecifické čerpanie úveru v tranžiach. Naši finanční špecialisti nastavia hypotéku presne na mieru harmonogramu.",
+    socialArch: "{gt.socialArch}",
+    socialArchDesc: "Či už chcete upraviť jeden z našich katalógových projektov alebo túžite po unikátnom dizajne na mieru, naši architekti sú vám k dispozícii.",
+    socialPermits: "{gt.socialPermits}",
+    socialPermitsDesc: "Získanie stavebného povolenia je pre bežného človeka nočnou morou – pre nás je to rutina. Zastúpime vás v celom inžinierskom procese.",
+    socialBuild: "{gt.socialBuild}",
+    socialBuildDesc: "Realizujeme hrubé stavby, holodomy aj domy na kľúč. Pracujeme s overenými materiálmi a vlastným tímom odborníkov.",
+    socialUtilities: "{gt.socialUtilities}",
+    socialUtilitiesDesc: "Dom bez sietí je len hrubá stavba. Zabezpečíme kompletnú realizáciu prípojok vody, elektriny, plynu a kanalizácie.",
+    socialApproval: "{gt.socialApproval}",
+    socialApprovalDesc: "Cieľová rovinka. Pripravíme všetky revízie, certifikáty, geometrické plány a dokumenty potrebné ku kolaudačnému konaniu.",
+    verifikaciaText: "{gt.verifikaciaText}"
+  },
+  en: {
+    galleryTitle: "Gallery of our most lucrative houses",
+    galleryDesc: "View real photos and details of the exterior and interior of our premium prefabricated and modular homes.",
+    exterier: "Exterior of houses",
+    interier: "Interior and layout",
+    noCapitalTitle: "Do you want to build a new house and have no capital?",
+    noCapitalDesc: "No problem! We have a financing model for those with no savings. We will help you secure financing from A to Z.",
+    askKexoFinancing: "Ask Kexo about financing",
+    trustGrantTitle: "Súkromný Grant AMERICANA",
+    trustGrantDesc: "We provide a unique operational grant and financial subsidy for energy certification and house operation up to €15,000.",
+    trustGrantLink: "Check grant eligibility",
+    trustFinanceTitle: "100% Construction Financing",
+    trustFinanceDesc: "No cash? At American Living we finance construction without initial savings. We arrange everything for you including mortgage.",
+    trustFinanceButton: "Ask about financing",
+    trustBuildTitle: "Fast Handover of Construction",
+    trustBuildDesc: "We guarantee factory handover in just 6 weeks for modular homes and within 12 weeks turnkey for prefab homes.",
+    trustBuildLink: "How it works",
+    socialRealEst: "Capital for your new home secured quickly and safely.",
+    socialRealEstDesc: "To build new, you often need to sell the old first. We provide full real estate service for your current property.",
+    socialLand: "Not every meadow is a suitable building plot.",
+    socialLandDesc: "We will find you a plot that is optimal for the chosen house technology, checking utilities, access, and zoning.",
+    socialFinance: "Financing house construction is not a standard mortgage.",
+    socialFinanceDesc: "Construction requires drawdowns in stages. Our specialists will tailor a mortgage to the project timeline.",
+    socialArch: "A house with logic before the first shovel hits.",
+    socialArchDesc: "Whether you want to adapt a catalog model or design a unique custom home, our architects are here for you.",
+    socialPermits: "Leave the bureaucracy to us.",
+    socialPermitsDesc: "Getting a permit is a nightmare - for us it's routine. We represent you in all engineering processes.",
+    socialBuild: "Quality construction without hidden costs.",
+    socialBuildDesc: "We build structures to turnkey standard using certified materials and our own team of experts.",
+    socialUtilities: "So that everything works at the turn of a tap.",
+    socialUtilitiesDesc: "A house without utilities is just shell. We provide full connections for water, electricity, gas, and sewer.",
+    socialApproval: "Last stamp and handover of keys.",
+    socialApprovalDesc: "Final stretch. We prepare all tests, certificates, maps, and documents needed for final occupancy approval.",
+    verifikaciaText: "Visualization / Realization"
+  }
+};
+
 export default function Domov() {
   const [showSettings, setShowSettings] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
   const [serviceModalOpen, setServiceModalOpen] = useState(false);
   const { t, language } = useLanguage();
   const sp = socialProofT[language] || socialProofT.sk;
+  const gt = localShowcaseT[language] || localShowcaseT.sk;
   const dv = dotaciaVerifyT[language] || dotaciaVerifyT.sk;
 
   // Selected house details state and dynamic lookups
@@ -174,7 +249,7 @@ export default function Domov() {
   const [lightboxImage, setLightboxImage] = useState(null);
 
   const premiumHouses = useMemo(() => {
-    const ids = ["6916ec94c11aacdd15248f07", "6916ec94c11aacdd15248f06", "6916ec94c11aacdd15248f0b"];
+    const ids = ["6916ec94c11aacdd15248f07", "6916ec94c11aacdd15248f18", "6916ec94c11aacdd15248f0b"];
     return verejneDomy.filter(d => ids.includes(d.id));
   }, [verejneDomy]);
 
@@ -214,15 +289,16 @@ export default function Domov() {
           "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/e4cf2673e_Londoninterierdrevo1.jpg"
         ]
       },
-      "6916ec94c11aacdd15248f06": { // Happy Wife 122
+      "6916ec94c11aacdd15248f18": { // Flat Double 142
         exterier: [
-          "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/6e386b445_HappyWifeexteriermurovka4.jpeg",
-          "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/353d1e4f2_HappyWifeexteriermurovka1.jpeg",
-          "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/91acde74e_HappyWifeexterierdrevoplech1.jpeg"
+          "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/335e826f0_FlatdoubleExteriermurovka1.jpeg",
+          "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/e21659a4d_FlatdoubleExteriermurovka4.jpeg",
+          "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/6b3ff5efc_FlatdoubleExteriermurovka5.jpeg",
+          "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/de8e12c89_FlatdoubleExteriermurovka6.jpeg"
         ],
         interier: [
-          "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/c4139ab8c_HappyWifeinteriersadrokarton1.jpeg",
-          "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/4c679c6c0_HappyWifeinterierdrevo1.jpg"
+          "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/7eaca1fe0_Gemini_Generated_Image_2i1lyq2i1lyq2i1l.jpeg",
+          "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/543aa55d3_Gemini_Generated_Image_5iqao65iqao65iqa.jpeg"
         ]
       },
       "6916ec94c11aacdd15248f0b": { // Alessandria 130
@@ -304,7 +380,7 @@ export default function Domov() {
       popis: t('realEstateAgency'),
       image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=500&q=80",
       headline: "Kapitál pre váš nový domov získame rýchlo a bezpečne.",
-      body: "Aby ste mohli stavať nové, často musíte najprv dobre predať to staré. Postaráme sa o kompletný realitný servis vašej súčasnej nehnuteľnosti. Nastavíme trhovú cenu tak, aby sa predala v ideálnom čase nadväzujúcom na vašu novú výstavbu. Zabezpečíme home staging, profesionálne fotenie, právny servis a prevod peňazí, ktoré plynulo použijeme na financovanie vášho nového projektu.",
+      body: "{gt.socialRealEstDesc}",
       detailImages: [
         "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80",
         "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&q=80"
@@ -330,7 +406,7 @@ export default function Domov() {
       popis: t('financialServices'),
       image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=500&q=80",
       headline: "Financovanie výstavby domu nie je bežná hypotéka.",
-      body: "Stavba domu vyžaduje špecifické čerpanie úveru v tranžiach. Naši finanční špecialisti nastavia hypotéku presne na mieru harmonogramu výstavby American Living. Komunikujeme priamo s bankou a znalcami, takže vy nemusíte nosiť faktúry a stresovať sa s uvoľňovaním prostriedkov. Garancia najlepších podmienok na trhu je samozrejmosťou.",
+      body: "{gt.socialFinanceDesc}",
       detailImages: [
         "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&q=80",
         "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&q=80"
@@ -356,7 +432,7 @@ export default function Domov() {
       popis: t('weArrangeForYou'),
       image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=500&q=80",
       headline: "Byrokraciu nechajte na nás.",
-      body: "Získanie stavebného povolenia je pre bežného človeka nočnou morou – pre nás je to rutina. Zastúpime vás v celom inžinierskom procese. Obiehame úrady, vybavujeme vyjadrenia dotknutých orgánov, správcov sietí a obce. Vy len počkáte na právoplatné rozhodnutie, s ktorým môžeme začať stavať.",
+      body: "{gt.socialPermitsDesc}",
       detailImages: [
         "https://images.unsplash.com/photo-1521791055366-0d553872125f?w=800&q=80",
         "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&q=80"
@@ -369,7 +445,7 @@ export default function Domov() {
       popis: t('constructionCompany'),
       image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=500&q=80",
       headline: "Kvalitná realizácia bez skrytých poplatkov.",
-      body: "Realizujeme hrubé stavby, holodomy aj domy na kľúč. Pracujeme s overenými materiálmi a vlastným tímom odborníkov. Garantujeme dodržanie dohodnutého rozpočtu a termínov. Počas výstavby máte k dispozícii stavebný dozor a pravidelné reporty, takže presne vidíte, ako váš nový domov rastie pred očami.",
+      body: "{gt.socialBuildDesc}",
       detailImages: [
         "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80",
         "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80"
@@ -382,7 +458,7 @@ export default function Domov() {
       popis: t('completeConnection'),
       image: "https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=500&q=80",
       headline: "Aby všetko fungovalo po otočení kohútikom.",
-      body: "Dom bez sietí je len hrubá stavba. Zabezpečíme kompletnú realizáciu prípojok vody, elektriny, plynu a kanalizácie. Riešime výkopy, pokládku, revízne správy aj finálne osadenie meračov. Koordinujeme všetko tak, aby bol dom pripravený na plnohodnotné užívanie.",
+      body: "{gt.socialUtilitiesDesc}",
       detailImages: [
         "https://images.unsplash.com/photo-1581094271901-8022df4466f9?w=800&q=80",
         "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=800&q=80"
@@ -395,7 +471,7 @@ export default function Domov() {
       popis: t('fromAToZ'),
       image: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=500&q=80",
       headline: "Posledná pečiatka a odovzdanie kľúčov.",
-      body: "Cieľová rovinka. Pripravíme všetky revízie, certifikáty, geometrické plány a dokumenty potrebné ku kolaudačnému konaniu. Zastúpime vás pri miestnom šetrení stavebného úradu. Vám odovzdáme už skolaudovaný dom so súpisným číslom, pripravený na nasťahovanie a prepis energií.",
+      body: "{gt.socialApprovalDesc}",
       detailImages: [
         "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?w=800&q=80",
         "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&q=80"
@@ -1043,7 +1119,7 @@ export default function Domov() {
           <div className="flex flex-wrap justify-center gap-3 mb-8">
             {[
               { id: "6916ec94c11aacdd15248f07", name: "LONDON 144", desc: "Prémiová rodinná vila", price: "od 168 510 €" },
-              { id: "6916ec94c11aacdd15248f06", name: "HAPPY WIFE 122", desc: "Moderný dvojkrídlový dom", price: "od 168 510 €" },
+              { id: "6916ec94c11aacdd15248f18", name: "FLAT DOUBLE 142", desc: "Dizajnový modulárny dom", price: "od 61 700 €" },
               { id: "6916ec94c11aacdd15248f0b", name: "ALESSANDRIA 130", desc: "Minimalistický plochostrechý dom", price: "od 110 454 €" }
             ].map((tab) => (
               <button
