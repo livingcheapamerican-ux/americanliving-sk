@@ -617,11 +617,11 @@ export default function Katalog() {
         {/* Tabs pre kategórie */}
         <Tabs value={kategoriaFilter} onValueChange={setKategoriaFilter} className="mb-4 sm:mb-6">
           <TabsList className={`grid w-full max-w-xl mx-auto h-10 sm:h-12 bg-card/50 backdrop-blur-xl border border-border rounded-full p-1 shadow-xl ${canManage ? 'grid-cols-4' : 'grid-cols-3'}`}>
-            <TabsTrigger value="vsetky" className="catalog-tab text-xs sm:text-sm rounded-full text-slate-900 dark:text-slate-200 transition-all duration-300">{t('all')} <span className="text-slate-900 dark:text-slate-300">({verejneDomy.length})</span></TabsTrigger>
-            <TabsTrigger value="rodinne_domy" className="catalog-tab text-xs sm:text-sm rounded-full text-slate-900 dark:text-slate-200 transition-all duration-300">{t('familyHouses')} <span className="text-slate-900 dark:text-slate-300">({rodinneDomy.length})</span></TabsTrigger>
-            <TabsTrigger value="mobilne_domy" className="catalog-tab text-xs sm:text-sm rounded-full text-slate-900 dark:text-slate-200 transition-all duration-300">{t('mobileHouses')} <span className="text-slate-900 dark:text-slate-300">({mobilneDomy.length})</span></TabsTrigger>
+            <TabsTrigger value="vsetky" className="catalog-tab text-xs sm:text-sm rounded-full !text-slate-900 dark:!text-slate-200 transition-all duration-300">{t('all')} <span className="!text-slate-900 dark:!text-slate-300">({verejneDomy.length})</span></TabsTrigger>
+            <TabsTrigger value="rodinne_domy" className="catalog-tab text-xs sm:text-sm rounded-full !text-slate-900 dark:!text-slate-200 transition-all duration-300">{t('familyHouses')} <span className="!text-slate-900 dark:!text-slate-300">({rodinneDomy.length})</span></TabsTrigger>
+            <TabsTrigger value="mobilne_domy" className="catalog-tab text-xs sm:text-sm rounded-full !text-slate-900 dark:!text-slate-200 transition-all duration-300">{t('mobileHouses')} <span className="!text-slate-900 dark:!text-slate-300">({mobilneDomy.length})</span></TabsTrigger>
             {canManage && (
-              <TabsTrigger value="skryte" className="catalog-tab text-xs sm:text-sm rounded-full text-slate-900 dark:text-slate-200 transition-all duration-300">{t('hidden')} <span className="text-slate-900 dark:text-slate-300">({skryteDomy.length})</span></TabsTrigger>
+              <TabsTrigger value="skryte" className="catalog-tab text-xs sm:text-sm rounded-full !text-slate-900 dark:!text-slate-200 transition-all duration-300">{t('hidden')} <span className="!text-slate-900 dark:!text-slate-300">({skryteDomy.length})</span></TabsTrigger>
             )}
           </TabsList>
         </Tabs>
