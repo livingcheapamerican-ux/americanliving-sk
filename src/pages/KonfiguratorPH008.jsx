@@ -31,69 +31,156 @@ import KonfiguratorGaleria from '../components/konfigurator/KonfiguratorGaleria'
 import SaveQuoteButton from '../components/SaveQuoteButton';
 
 const HOUSE_PH008 = {
-  "id": "barn",
-  "name": "Barn 48 (PH-008)",
-  "basePrice": 20900,
-  "options": {
-    "mounting": [
-      { "label": "Bez montáže", "price": 0, "description": "Svojpomocne" },
-      { "label": "S montážou", "price": 4875, "description": "Profesionálna montáž" }
+  id: "barn",
+  name: "Barn 48 (PH-008)",
+  basePrice: 21600,
+  options: {
+    mounting: [
+      {
+        label: "Bez montáže",
+        price: 0,
+        description: "Svojpomocne"
+      },
+      {
+        label: "S montážou",
+        price: 5400,
+        description: "Profesionálna montáž"
+      }
     ],
-    "extension": [
-      { "label": "Bez predĺženia", "price": 0 },
-      { "label": "+1,2 m", "price": 3300 },
-      { "label": "+2,4 m", "price": 6606 },
-      { "label": "+3,6 m", "price": 9900 },
-      { "label": "+4,8 m", "price": 15880 }
+    extension: [
+      {
+        label: "Bez predĺženia",
+        price: 0
+      },
+      {
+        label: "+1,2 m",
+        price: 3300
+      },
+      {
+        label: "+2,4 m",
+        price: 6606
+      },
+      {
+        label: "+3,6 m",
+        price: 9900
+      },
+      {
+        label: "+4,8 m",
+        price: 15880
+      }
     ],
-    "insulation": [
-      { "label": "Celoročná 150 mm", "price": 0, "description": "Štandard" },
-      { "label": "Zvýšená 200 mm", "price": 1400, "description": "Zvýšený štandard" },
-      { "label": "Prémium 250 mm", "price": 2800, "description": "Pre A0 certifikát" },
-      { "label": "Extra 300 mm", "price": 5250, "description": "Extra úspora" }
+    insulation: [
+      {
+        label: "Celoročná 150 mm",
+        price: 0,
+        description: "Štandard"
+      },
+      {
+        label: "Zvýšená 200 mm",
+        price: 1400,
+        description: "Zvýšený štandard"
+      },
+      {
+        label: "Prémium 250 mm",
+        price: 2800,
+        description: "Pre A0 certifikát"
+      },
+      {
+        label: "Extra 300 mm",
+        price: 5250,
+        description: "Extra úspora"
+      }
     ],
-    "foundation": [
-      { "label": "Bez základov", "price": 0, "description": "Vlastná realizácia" },
-      { "label": "Pilóty/Pätky", "price": 3077, "description": "Zemné skrutky" },
-      { "label": "Základová doska", "price": 6595, "description": "Betón" },
-      { "label": "Pásové základy", "price": 6782, "description": "Betónové pásy" }
+    foundation: [
+      {
+        label: "Bez základov",
+        price: 0,
+        description: "Vlastná realizácia"
+      },
+      {
+        label: "Pilóty/Pätky",
+        price: 3077,
+        description: "Zemné skrutky"
+      },
+      {
+        label: "Základová doska",
+        price: 6595,
+        description: "Betón"
+      },
+      {
+        label: "Pásové základy",
+        price: 6782,
+        description: "Betónové pásy"
+      }
     ],
-    "interior": [
-      { "label": "Bez interiéru", "price": 0, "description": "Holostavba" },
-      { "label": "Drevo", "price": 4100, "description": "Smrekový obklad" },
-      { "label": "Sadrokartón", "price": 4715, "description": "Hladké steny" }
+    interior: [
+      {
+        label: "Bez interiéru",
+        price: 0,
+        description: "Holostavba"
+      },
+      {
+        label: "Drevo",
+        price: 6150,
+        description: "Smrekový obklad"
+      },
+      {
+        label: "Sadrokartón",
+        price: 7073,
+        description: "Hladké steny"
+      }
     ],
-    "doors": [
-      { "label": "Štandard", "price": 0, "description": "Základné" },
-      { "label": "Kovové s 2 zámkami", "price": 720, "description": "Bezpečnostné" },
-      { "label": "Plastovo-kovové", "price": 660, "description": "Odolné" }
+    doors: [
+      {
+        label: "Štandard",
+        price: 0,
+        description: "Základné"
+      },
+      {
+        label: "Kovové s 2 zámkami",
+        price: 720,
+        description: "Bezpečnostné"
+      },
+      {
+        label: "Plastovo-kovové",
+        price: 660,
+        description: "Odolné"
+      }
     ],
-    "facade": [
-      { "label": "Štandardná", "price": 0, "description": "Drevený obklad" },
-      { "label": "Šúchaná fasáda", "price": 4321, "description": "Biela omietka" }
+    facade: [
+      {
+        label: "Štandardná",
+        price: 0,
+        description: "Drevený obklad"
+      },
+      {
+        label: "Šúchaná fasáda",
+        price: 4321,
+        description: "Biela omietka"
+      }
     ]
   },
-  "addons": {
-    "electricity": 2300,
-    "water": 980,
-    "sanita": 1169,
-    "boiler": 246,
-    "heatPump": 1100,
-    "recuperation": 2214,
-    "windowLamination": 790,
-    "windowTint": 375,
-    "roofWindow": 760,
-    "fixWindow": 500,
-    "tiltWindowBig": 540,
-    "tiltWindowSmall": 225,
-    "interiorDoor": 250,
-    "laminateFloors": 850,
-    "floorHeating": 2819,
-    "networks": 1500,
-    "engineering": 2590,
-    "projectant": 3500,
-    "revision": 500,
-    "transport": 0
+  addons: {
+    electricity: 2300,
+    water: 1176,
+    sanita: 1400,
+    boiler: 500,
+    heatPump: 1926,
+    recuperation: 762,
+    windowLamination: 790,
+    windowTint: 375,
+    roofWindow: 760,
+    fixWindow: 500,
+    tiltWindowBig: 540,
+    tiltWindowSmall: 225,
+    interiorDoor: 500,
+    laminateFloors: 1470,
+    floorHeating: 2819,
+    networks: 1993,
+    engineering: 2590,
+    projectant: 3500,
+    revision: 500,
+    transport: 0
   }
 };
 
