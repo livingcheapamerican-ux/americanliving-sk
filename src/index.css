@@ -162,13 +162,16 @@ button:focus-visible {
 }
 
 /* Catalog Page Tabs Active State Override */
+.catalog-tab {
+  color: rgb(15, 23, 42) !important;
+}
 .catalog-tab[data-state=active] {
   background-color: hsl(var(--primary)) !important;
   color: #ffffff !important;
 }
-.catalog-tab[data-state=inactive] {
-  color: rgb(15, 23, 42) !important;
-}
-.dark .catalog-tab[data-state=inactive] {
+.dark .catalog-tab {
   color: rgb(226, 232, 240) !important;
+}
+.dark .catalog-tab[data-state=active] {
+  color: #ffffff !important;
 }
