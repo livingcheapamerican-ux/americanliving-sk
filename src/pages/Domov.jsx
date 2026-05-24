@@ -409,7 +409,7 @@ export default function Domov() {
                   className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-slate-300"
                 >
                   <span className="w-2 h-2 rounded-full bg-[#C5A880] animate-pulse"></span>
-                  <span>Prémiové americké bývanie na kľúč</span>
+                  <span>Prémiová americká technológia bývania na kľúč</span>
                 </motion.div>
               </div>
 
@@ -421,7 +421,7 @@ export default function Domov() {
                 className="text-3xl sm:text-5xl md:text-6xl font-black text-white mb-6 leading-[1.1] tracking-tight text-white"
                 style={{ textShadow: '2px 2px 10px rgba(0,0,0,0.8)' }}
               >
-                Americké bývanie bez starostí a bez kompromisov
+                Americká technológia bývania bez starostí a bez kompromisov
               </motion.h1>
 
               {/* Subheadline */}
