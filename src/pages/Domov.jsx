@@ -388,7 +388,7 @@ export default function Domov() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
             {/* Left Column: Copywriting & CTAs */}
-            <div className="lg:col-span-7 flex flex-col text-left">
+            <div className="lg:col-span-6 flex flex-col text-left">
               {/* Logo & Small Badge */}
               <div className="flex items-center gap-3 mb-6 flex-wrap">
                 <motion.img 
@@ -418,7 +418,7 @@ export default function Domov() {
                 initial={{ opacity: 0, y: 25 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="text-3xl sm:text-5xl md:text-6xl font-black text-white mb-6 leading-[1.1] tracking-tight text-white"
+                className="text-3xl sm:text-5xl md:text-6xl font-black text-white mb-6 leading-[1.1] tracking-tight"
                 style={{ textShadow: '2px 2px 10px rgba(0,0,0,0.8)' }}
               >
                 Americká technológia bývania bez starostí a bez kompromisov
@@ -459,39 +459,63 @@ export default function Domov() {
                 </Button>
               </motion.div>
 
-              {/* Quick Navigation Cards */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.8 }}
-                className="grid grid-cols-3 gap-3 pt-6 border-t border-white/10 max-w-lg"
-              >
-                {[
-                  { name: "Prosto House", desc: "Barn & A-Frame", path: "Katalog" },
-                  { name: "Ticab house", desc: "Modulárne domy", path: "Katalog" },
-                  { name: "JAK Modules", desc: "Prémiový lepený GL24", path: "Katalog" }
-                ].map((cat, i) => (
-                  <Link key={i} to={createPageUrl(cat.path)} className="group p-3 rounded-xl bg-white/5 border border-white/10 hover:border-[#C5A880]/40 hover:bg-white/[0.08] transition-all">
-                    <p className="text-xs font-bold text-white group-hover:text-[#C5A880] transition-colors">{cat.name}</p>
-                    <p className="text-[10px] text-slate-400 mt-0.5">{cat.desc}</p>
-                  </Link>
-                ))}
-              </motion.div>
+              {/* Interactive Quick House Switcher with Real Images */}
+              <div className="pt-6 border-t border-white/10 max-w-xl">
+                <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-3">Kliknutím si pozrite najlukratívnejšie modely</p>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.8 }}
+                  className="grid grid-cols-3 gap-3"
+                >
+                  {[
+                    { id: "barn72", name: "Barn Double 72", desc: "Dvojposchodový Barn", img: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/5ddf7431e_BarnDoubledrevouvodnafotka.jpg" },
+                    { id: "london", name: "LONDON 144", desc: "Veľkolepá rodinná vila", img: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/25e2796ce_Londonexteriermurovka1.jpeg" },
+                    { id: "barn48", name: "Barn 48", desc: "Škandinávska chatka", img: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/cbd41c122_Barnbazen.jpeg" }
+                  ].map((house) => (
+                    <button
+                      key={house.id}
+                      type="button"
+                      onClick={() => {
+                        setSelectedHouseId(house.id);
+                        // Reset facade to anthracite to avoid missing configurations
+                        setSelectedFacade("anthracite");
+                      }}
+                      className={`group p-3.5 rounded-2xl border text-left transition-all relative overflow-hidden h-24 flex flex-col justify-end ${
+                        selectedHouseId === house.id 
+                          ? 'border-[#C5A880] ring-1 ring-[#C5A880] bg-slate-900/80 shadow-lg shadow-[#C5A880]/10' 
+                          : 'border-white/5 bg-slate-950/40 hover:border-white/10'
+                      }`}
+                    >
+                      {/* Background image overlay */}
+                      <div className="absolute inset-0 z-0 opacity-20 group-hover:opacity-40 transition-opacity duration-300">
+                        <img src={house.img} alt={house.name} className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent" />
+                      </div>
+                      <div className="relative z-10">
+                        <p className={`text-xs font-black transition-colors ${selectedHouseId === house.id ? 'text-[#C5A880]' : 'text-slate-100'}`}>{house.name}</p>
+                        <p className="text-[9px] text-slate-400 mt-0.5 leading-tight">{house.desc}</p>
+                      </div>
+                    </button>
+                  ))}
+                </motion.div>
+              </div>
             </div>
 
             {/* Right Column: Interactive Lookbook (Color Swapper) & Floating Tags */}
-            <div className="lg:col-span-5 relative">
+            <div className="lg:col-span-6 relative">
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
-                className="relative bg-slate-900/50 backdrop-blur-md border border-white/10 rounded-3xl p-4 sm:p-6 shadow-2xl overflow-hidden group"
+                className="relative bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-3xl p-4 sm:p-6 shadow-2xl overflow-hidden group"
               >
                 {/* Lookbook main image wrapper */}
-                <div className="aspect-[4/3] rounded-2xl overflow-hidden relative border border-white/5">
+                <div className="aspect-[4/3] rounded-2xl overflow-hidden relative border border-white/5 bg-slate-950">
                   <img 
+                    key={`${selectedHouseId}-${selectedFacade}`}
                     src={selectedFacadeImage} 
-                    alt="Prémiový dom - Prosto House Barnhouse"
+                    alt={currentHouseData.name}
                     className="w-full h-full object-cover transition-all duration-700" 
                     loading="eager"
                   />
@@ -507,7 +531,7 @@ export default function Domov() {
                       <Clock className="w-4 h-4 text-[#C5A880]" />
                     </div>
                     <div>
-                      <p className="text-[10px] text-slate-400 font-medium">Záruka odovzdania</p>
+                      <p className="text-[10px] text-slate-400 font-medium">Dodanie na kľúč</p>
                       <p className="text-xs font-black text-white">Do 12 týždňov</p>
                     </div>
                   </motion.div>
@@ -522,8 +546,8 @@ export default function Domov() {
                       <Star className="w-4 h-4 text-emerald-400" />
                     </div>
                     <div>
-                      <p className="text-[10px] text-slate-400 font-medium">Bývanie v A0</p>
-                      <p className="text-xs font-black text-emerald-400">Súkromný grant</p>
+                      <p className="text-[10px] text-slate-400 font-medium">Zastavaná plocha</p>
+                      <p className="text-xs font-black text-emerald-400">{currentHouseData.area} m²</p>
                     </div>
                   </motion.div>
                 </div>
@@ -532,31 +556,39 @@ export default function Domov() {
                 <div className="mt-4 sm:mt-6">
                   <div className="flex items-center justify-between mb-4">
                     <div>
-                      <h3 className="text-base sm:text-lg font-bold text-white">Prosto House - Barnhouse</h3>
-                      <p className="text-xs text-slate-400">Prispôsobte si exteriér a farbu fasády</p>
+                      <h3 className="text-base sm:text-xl font-bold text-white leading-tight">{currentHouseData.name}</h3>
+                      <p className="text-xs text-slate-400 mt-0.5">
+                        {currentHouseData.rooms} izby • Výrobca: {currentHouseData.manufacturer} • <strong className="text-white">od {currentHouseData.price.toLocaleString()} €</strong>
+                      </p>
                     </div>
-                    <Link to={createPageUrl("Katalog")}>
-                      <Button variant="ghost" size="sm" className="text-xs text-[#C5A880] hover:text-white p-0 hover:bg-transparent flex items-center gap-1">
-                        <span>Konfigurovať v katalógu</span>
+                    <Link to={`${createPageUrl("DetailDomu")}?id=${currentHouseData.id}`}>
+                      <Button variant="ghost" size="sm" className="text-xs text-[#C5A880] hover:text-white p-0 hover:bg-transparent flex items-center gap-1 font-bold">
+                        <span>Konfigurovať</span>
                         <ChevronRight className="w-4 h-4" />
                       </Button>
                     </Link>
                   </div>
 
-                  {/* Facade switcher controls */}
-                  <div className="flex gap-2">
+                  {/* Facade switcher controls with live thumbnails */}
+                  <div className="flex flex-col sm:flex-row gap-2">
                     {facadeOptions.map((opt) => (
                       <button
                         key={opt.id}
+                        type="button"
                         onClick={() => setSelectedFacade(opt.id)}
-                        className={`flex-1 py-2 px-3 rounded-xl border text-center transition-all ${
+                        className={`flex-1 p-2 rounded-xl border text-left transition-all flex items-center gap-2.5 ${
                           selectedFacade === opt.id 
-                            ? 'bg-[#C5A880] border-[#C5A880] text-slate-950 font-black' 
+                            ? 'bg-[#C5A880]/15 border-[#C5A880] text-white shadow-lg' 
                             : 'bg-white/5 border-white/10 text-slate-300 hover:bg-white/10 hover:border-white/20'
                         }`}
                       >
-                        <p className="text-[11px] leading-tight font-bold">{opt.name}</p>
-                        <p className={`text-[9px] leading-tight ${selectedFacade === opt.id ? 'text-slate-950/80' : 'text-slate-500'}`}>{opt.desc}</p>
+                        <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 border border-white/10 bg-slate-950">
+                          <img src={opt.img} alt={opt.name} className="w-full h-full object-cover" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className={`text-[11px] leading-tight font-black ${selectedFacade === opt.id ? 'text-[#C5A880]' : 'text-slate-200'}`}>{opt.name}</p>
+                          <p className="text-[9px] leading-tight text-slate-400 mt-0.5 truncate">{opt.desc}</p>
+                        </div>
                       </button>
                     ))}
                   </div>
