@@ -11714,7 +11714,7 @@ const translations = {
     priceOffer: "Цінова пропозиція",
     financing: "Фінансування",
     lookingForLand: "Шукаю ділянку",
-  },
+    
     
     // Added by translator helper
     heroBadgeText: "Преміум американська технологія житла під ключ",
@@ -11803,6 +11803,7 @@ const translations = {
     adminAccess: "Доступ адміністратора",
     adminLoginPrompt: "Увійдіть, щоб отримати доступ до інструментів адміністратора",
     adminLogin: "Увійти",
+  },
 };
 
 const LanguageContext = createContext();
