@@ -142,23 +142,49 @@ export default function Domov() {
   // Facade lookbook options
   const [selectedFacade, setSelectedFacade] = useState("anthracite");
 
-  const facadeImages = {
-    barn72: {
-      anthracite: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/5ddf7431e_BarnDoubledrevouvodnafotka.jpg",
-      wood: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/eccd583aa_barn-double-prosto-house-3.jpg",
-      stucco: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/2b401b76a_BarnDouble72exteriermurovkauvodnyobrazok.jpg"
-    },
-    london: {
-      anthracite: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/952c7dee5_Londonexterierdrevoplech1.jpg",
-      wood: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/25cd528c6_Londonexterierdrevoplech2.jpg",
-      stucco: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/25e2796ce_Londonexteriermurovka1.jpeg"
-    },
-    barn48: {
-      anthracite: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/49133a5d4_Barnhills.jpeg",
-      wood: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/24cecde9d_BarnZilina.jpeg",
-      stucco: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/ee82ce3f5_Barnmurovkazilina.jpeg"
+  // Načítaj verejné domy pre FloatingHouses — zdieľaný query s FloatingHouses komponentom
+  const { data: verejneDomy = [] } = useQuery({
+    queryKey: ['domy-floating-public'],
+    queryFn: () => base44.entities.Dom.filter({ verejny: true }),
+    staleTime: 300000,
+  });
+
+  const facadeImages = useMemo(() => {
+    const base = {
+      barn72: {
+        anthracite: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/5ddf7431e_BarnDoubledrevouvodnafotka.jpg",
+        wood: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/eccd583aa_barn-double-prosto-house-3.jpg",
+        stucco: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/2b401b76a_BarnDouble72exteriermurovkauvodnyobrazok.jpg"
+      },
+      london: {
+        anthracite: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/952c7dee5_Londonexterierdrevoplech1.jpg",
+        wood: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/25cd528c6_Londonexterierdrevoplech2.jpg",
+        stucco: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/25e2796ce_Londonexteriermurovka1.jpeg"
+      },
+      barn48: {
+        anthracite: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/49133a5d4_Barnhills.jpeg",
+        wood: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/24cecde9d_BarnZilina.jpeg",
+        stucco: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/ee82ce3f5_Barnmurovkazilina.jpeg"
+      }
+    };
+
+    if (verejneDomy.length > 0 && !base[selectedHouseId]) {
+      const activeDbHouse = verejneDomy.find(d => d.id === selectedHouseId || d.slug === selectedHouseId);
+      if (activeDbHouse) {
+        const stuccoImg = activeDbHouse.galerie?.find(g => g.typ === "exterier_murovka")?.fotky?.[0] || activeDbHouse.hlavny_obrazok;
+        const woodImg = activeDbHouse.galerie?.find(g => g.typ === "exterier_drevo_plech")?.fotky?.[0] || activeDbHouse.hlavny_obrazok;
+        const anthraciteImg = activeDbHouse.galerie?.find(g => g.typ === "exterier_drevo_plech")?.fotky?.[1] || activeDbHouse.hlavny_obrazok;
+
+        base[selectedHouseId] = {
+          anthracite: anthraciteImg,
+          wood: woodImg,
+          stucco: stuccoImg
+        };
+      }
     }
-  };
+
+    return base;
+  }, [selectedHouseId, verejneDomy]);
 
   const facadeOptions = useMemo(() => {
     const images = facadeImages[selectedHouseId] || facadeImages.barn72;
@@ -167,11 +193,44 @@ export default function Domov() {
       { id: "wood", name: "Drevený obklad", desc: "Severský smrek", img: images.wood },
       { id: "stucco", name: "Šúchaná omietka", desc: "Svetlý exteriér", img: images.stucco }
     ];
-  }, [selectedHouseId]);
+  }, [selectedHouseId, facadeImages]);
 
   const selectedFacadeImage = useMemo(() => {
     return facadeOptions.find(o => o.id === selectedFacade)?.img || facadeOptions[0].img;
   }, [selectedFacade, facadeOptions]);
+
+  const hasMultipleFacades = useMemo(() => {
+    return new Set(facadeOptions.map(o => o.img)).size > 1;
+  }, [facadeOptions]);
+
+  const switcherHouses = useMemo(() => {
+    const default3 = [
+      { id: "barn72", name: "Barn Double 72", desc: "Dvojposchodový Barn", img: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/5ddf7431e_BarnDoubledrevouvodnafotka.jpg" },
+      { id: "london", name: "LONDON 144", desc: "Veľkolepá rodinná vila", img: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/25e2796ce_Londonexteriermurovka1.jpeg" },
+      { id: "barn48", name: "Barn 48", desc: "Škandinávska chatka", img: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/cbd41c122_Barnbazen.jpeg" }
+    ];
+
+    const others = verejneDomy.filter(d => {
+      const isDefault = d.prosto_house_kod === "PH-005" || 
+                        d.nazov?.includes("LONDON") || 
+                        d.prosto_house_kod === "PH-008" ||
+                        d.id === "6916ec94c11aacdd15248f2c" ||
+                        d.id === "6916ec94c11aacdd15248f07" ||
+                        d.id === "6916ec94c11aacdd15248f31";
+      return !isDefault;
+    }).map(d => {
+      let desc = d.vyrobca;
+      if (d.uzitkova_plocha) desc += ` • ${d.uzitkova_plocha} m²`;
+      return {
+        id: d.id,
+        name: d.nazov?.split(",")[0]?.split("(")[0]?.trim() || d.nazov,
+        desc: desc,
+        img: d.hlavny_obrazok
+      };
+    });
+
+    return [...default3, ...others];
+  }, [verejneDomy]);
   
   const { data: domy = [] } = useQuery({
     queryKey: ['domy-popularne'],
@@ -187,19 +246,12 @@ export default function Domov() {
     },
   });
 
-  // Načítaj verejné domy pre FloatingHouses — zdieľaný query s FloatingHouses komponentom
-  const { data: verejneDomy = [] } = useQuery({
-    queryKey: ['domy-floating-public'],
-    queryFn: () => base44.entities.Dom.filter({ verejny: true }),
-    staleTime: 300000,
-  });
-
   const currentHouseData = useMemo(() => {
     const dbHouse = verejneDomy.find(d => {
       if (selectedHouseId === "barn72") return d.id === "6916ec94c11aacdd15248f2c" || d.prosto_house_kod === "PH-005";
       if (selectedHouseId === "london") return d.id === "6916ec94c11aacdd15248f07" || d.nazov?.includes("LONDON");
       if (selectedHouseId === "barn48") return d.id === "6916ec94c11aacdd15248f31" || d.prosto_house_kod === "PH-008";
-      return false;
+      return d.id === selectedHouseId || d.slug === selectedHouseId;
     });
 
     if (dbHouse) {
@@ -702,18 +754,14 @@ export default function Domov() {
 
               {/* Interactive Quick House Switcher with Real Images */}
               <div className="pt-6 border-t border-white/10 max-w-xl">
-                <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-4">Kliknutím si pozrite najlukratívnejšie modely</p>
+                <p className="text-slate-450 text-xs font-bold uppercase tracking-wider mb-4">Kliknutím si pozrite najlukratívnejšie modely</p>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.8 }}
-                  className="grid grid-cols-3 gap-3"
+                  className="flex overflow-x-auto gap-3 pb-3 pt-1 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-805 scroll-smooth snap-x"
                 >
-                  {[
-                    { id: "barn72", name: "Barn Double 72", desc: "Dvojposchodový Barn", img: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/5ddf7431e_BarnDoubledrevouvodnafotka.jpg" },
-                    { id: "london", name: "LONDON 144", desc: "Veľkolepá rodinná vila", img: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/25e2796ce_Londonexteriermurovka1.jpeg" },
-                    { id: "barn48", name: "Barn 48", desc: "Škandinávska chatka", img: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/cbd41c122_Barnbazen.jpeg" }
-                  ].map((house) => (
+                  {switcherHouses.map((house) => (
                     <button
                       key={house.id}
                       type="button"
@@ -722,20 +770,20 @@ export default function Domov() {
                         // Reset facade to anthracite to avoid missing configurations
                         setSelectedFacade("anthracite");
                       }}
-                      className={`group p-3.5 rounded-2xl border text-left transition-all duration-300 relative overflow-hidden h-24 flex flex-col justify-end ${
+                      className={`snap-start flex-shrink-0 w-28 h-20 sm:w-36 sm:h-24 group p-2.5 rounded-xl border text-left transition-all duration-300 relative overflow-hidden flex flex-col justify-end ${
                         selectedHouseId === house.id 
-                          ? 'border-[#C5A880] ring-1 ring-[#C5A880]/50 bg-white/95 dark:bg-slate-900/90 shadow-[0_10px_20px_rgba(197,168,128,0.15)] dark:shadow-[0_0_20px_rgba(197,168,128,0.2)] scale-[1.03]' 
-                          : 'border-slate-200 dark:border-white/10 bg-white/70 dark:bg-slate-950/60 hover:bg-slate-50 dark:hover:bg-slate-900/40 hover:border-slate-300 dark:hover:border-white/20 hover:scale-[1.03] backdrop-blur-sm shadow-sm dark:shadow-none'
+                          ? 'border-[#C5A880] ring-1 ring-[#C5A880]/50 bg-white/95 dark:bg-slate-900/90 shadow-[0_4px_12px_rgba(197,168,128,0.15)] dark:shadow-[0_0_15px_rgba(197,168,128,0.2)] scale-[1.02]' 
+                          : 'border-slate-200 dark:border-white/10 bg-white/75 dark:bg-slate-955/60 hover:bg-slate-50 dark:hover:bg-slate-900/40 hover:border-slate-300 dark:hover:border-white/20 hover:scale-[1.02] backdrop-blur-sm shadow-sm dark:shadow-none'
                       }`}
                     >
-                      {/* Background image overlay */}
-                      <div className="absolute inset-0 z-0 opacity-35 group-hover:opacity-60 transition-opacity duration-300">
+                      {/* Background image overlay - increased opacity and dark overlay for text legibility, no more pale wash-out */}
+                      <div className="absolute inset-0 z-0 opacity-70 group-hover:opacity-90 transition-opacity duration-300">
                         <img src={house.img} alt={house.name} className="w-full h-full object-cover" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-white/90 dark:from-slate-950 via-white/40 dark:via-slate-950/40 to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/5 dark:from-slate-950/85 dark:via-slate-950/45 dark:to-transparent" />
                       </div>
                       <div className="relative z-10">
-                        <p className={`text-xs font-black transition-colors duration-300 ${selectedHouseId === house.id ? 'text-[#C5A880]' : 'text-slate-800 dark:text-slate-100'}`}>{house.name}</p>
-                        <p className="text-[9px] text-slate-500 dark:text-slate-400 mt-0.5 leading-tight font-medium">{house.desc}</p>
+                        <p className={`text-[10px] sm:text-xs font-black transition-colors duration-300 text-white ${selectedHouseId === house.id ? 'text-[#E2C799]' : ''}`}>{house.name}</p>
+                        <p className="text-[8px] sm:text-[9px] text-slate-200 dark:text-slate-350 mt-0.5 leading-tight font-medium line-clamp-1">{house.desc}</p>
                       </div>
                     </button>
                   ))}
@@ -815,28 +863,30 @@ export default function Domov() {
                   </div>
 
                   {/* Facade switcher controls with live thumbnails */}
-                  <div className="flex flex-col sm:flex-row gap-2">
-                    {facadeOptions.map((opt) => (
-                      <button
-                        key={opt.id}
-                        type="button"
-                        onClick={() => setSelectedFacade(opt.id)}
-                        className={`flex-1 p-2 rounded-xl border text-left transition-all duration-300 flex items-center gap-2.5 hover:scale-[1.02] ${
-                          selectedFacade === opt.id 
-                            ? 'bg-[#C5A880]/10 border-[#C5A880] text-[#C5A880] dark:text-white shadow-[0_0_15px_rgba(197,168,128,0.1)]' 
-                            : 'bg-slate-100 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-white/10 hover:border-slate-300 dark:hover:border-white/15'
-                        }`}
-                      >
-                        <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 border border-slate-200 dark:border-white/10 bg-slate-950 transition-all duration-300">
-                          <img src={opt.img} alt={opt.name} className="w-full h-full object-cover" />
-                        </div>
-                        <div className="min-w-0">
-                          <p className={`text-[11px] leading-tight font-black transition-colors duration-300 ${selectedFacade === opt.id ? 'text-[#C5A880]' : 'text-slate-800 dark:text-slate-200'}`}>{opt.name}</p>
-                          <p className="text-[9px] leading-tight text-slate-505 dark:text-slate-400 mt-0.5 truncate">{opt.desc}</p>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
+                  {hasMultipleFacades && (
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      {facadeOptions.map((opt) => (
+                        <button
+                          key={opt.id}
+                          type="button"
+                          onClick={() => setSelectedFacade(opt.id)}
+                          className={`flex-1 p-2 rounded-xl border text-left transition-all duration-300 flex items-center gap-2.5 hover:scale-[1.02] ${
+                            selectedFacade === opt.id 
+                              ? 'bg-[#C5A880]/10 border-[#C5A880] text-[#C5A880] dark:text-white shadow-[0_0_15px_rgba(197,168,128,0.1)]' 
+                              : 'bg-slate-100 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-white/10 hover:border-slate-300 dark:hover:border-white/15'
+                          }`}
+                        >
+                          <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 border border-slate-200 dark:border-white/10 bg-slate-950 transition-all duration-300">
+                            <img src={opt.img} alt={opt.name} className="w-full h-full object-cover" />
+                          </div>
+                          <div className="min-w-0">
+                            <p className={`text-[11px] leading-tight font-black transition-colors duration-300 ${selectedFacade === opt.id ? 'text-[#C5A880]' : 'text-slate-800 dark:text-slate-200'}`}>{opt.name}</p>
+                            <p className="text-[9px] leading-tight text-slate-505 dark:text-slate-400 mt-0.5 truncate">{opt.desc}</p>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </motion.div>
             </div>
