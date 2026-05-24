@@ -1289,7 +1289,7 @@ export default function KonfiguratorFlatDoubleInline({
               </div>
               <div className="text-right p-3 sm:p-6 bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-xl sm:rounded-2xl border border-green-500/20 lg:min-w-[280px]">
                 <p className="text-slate-600 dark:text-slate-400 mb-1 sm:mb-2 text-[10px] sm:text-sm">{t('totalWithVAT')}</p>
-                <p className="text-3xl sm:text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-emerald-600 to-teal-655 dark:from-green-400 dark:via-emerald-400 dark:to-teal-400">
+                <p className="text-3xl sm:text-5xl md:text-6xl font-black text-green-600 dark:text-green-400">
                   {formatPrice(totalPrice)}
                 </p>
               </div>

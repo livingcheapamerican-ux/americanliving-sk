@@ -314,33 +314,33 @@ export default function KonfiguratorContactModal({
               </div>
 
               {/* A0 / Rekreačná stavba status */}
-              <div className={`mt-2 p-2 rounded-lg border flex-shrink-0 ${isA0Ready ? 'bg-green-500/20 border-green-500/30' : projektA0 && a0Missing.length > 0 ? 'bg-amber-500/20 border-amber-500/30' : 'bg-blue-500/20 border-blue-500/30'}`}>
+              <div className={`mt-2 p-2 rounded-lg border flex-shrink-0 ${isA0Ready ? 'bg-green-500/10 dark:bg-green-500/20 border-green-500/20 dark:border-green-500/30' : projektA0 && a0Missing.length > 0 ? 'bg-amber-500/10 dark:bg-amber-500/20 border-amber-500/20 dark:border-amber-500/30' : 'bg-blue-500/10 dark:bg-blue-500/20 border-blue-500/20 dark:border-blue-500/30'}`}>
                {isA0Ready ? (
                  <div className="flex items-center gap-2">
-                   <Sparkles className="w-4 h-4 text-green-400 flex-shrink-0" />
+                   <Sparkles className="w-4 h-4 text-green-600 dark:text-green-400 flex-shrink-0" />
                    <div>
-                     <p className="text-green-400 font-bold text-xs sm:text-sm">✓ {t('meetsA0Conditions')}</p>
-                     <p className="text-green-300/80 text-xs">{t('familyHouseWithCert')}</p>
+                     <p className="text-green-700 dark:text-green-400 font-bold text-xs sm:text-sm">✓ {t('meetsA0Conditions')}</p>
+                     <p className="text-green-600/90 dark:text-green-300/85 text-xs">{t('familyHouseWithCert')}</p>
                    </div>
                  </div>
                ) : projektA0 && a0Missing.length > 0 ? (
                  <div>
                    <div className="flex items-center gap-2 mb-1">
-                     <Sparkles className="w-3 h-3 text-amber-400 flex-shrink-0" />
-                     <p className="text-amber-400 font-bold text-xs sm:text-sm">{t('forA0Missing')}:</p>
+                     <Sparkles className="w-3 h-3 text-amber-600 dark:text-amber-400 flex-shrink-0" />
+                     <p className="text-amber-700 dark:text-amber-400 font-bold text-xs sm:text-sm">{t('forA0Missing')}:</p>
                    </div>
-                   <ul className="text-amber-300/80 text-xs space-y-0 ml-5">
+                   <ul className="text-amber-600/90 dark:text-amber-300/85 text-xs space-y-0 ml-5">
                      {a0Missing.map((item, i) => <li key={i}>• {item}</li>)}
                    </ul>
                  </div>
                ) : (
                   <div className="flex items-center gap-2">
-                     <Package className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                     <Package className="w-4 h-4 text-blue-600 dark:text-blue-400 flex-shrink-0" />
                      <div>
-                       <p className="text-blue-400 font-bold text-xs sm:text-sm">
+                       <p className="text-blue-700 dark:text-blue-400 font-bold text-xs sm:text-sm">
                          {typStavby === 'rodinny_dom' ? t('familyHouse') : t('recreationalBuilding')}
                        </p>
-                       <p className="text-blue-300/80 text-xs">
+                       <p className="text-blue-600/90 dark:text-blue-300/85 text-xs">
                          {typStavby === 'rodinny_dom' ? t('completeCalculation') : t('cottageOrGardenHouse')}
                        </p>
                      </div>
@@ -349,10 +349,10 @@ export default function KonfiguratorContactModal({
               </div>
 
               {/* Celková cena */}
-              <div className="mt-2 p-2 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-lg border border-green-500/30 flex-shrink-0">
+              <div className="mt-2 p-2 bg-gradient-to-br from-green-500/10 to-emerald-500/10 dark:from-green-500/20 dark:to-emerald-500/20 rounded-lg border border-green-500/20 dark:border-green-500/30 flex-shrink-0">
                <div className="flex justify-between items-center gap-2">
-                 <span className="text-slate-300 text-xs sm:text-sm">{t('totalWithVAT')}</span>
-                 <span className="text-lg sm:text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400 whitespace-nowrap">
+                 <span className="text-slate-700 dark:text-slate-300 text-xs sm:text-sm">{t('totalWithVAT')}</span>
+                 <span className="text-lg sm:text-2xl md:text-3xl font-black text-green-600 dark:text-green-400 whitespace-nowrap">
                    {formatPrice(totalPrice)}
                  </span>
                </div>

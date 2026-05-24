@@ -199,7 +199,7 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
                     <p className="text-xs sm:text-sm font-bold text-red-500/70 line-through">
                       {dom.zakladna_cena?.toLocaleString('sk-SK')} €
                     </p>
-                    <p className="text-lg sm:text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-emerald-800 dark:from-emerald-400 dark:to-emerald-600 group-hover:from-emerald-500 group-hover:to-emerald-700 dark:group-hover:from-emerald-300 dark:group-hover:to-emerald-500 transition-all drop-shadow-sm">
+                    <p className="text-lg sm:text-xl font-black text-emerald-600 dark:text-emerald-400 group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition-all drop-shadow-sm">
                       {Math.round(dom.zakladna_cena * 0.95)?.toLocaleString('sk-SK')} €
                     </p>
                   </div>
@@ -210,7 +210,7 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
                 </div>
               ) : (
                 <div>
-                  <p className="text-lg sm:text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-red-600 dark:from-red-400 dark:to-red-600 group-hover:from-secondary group-hover:to-red-500 dark:group-hover:from-red-300 dark:group-hover:to-red-500 transition-all drop-shadow-sm">
+                  <p className="text-lg sm:text-xl font-black text-red-600 dark:text-red-400 group-hover:text-red-700 dark:group-hover:text-red-300 transition-all drop-shadow-sm">
                     {dom.zakladna_cena?.toLocaleString('sk-SK')} €
                   </p>
                   <p className="text-[8px] sm:text-[10px] text-muted-foreground/75 mt-1">vrátane DPH</p>

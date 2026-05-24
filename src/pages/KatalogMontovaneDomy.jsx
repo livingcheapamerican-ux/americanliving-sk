@@ -476,7 +476,7 @@ export default function KatalogMontovaneDomy() {
                       </div>
                       <div>
                         <p className="text-slate-500 text-xs">{mt.priceFrom}</p>
-                        <p className="text-red-400">{dom.zakladna_cena?.toLocaleString('sk-SK')} €</p>
+                        <p className="text-red-600 dark:text-red-400">{dom.zakladna_cena?.toLocaleString('sk-SK')} €</p>
                       </div>
                     </div>
                   </div>

@@ -458,7 +458,7 @@ export default function KatalogModularneDomy() {
                       </div>
                       <div>
                         <p className="text-slate-500 text-xs">{mt.priceFrom}</p>
-                        <p className="text-blue-400">{dom.zakladna_cena?.toLocaleString('sk-SK')} €</p>
+                        <p className="text-blue-600 dark:text-blue-400">{dom.zakladna_cena?.toLocaleString('sk-SK')} €</p>
                       </div>
                     </div>
                   </div>
