@@ -17,18 +17,18 @@ export default function A0StatusHint({ isA0Compliant, insulationIdx, heatPump, r
   if (isA0Compliant) {
     return (
       <div className="mt-3 p-3 bg-emerald-500/10 rounded-xl border border-emerald-500/30">
-        <div className="flex items-center gap-2 text-emerald-400">
+        <div className="flex items-center gap-2 text-emerald-700 dark:text-emerald-400">
           <CheckCircle className="w-4 h-4 flex-shrink-0" />
           <span className="text-xs font-bold">Dom spĺňa všetky požiadavky pre energetický certifikát A0</span>
         </div>
-        <p className="text-[11px] text-emerald-500 mt-1 ml-6">{t ? t('meetsA0CertDesc') : 'Vhodné na kolaudáciu ako rodinný dom.'}</p>
+        <p className="text-[11px] text-emerald-600 dark:text-emerald-500 mt-1 ml-6">{t ? t('meetsA0CertDesc') : 'Vhodné na kolaudáciu ako rodinný dom.'}</p>
       </div>
     );
   }
 
   return (
     <div className="mt-3 p-3 bg-amber-500/10 rounded-xl border border-amber-500/30">
-      <div className="flex items-center gap-2 text-amber-400 mb-2">
+      <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400 mb-2">
         <AlertCircle className="w-4 h-4 flex-shrink-0" />
         <span className="text-xs font-bold">Pre A0 certifikát ešte chýba:</span>
       </div>
@@ -37,9 +37,9 @@ export default function A0StatusHint({ isA0Compliant, insulationIdx, heatPump, r
           <button
             key={i}
             onClick={() => onGoToSection && onGoToSection(m.section)}
-            className="flex items-center gap-2 text-xs text-amber-500 hover:text-amber-400 group w-full text-left transition-colors"
+            className="flex items-center gap-2 text-xs text-amber-600 dark:text-amber-500 hover:text-amber-700 dark:hover:text-amber-400 group w-full text-left transition-colors"
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 flex-shrink-0"></span>
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-600 dark:bg-amber-500 flex-shrink-0"></span>
             <span className="underline decoration-dotted group-hover:decoration-solid">{m.label}</span>
             <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
           </button>

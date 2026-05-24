@@ -13,6 +13,7 @@ import {
 
 // ── Glassmorphism Komponenty ──────────────────────────────────────────────
 const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmin, onPriceChange, icon: Icon }) => {
+  const { t } = useLanguage();
   const isStandard = price === 0;
   return (
   <button 
@@ -48,7 +49,7 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
           <div className="flex flex-col mb-1.5">
             {isA0 && (
               <span className="mb-2 inline-flex items-center self-start bg-amber-500/10 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-500/20 text-[10px] sm:text-[11px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                ★ Povinné pre rodinný dom A0
+                ★ {t('a0Required') || 'Povinné pre rodinný dom A0'}
               </span>
             )}
             <span className={`font-black text-base sm:text-lg transition-colors duration-300 ${
@@ -94,7 +95,7 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
                   ? 'text-base text-blue-600 dark:text-blue-300' 
                   : 'text-base text-slate-650 dark:text-slate-400'
           }`}>
-            {isStandard ? '✓ V základnej cene' : `+${price.toLocaleString()} €`}
+            {isStandard ? `✓ ${t('includedInPriceShort') || 'V základnej cene'}` : `+${price.toLocaleString()} €`}
           </span>
         </div>
       )}
@@ -103,7 +104,10 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
   );
 };
 
-const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = false, isAdmin, onPriceChange, description, t, icon: Icon }) => (
+const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = false, isAdmin, onPriceChange, description, t: propT, icon: Icon }) => {
+  const { t: contextT } = useLanguage();
+  const t = propT || contextT;
+  return (
   <button 
     onClick={!disabled && !locked ? onChange : undefined} 
     className={`flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-2xl border-2 transition-all duration-500 w-full active:scale-[0.98] group overflow-hidden relative gap-4 ${
@@ -133,7 +137,7 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
         <div className="flex flex-col mb-1.5">
           {locked && (
             <span className="mb-2 inline-flex items-center self-start bg-amber-500/10 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-500/20 text-[10px] sm:text-[11px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-              ★ Povinné pre rodinný dom A0
+              ★ {t('a0Required') || 'Povinné pre rodinný dom A0'}
             </span>
           )}
           <span className={`font-bold text-base sm:text-lg block transition-colors duration-300 ${
@@ -178,7 +182,7 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
                   ? 'text-sm text-emerald-600 dark:text-emerald-400' 
                   : 'text-base text-slate-650 dark:text-slate-400'
             }`}>
-              {price === 0 ? '✓ V základnej cene' : `+${price.toLocaleString()} €`}
+              {price === 0 ? `✓ ${t('includedInPriceShort') || 'V základnej cene'}` : `+${price.toLocaleString()} €`}
             </span>
           </div>
         )}
@@ -196,7 +200,8 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
       </div>
     </div>
   </button>
-);
+  );
+};
 
 const CounterRow = ({ label, price, value, onChange, isAdmin, onPriceChange, icon: Icon }) => (
   <div className="flex items-center justify-between p-4 rounded-2xl border-2 border-slate-200 dark:border-white/5 bg-white/40 dark:bg-white/[0.01] backdrop-blur-sm transition-all duration-500 hover:border-slate-350 dark:hover:border-white/20 group relative overflow-hidden">
@@ -851,7 +856,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
         <div className="flex-1 min-w-0 w-full lg:w-[65%] space-y-12 pb-32">
         
         {/* 0. Účel stavby */}
-        <section id="section-0" className="scroll-mt-32">
+        <section id="section-0" className="scroll-mt-32 border-b-2 border-slate-200 dark:border-white/10 pb-12">
           <BigSectionHeader title={getTranslatedText('sekcia_ucel', 'nazov') || t('purposeOfBuilding') || 'Účel stavby'} icon={Home} stepIdx={0} totalSteps={13} />
           <div className="grid sm:grid-cols-2 gap-4">
             <OptionCard 
@@ -895,7 +900,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
         </section>
 
         {/* 1. Izolácia */}
-        <section id="section-1" className="scroll-mt-32">
+        <section id="section-1" className="scroll-mt-32 border-b-2 border-slate-200 dark:border-white/10 pb-12">
           <BigSectionHeader title={getTranslatedText('sekcia_izolacia', 'nazov') || t('insulationSection') || 'Izolácia'} icon={Thermometer} stepIdx={1} totalSteps={13} />
           
           <SectionLabel label={getTranslatedText('izolacia_stien', 'nazov') || t('wallInsulation') || 'Izolácia stien'} color="red" />
@@ -919,7 +924,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
         </section>
 
         {/* 2. Vykurovanie */}
-        <section id="section-2" className="scroll-mt-32">
+        <section id="section-2" className="scroll-mt-32 border-b-2 border-slate-200 dark:border-white/10 pb-12">
           <BigSectionHeader title={getTranslatedText('sekcia_vykurovanie', 'nazov') || t('heatingSection') || 'Vykurovanie'} icon={Flame} stepIdx={2} totalSteps={13} />
           
           <SectionLabel label={getTranslatedText('tepelne_cerpadlo', 'nazov') || t('heating') || 'Tepelné čerpadlo'} color="orange" />
@@ -945,7 +950,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
         </section>
 
         {/* 3. Fasáda */}
-        <section id="section-3" className="scroll-mt-32">
+        <section id="section-3" className="scroll-mt-32 border-b-2 border-slate-200 dark:border-white/10 pb-12">
           <BigSectionHeader title={getTranslatedText('sekcia_fasada', 'nazov') || t('facadeSection') || 'Fasáda'} icon={Paintbrush} stepIdx={3} totalSteps={13} />
           <div className="grid sm:grid-cols-2 gap-4">
             <OptionCard label={getTranslatedText('fasada_drevo_smrek', 'nazov') || t('spruceWood')} selected={fasada === "drevo_smrek"} onClick={() => setFasada("drevo_smrek")} price={0} />
@@ -957,7 +962,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
         </section>
 
         {/* 4. Strecha */}
-        <section id="section-4" className="scroll-mt-32">
+        <section id="section-4" className="scroll-mt-32 border-b-2 border-slate-200 dark:border-white/10 pb-12">
           <BigSectionHeader title={getTranslatedText('sekcia_strecha', 'nazov') || t('roofSection') || 'Strecha'} icon={Home} stepIdx={4} totalSteps={13} />
           <SectionLabel label={getTranslatedText('stresna_krytina', 'nazov') || t('roofCoveringType') || 'Strešná krytina'} color="purple" />
           <div className="grid sm:grid-cols-2 gap-4 mb-8">
@@ -972,7 +977,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
         </section>
 
         {/* 5. Okná a dvere */}
-        <section id="section-5" className="scroll-mt-32">
+        <section id="section-5" className="scroll-mt-32 border-b-2 border-slate-200 dark:border-white/10 pb-12">
           <BigSectionHeader title={getTranslatedText('sekcia_okna_dvere', 'nazov') || t('windowsDoorsSection') || 'Okná a dvere'} icon={DoorOpen} stepIdx={5} totalSteps={13} />
           <SectionLabel label={getTranslatedText('okna_farba', 'nazov') || t('windowColor') || 'Farba okien 3-sklo'} color="blue" />
           <div className="grid sm:grid-cols-3 gap-4 mb-8">
@@ -988,7 +993,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
         </section>
 
         {/* 6. Interiér */}
-        <section id="section-6" className="scroll-mt-32">
+        <section id="section-6" className="scroll-mt-32 border-b-2 border-slate-200 dark:border-white/10 pb-12">
           <BigSectionHeader title={getTranslatedText('sekcia_interier', 'nazov') || t('interiorSection') || 'Interiér'} icon={Layout} stepIdx={6} totalSteps={13} />
           <SectionLabel label={getTranslatedText('obklad_stien', 'nazov') || t('wallCladding') || 'Obklad stien'} color="amber" />
           <div className="grid sm:grid-cols-2 gap-4 mb-8">
@@ -1009,7 +1014,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
         </section>
 
         {/* 7. Elektro */}
-        <section id="section-7" className="scroll-mt-32">
+        <section id="section-7" className="scroll-mt-32 border-b-2 border-slate-200 dark:border-white/10 pb-12">
           <BigSectionHeader title={getTranslatedText('sekcia_elektro', 'nazov') || t('electricalSection') || 'Elektroinštalácia'} icon={Zap} stepIdx={7} totalSteps={13} />
           <SectionLabel label={getTranslatedText('elektro_typ', 'nazov') || t('installationType') || 'Typ inštalácie'} color="yellow" />
           <div className="grid sm:grid-cols-3 gap-4 mb-8">
@@ -1026,7 +1031,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
         </section>
 
         {/* 8. Kúpeľňa */}
-        <section id="section-8" className="scroll-mt-32">
+        <section id="section-8" className="scroll-mt-32 border-b-2 border-slate-200 dark:border-white/10 pb-12">
           <BigSectionHeader title={getTranslatedText('sekcia_kupelna', 'nazov') || t('bathroomSection') || 'Kúpeľňa'} icon={Droplet} stepIdx={8} totalSteps={13} />
           <SectionLabel label={getTranslatedText('sprchovyKut', 'nazov') || t('showerCabin') || 'Sprchový kút'} color="teal" />
           <div className="grid sm:grid-cols-2 gap-4 mb-8">
@@ -1051,7 +1056,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
         </section>
 
         {/* 9. Základy */}
-        <section id="section-9" className="scroll-mt-32">
+        <section id="section-9" className="scroll-mt-32 border-b-2 border-slate-200 dark:border-white/10 pb-12">
           <BigSectionHeader title={getTranslatedText('sekcia_zaklady', 'nazov') || t('foundationsSection') || 'Základy'} icon={Wrench} stepIdx={9} totalSteps={13} />
           <div className="grid sm:grid-cols-2 gap-4">
             <OptionCard label={getTranslatedText('zaklady_bez', 'nazov') || t('noFoundations')} selected={zaklady === "bez"} onClick={() => setZaklady("bez")} price={0} />
@@ -1062,7 +1067,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
         </section>
 
         {/* 10. Inžiniering */}
-        <section id="section-10" className="scroll-mt-32">
+        <section id="section-10" className="scroll-mt-32 border-b-2 border-slate-200 dark:border-white/10 pb-12">
           <BigSectionHeader title={getTranslatedText('sekcia_inziniering', 'nazov') || t('engineeringDocsSection') || 'Inžiniering a dokumentácia'} icon={Layers} stepIdx={10} totalSteps={13} />
           <div className="space-y-4">
             <AddonRow label={getTranslatedText('inziniering', 'nazov') || t('engineering')} checked={inziniering} onChange={() => setInziniering(!inziniering)} price={CENY.inziniering} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('inziniering', p)} locked={ucel === "rodinny"} t={t} />
@@ -1072,7 +1077,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
         </section>
 
         {/* 11. Realizácia */}
-        <section id="section-11" className="scroll-mt-32">
+        <section id="section-11" className="scroll-mt-32 border-b-2 border-slate-200 dark:border-white/10 pb-12">
           <BigSectionHeader title={getTranslatedText('sekcia_realizacia', 'nazov') || t('realizationSection') || 'Realizácia'} icon={Hammer} stepIdx={11} totalSteps={13} />
           <div className="space-y-4">
             <AddonRow label={getTranslatedText('montaz', 'nazov') || t('houseAssembly')} checked={montaz} onChange={() => setMontaz(!montaz)} price={CENY.montaz} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('montaz', p)} />

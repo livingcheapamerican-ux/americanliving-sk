@@ -43,7 +43,7 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
       
       <div className="flex-1 min-w-0 mt-1">
         <div className="flex items-center gap-2 flex-wrap mb-1.5">
-          <span className={`font-black text-lg transition-colors duration-300 ${selected ? 'text-red-955 dark:text-white' : 'text-slate-800 dark:text-slate-200'}`}>{label}</span>
+          <span className={`font-black text-lg transition-colors duration-300 ${selected ? 'text-red-950 dark:text-white' : 'text-slate-800 dark:text-slate-200'}`}>{label}</span>
           {isA0 && <span className="bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.2)]">A0 Certifikácia</span>}
         </div>
         {description && <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-2">{description}</p>}
@@ -181,7 +181,7 @@ const CounterRow = ({ label, price, value, onChange, isAdmin, onPriceChange, ico
         −
       </button>
       <span className={`w-8 text-center font-black text-xl transition-colors duration-300 ${
-        value > 0 ? 'text-slate-900 dark:text-white' : 'text-slate-400 dark:text-slate-655'
+        value > 0 ? 'text-slate-900 dark:text-white' : 'text-slate-400 dark:text-slate-500'
       }`}>{value}</span>
       <button 
         onClick={() => onChange(value + 1)} 
@@ -535,21 +535,21 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
   const phCode = houseCode.replace('ph0', 'PH-0').replace('ph', 'PH-');
 
   return (
-    <div className="bg-slate-950 min-h-screen pb-40 lg:pb-32 font-['Outfit'] relative">
+    <div className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen pb-40 lg:pb-32 font-['Outfit'] relative transition-colors duration-300">
       
       {/* Background ambient glow */}
-      <div className="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-red-900/10 blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-900/10 blur-[120px]" />
+      <div className="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0 opacity-40 dark:opacity-100">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-red-500/5 dark:bg-red-900/10 blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-500/5 dark:bg-blue-900/10 blur-[120px]" />
       </div>
 
       <div className="container mx-auto px-4 py-8 lg:py-12 max-w-7xl relative z-10">
         
         {/* Hlavička domu */}
         <div className="mb-8 lg:mb-12">
-          <h1 className="text-3xl lg:text-5xl font-black text-white tracking-tight">{house.name}</h1>
+          <h1 className="text-3xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight">{house.name}</h1>
           <div className="flex items-center gap-3 mt-4">
-            <span className="bg-white/5 text-slate-300 border border-white/10 text-xs px-3 py-1.5 rounded-full uppercase tracking-widest font-bold backdrop-blur-md">
+            <span className="bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-white/10 text-xs px-3 py-1.5 rounded-full uppercase tracking-widest font-bold backdrop-blur-md">
               {phCode}
             </span>
             {isA0Compliant && (
@@ -564,15 +564,15 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
           
           {/* ĽAVÝ STĹPEC: Sticky Progress Menu (Len pre Desktop) */}
           <div className="hidden lg:block lg:col-span-4 sticky top-28">
-            <div className="bg-white/[0.02] border border-white/5 p-6 rounded-3xl backdrop-blur-md">
-              <h3 className="text-slate-500 font-bold uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
+            <div className="bg-white dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 p-6 rounded-3xl backdrop-blur-md shadow-sm dark:shadow-none">
+              <h3 className="text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
                 Postup konfigurácie
               </h3>
               
               <div className="space-y-3 relative">
                 {/* Connecting line */}
-                <div className="absolute left-6 top-6 bottom-6 w-[2px] bg-white/5" />
+                <div className="absolute left-6 top-6 bottom-6 w-[2px] bg-slate-200 dark:bg-white/5" />
                 
                 {sectionsConfig.map((step, idx) => {
                   const isActive = activeSection === idx;
@@ -581,16 +581,32 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
                     <button 
                       key={step.id}
                       onClick={() => scrollToSection(step.id)} 
-                      className={`relative w-full text-left flex items-center gap-4 p-3 rounded-2xl transition-all duration-300 group z-10 ${isActive ? 'bg-gradient-to-r from-red-500/10 to-transparent shadow-[inset_2px_0_0_0_rgba(239,68,68,1)]' : 'hover:bg-white/5'}`}
+                      className={`relative w-full text-left flex items-center gap-4 p-3 rounded-2xl transition-all duration-300 group z-10 ${isActive ? 'bg-gradient-to-r from-red-500/10 to-transparent shadow-[inset_2px_0_0_0_rgba(239,68,68,1)]' : 'hover:bg-slate-100 dark:hover:bg-white/5'}`}
                     >
-                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 shadow-md ${isActive ? 'bg-red-500 text-white scale-110 shadow-red-500/40' : isPassed ? 'bg-slate-800 text-slate-300' : 'bg-slate-900/50 text-slate-500 border border-white/5'}`}>
-                        {isPassed && !isActive ? <Check className="w-5 h-5 text-emerald-400" /> : <step.icon className="w-5 h-5" />}
+                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 shadow-md ${
+                        isActive 
+                          ? 'bg-red-500 text-white scale-110 shadow-red-500/40' 
+                          : isPassed 
+                            ? 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300' 
+                            : 'bg-slate-100/50 dark:bg-slate-900/50 text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-white/5'
+                      }`}>
+                        {isPassed && !isActive ? <Check className="w-5 h-5 text-emerald-600 dark:text-emerald-400" /> : <step.icon className="w-5 h-5" />}
                       </div>
                       <div>
-                        <div className={`font-black tracking-tight transition-colors ${isActive ? 'text-white text-lg' : isPassed ? 'text-slate-300 text-base' : 'text-slate-500 text-base'}`}>
+                        <div className={`font-black tracking-tight transition-colors ${
+                          isActive 
+                            ? 'text-slate-900 dark:text-white text-lg' 
+                            : isPassed 
+                              ? 'text-slate-700 dark:text-slate-300 text-base' 
+                              : 'text-slate-400 dark:text-slate-550 text-base'
+                        }`}>
                           {step.title}
                         </div>
-                        <div className={`text-xs uppercase tracking-widest font-bold mt-0.5 transition-colors ${isActive ? 'text-red-400' : 'text-slate-600'}`}>
+                        <div className={`text-xs uppercase tracking-widest font-bold mt-0.5 transition-colors ${
+                          isActive 
+                            ? 'text-red-600 dark:text-red-400' 
+                            : 'text-slate-400 dark:text-slate-600'
+                        }`}>
                           Krok {idx + 1}
                         </div>
                       </div>
@@ -601,9 +617,9 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
             </div>
             
             {/* Price Mini Summary in Sidebar */}
-            <div className="mt-6 bg-gradient-to-br from-slate-900 to-slate-950 border border-white/10 p-6 rounded-3xl shadow-xl">
-              <div className="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1">{t('totalWithVAT')}</div>
-              <div className="text-3xl font-black text-white mb-4">{totalPrice.toLocaleString()} €</div>
+            <div className="mt-6 bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-white/10 p-6 rounded-3xl shadow-xl">
+              <div className="text-[11px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mb-1">{t('totalWithVAT')}</div>
+              <div className="text-3xl font-black text-slate-900 dark:text-white mb-4">{totalPrice.toLocaleString()} €</div>
               <button 
                 onClick={() => setModalOpen(true)} 
                 className="w-full bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-4 rounded-2xl flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(239,68,68,0.4)] active:scale-95 transition-all text-lg"
@@ -811,7 +827,7 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
             <div id="section-5" className="scroll-mt-28">
               <BigSectionHeader title="Súhrn a Služby" description="Vyberte doplnkové služby pre bezstarostnú realizáciu a skontrolujte zhrnutie." icon={CheckCircle} stepIdx={5} totalSteps={6} />
               
-              <div className="bg-white/[0.02] border border-white/5 p-6 lg:p-8 rounded-3xl backdrop-blur-md mb-12">
+              <div className="bg-white dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 p-6 lg:p-8 rounded-3xl backdrop-blur-md mb-12 shadow-sm dark:shadow-none">
                 <SectionLabel label={t('documentation')} color="gray" />
                 <div className="space-y-3 mb-10">
                   <AddonRow icon={FileText} label={t('projectant')} price={getPrice('addon', 'projectant', house.addons.projectant)} checked={projectant} onChange={() => setProjectant(!projectant)} locked={typStavby === 'rodinny_dom'} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'projectant', p)} t={t} />
@@ -827,8 +843,8 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
                   <AddonRow icon={FileText} label={t('financing')} price={0} checked={financing} onChange={() => setFinancing(!financing)} t={t} />
                 </div>
                 
-                <div className="pt-8 border-t border-white/10">
-                  <h3 className="text-xl font-black text-white mb-6">Finálne zhrnutie konfigurácie</h3>
+                <div className="pt-8 border-t border-slate-200 dark:border-white/10">
+                  <h3 className="text-xl font-black text-slate-900 dark:text-white mb-6">Finálne zhrnutie konfigurácie</h3>
                   <ProstoHouseSummary
                     house={house} t={t} isA0Compliant={isA0Compliant} totalPrice={totalPrice} onSendQuote={() => setModalOpen(true)}
                     mountingIdx={mountingIdx} extensionIdx={extensionIdx} insulationIdx={insulationIdx} foundationIdx={foundationIdx}
@@ -857,7 +873,7 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
               {effectiveDom && (
                 <div className="mb-12">
                   <BigSectionHeader title="Fotogaléria a Pôdorysy" description="Prezrite si vizualizácie k vašej vybranej konfigurácii." icon={Eye} />
-                  <div className="bg-white/[0.02] border border-white/5 p-6 rounded-3xl backdrop-blur-md">
+                  <div className="bg-white dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 p-6 rounded-3xl backdrop-blur-md shadow-sm dark:shadow-none">
                     <KonfiguratorGaleria dom={effectiveDom} facadeIdx={facadeIdx} interiorIdx={interiorIdx} />
                   </div>
                 </div>
@@ -870,11 +886,11 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
       </div>
 
       {/* MOBILNÝ STICKY FOOTER (Zobrazený len na malých obrazovkách, na Desktope je skrytý kvôli sidebaru) */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-xl border-t border-white/10 z-40 p-4 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-t border-slate-200 dark:border-white/10 z-40 p-4 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] dark:shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
         <div className="max-w-3xl mx-auto flex items-center justify-between gap-4">
           <div className="flex-1 text-left">
-            <div className="text-[11px] text-slate-400 font-bold uppercase tracking-widest">{t('totalWithVAT')}</div>
-            <div className="text-2xl font-black text-white">{totalPrice.toLocaleString()} €</div>
+            <div className="text-[11px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest">{t('totalWithVAT')}</div>
+            <div className="text-2xl font-black text-slate-900 dark:text-white">{totalPrice.toLocaleString()} €</div>
           </div>
           <div className="flex-shrink-0 flex items-center gap-2">
             <button 

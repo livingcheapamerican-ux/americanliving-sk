@@ -14,6 +14,7 @@ import { motion } from "framer-motion";
 
 // ── Glassmorphism Komponenty ──────────────────────────────────────────────
 const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmin, onPriceChange, icon: Icon }) => {
+  const { t } = useLanguage();
   const isStandard = price === 0;
   return (
   <button 
@@ -49,7 +50,7 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
           <div className="flex flex-col mb-1.5">
             {isA0 && (
               <span className="mb-2 inline-flex items-center self-start bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-500/40 text-[10px] sm:text-[11px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider shadow-[0_0_15px_rgba(59,130,246,0.15)] dark:shadow-[0_0_15px_rgba(59,130,246,0.3)]">
-                ⚠️ Povinné pre Rodinný dom (A0)
+                ⚠️ {t('a0Required') || 'Povinné pre Rodinný dom (A0)'}
               </span>
             )}
             <span className={`font-black text-base sm:text-lg transition-colors duration-300 ${
@@ -95,13 +96,13 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
                   ? 'text-base text-blue-600 dark:text-blue-300' 
                   : 'text-base text-slate-600 dark:text-slate-400'
           }`}>
-            {isStandard ? 'Základný štandard' : `+${price.toLocaleString()} €`}
+            {isStandard ? (t('includedInPriceShort') || 'Základný štandard') : `+${price.toLocaleString()} €`}
           </span>
           {isStandard && (
             <span className={`block text-[10px] uppercase font-bold tracking-wider mt-0.5 ${
               selected ? 'text-red-500/80' : 'text-emerald-650/80 dark:text-emerald-500/80'
             }`}>
-              (Bez príplatku)
+              ({t('noSurcharge') || 'Bez príplatku'})
             </span>
           )}
         </div>
@@ -111,7 +112,10 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
   );
 };
 
-const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = false, isAdmin, onPriceChange, description, t, icon: Icon }) => (
+const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = false, isAdmin, onPriceChange, description, t: propT, icon: Icon }) => {
+  const { t: contextT } = useLanguage();
+  const t = propT || contextT;
+  return (
   <button 
     onClick={!disabled && !locked ? onChange : undefined} 
     className={`flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-2xl border-2 transition-all duration-500 w-full active:scale-[0.98] group overflow-hidden relative gap-4 ${
@@ -141,7 +145,7 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
         <div className="flex flex-col mb-1.5">
           {locked && (
             <span className="mb-2 inline-flex items-center self-start bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-500/40 text-[10px] sm:text-[11px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider shadow-[0_0_15px_rgba(59,130,246,0.15)] dark:shadow-[0_0_15px_rgba(59,130,246,0.3)]">
-              ⚠️ Povinné pre Rodinný dom (A0)
+              ⚠️ {t('a0Required') || 'Povinné pre Rodinný dom (A0)'}
             </span>
           )}
           <span className={`font-bold text-base sm:text-lg block transition-colors duration-300 ${
@@ -186,13 +190,13 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
                   ? 'text-sm text-emerald-600 dark:text-emerald-400' 
                   : 'text-base text-slate-600 dark:text-slate-400'
             }`}>
-              {price === 0 ? 'Základný štandard' : `+${price.toLocaleString()} €`}
+              {price === 0 ? (t('includedInPriceShort') || 'Základný štandard') : `+${price.toLocaleString()} €`}
             </span>
             {price === 0 && (
               <span className={`block text-[10px] uppercase font-bold tracking-wider mt-0.5 ${
                 locked ? 'text-emerald-650/80 dark:text-emerald-500/80' : 'text-emerald-655/80 dark:text-emerald-500/80'
               }`}>
-                (Bez príplatku)
+                ({t('noSurcharge') || 'Bez príplatku'})
               </span>
             )}
           </div>
@@ -211,7 +215,8 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
       </div>
     </div>
   </button>
-);
+  );
+};
 
 const CounterRow = ({ label, price, value, onChange, isAdmin, onPriceChange, icon: Icon }) => (
   <div className="flex items-center justify-between p-4 rounded-2xl border-2 border-slate-200 dark:border-white/5 bg-white dark:bg-white/[0.02] backdrop-blur-sm transition-all duration-500 hover:border-slate-300 dark:hover:border-white/20 group relative overflow-hidden">
