@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Calculator, Send } from "lucide-react";
+import { Calculator, Send, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
 
-export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyrobca, buttonText, hidePrice, mobileOnly }) {
+export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyrobca, buttonText, hidePrice, mobileOnly, onToggleSummary, isSummaryOpen }) {
   const [showContactModal, setShowContactModal] = useState(false);
   const [formData, setFormData] = useState({ meno: "", email: "", telefon: "", obec: "", poznamka: "" });
   const [sending, setSending] = useState(false);
@@ -67,33 +67,68 @@ export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyro
       <AnimatePresence>
         {isVisible && !hidePrice && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            className={mobileOnly ? "md:hidden fixed bottom-24 right-4 z-40 pointer-events-auto" : "fixed bottom-24 right-4 md:bottom-28 md:right-8 z-40 pointer-events-auto"}
+            exit={{ opacity: 0, y: 30 }}
+            className={mobileOnly 
+              ? "md:hidden fixed bottom-0 left-0 right-0 z-40 pointer-events-auto bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-t border-slate-200 dark:border-white/10 px-4 py-3 flex items-center justify-between shadow-[0_-8px_30px_rgba(0,0,0,0.12)]" 
+              : "fixed bottom-24 right-4 md:bottom-28 md:right-8 z-40 pointer-events-auto"
+            }
           >
-            <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl shadow-2xl border-2 border-white/50 overflow-hidden">
-              <div className="px-3 py-2">
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Calculator className="w-4 h-4" />
+            {mobileOnly && onToggleSummary ? (
+              <>
+                <div className="flex flex-col text-left cursor-pointer select-none" onClick={onToggleSummary}>
+                  <div className="flex items-center gap-1">
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">Zhrnutie konfigurácie</span>
+                    <motion.div animate={{ rotate: isSummaryOpen ? 180 : 0 }}>
+                      <ChevronUp className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+                    </motion.div>
                   </div>
-                  <div>
-                    <p className="text-[9px] text-white/90 leading-none">Celková cena</p>
-                    <p className="text-sm font-bold leading-tight">
-                      {price.toLocaleString('sk-SK')} €
-                    </p>
+                  <div className="text-lg font-black text-slate-900 dark:text-white leading-tight">
+                    {price.toLocaleString('sk-SK')} €
                   </div>
                 </div>
+                <div className="flex gap-2">
+                  <Button 
+                    onClick={onToggleSummary}
+                    variant="outline"
+                    className="border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-350 font-bold px-3 rounded-xl h-10 text-xs shadow-sm hover:bg-slate-100"
+                  >
+                    Zhrnutie
+                  </Button>
+                  <Button 
+                    onClick={() => setShowContactModal(true)}
+                    className="bg-gradient-to-r from-[#9E2A2B] to-[#802021] hover:from-[#802021] hover:to-[#611617] text-white font-bold px-4 rounded-xl shadow-lg shadow-primary/20 h-10 text-xs border-0"
+                  >
+                    <Send className="w-3.5 h-3.5 mr-1.5" />
+                    {buttonText || 'Mám záujem'}
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl shadow-2xl border-2 border-white/50 overflow-hidden">
+                <div className="px-3 py-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Calculator className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <p className="text-[9px] text-white/90 leading-none">Celková cena</p>
+                      <p className="text-sm font-bold leading-tight">
+                        {price.toLocaleString('sk-SK')} €
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <Button 
+                  onClick={() => setShowContactModal(true)}
+                  className="w-full bg-white/20 hover:bg-white/30 text-white font-bold border-t border-white/30 rounded-none rounded-b-xl py-2 h-auto text-xs"
+                >
+                  <Send className="w-3 h-3 mr-1.5" />
+                  {buttonText || 'Pošli ponuku'}
+                </Button>
               </div>
-              <Button 
-                onClick={() => setShowContactModal(true)}
-                className="w-full bg-white/20 hover:bg-white/30 text-white font-bold border-t border-white/30 rounded-none rounded-b-xl py-2 h-auto text-xs"
-              >
-                <Send className="w-3 h-3 mr-1.5" />
-                {buttonText || 'Pošli ponuku'}
-              </Button>
-            </div>
+            )}
           </motion.div>
         )}
         {isVisible && hidePrice && (

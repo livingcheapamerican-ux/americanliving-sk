@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useLanguage } from "./LanguageContext";
+import { motion, AnimatePresence } from "framer-motion";
 import FloatingPrice from "./FloatingPrice";
 import { 
   Home, Check, Send, X, Thermometer, Zap, Layout, Hammer, 
@@ -18,15 +19,15 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
     onClick={onClick} 
     className={`relative flex flex-col p-5 rounded-3xl border-2 transition-all duration-500 w-full text-left active:scale-[0.98] gap-2 overflow-hidden group backdrop-blur-md ${
       selected 
-        ? 'border-red-500 bg-red-500/10 dark:bg-gradient-to-br dark:from-red-500/10 dark:to-red-900/10 shadow-[0_0_30px_rgba(239,68,68,0.2)] scale-[1.02]' 
+        ? 'border-[#C5A880] bg-[#C5A880]/5 dark:bg-[#C5A880]/10 shadow-[0_0_25px_rgba(197,168,128,0.15)] scale-[1.02]' 
         : isStandard 
-          ? 'border-emerald-500/30 bg-emerald-500/5 hover:border-emerald-500/50 hover:bg-emerald-500/10' 
+          ? 'border-emerald-500/20 bg-emerald-500/5 hover:border-emerald-500/40 hover:bg-emerald-500/10' 
           : isA0 
-            ? 'border-blue-500/20 dark:border-blue-500/60 bg-blue-50/50 dark:bg-blue-500/10 hover:border-blue-400 hover:bg-blue-500/20 shadow-[0_0_20px_rgba(59,130,246,0.15)] dark:shadow-[0_0_20px_rgba(59,130,246,0.25)]' 
-            : 'border-slate-200 dark:border-white/5 bg-white dark:bg-white/[0.02] hover:border-slate-350 dark:hover:border-white/20 hover:bg-slate-50 dark:hover:bg-white/[0.05]'
+            ? 'border-blue-500/20 dark:border-blue-500/40 bg-blue-500/5 hover:border-blue-400 hover:bg-blue-500/10 shadow-[0_0_15px_rgba(59,130,246,0.05)]' 
+            : 'border-slate-200/80 dark:border-white/5 bg-white/40 dark:bg-white/[0.01] hover:border-slate-350 dark:hover:border-white/20 hover:bg-slate-50/80 dark:hover:bg-white/[0.04]'
     }`}
   >
-    {selected && <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-orange-500 opacity-80" />}
+    {selected && <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#C5A880] to-amber-500 opacity-80" />}
     {isA0 && !selected && <div className="absolute top-0 left-0 w-full h-1 bg-blue-500 opacity-60 animate-pulse" />}
     
     {/* Horná časť: Ikona, Názov a Checkbox */}
@@ -35,9 +36,9 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
         {Icon && (
           <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all duration-500 ${
             selected 
-              ? 'bg-gradient-to-br from-red-500 to-red-700 text-white shadow-xl shadow-red-500/30 rotate-3' 
+              ? 'bg-gradient-to-br from-[#C5A880] to-[#bfa177] text-white shadow-xl shadow-[#C5A880]/30 rotate-3' 
               : isA0 
-                ? 'bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 group-hover:scale-110 shadow-lg shadow-blue-500/10 dark:shadow-blue-500/20' 
+                ? 'bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 group-hover:scale-110 shadow-lg shadow-blue-500/10' 
                 : 'bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 group-hover:scale-110'
           }`}>
             <Icon className={`w-6 h-6 sm:w-7 sm:h-7 transition-transform duration-500 ${selected || isA0 ? 'scale-110' : 'scale-100'}`} />
@@ -46,28 +47,28 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
         <div className="flex-1 mt-1">
           <div className="flex flex-col mb-1.5">
             {isA0 && (
-              <span className="mb-2 inline-flex items-center self-start bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-500/40 text-[10px] sm:text-[11px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider shadow-[0_0_15px_rgba(59,130,246,0.15)] dark:shadow-[0_0_15px_rgba(59,130,246,0.3)]">
-                ⚠️ Povinné pre Rodinný dom (A0)
+              <span className="mb-2 inline-flex items-center self-start bg-amber-500/10 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-500/20 text-[10px] sm:text-[11px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                ★ Povinné pre rodinný dom A0
               </span>
             )}
             <span className={`font-black text-base sm:text-lg transition-colors duration-300 ${
               selected 
-                ? 'text-red-955 dark:text-white' 
+                ? 'text-[#C5A880] dark:text-[#C5A880]' 
                 : isA0 
                   ? 'text-blue-900 dark:text-blue-100' 
                   : 'text-slate-800 dark:text-slate-200'
             }`}>{label}</span>
           </div>
-          {description && <p className="text-xs sm:text-sm text-slate-655 dark:text-slate-400 leading-relaxed">{description}</p>}
+          {description && <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{description}</p>}
         </div>
       </div>
       
       <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all duration-500 mt-1 ${
         selected 
-          ? 'border-red-500 bg-red-500 scale-110 shadow-lg shadow-red-500/40' 
+          ? 'border-[#C5A880] bg-[#C5A880] scale-110 shadow-lg shadow-[#C5A880]/40' 
           : isA0 
-            ? 'border-blue-400/50 bg-blue-50 dark:bg-blue-955/50 shadow-[0_0_10px_rgba(59,130,246,0.2)]' 
-            : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950/50'
+            ? 'border-blue-400/50 bg-blue-50 dark:bg-blue-900/50 shadow-[0_0_10px_rgba(59,130,246,0.2)]' 
+            : 'border-slate-350 dark:border-slate-700 bg-white dark:bg-slate-950/50'
       }`}>
         {selected && <Check className="w-3 h-3 sm:w-4 sm:h-4 text-white" />}
       </div>
@@ -86,22 +87,15 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
         <div className="text-right flex flex-col items-end justify-center">
           <span className={`block font-black transition-colors duration-300 ${
             selected 
-              ? 'text-base text-red-600 dark:text-red-400' 
+              ? 'text-base text-[#C5A880] dark:text-[#C5A880]' 
               : isStandard 
                 ? 'text-sm text-emerald-600 dark:text-emerald-400' 
                 : isA0 
                   ? 'text-base text-blue-600 dark:text-blue-300' 
-                  : 'text-base text-slate-600 dark:text-slate-400'
+                  : 'text-base text-slate-650 dark:text-slate-400'
           }`}>
-            {isStandard ? 'Základný štandard' : `+${price.toLocaleString()} €`}
+            {isStandard ? '✓ V základnej cene' : `+${price.toLocaleString()} €`}
           </span>
-          {isStandard && (
-            <span className={`block text-[10px] uppercase font-bold tracking-wider mt-0.5 ${
-              selected ? 'text-red-500/80' : 'text-emerald-650/80 dark:text-emerald-500/80'
-            }`}>
-              (Bez príplatku)
-            </span>
-          )}
         </div>
       )}
     </div>
@@ -114,23 +108,23 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
     onClick={!disabled && !locked ? onChange : undefined} 
     className={`flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-2xl border-2 transition-all duration-500 w-full active:scale-[0.98] group overflow-hidden relative gap-4 ${
       locked 
-        ? 'border-blue-500/30 bg-blue-50/50 dark:bg-blue-500/10 cursor-not-allowed shadow-[0_0_20px_rgba(59,130,246,0.15)] dark:shadow-[0_0_20px_rgba(59,130,246,0.25)] backdrop-blur-md' 
+        ? 'border-blue-500/20 bg-blue-500/5 cursor-not-allowed shadow-[0_0_15px_rgba(59,130,246,0.05)] backdrop-blur-md' 
         : checked 
-          ? 'border-red-500 bg-red-500/5 dark:bg-gradient-to-r dark:from-red-500/10 dark:to-transparent shadow-[0_0_20px_rgba(239,68,68,0.1)] scale-[1.01] backdrop-blur-md' 
+          ? 'border-[#C5A880] bg-[#C5A880]/5 dark:bg-gradient-to-r dark:from-[#C5A880]/10 dark:to-transparent shadow-[0_0_20px_rgba(197,168,128,0.12)] scale-[1.01] backdrop-blur-md' 
           : disabled 
             ? 'border-slate-200 dark:border-white/5 bg-slate-100/50 dark:bg-slate-900/50 opacity-60 cursor-not-allowed' 
-            : 'border-slate-200 dark:border-white/5 bg-white dark:bg-white/[0.02] hover:border-slate-350 dark:hover:border-white/20 hover:bg-slate-50 dark:hover:bg-white/[0.05] backdrop-blur-sm'
+            : 'border-slate-200/80 dark:border-white/5 bg-white/40 dark:bg-white/[0.01] hover:border-slate-350 dark:hover:border-white/20 hover:bg-slate-50/80 dark:hover:bg-white/[0.04] backdrop-blur-sm'
     }`}
   >
-    {checked && !locked && <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500" />}
+    {checked && !locked && <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#C5A880]" />}
     {locked && <div className="absolute top-0 left-0 w-full h-1 bg-blue-500 opacity-60 animate-pulse" />}
     
     <div className="flex items-start sm:items-center gap-4 w-full relative z-10">
       <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors duration-500 ${
         locked 
-          ? 'bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 shadow-lg shadow-blue-500/10 dark:shadow-blue-500/20' 
+          ? 'bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 shadow-lg shadow-blue-500/10' 
           : checked 
-            ? 'bg-gradient-to-br from-red-500 to-red-600 text-white shadow-lg shadow-red-500/20' 
+            ? 'bg-gradient-to-br from-[#C5A880] to-[#bfa177] text-white shadow-lg shadow-[#C5A880]/20' 
             : 'bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 group-hover:scale-110 transition-transform duration-300'
       }`}>
         {Icon ? <Icon className={`w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-500 ${checked || locked ? 'scale-110' : 'scale-100'}`} /> : (locked ? <Lock className="w-4 h-4 sm:w-5 sm:h-5" /> : <CheckSquare className="w-4 h-4 sm:w-5 sm:h-5" />)}
@@ -138,28 +132,28 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
       <div className="text-left flex-1 pr-4">
         <div className="flex flex-col mb-1.5">
           {locked && (
-            <span className="mb-2 inline-flex items-center self-start bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-500/40 text-[10px] sm:text-[11px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider shadow-[0_0_15px_rgba(59,130,246,0.15)] dark:shadow-[0_0_15px_rgba(59,130,246,0.3)]">
-              ⚠️ Povinné pre Rodinný dom (A0)
+            <span className="mb-2 inline-flex items-center self-start bg-amber-500/10 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-500/20 text-[10px] sm:text-[11px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+              ★ Povinné pre rodinný dom A0
             </span>
           )}
           <span className={`font-bold text-base sm:text-lg block transition-colors duration-300 ${
             locked 
               ? 'text-blue-900 dark:text-blue-100' 
               : checked 
-                ? 'text-red-955 dark:text-white' 
+                ? 'text-[#C5A880] dark:text-[#C5A880]' 
                 : 'text-slate-800 dark:text-slate-200'
           }`}>{label}</span>
         </div>
-        {description && <p className="text-xs sm:text-sm text-slate-655 dark:text-slate-400 leading-relaxed">{description}</p>}
+        {description && <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{description}</p>}
       </div>
       
       {/* Checkbox na mobile zobrazený hore vedľa nadpisu, na desktope skrytý */}
       <div className={`sm:hidden w-6 h-6 mt-1 rounded border-2 flex items-center justify-center transition-all duration-300 flex-shrink-0 ${
         locked 
-          ? 'border-blue-400/50 bg-blue-50 dark:bg-blue-950/50 shadow-[0_0_10px_rgba(59,130,246,0.2)]' 
+          ? 'border-blue-400/50 bg-blue-50 dark:bg-blue-900/50 shadow-[0_0_10px_rgba(59,130,246,0.2)]' 
           : checked 
-            ? 'border-red-500 bg-red-500 scale-110' 
-            : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950/50'
+            ? 'border-[#C5A880] bg-[#C5A880] scale-110' 
+            : 'border-slate-350 dark:border-slate-700 bg-white dark:bg-slate-950/50'
       }`}>
         {locked ? <Lock className="w-4 h-4 text-white" /> : checked && <Check className="w-4 h-4 text-white" />}
       </div>
@@ -182,17 +176,10 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
                 ? 'text-base text-blue-600 dark:text-blue-300' 
                 : price === 0 
                   ? 'text-sm text-emerald-600 dark:text-emerald-400' 
-                  : 'text-base text-slate-600 dark:text-slate-400'
+                  : 'text-base text-slate-650 dark:text-slate-400'
             }`}>
-              {price === 0 ? 'Základný štandard' : `+${price.toLocaleString()} €`}
+              {price === 0 ? '✓ V základnej cene' : `+${price.toLocaleString()} €`}
             </span>
-            {price === 0 && (
-              <span className={`block text-[10px] uppercase font-bold tracking-wider mt-0.5 ${
-                locked ? 'text-emerald-650/80 dark:text-emerald-500/80' : 'text-emerald-655/80 dark:text-emerald-500/80'
-              }`}>
-                (Bez príplatku)
-              </span>
-            )}
           </div>
         )}
       </div>
@@ -200,10 +187,10 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
       {/* Checkbox na desktope zobrazený vpravo od ceny */}
       <div className={`hidden sm:flex w-6 h-6 rounded border-2 items-center justify-center transition-all duration-300 flex-shrink-0 ${
         locked 
-          ? 'border-blue-400/50 bg-blue-50 dark:bg-blue-950/50 shadow-[0_0_10px_rgba(59,130,246,0.2)]' 
+          ? 'border-blue-400/50 bg-blue-50 dark:bg-blue-900/50 shadow-[0_0_10px_rgba(59,130,246,0.2)]' 
           : checked 
-            ? 'border-red-500 bg-red-500 scale-110' 
-            : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950/50'
+            ? 'border-[#C5A880] bg-[#C5A880] scale-110' 
+            : 'border-slate-350 dark:border-slate-700 bg-white dark:bg-slate-950/50'
       }`}>
         {locked ? <Lock className="w-4 h-4 text-white" /> : checked && <Check className="w-4 h-4 text-white" />}
       </div>
@@ -212,8 +199,8 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
 );
 
 const CounterRow = ({ label, price, value, onChange, isAdmin, onPriceChange, icon: Icon }) => (
-  <div className="flex items-center justify-between p-4 rounded-2xl border-2 border-slate-200 dark:border-white/5 bg-white dark:bg-white/[0.02] backdrop-blur-sm transition-all duration-500 hover:border-slate-300 dark:hover:border-white/20 group relative overflow-hidden">
-    {value > 0 && <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500" />}
+  <div className="flex items-center justify-between p-4 rounded-2xl border-2 border-slate-200 dark:border-white/5 bg-white/40 dark:bg-white/[0.01] backdrop-blur-sm transition-all duration-500 hover:border-slate-350 dark:hover:border-white/20 group relative overflow-hidden">
+    {value > 0 && <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#C5A880]" />}
     <div className="flex items-center gap-4 relative z-10">
       {Icon && (
         <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors duration-500 ${
@@ -232,7 +219,7 @@ const CounterRow = ({ label, price, value, onChange, isAdmin, onPriceChange, ico
             <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-16 text-sm font-bold text-red-400 bg-slate-950 outline-none border border-red-500/30 rounded px-1 py-0.5" />
           </div>
         ) : (
-          <div className="text-sm text-red-655 dark:text-red-400 font-bold mt-1">{price} € / ks</div>
+          <div className="text-sm text-slate-700 dark:text-slate-300 font-bold mt-1">{price} € / ks</div>
         )}
       </div>
     </div>
@@ -244,11 +231,11 @@ const CounterRow = ({ label, price, value, onChange, isAdmin, onPriceChange, ico
         −
       </button>
       <span className={`w-8 text-center font-black text-xl transition-colors duration-300 ${
-        value > 0 ? 'text-slate-900 dark:text-white' : 'text-slate-450 dark:text-slate-600'
+        value > 0 ? 'text-slate-900 dark:text-white' : 'text-slate-400 dark:text-slate-600'
       }`}>{value}</span>
       <button 
         onClick={() => onChange(value + 1)} 
-        className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 flex items-center justify-center font-bold active:scale-90 transition-all shadow-[0_0_15px_rgba(239,68,68,0.4)]"
+        className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#9E2A2B] to-[#802021] text-white hover:opacity-90 flex items-center justify-center font-bold active:scale-90 transition-all shadow-[0_0_15px_rgba(158,42,43,0.3)]"
       >
         +
       </button>
@@ -264,7 +251,7 @@ const SectionLabel = ({ label, color = 'gray' }) => {
     'amber': 'text-amber-700 dark:text-amber-400',
     'blue': 'text-blue-700 dark:text-blue-400',
     'purple': 'text-purple-700 dark:text-purple-400',
-    'red': 'text-red-750 dark:text-red-400',
+    'red': 'text-[#9E2A2B] dark:text-[#C5A880]',
     'emerald': 'text-emerald-700 dark:text-emerald-400',
     'green': 'text-green-700 dark:text-green-400',
     'yellow': 'text-yellow-750 dark:text-yellow-400'
@@ -279,17 +266,17 @@ const SectionLabel = ({ label, color = 'gray' }) => {
 
 const BigSectionHeader = ({ title, description, icon: Icon, stepIdx, totalSteps }) => (
   <div className="mb-8 border-b border-slate-200 dark:border-white/10 pb-6">
-    <div className="lg:hidden text-red-500 font-bold uppercase tracking-widest text-xs mb-4 flex items-center gap-2">
-      <span className="w-8 h-[2px] bg-red-500"></span>
+    <div className="lg:hidden text-[#9E2A2B] dark:text-[#C5A880] font-bold uppercase tracking-widest text-xs mb-4 flex items-center gap-2">
+      <span className="w-8 h-[2px] bg-current"></span>
       Krok {stepIdx + 1} z {totalSteps}
     </div>
     <div className="flex items-start gap-4">
-      <div className="w-12 h-12 lg:w-14 lg:h-14 flex-shrink-0 bg-red-500/10 border border-red-500/30 rounded-2xl flex items-center justify-center shadow-[0_0_15px_rgba(239,68,68,0.2)]">
-        <Icon className="w-6 h-6 lg:w-7 lg:h-7 text-red-500" />
+      <div className="w-12 h-12 lg:w-14 lg:h-14 flex-shrink-0 bg-[#C5A880]/10 border border-[#C5A880]/30 rounded-2xl flex items-center justify-center shadow-[0_0_15px_rgba(197,168,128,0.15)]">
+        <Icon className="w-6 h-6 lg:w-7 lg:h-7 text-[#9E2A2B] dark:text-[#C5A880]" />
       </div>
       <div>
         <h2 className="text-2xl lg:text-3xl font-black text-slate-900 dark:text-white tracking-tight mb-2">{title}</h2>
-        {description && <p className="text-slate-600 dark:text-slate-400 text-sm lg:text-base leading-relaxed">{description}</p>}
+        {description && <p className="text-slate-600 dark:text-slate-350 text-sm lg:text-base leading-relaxed">{description}</p>}
       </div>
     </div>
   </div>
@@ -639,16 +626,221 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
     }
   };
 
+  const [isMobileSummaryOpen, setIsMobileSummaryOpen] = useState(false);
+
+  const renderGroupedSummary = () => {
+    const categories = [
+      {
+        title: "1. Konštrukcia & Izolácia",
+        items: [
+          { label: "Účel stavby", value: ucel === "chata" ? "Rekreačná chata" : "Rodinný dom (A0)", isStandard: false },
+          { 
+            label: "Izolácia stien", 
+            value: izolaciaStien === "150mm" ? "150 mm" : `${izolaciaStien}`, 
+            price: izolaciaStien === "150mm" ? 0 : (CENY[`izolacia_stien_${izolaciaStien}`] || 0),
+            isStandard: izolaciaStien === "150mm"
+          },
+          { 
+            label: "Izolácia podlahy", 
+            value: izolaciaPodlahy === "150mm" ? "150 mm" : `${izolaciaPodlahy}`, 
+            price: izolaciaPodlahy === "150mm" ? 0 : (CENY[`izolacia_podlahy_${izolaciaPodlahy}`] || 0),
+            isStandard: izolaciaPodlahy === "150mm"
+          },
+          { 
+            label: "Izolácia stropu", 
+            value: izolaciaStropu === "150mm" ? "150 mm" : `${izolaciaStropu}`, 
+            price: izolaciaStropu === "150mm" ? 0 : (CENY[`izolacia_stropu_${izolaciaStropu}`] || 0),
+            isStandard: izolaciaStropu === "150mm"
+          },
+          { 
+            label: "Základy", 
+            value: zaklady === "bez" ? "Bez základov" :
+                   zaklady === "vruty" ? "Zemné skrutky" :
+                   zaklady === "patky" ? "Betónové pätky" : "Pásové základy", 
+            price: zaklady === "bez" ? 0 : (CENY[`zaklady_${zaklady}`] || 0),
+            isStandard: zaklady === "bez"
+          },
+        ]
+      },
+      {
+        title: "2. Exteriér & Fasáda",
+        items: [
+          { 
+            label: "Fasáda", 
+            value: fasada === "drevo_smrek" ? "Severský smrek" : 
+                   fasada === "omietka" ? "Šúchaná omietka" :
+                   fasada === "smrekovec" ? "Sibírsky smrekovec" :
+                   fasada === "falcovane" ? "Falcovaný plech" : "Thermowood", 
+            price: fasada === "drevo_smrek" ? 0 : (CENY[`fasada_${fasada}`] || 0),
+            isStandard: fasada === "drevo_smrek"
+          },
+          { 
+            label: "Strešná krytina", 
+            value: strecha === "korugovan_plech" ? "Korugovaný plech" : "Falcovaný plech", 
+            price: strecha === "korugovan_plech" ? 0 : (CENY.strecha_falcovane || 0),
+            isStandard: strecha === "korugovan_plech"
+          },
+          { 
+            label: "Odkvapy", 
+            value: odkvapy === "ano" ? "Áno" : "Nie", 
+            price: odkvapy === "ano" ? (CENY.odkvapy || 0) : 0,
+            isStandard: odkvapy !== "ano",
+            hideIfStandard: true,
+            active: odkvapy === "ano"
+          },
+          { 
+            label: "Farba okien", 
+            value: okna === "biele" ? "Biele" : okna === "antracit" ? "Antracit" : "Hnedé", 
+            price: 0,
+            isStandard: true
+          },
+          { 
+            label: "Vchodové dvere", 
+            value: vchodoveDvere === "plastove" ? "Plastovo-kovové" : "Kovové", 
+            price: vchodoveDvere === "plastove" ? 0 : (CENY.dvere_kovove || 0),
+            isStandard: vchodoveDvere === "plastove"
+          },
+        ]
+      },
+      {
+        title: "3. Interiér & Kúpeľňa",
+        items: [
+          { 
+            label: "Obklad stien", 
+            value: obkladStien === "smrek_8cm" ? "Smrek 8cm" :
+                   obkladStien === "smrek_bez_uzlov" ? "Smrek bez uzlov" :
+                   obkladStien === "sadrokarton_tapeta" ? "Sadrokartón/Tapeta" : "OSB panel", 
+            price: obkladStien === "smrek_8cm" ? 0 : (CENY[`obklad_${obkladStien}`] || 0),
+            isStandard: obkladStien === "smrek_8cm"
+          },
+          { 
+            label: "Podlaha", 
+            value: "Laminát", 
+            price: 0,
+            isStandard: true
+          },
+          { 
+            label: "Interiérové dvere", 
+            value: interieroveDvere === "kridlove" ? "Krídlové" : "Posuvné", 
+            price: interieroveDvere === "kridlove" ? 0 : (CENY.dvere_posuvne || 0),
+            isStandard: interieroveDvere === "kridlove"
+          },
+          { 
+            label: "Sprchový kút", 
+            value: sprchovyKut === "standard" ? "Štandard" : "Radaway", 
+            price: sprchovyKut === "standard" ? 0 : (CENY.sprchovyKut || 0),
+            isStandard: sprchovyKut === "standard"
+          },
+          { 
+            label: "Kúpeľňová batéria", 
+            value: bateria === "standard" ? "Štandard" : "Grohe", 
+            price: bateria === "standard" ? 0 : (CENY.bateria || 0),
+            isStandard: bateria === "standard"
+          },
+          { 
+            label: "Strop v kúpeľni", 
+            value: stropKupelna === "drevo" ? "Drevený obklad" : "Sadrokartón", 
+            price: 0,
+            isStandard: true
+          },
+          { 
+            label: "Vaňa", 
+            value: "Áno", 
+            price: CENY.vana || 0, 
+            isStandard: false, 
+            hideIfStandard: true,
+            active: vana
+          },
+          { 
+            label: "Skrinka s umývadlom", 
+            value: "Áno", 
+            price: CENY.skrinka || 0, 
+            isStandard: false, 
+            hideIfStandard: true,
+            active: skrinka
+          },
+        ]
+      },
+      {
+        title: "4. Technológie & Služby",
+        items: [
+          { label: "Tepelné čerpadlo", value: "Áno", price: CENY.tepelne_cerpadlo || 0, isStandard: false, active: tepelneCerpadlo === "ano", hideIfStandard: true },
+          { label: "Príprava na rekuperáciu", value: "Áno", price: CENY.pripravaNaRekuperaciu || 0, isStandard: false, active: pripravaNaRekuperaciu, hideIfStandard: true },
+          { label: "Rekuperácia", value: "Áno", price: CENY.rekuperacia || 0, isStandard: false, active: rekuperacia === "ano", hideIfStandard: true },
+          { label: "Podlahové kúrenie", value: "Áno", price: CENY.podlahove_kurenie || 0, isStandard: false, active: podlahovoKurenie, hideIfStandard: true },
+          { label: "Klimatizácia", value: "Áno", price: CENY.klimatizacia || 0, isStandard: false, active: klimatizacia, hideIfStandard: true },
+          { label: "Príprava na krb", value: "Áno", price: CENY.pripravaKrb || 0, isStandard: false, active: pripravaNaKrb, hideIfStandard: true },
+          { label: "Ochrana (Kachle)", value: "Áno", price: CENY.ochranaKachle || 0, isStandard: false, active: ochranaKachle, hideIfStandard: true },
+          { label: "Bleskozvod", value: "Áno", price: CENY.bleskozvod || 0, isStandard: false, active: bleskozvod, hideIfStandard: true },
+          { label: "Prepäťová ochrana", value: "Áno", price: CENY.prepat || 0, isStandard: false, active: prepat, hideIfStandard: true },
+          { label: "Príprava na solárne panely", value: "Áno", price: CENY.pripravaNaSolarnePanely || 0, isStandard: false, active: pripravaNaSolarnePanely, hideIfStandard: true },
+          { label: "Inžiniering", value: "Áno", price: CENY.inziniering || 0, isStandard: false, active: inziniering, hideIfStandard: true },
+          { label: "Projekt a certifikácia", value: "Áno", price: CENY.projektACertifikacia || 0, isStandard: false, active: projektACertifikacia, hideIfStandard: true },
+          { label: "Revízia", value: "Áno", price: CENY.revizia || 0, isStandard: false, active: revizia, hideIfStandard: true },
+          { label: "Montáž domu", value: "Áno", price: CENY.montaz || 0, isStandard: false, active: montaz, hideIfStandard: true },
+          { label: "Doprava", value: "Áno", price: CENY.doprava || 0, isStandard: false, active: doprava && dopravaViditelna, hideIfStandard: true, condition: dopravaViditelna },
+          { label: "Predaj nehnuteľnosti", value: "Áno", price: 0, isStandard: true, active: predajNehnutelnosti, hideIfStandard: true },
+          { label: "Chcem pozemok", value: "Áno", price: 0, isStandard: true, active: hladamPozemok, hideIfStandard: true },
+          { label: "Finančné služby", value: "Áno", price: 0, isStandard: true, active: financneSluzby, hideIfStandard: true },
+        ]
+      }
+    ];
+
+    return (
+      <div className="space-y-4">
+        {categories.map((category, idx) => {
+          const visibleItems = category.items.filter(item => {
+            if (item.condition === false) return false;
+            if (item.hideIfStandard) {
+              return item.active;
+            }
+            return true;
+          });
+
+          if (visibleItems.length === 0) return null;
+
+          return (
+            <div key={idx} className="bg-slate-50 dark:bg-white/[0.02] border border-slate-200/50 dark:border-white/5 rounded-2xl p-4 space-y-3">
+              <div className="text-[10px] font-bold text-[#C5A880] uppercase tracking-wider mb-1">
+                {category.title}
+              </div>
+              <div className="space-y-2">
+                {visibleItems.map((item, itemIdx) => (
+                  <div key={itemIdx} className="flex justify-between items-baseline gap-4 text-xs">
+                    <span className="text-slate-500 dark:text-slate-400 font-medium">{item.label}</span>
+                    <div className="text-right flex items-center gap-1.5">
+                      <span className="font-bold text-slate-800 dark:text-slate-200">{item.value}</span>
+                      {item.price > 0 && (
+                        <span className="text-[10px] text-[#C5A880] font-black">
+                          (+{item.price.toLocaleString('sk-SK')} €)
+                        </span>
+                      )}
+                      {item.isStandard && (
+                        <span className="text-[9px] text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.2 rounded-md">
+                          V cene
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
   return (
     <div className="flex flex-col w-full relative mt-8 font-sans">
       {/* Vysvetlenie Štandardu */}
-      <div className="w-full bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-6 mb-8 flex gap-4 items-start shadow-lg">
-        <div className="bg-emerald-500/20 p-3 rounded-full text-emerald-400">
+      <div className="w-full bg-emerald-50/5 dark:bg-emerald-500/10 border border-emerald-500/20 dark:border-emerald-500/30 rounded-2xl p-6 mb-8 flex gap-4 items-start shadow-sm">
+        <div className="bg-emerald-500/10 dark:bg-emerald-500/20 p-3 rounded-full text-emerald-600 dark:text-emerald-400 flex-shrink-0">
           <CheckCircle className="w-6 h-6" />
         </div>
         <div>
-          <h3 className="text-lg font-bold text-white mb-1">Prémiový drevodom v základnej cene</h3>
-          <p className="text-sm text-slate-300 leading-relaxed">
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">Prémiový drevodom v základnej cene</h3>
+          <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
             Domy Ticab House sú štandardne dodávané ako prémiové drevodomy s kvalitným dreveným obkladom fasády aj interiéru. Tento luxusný drevený štandard je už zahrnutý v základnej cene. Priplácate si výlučne iba za zmeny štandardu (napr. ak chcete vymeniť drevo za sadrokartón).
           </p>
         </div>
@@ -940,332 +1132,28 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
         
         {/* PRAVÝ STĹPEC - Sticky Účtenka */}
         <aside className="hidden lg:block w-[35%] flex-shrink-0 sticky top-24 h-[calc(100vh-8rem)] overflow-y-auto custom-scrollbar z-40">
-          <div className="bg-slate-900 border border-white/10 rounded-3xl p-6 shadow-2xl flex flex-col h-full">
-            <h3 className="text-lg font-black text-white mb-4 border-b border-white/10 pb-4">Zhrnutie konfigurácie</h3>
+          <div className="bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-3xl p-6 shadow-2xl flex flex-col h-full">
+            <h3 className="text-lg font-black text-slate-900 dark:text-white mb-4 border-b border-slate-100 dark:border-white/5 pb-4">Zhrnutie konfigurácie</h3>
             
-            <div className="flex-1 overflow-y-auto pr-2 space-y-4 mb-6 text-sm">
-              <div className="flex justify-between text-slate-350 pb-2 border-b border-white/10">
+            <div className="flex-1 overflow-y-auto pr-2 space-y-4 mb-6">
+              <div className="flex justify-between text-slate-500 dark:text-slate-400 pb-2 border-b border-slate-100 dark:border-white/5 text-sm">
                 <span>Základná cena domu</span>
-                <span className="font-bold text-white">{dom?.zakladna_cena?.toLocaleString('sk-SK')} €</span>
+                <span className="font-bold text-slate-900 dark:text-white">{dom?.zakladna_cena?.toLocaleString('sk-SK')} €</span>
               </div>
               
-              <div className="space-y-3">
-                <div className="text-xs font-bold text-red-400 uppercase tracking-widest mb-1">Zvolené parametre:</div>
-                
-                {/* Účel stavby */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Účel stavby</span>
-                  <span className="font-semibold text-white">
-                    {ucel === "chata" ? "Rekreačná chata" : "Rodinný dom (A0)"}
-                  </span>
-                </div>
-
-                {/* Izolácia stien */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Izolácia stien</span>
-                  <span className="font-semibold text-white">
-                    {izolaciaStien === "150mm" ? "150 mm (Základ)" : `${izolaciaStien} (+${CENY[`izolacia_stien_${izolaciaStien}`]?.toLocaleString('sk-SK')} €)`}
-                  </span>
-                </div>
-
-                {/* Izolácia podlahy */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Izolácia podlahy</span>
-                  <span className="font-semibold text-white">
-                    {izolaciaPodlahy === "150mm" ? "150 mm (Základ)" : `${izolaciaPodlahy} (+${CENY[`izolacia_podlahy_${izolaciaPodlahy}`]?.toLocaleString('sk-SK')} €)`}
-                  </span>
-                </div>
-
-                {/* Izolácia stropu */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Izolácia stropu</span>
-                  <span className="font-semibold text-white">
-                    {izolaciaStropu === "150mm" ? "150 mm (Základ)" : `${izolaciaStropu} (+${CENY[`izolacia_stropu_${izolaciaStropu}`]?.toLocaleString('sk-SK')} €)`}
-                  </span>
-                </div>
-
-                {/* Fasáda */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Fasáda</span>
-                  <span className="font-semibold text-white">
-                    {fasada === "drevo_smrek" ? "Severský smrek (Základ)" : 
-                     fasada === "omietka" ? `Omietka (+${CENY.fasada_omietka?.toLocaleString('sk-SK')} €)` :
-                     fasada === "smrekovec" ? `Červený smrekovec (+${CENY.fasada_smrekovec?.toLocaleString('sk-SK')} €)` :
-                     fasada === "falcovane" ? `Falcovaný plech (+${CENY.fasada_falcovane?.toLocaleString('sk-SK')} €)` :
-                     fasada === "thermowood" ? `Thermowood (+${CENY.fasada_thermowood?.toLocaleString('sk-SK')} €)` : fasada}
-                  </span>
-                </div>
-
-                {/* Strecha */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Strešná krytina</span>
-                  <span className="font-semibold text-white">
-                    {strecha === "korugovan_plech" ? "Korugovaný plech (Základ)" : `Falcovaný plech (+${CENY.strecha_falcovane?.toLocaleString('sk-SK')} €)`}
-                  </span>
-                </div>
-
-                {/* Farba okien */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Farba okien</span>
-                  <span className="font-semibold text-white">
-                    {okna === "biele" ? "Biele (Základ)" : okna === "antracit" ? "Antracit (Základ)" : "Hnedé (Základ)"}
-                  </span>
-                </div>
-
-                {/* Vchodové dvere */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Vchodové dvere</span>
-                  <span className="font-semibold text-white">
-                    {vchodoveDvere === "plastove" ? "Plastovo-kovové (Základ)" : `Kovové (+${CENY.dvere_kovove?.toLocaleString('sk-SK')} €)`}
-                  </span>
-                </div>
-
-                {/* Obklad stien */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Obklad stien</span>
-                  <span className="font-semibold text-white">
-                    {obkladStien === "smrek_8cm" ? "Smrek 8cm (Základ)" :
-                     obkladStien === "smrek_bez_uzlov" ? `Smrek bez uzlov (+${CENY.obklad_smrek_bez_uzlov?.toLocaleString('sk-SK')} €)` :
-                     obkladStien === "sadrokarton_tapeta" ? `Sadrokartón/Tapeta (+${CENY.obklad_sadrokarton_tapeta?.toLocaleString('sk-SK')} €)` :
-                     `OSB panel (+${CENY.obklad_osb_panel?.toLocaleString('sk-SK')} €)`}
-                  </span>
-                </div>
-
-                {/* Podlaha */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Podlaha</span>
-                  <span className="font-semibold text-white">Laminát (Základ)</span>
-                </div>
-
-                {/* Interiérové dvere */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Interiérové dvere</span>
-                  <span className="font-semibold text-white">
-                    {interieroveDvere === "kridlove" ? "Krídlové (Základ)" : `Posuvné (+${CENY.dvere_posuvne?.toLocaleString('sk-SK')} €)`}
-                  </span>
-                </div>
-
-                {/* Elektroinštalácia */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Elektroinštalácia</span>
-                  <span className="font-semibold text-white">
-                    {elektro === "eu" ? "EU štandard (Základ)" :
-                     elektro === "cz" ? `CZ/SK štandard (+${CENY.elektro_cz?.toLocaleString('sk-SK')} €)` :
-                     `Nemecký štandard (+${CENY.elektro_ge?.toLocaleString('sk-SK')} €)`}
-                  </span>
-                </div>
-
-                {/* Sprchový kút */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Sprchový kút</span>
-                  <span className="font-semibold text-white">
-                    {sprchovyKut === "standard" ? "Štandard (Základ)" : `Radaway (+${CENY.sprchovyKut?.toLocaleString('sk-SK')} €)`}
-                  </span>
-                </div>
-
-                {/* Kúpeľňová batéria */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Kúpeľňová batéria</span>
-                  <span className="font-semibold text-white">
-                    {bateria === "standard" ? "Štandard (Základ)" : `Grohe (+${CENY.bateria?.toLocaleString('sk-SK')} €)`}
-                  </span>
-                </div>
-
-                {/* Strop v kúpeľni */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Strop v kúpeľni</span>
-                  <span className="font-semibold text-white">
-                    {stropKupelna === "drevo" ? "Drevený obklad (Základ)" : "Sadrokartón (Základ)"}
-                  </span>
-                </div>
-
-                {/* Základy */}
-                <div className="flex justify-between text-slate-400 pb-3 border-b border-white/5">
-                  <span>Základy</span>
-                  <span className="font-semibold text-white">
-                    {zaklady === "bez" ? "Bez základov (Základ)" :
-                     zaklady === "vruty" ? `Zemné skrutky (+${CENY.zaklady_vruty?.toLocaleString('sk-SK')} €)` :
-                     zaklady === "patky" ? `Betónové pätky (+${CENY.zaklady_patky?.toLocaleString('sk-SK')} €)` :
-                     `Pásové základy (+${CENY.zaklady_pasove?.toLocaleString('sk-SK')} €)`}
-                  </span>
-                </div>
-              </div>
-
-              <div className="space-y-3 pt-2">
-                <div className="text-xs font-bold text-red-400 uppercase tracking-widest mb-1">Doplnková výbava:</div>
-                
-                {/* Tepelné čerpadlo */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Tepelné čerpadlo</span>
-                  <span className="text-white font-medium">
-                    {tepelneCerpadlo === "ano" ? `áno (+${CENY.tepelne_cerpadlo?.toLocaleString('sk-SK')} €)` : "nie"}
-                  </span>
-                </div>
-
-                {/* Príprava na rekuperáciu */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Príprava na rekuperáciu</span>
-                  <span className="text-white font-medium">
-                    {pripravaNaRekuperaciu ? `áno (+${CENY.pripravaNaRekuperaciu?.toLocaleString('sk-SK')} €)` : "nie"}
-                  </span>
-                </div>
-
-                {/* Rekuperácia */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Rekuperácia</span>
-                  <span className="text-white font-medium">
-                    {rekuperacia === "ano" ? `áno (+${CENY.rekuperacia?.toLocaleString('sk-SK')} €)` : "nie"}
-                  </span>
-                </div>
-
-                {/* Podlahové kúrenie */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Podlahové kúrenie</span>
-                  <span className="text-white font-medium">
-                    {podlahovoKurenie ? `áno (+${CENY.podlahove_kurenie?.toLocaleString('sk-SK')} €)` : "nie"}
-                  </span>
-                </div>
-
-                {/* Klimatizácia */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Príprava na klimatizáciu</span>
-                  <span className="text-white font-medium">
-                    {klimatizacia ? `áno (+${CENY.klimatizacia?.toLocaleString('sk-SK')} €)` : "nie"}
-                  </span>
-                </div>
-
-                {/* Príprava na krb */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Príprava na krb</span>
-                  <span className="text-white font-medium">
-                    {pripravaNaKrb ? `áno (+${CENY.pripravaKrb?.toLocaleString('sk-SK')} €)` : "nie"}
-                  </span>
-                </div>
-
-                {/* Ochrana (Kachle) */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Ochrana (Kachle)</span>
-                  <span className="text-white font-medium">
-                    {ochranaKachle ? `áno (+${CENY.ochranaKachle?.toLocaleString('sk-SK')} €)` : "nie"}
-                  </span>
-                </div>
-
-                {/* Odkvapy */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Odkvapy</span>
-                  <span className="text-white font-medium">
-                    {odkvapy === "ano" ? `áno (+${CENY.odkvapy?.toLocaleString('sk-SK')} €)` : "nie"}
-                  </span>
-                </div>
-
-                {/* Bleskozvod */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Bleskozvod</span>
-                  <span className="text-white font-medium">
-                    {bleskozvod ? `áno (+${CENY.bleskozvod?.toLocaleString('sk-SK')} €)` : "nie"}
-                  </span>
-                </div>
-
-                {/* Prepäťová ochrana */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Prepäťová ochrana</span>
-                  <span className="text-white font-medium">
-                    {prepat ? `áno (+${CENY.prepat?.toLocaleString('sk-SK')} €)` : "nie"}
-                  </span>
-                </div>
-
-                {/* Príprava na solárne panely */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Príprava na solárne panely</span>
-                  <span className="text-white font-medium">
-                    {pripravaNaSolarnePanely ? `áno (+${CENY.pripravaNaSolarnePanely?.toLocaleString('sk-SK')} €)` : "nie"}
-                  </span>
-                </div>
-
-                {/* Vaňa */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Vaňa</span>
-                  <span className="text-white font-medium">
-                    {vana ? `áno (+${CENY.vana?.toLocaleString('sk-SK')} €)` : "nie"}
-                  </span>
-                </div>
-
-                {/* Skrinka s umývadlom */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Skrinka s umývadlom</span>
-                  <span className="text-white font-medium">
-                    {skrinka ? `áno (+${CENY.skrinka?.toLocaleString('sk-SK')} €)` : "nie"}
-                  </span>
-                </div>
-
-                {/* Inžiniering */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Inžiniering</span>
-                  <span className="text-white font-medium">
-                    {inziniering ? `áno (+${CENY.inziniering?.toLocaleString('sk-SK')} €)` : "nie"}
-                  </span>
-                </div>
-
-                {/* Projekt a certifikácia */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Projekt a certifikácia</span>
-                  <span className="text-white font-medium">
-                    {projektACertifikacia ? `áno (+${CENY.projektACertifikacia?.toLocaleString('sk-SK')} €)` : "nie"}
-                  </span>
-                </div>
-
-                {/* Revízia */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Revízia</span>
-                  <span className="text-white font-medium">
-                    {revizia ? `áno (+${CENY.revizia?.toLocaleString('sk-SK')} €)` : "nie"}
-                  </span>
-                </div>
-
-                {/* Montáž */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Montáž domu</span>
-                  <span className="text-white font-medium">
-                    {montaz ? `áno (+${CENY.montaz?.toLocaleString('sk-SK')} €)` : "nie"}
-                  </span>
-                </div>
-
-                {/* Doprava */}
-                {dopravaViditelna && (
-                  <div className="flex justify-between text-slate-400">
-                    <span>Doprava</span>
-                    <span className="text-white font-medium">
-                      {doprava ? `áno (+${CENY.doprava?.toLocaleString('sk-SK')} €)` : "nie"}
-                    </span>
-                  </div>
-                )}
-                
-                {/* Služby k nákupu */}
-                <div className="flex justify-between text-slate-400">
-                  <span>Predaj predošlej nehnuteľnosti</span>
-                  <span className="text-white font-medium">{predajNehnutelnosti ? "áno" : "nie"}</span>
-                </div>
-                <div className="flex justify-between text-slate-400">
-                  <span>Chcem pozemok pod svoj dom</span>
-                  <span className="text-white font-medium">{hladamPozemok ? "áno" : "nie"}</span>
-                </div>
-                <div className="flex justify-between text-slate-400">
-                  <span>Finančné služby</span>
-                  <span className="text-white font-medium">{financneSluzby ? "áno" : "nie"}</span>
-                </div>
-              </div>
+              {renderGroupedSummary()}
             </div>
 
-            <div className="mt-auto border-t border-white/10 pt-4">
+            <div className="mt-auto border-t border-slate-100 dark:border-white/5 pt-4">
               <div className="flex items-center justify-between mb-4">
-                <span className="text-slate-400">Celková cena</span>
-                <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-600">{totalPrice.toLocaleString('sk-SK')} €</span>
+                <span className="text-slate-500 dark:text-slate-400 font-medium">Celková cena s DPH</span>
+                <span className="text-2xl font-black text-slate-900 dark:text-white">{totalPrice.toLocaleString('sk-SK')} €</span>
               </div>
               <button 
                 onClick={() => window.dispatchEvent(new CustomEvent('open-contact-modal'))} 
-                className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold rounded-xl py-3 shadow-lg transition-all"
+                className="w-full bg-gradient-to-r from-[#9E2A2B] to-[#802021] hover:from-[#802021] hover:to-[#611617] text-white font-bold rounded-xl py-3.5 shadow-lg active:scale-98 transition-all flex items-center justify-center gap-2"
               >
-                <Send className="inline-block w-4 h-4 mr-2" />
+                <Send className="w-4 h-4" />
                 Poslať ponuku
               </button>
             </div>
@@ -1273,6 +1161,72 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
         </aside>
       </div>
       
+      {/* Mobilný Bottom Sheet pre Zhrnutie */}
+      <AnimatePresence>
+        {isMobileSummaryOpen && (
+          <>
+            {/* Backdrop blur */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileSummaryOpen(false)}
+              className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+            />
+            {/* Sheet content */}
+            <motion.div 
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 250 }}
+              className="lg:hidden fixed bottom-0 left-0 right-0 max-h-[80vh] bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-white/10 rounded-t-3xl shadow-2xl z-50 flex flex-col pointer-events-auto"
+            >
+              {/* Handle bar */}
+              <div className="w-full flex justify-center py-3 flex-shrink-0 cursor-pointer" onClick={() => setIsMobileSummaryOpen(false)}>
+                <div className="w-12 h-1.5 bg-slate-300 dark:bg-slate-700 rounded-full" />
+              </div>
+              
+              {/* Header */}
+              <div className="px-6 pb-4 border-b border-slate-100 dark:border-white/5 flex justify-between items-center flex-shrink-0">
+                <h3 className="text-lg font-black text-slate-900 dark:text-white">Zhrnutie konfigurácie</h3>
+                <button onClick={() => setIsMobileSummaryOpen(false)} className="p-1 rounded-full bg-slate-100 dark:bg-white/5 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              
+              {/* Body (Grouped Summary) */}
+              <div className="flex-1 overflow-y-auto px-6 py-4 space-y-6 custom-scrollbar">
+                <div className="flex justify-between text-slate-500 dark:text-slate-400 pb-2 border-b border-slate-100 dark:border-white/5 text-sm">
+                  <span>Základná cena domu</span>
+                  <span className="font-bold text-slate-900 dark:text-white">{dom?.zakladna_cena?.toLocaleString('sk-SK')} €</span>
+                </div>
+                {renderGroupedSummary()}
+              </div>
+              
+              {/* Footer */}
+              <div className="p-6 border-t border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-slate-950/40 flex flex-col gap-4 flex-shrink-0 pb-8">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-500 dark:text-slate-400 font-medium">Celková cena s DPH</span>
+                  <span className="text-2xl font-black text-slate-900 dark:text-white">{totalPrice.toLocaleString('sk-SK')} €</span>
+                </div>
+                <button 
+                  onClick={() => {
+                    setIsMobileSummaryOpen(false);
+                    setTimeout(() => {
+                      window.dispatchEvent(new CustomEvent('open-contact-modal'));
+                    }, 300);
+                  }}
+                  className="w-full bg-gradient-to-r from-[#9E2A2B] to-[#802021] text-white font-bold rounded-2xl py-4 shadow-lg active:scale-95 transition-all text-center flex items-center justify-center gap-2"
+                >
+                  <Send className="w-5 h-5" />
+                  Mám záujem o ponuku
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
       {/* Plávajúca cena (Iba pre mobilné zariadenia) */}
       <FloatingPrice 
         price={totalPrice} 
@@ -1281,6 +1235,8 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
         dom={dom}
         vyrobca="Ticab house"
         mobileOnly={true}
+        onToggleSummary={() => setIsMobileSummaryOpen(!isMobileSummaryOpen)}
+        isSummaryOpen={isMobileSummaryOpen}
       />
     </div>
   );
