@@ -61,16 +61,42 @@ export default function Domov() {
   const sp = socialProofT[language] || socialProofT.sk;
   const dv = dotaciaVerifyT[language] || dotaciaVerifyT.sk;
 
+  // Selected house details state and dynamic lookups
+  const [selectedHouseId, setSelectedHouseId] = useState("barn72");
+  
   // Facade lookbook options
   const [selectedFacade, setSelectedFacade] = useState("anthracite");
-  const facadeOptions = [
-    { id: "anthracite", name: "Falcovaný plech", desc: "Moderný antracit", img: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/49133a5d4_Barnhills.jpeg" },
-    { id: "wood", name: "Drevený obklad", desc: "Severský smrek", img: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/24cecde9d_BarnZilina.jpeg" },
-    { id: "stucco", name: "Šúchaná omietka", desc: "Svetlý exteriér", img: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/ee82ce3f5_Barnmurovkazilina.jpeg" }
-  ];
+
+  const facadeImages = {
+    barn72: {
+      anthracite: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/5ddf7431e_BarnDoubledrevouvodnafotka.jpg",
+      wood: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/eccd583aa_barn-double-prosto-house-3.jpg",
+      stucco: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/2b401b76a_BarnDouble72exteriermurovkauvodnyobrazok.jpg"
+    },
+    london: {
+      anthracite: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/952c7dee5_Londonexterierdrevoplech1.jpg",
+      wood: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/25cd528c6_Londonexterierdrevoplech2.jpg",
+      stucco: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/25e2796ce_Londonexteriermurovka1.jpeg"
+    },
+    barn48: {
+      anthracite: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/49133a5d4_Barnhills.jpeg",
+      wood: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/24cecde9d_BarnZilina.jpeg",
+      stucco: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/ee82ce3f5_Barnmurovkazilina.jpeg"
+    }
+  };
+
+  const facadeOptions = useMemo(() => {
+    const images = facadeImages[selectedHouseId] || facadeImages.barn72;
+    return [
+      { id: "anthracite", name: "Falcovaný plech", desc: "Moderný antracit", img: images.anthracite },
+      { id: "wood", name: "Drevený obklad", desc: "Severský smrek", img: images.wood },
+      { id: "stucco", name: "Šúchaná omietka", desc: "Svetlý exteriér", img: images.stucco }
+    ];
+  }, [selectedHouseId]);
+
   const selectedFacadeImage = useMemo(() => {
     return facadeOptions.find(o => o.id === selectedFacade)?.img || facadeOptions[0].img;
-  }, [selectedFacade]);
+  }, [selectedFacade, facadeOptions]);
   
   const { data: domy = [] } = useQuery({
     queryKey: ['domy-popularne'],
@@ -86,6 +112,55 @@ export default function Domov() {
     queryFn: () => base44.entities.Dom.filter({ verejny: true }),
     staleTime: 300000,
   });
+
+  const currentHouseData = useMemo(() => {
+    const dbHouse = verejneDomy.find(d => {
+      if (selectedHouseId === "barn72") return d.id === "6916ec94c11aacdd15248f2c" || d.prosto_house_kod === "PH-005";
+      if (selectedHouseId === "london") return d.id === "6916ec94c11aacdd15248f07" || d.nazov?.includes("LONDON");
+      if (selectedHouseId === "barn48") return d.id === "6916ec94c11aacdd15248f31" || d.prosto_house_kod === "PH-008";
+      return false;
+    });
+
+    if (dbHouse) {
+      return {
+        id: dbHouse.id,
+        name: dbHouse.nazov,
+        area: dbHouse.zastavana_plocha || dbHouse.uzitkova_plocha || (selectedHouseId === "london" ? 144 : selectedHouseId === "barn72" ? 72 : 48),
+        rooms: dbHouse.pocet_izieb || (selectedHouseId === "london" ? 5 : selectedHouseId === "barn72" ? 3 : 2),
+        manufacturer: dbHouse.vyrobca || (selectedHouseId === "london" ? "Ticab house" : "Prosto House"),
+        price: dbHouse.zakladna_cena || (selectedHouseId === "london" ? 120000 : selectedHouseId === "barn72" ? 36900 : 20900)
+      };
+    }
+
+    const fallbacks = {
+      barn72: {
+        id: "6916ec94c11aacdd15248f2c",
+        name: "Barn Double 72",
+        area: 72,
+        rooms: 3,
+        manufacturer: "Prosto House",
+        price: 36900
+      },
+      london: {
+        id: "6916ec94c11aacdd15248f07",
+        name: "LONDON 144",
+        area: 144,
+        rooms: 5,
+        manufacturer: "Ticab house",
+        price: 120000
+      },
+      barn48: {
+        id: "6916ec94c11aacdd15248f31",
+        name: "Barn 48",
+        area: 48,
+        rooms: 2,
+        manufacturer: "Prosto House",
+        price: 20900
+      }
+    };
+
+    return fallbacks[selectedHouseId] || fallbacks.barn72;
+  }, [selectedHouseId, verejneDomy]);
 
   const { data: user } = useQuery({
     queryKey: ['current-user'],
