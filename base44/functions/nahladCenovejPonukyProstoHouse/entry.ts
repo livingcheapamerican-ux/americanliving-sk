@@ -35,15 +35,15 @@ Deno.serve(async (req) => {
 
     // Mapovanie cien hrubej stavby
     const priceMap = {
-      'PH-001': { kit: 59900, assembly: 17970 },
-      'PH-002': { kit: 59000, assembly: 17700 },
-      'PH-003': { kit: 44900, assembly: 13470 },
-      'PH-004': { kit: 49500, assembly: 14850 },
-      'PH-005': { kit: 36900, assembly: 9225 },
+      'PH-001': { kit: 61700, assembly: 17970 },
+      'PH-002': { kit: 61000, assembly: 19500 },
+      'PH-003': { kit: 45950, assembly: 13785 },
+      'PH-004': { kit: 51000, assembly: 15650 },
+      'PH-005': { kit: 38000, assembly: 9500 },
       'PH-006': { kit: 31700, assembly: 7925 },
-      'PH-007': { kit: 22700, assembly: 5675 },
-      'PH-008': { kit: 20900, assembly: 4875 },
-      'PH-009': { kit: 19500, assembly: 4875 }
+      'PH-007': { kit: 23400, assembly: 7200 },
+      'PH-008': { kit: 21600, assembly: 5400 },
+      'PH-009': { kit: 19950, assembly: 4990 }
     };
     
     const shellPrices = priceMap[dom.prosto_house_kod] || { kit: 0, assembly: 0 };

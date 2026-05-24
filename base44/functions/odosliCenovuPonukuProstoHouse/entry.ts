@@ -589,15 +589,15 @@ Deno.serve(async (req) => {
 
     // Mapovanie cien hrubej stavby podľa prosto_house_kod
     const priceMap = {
-      'PH-001': { kit: 59900, assembly: 17970 },  // Flat Double
-      'PH-002': { kit: 59000, assembly: 17700 },  // Fjord
-      'PH-003': { kit: 44900, assembly: 13470 },  // Flat House 1,5
-      'PH-004': { kit: 49500, assembly: 14850 },  // Nord
-      'PH-005': { kit: 36900, assembly: 9225 },   // Barn Double
+      'PH-001': { kit: 61700, assembly: 17970 },  // Flat Double
+      'PH-002': { kit: 61000, assembly: 19500 },  // Fjord
+      'PH-003': { kit: 45950, assembly: 13785 },  // Flat House 1,5
+      'PH-004': { kit: 51000, assembly: 15650 },  // Nord
+      'PH-005': { kit: 38000, assembly: 9500 },   // Barn Double
       'PH-006': { kit: 31700, assembly: 7925 },   // Flat 72
-      'PH-007': { kit: 22700, assembly: 5675 },   // A-Frame
-      'PH-008': { kit: 20900, assembly: 4875 },   // Barn
-      'PH-009': { kit: 19500, assembly: 4875 }    // Flat Small
+      'PH-007': { kit: 23400, assembly: 7200 },   // A-Frame
+      'PH-008': { kit: 21600, assembly: 5400 },   // Barn
+      'PH-009': { kit: 19950, assembly: 4990 }    // Flat Small
     };
     
     const shellPrices = priceMap[dom.prosto_house_kod] || { kit: 0, assembly: 0 };
