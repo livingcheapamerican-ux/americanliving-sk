@@ -46,9 +46,9 @@ const socialProofT = {
 
 // Optimized hero images: WebP format, capped at 1200px wide, q=75
 const DEFAULT_HERO_IMAGES = [
-  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?fm=webp&auto=format,compress&w=1200&q=75",
-  "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?fm=webp&auto=format,compress&w=1200&q=75",
-  "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?fm=webp&auto=format,compress&w=1200&q=75"
+  "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/49133a5d4_Barnhills.jpeg",
+  "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/24cecde9d_BarnZilina.jpeg",
+  "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/ee82ce3f5_Barnmurovkazilina.jpeg"
 ];
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/376b4bd9f_okruhlelogo.png";
@@ -64,9 +64,9 @@ export default function Domov() {
   // Facade lookbook options
   const [selectedFacade, setSelectedFacade] = useState("anthracite");
   const facadeOptions = [
-    { id: "anthracite", name: "Falcovaný plech", desc: "Moderný antracit", img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?fm=webp&auto=format,compress&w=800&q=75" },
-    { id: "wood", name: "Drevený obklad", desc: "Severský smrek", img: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?fm=webp&auto=format,compress&w=800&q=75" },
-    { id: "stucco", name: "Šúchaná omietka", desc: "Svetlý exteriér", img: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?fm=webp&auto=format,compress&w=800&q=75" }
+    { id: "anthracite", name: "Falcovaný plech", desc: "Moderný antracit", img: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/49133a5d4_Barnhills.jpeg" },
+    { id: "wood", name: "Drevený obklad", desc: "Severský smrek", img: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/24cecde9d_BarnZilina.jpeg" },
+    { id: "stucco", name: "Šúchaná omietka", desc: "Svetlý exteriér", img: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/ee82ce3f5_Barnmurovkazilina.jpeg" }
   ];
   const selectedFacadeImage = useMemo(() => {
     return facadeOptions.find(o => o.id === selectedFacade)?.img || facadeOptions[0].img;
