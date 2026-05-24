@@ -18,7 +18,7 @@ import ServiceDetailModal from "../components/ServiceDetailModal";
 
 // Dotacia verify banner translations
 const dotaciaVerifyT = {
-  sk: { line1: "OVERENIE nároku na", line2: "DOTÁCIU" },
+  sk: { line1: "OVERENIE nároku na", line2: "SÚKROMNÝ GRANT" },
   en: { line1: "CHECK YOUR ELIGIBILITY FOR A", line2: "GRANT" },
   de: { line1: "ANSPRUCH PRÜFEN AUF", line2: "FÖRDERUNG" },
   fr: { line1: "VÉRIFIER L'ÉLIGIBILITÉ À LA", line2: "SUBVENTION" },
@@ -778,7 +778,7 @@ export default function Domov() {
         </div>
       </section>
 
-      {/* DOTÁCIA AMERICANA - Premium Redesign */}
+      {/* SÚKROMNÝ GRANT AMERICANA - Premium Redesign */}
       <section className="py-16 sm:py-28 bg-slate-950 relative overflow-hidden border-t border-white/5">
         {/* Glow effects */}
         <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-red-600/10 rounded-full blur-[120px] pointer-events-none"></div>
@@ -805,13 +805,13 @@ export default function Domov() {
                   </span>
                 </h2>
                 <p className="text-lg sm:text-xl text-slate-400 font-light mb-8 leading-relaxed max-w-xl">
-                  Vieme, že stavba domu je životné rozhodnutie a obrovská finančná záťaž. Preto sme vytvorili exkluzívny program <strong className="text-slate-200">Dotácia Americana</strong>, ktorý vám po podpise zmluvy pomôže pokryť náklady na energie alebo uľahčí vašu investíciu.
+                  Vieme, že stavba domu je životné rozhodnutie a obrovská finančná záťaž. Preto sme vytvorili exkluzívny program <strong className="text-slate-200">Súkromný grant AMERICANA</strong>, ktorý vám po podpise zmluvy pomôže pokryť náklady na energie alebo uľahčí vašu investíciu.
                 </p>
                 
                 <Link to={createPageUrl("DotaciaAmericana")} className="inline-block w-full sm:w-auto">
                   <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-bold px-8 py-7 text-lg shadow-[0_0_30px_rgba(220,38,38,0.3)] hover:shadow-[0_0_50px_rgba(220,38,38,0.5)] border border-red-400/50 transition-all group rounded-2xl">
                     <span className="flex items-center justify-center gap-3">
-                      Overiť nárok na dotáciu
+                      Overiť nárok na grant
                       <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </span>
                   </Button>
@@ -907,6 +907,43 @@ export default function Domov() {
           animation: shimmer 3s infinite;
         }
       `}</style>
+
+      {/* 100% Financovanie Bez Úspor Banner */}
+      <section className="py-12 sm:py-20 bg-[#08080A] relative overflow-hidden border-t border-white/5">
+        <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-red-950/15 rounded-full blur-[120px] pointer-events-none"></div>
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-5xl mx-auto">
+            <div className="bg-gradient-to-br from-slate-900/90 to-slate-950/90 border border-[#C5A880]/30 rounded-3xl p-8 sm:p-12 shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+              <div className="absolute top-0 left-0 w-3 h-full bg-[#C5A880]"></div>
+              
+              <div className="flex-1 text-center md:text-left">
+                <h2 className="text-2xl sm:text-4xl font-black text-white mb-4 leading-tight">
+                  Chcete si postaviť nový dom a nemáte na to kapitál?
+                </h2>
+                <p className="text-slate-300 text-sm sm:text-lg font-light leading-relaxed max-w-2xl">
+                  Žiadny problém! Máme model financovania pre tých, ktorí nemajú našetrené. Pomôžeme vám vyriešiť financovanie celej výstavby od A po Z.
+                </p>
+              </div>
+              
+              <div className="flex-shrink-0">
+                <Button 
+                  onClick={() => {
+                    const event = new CustomEvent('openChatbotWithContext', {
+                      detail: { message: "Mám záujem o model financovania bez našetreného kapitálu. Ako to funguje?" }
+                    });
+                    window.dispatchEvent(event);
+                  }}
+                  size="lg"
+                  className="bg-[#C5A880] hover:bg-[#b0926a] text-slate-950 font-black px-8 py-6 rounded-2xl shadow-xl flex items-center gap-2 active:scale-95 transition-all text-base border border-[#C5A880]/40"
+                >
+                  <MessageCircle className="w-5 h-5 text-slate-950" />
+                  <span>Opýtať sa Kexa na financovanie</span>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Fixácia úrokov - Nová sekcia */}
       <section className="py-6 sm:py-16 bg-gradient-to-br from-red-900 via-red-800 to-red-700 relative overflow-hidden">

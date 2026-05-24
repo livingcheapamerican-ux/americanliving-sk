@@ -10,15 +10,15 @@ import ReactMarkdown from "react-markdown";
 
 const WELCOME_MESSAGE = {
   role: "assistant",
-  content: "👋 Ahoj! Som **Kexo**, váš AI konzultant pre domy na kľúč.\n\n**Odpovedám okamžite!** Viem všetko o našich montovaných a modulárnych domoch, cenách a detailoch. Môžem vám pomôcť s:\n\n🏠 **Výberom a porovnaním domov** (Ticab vs Prosto)\n🛠️ **Kalkuláciou ceny na kľúč** (základy, montáž, prípojky, legislatíva)\n📐 **Technológiami a materiálmi** (KVH konštrukcie, bazaltové izolácie)\n💻 **Prechodom cez konfigurátor** krok za krokom\n\nNa čo sa chcete opýtať?"
+  content: "👋 Ahoj! Som **Kexo**, váš AI konzultant pre domy na kľúč.\n\n**Odpovedám okamžite!** Viem všetko o našich montovaných a modulárnych domoch, cenách a detailoch. Môžem vám pomôcť s:\n\n🏠 **Výberom a porovnaním domov** (Ticab vs Prosto)\n🪙 **Súkromnými grantmi AMERICANA** (financovanie a príspevky)\n🛠️ **Kalkuláciou ceny na kľúč** (základy, montáž, prípojky, legislatíva)\n📐 **Technológiami a materiálmi** (KVH konštrukcie, bazaltové izolácie)\n💻 **Prechodom cez konfigurátor** krok za krokom\n\nNa čo sa chcete opýtať?"
 };
 
 const QUICK_QUESTIONS = [
+  "Ako funguje súkromný grant?",
+  "Chcem model financovania bez úspor",
   "Ako poskladať dom na kľúč?",
   "Aké sú ceny a poplatky?",
-  "Aké technológie používate?",
   "Rozdiel Ticab vs Prosto?",
-  "Koľko stojí doprava a montáž?",
 ];
 
 const KONFIGA_LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/1a73e4a6c_Konfigaeu.jpg";
@@ -65,10 +65,26 @@ export default function Chatbot() {
   }, [isOpen, isMinimized]);
 
   useEffect(() => {
-    const handler = () => setIsOpen(true);
-    window.addEventListener('openChatbot', handler);
-    return () => window.removeEventListener('openChatbot', handler);
-  }, []);
+    const handler = (e) => {
+      setIsOpen(true);
+      setIsMinimized(false);
+      if (e.detail && e.detail.message) {
+        sendMessage(e.detail.message);
+      }
+    };
+    window.addEventListener('openChatbotWithContext', handler);
+    
+    const openHandler = () => {
+      setIsOpen(true);
+      setIsMinimized(false);
+    };
+    window.addEventListener('openChatbot', openHandler);
+    
+    return () => {
+      window.removeEventListener('openChatbotWithContext', handler);
+      window.removeEventListener('openChatbot', openHandler);
+    };
+  }, [messages, isLoading, isKonfigurator]);
 
   useEffect(() => {
     if (!isMinimized) {
@@ -154,9 +170,13 @@ export default function Chatbot() {
             exit={{ scale: 0, opacity: 0 }}
             className={`fixed right-4 sm:right-6 z-40 bottom-6 sm:bottom-8 ${!isKonfigurator ? 'hidden sm:flex' : 'flex'}`}
           >
+            {/* Pulse Rings */}
+            <div className="absolute inset-0 rounded-full bg-[#C5A880]/20 animate-ping pointer-events-none" style={{ animationDuration: '3s' }} />
+            <div className="absolute inset-0 rounded-full bg-[#C5A880]/15 animate-ping pointer-events-none" style={{ animationDuration: '1.5s' }} />
+
             <button
               onClick={() => setIsOpen(true)}
-              className="h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-[#0D0D11]/90 hover:bg-[#16161D] active:scale-95 shadow-[0_0_25px_rgba(197,168,128,0.25)] text-[#C5A880] border border-[#C5A880]/30 hover:border-[#C5A880] flex items-center justify-center transition-all"
+              className="h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-[#0D0D11]/90 hover:bg-[#16161D] active:scale-95 shadow-[0_0_20px_#C5A880] text-[#C5A880] border border-[#C5A880]/40 hover:border-[#C5A880] flex items-center justify-center transition-all relative z-10"
             >
               <MessageCircle className="w-6 h-6 sm:w-7 sm:h-7" />
             </button>

@@ -16,8 +16,8 @@ import KonfiguratorGaleria from './KonfiguratorGaleria';
 
 // ── Glassmorphism Komponenty s Ikonami a Animáciami ─────────────────────────────────────
 
-const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmin, onPriceChange, icon: Icon }) => (
-  <button onClick={onClick} className={`relative flex flex-col p-5 rounded-3xl border-2 transition-all duration-500 w-full text-left active:scale-[0.98] gap-4 overflow-hidden group ${selected ? 'border-red-500 bg-gradient-to-br from-red-500/10 to-red-900/10 shadow-[0_0_30px_rgba(239,68,68,0.2)] scale-[1.02] backdrop-blur-md' : 'border-white/5 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.05] backdrop-blur-sm'}`}>
+const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmin, onPriceChange, icon: Icon, onShowGallery }) => (
+  <div onClick={onClick} className={`relative flex flex-col p-5 rounded-3xl border-2 transition-all duration-500 w-full text-left active:scale-[0.98] gap-4 overflow-hidden group cursor-pointer ${selected ? 'border-red-500 bg-gradient-to-br from-red-500/10 to-red-900/10 shadow-[0_0_30px_rgba(239,68,68,0.2)] scale-[1.02] backdrop-blur-md' : 'border-white/5 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.05] backdrop-blur-sm'}`}>
     {selected && <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-orange-500 opacity-80" />}
     <div className="flex items-start gap-4 w-full relative z-10">
       {Icon && (
@@ -31,7 +31,19 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
           <span className={`font-black text-lg transition-colors duration-300 ${selected ? 'text-white' : 'text-slate-200'}`}>{label}</span>
           {isA0 && <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.2)]">A0 Certifikácia</span>}
         </div>
-        {description && <p className="text-sm text-slate-400 leading-relaxed">{description}</p>}
+        {description && <p className="text-sm text-slate-400 leading-relaxed mb-2">{description}</p>}
+        {onShowGallery && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onShowGallery();
+            }}
+            className="mt-2 text-xs font-bold text-[#C5A880] hover:text-white flex items-center gap-1.5 bg-[#C5A880]/10 hover:bg-[#C5A880]/20 px-3 py-1.5 rounded-lg border border-[#C5A880]/20 transition-all w-fit"
+          >
+            <Eye className="w-3.5 h-3.5 text-[#C5A880]" />
+            <span>Pozrieť ukážku</span>
+          </button>
+        )}
       </div>
       
       <div className="flex flex-col items-end flex-shrink-0">
@@ -51,7 +63,7 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
         )}
       </div>
     </div>
-  </button>
+  </div>
 );
 
 const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = false, isAdmin, onPriceChange, description, t, icon: Icon }) => (
@@ -240,6 +252,46 @@ export default function ProstoHouseKonfigurator({ house, houseCode, dom: domProp
   const [financing, setFinancing] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [activeLightbox, setActiveLightbox] = useState(null);
+
+  const handleShowOptionGallery = (type) => {
+    if (!effectiveDom?.galerie?.length) {
+      alert("Galéria nie je pre tento dom k dispozícii.");
+      return;
+    }
+    const matchingGallery = effectiveDom.galerie.find(g => g.typ === type);
+    if (matchingGallery?.fotky?.length) {
+      setActiveLightbox({ images: matchingGallery.fotky, index: 0 });
+    } else {
+      const allPhotos = effectiveDom.galerie.flatMap(g => g.fotky || []);
+      if (allPhotos.length) {
+        setActiveLightbox({ images: allPhotos, index: 0 });
+      } else {
+        alert("Tento typ úpravy nemá priradené samostatné fotografie.");
+      }
+    }
+  };
+
+  const handleConsultWithKexo = () => {
+    const selectedItemsList = buildSelectedItems();
+    const itemsDescription = selectedItemsList
+      .filter(item => item.section !== 'base')
+      .map(item => `- ${item.name} (${item.price === 0 ? 'V cene' : `+${item.price.toLocaleString()} €`})`)
+      .join('\n');
+      
+    const message = `Ahoj Kexo, chcem skonzultovať moju konfiguráciu domu **${house.name}** (${phCode}).
+    
+Základná cena: **${house.basePrice.toLocaleString()} €**
+Celková cena s DPH: **${totalPrice.toLocaleString()} €**
+
+Vybrané položky:
+${itemsDescription || '- Len základná výbava'}
+
+Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre A0 alebo pomôcť s financovaním?`;
+
+    const event = new CustomEvent('openChatbotWithContext', { detail: { message } });
+    window.dispatchEvent(event);
+  };
 
   // ScrollSpy stav
   const [activeSection, setActiveSection] = useState(0);
@@ -494,6 +546,14 @@ export default function ProstoHouseKonfigurator({ house, houseCode, dom: domProp
                 <span>{t('sendQuote')}</span>
                 <Send className="w-5 h-5" />
               </button>
+              
+              <button 
+                onClick={handleConsultWithKexo} 
+                className="w-full mt-3 bg-[#C5A880]/10 hover:bg-[#C5A880]/20 text-[#C5A880] border border-[#C5A880]/30 hover:border-[#C5A880] font-bold px-6 py-3.5 rounded-2xl flex items-center justify-center gap-2 active:scale-95 transition-all text-base shadow-md"
+              >
+                <MessageCircle className="w-5 h-5" />
+                <span>Konzultovať s Kexom</span>
+              </button>
             </div>
           </div>
 
@@ -610,7 +670,18 @@ export default function ProstoHouseKonfigurator({ house, houseCode, dom: domProp
                   <SectionLabel label={t('facade')} color="purple" />
                   <div className="space-y-3">
                     {house.options.facade.map((opt, i) => (
-                      <OptionCard key={i} icon={Paintbrush} label={i === 0 ? t('facadeStandard') : t('facadeStucco')} price={getPrice('facade', i, opt.price)} description={i === 0 ? t('facadeStandardDesc') : t('facadeStuccoDesc')} selected={facadeIdx === i} onClick={() => setFacadeIdx(i)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('facade', i, p)} />
+                      <OptionCard 
+                        key={i} 
+                        icon={Paintbrush} 
+                        label={i === 0 ? t('facadeStandard') : t('facadeStucco')} 
+                        price={getPrice('facade', i, opt.price)} 
+                        description={i === 0 ? t('facadeStandardDesc') : t('facadeStuccoDesc')} 
+                        selected={facadeIdx === i} 
+                        onClick={() => setFacadeIdx(i)} 
+                        isAdmin={isAdmin} 
+                        onPriceChange={(p) => updatePrice('facade', i, p)} 
+                        onShowGallery={() => handleShowOptionGallery(i === 0 ? 'exterier_drevo_plech' : 'exterier_murovka')}
+                      />
                     ))}
                   </div>
                 </div>
@@ -627,7 +698,20 @@ export default function ProstoHouseKonfigurator({ house, houseCode, dom: domProp
                     {house.options.interior.map((opt, i) => {
                       const labels = { 0: t('noInterior'), 1: t('interiorWood'), 2: t('interiorDrywall') };
                       const descs = { 0: t('noInteriorDesc'), 1: t('interiorWoodDesc'), 2: t('interiorDrywallDesc') };
-                      return <OptionCard key={i} icon={Layout} label={labels[i]} price={getPrice('interior', i, opt.price)} description={descs[i]} selected={interiorIdx === i} onClick={() => setInteriorIdx(i)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('interior', i, p)} />;
+                      return (
+                        <OptionCard 
+                          key={i} 
+                          icon={Layout} 
+                          label={labels[i]} 
+                          price={getPrice('interior', i, opt.price)} 
+                          description={descs[i]} 
+                          selected={interiorIdx === i} 
+                          onClick={() => setInteriorIdx(i)} 
+                          isAdmin={isAdmin} 
+                          onPriceChange={(p) => updatePrice('interior', i, p)} 
+                          onShowGallery={i > 0 ? () => handleShowOptionGallery(i === 1 ? 'interier_drevo' : 'interier_sadrokarton') : undefined}
+                        />
+                      );
                     })}
                   </div>
                 </div>
@@ -729,6 +813,13 @@ export default function ProstoHouseKonfigurator({ house, houseCode, dom: domProp
           </div>
           <div className="flex-shrink-0 flex items-center gap-2">
             <button 
+              onClick={handleConsultWithKexo} 
+              className="bg-[#C5A880]/15 hover:bg-[#C5A880]/25 text-[#C5A880] border border-[#C5A880]/30 hover:border-[#C5A880] font-bold p-3 rounded-xl flex items-center gap-2 active:scale-95 transition-all"
+              title="Konzultovať s Kexom"
+            >
+              <MessageCircle className="w-5 h-5" />
+            </button>
+            <button 
               onClick={() => setModalOpen(true)} 
               className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-xl flex items-center gap-2 shadow-[0_0_20px_rgba(239,68,68,0.4)] active:scale-95 transition-all"
             >
@@ -738,6 +829,45 @@ export default function ProstoHouseKonfigurator({ house, houseCode, dom: domProp
           </div>
         </div>
       </div>
+
+      {/* Option Lookbook Lightbox Modal */}
+      {activeLightbox && (
+        <div
+          className="fixed inset-0 bg-black/90 z-[999] flex items-center justify-center p-4 animate-in fade-in duration-200"
+          onClick={() => setActiveLightbox(null)}
+        >
+          <button onClick={() => setActiveLightbox(null)} className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors z-[1000] active:scale-90">
+            <X className="w-6 h-6" />
+          </button>
+          {activeLightbox.images.length > 1 && (
+            <>
+              <button
+                onClick={(e) => { e.stopPropagation(); setActiveLightbox(prev => ({ ...prev, index: (prev.index - 1 + prev.images.length) % prev.images.length })); }}
+                className="absolute left-4 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors z-[1000] active:scale-95"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+              <button
+                onClick={(e) => { e.stopPropagation(); setActiveLightbox(prev => ({ ...prev, index: (prev.index + 1) % prev.images.length })); }}
+                className="absolute right-4 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors z-[1000] active:scale-95"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
+            </>
+          )}
+          <img
+            src={activeLightbox.images[activeLightbox.index]}
+            alt=""
+            className="max-w-full max-h-[85vh] object-contain rounded-xl shadow-2xl border border-white/10"
+            onClick={(e) => e.stopPropagation()}
+          />
+          {activeLightbox.images.length > 1 && (
+            <div className="absolute bottom-4 text-white/60 text-sm">
+              {activeLightbox.index + 1} / {activeLightbox.images.length}
+            </div>
+          )}
+        </div>
+      )}
 
       <ContactModal isOpen={modalOpen} onClose={() => setModalOpen(false)} onSubmit={handleSubmit} isSubmitting={isSubmitting} t={t} />
       <ProstoHousePriceSaver isAdmin={isAdmin} customPrices={customPrices} domId={effectiveDomId} houseCode={houseCode} />

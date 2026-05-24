@@ -1203,7 +1203,7 @@ export default function DetailDomu() {
                         </p>
                       </div>
                       <p className="text-xs text-green-400 font-semibold mt-1">
-                        💰 s dotáciou AMERICANA
+                        💰 s grantom AMERICANA
                       </p>
                     </div>
                   ) : (
@@ -1242,7 +1242,7 @@ export default function DetailDomu() {
                       </span>
                     </div>
                     <p className="text-sm text-green-700 font-semibold mt-2">
-                      💰 s dotáciou AMERICANA
+                      💰 s grantom AMERICANA
                     </p>
                   </div>
                 ) : (
@@ -1723,7 +1723,7 @@ export default function DetailDomu() {
             {/* Sidebar pre všetky Ticabhouse domy - rovnaké ako Lyon (okrem Tiny House) */}
             {isTicabhouse && !dom.nazov?.toLowerCase().includes("tiny house") && (
               <div className="space-y-4">
-                {/* Informácia o dotácii */}
+                {/* Informácia o grante */}
                 <Card className="bg-slate-900 border border-emerald-500/30 p-3 sm:p-4 shadow-xl">
                   <div className="flex items-start gap-2">
                     <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
