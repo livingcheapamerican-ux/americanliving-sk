@@ -166,12 +166,15 @@ button:focus-visible {
   color: rgb(15, 23, 42) !important;
 }
 .catalog-tab[data-state=active] {
-  background-color: hsl(var(--primary)) !important;
+  background-color: #f97316 !important;
   color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.25) !important;
 }
 .dark .catalog-tab {
   color: rgb(226, 232, 240) !important;
 }
 .dark .catalog-tab[data-state=active] {
+  background-color: #f97316 !important;
   color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3) !important;
 }
