@@ -189,11 +189,11 @@ export default function Domov() {
   const facadeOptions = useMemo(() => {
     const images = facadeImages[selectedHouseId] || facadeImages.barn72;
     return [
-      { id: "anthracite", name: "Falcovaný plech", desc: "Moderný antracit", img: images.anthracite },
-      { id: "wood", name: "Drevený obklad", desc: "Severský smrek", img: images.wood },
-      { id: "stucco", name: "Šúchaná omietka", desc: "Svetlý exteriér", img: images.stucco }
+      { id: "anthracite", name: t('facadeFalcplech') || "Falcovaný plech", desc: t('facadeFalcplechDesc') || "Moderný antracit", img: images.anthracite },
+      { id: "wood", name: t('facadeWood') || "Drevený obklad", desc: t('facadeWoodDesc') || "Severský smrek", img: images.wood },
+      { id: "stucco", name: t('facadeStuccoLabel') || "Šúchaná omietka", desc: t('facadeStuccoDesc') || "Svetlý exteriér", img: images.stucco }
     ];
-  }, [selectedHouseId, facadeImages]);
+  }, [selectedHouseId, facadeImages, t]);
 
   const selectedFacadeImage = useMemo(() => {
     return facadeOptions.find(o => o.id === selectedFacade)?.img || facadeOptions[0].img;
@@ -205,9 +205,9 @@ export default function Domov() {
 
   const switcherHouses = useMemo(() => {
     const default3 = [
-      { id: "barn72", name: "Barn Double 72", desc: "Dvojposchodový Barn", img: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/5ddf7431e_BarnDoubledrevouvodnafotka.jpg" },
-      { id: "london", name: "LONDON 144", desc: "Veľkolepá rodinná vila", img: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/25e2796ce_Londonexteriermurovka1.jpeg" },
-      { id: "barn48", name: "Barn 48", desc: "Škandinávska chatka", img: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/cbd41c122_Barnbazen.jpeg" }
+      { id: "barn72", name: "Barn Double 72", desc: t('barnDoubleDesc') || "Dvojposchodový Barn", img: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/5ddf7431e_BarnDoubledrevouvodnafotka.jpg" },
+      { id: "london", name: "LONDON 144", desc: t('londonDesc') || "Veľkolepá rodinná vila", img: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/25e2796ce_Londonexteriermurovka1.jpeg" },
+      { id: "barn48", name: "Barn 48", desc: t('barn48Desc') || "Škandinávska chatka", img: "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/cbd41c122_Barnbazen.jpeg" }
     ];
 
     const others = verejneDomy.filter(d => {
@@ -230,7 +230,7 @@ export default function Domov() {
     });
 
     return [...default3, ...others];
-  }, [verejneDomy]);
+  }, [verejneDomy, t]);
   
   const { data: domy = [] } = useQuery({
     queryKey: ['domy-popularne'],
@@ -621,17 +621,17 @@ export default function Domov() {
             <CardContent className="p-4">
               <div className="flex items-center gap-2 mb-3">
                 <Shield className="w-5 h-5 text-white" />
-                <h4 className="font-bold text-white">Admin prístup</h4>
+                <h4 className="font-bold text-white">{t('adminAccess')}</h4>
               </div>
               <p className="text-xs text-white/90 mb-3">
-                Prihláste sa pre prístup k admin nástrojom
+                {t('adminLoginPrompt')}
               </p>
               <Button
                 onClick={() => base44.auth.redirectToLogin(window.location.pathname)}
                 className="w-full bg-white text-indigo-700 hover:bg-gray-100 font-semibold"
               >
                 <LogIn className="w-4 h-4 mr-2" />
-                Prihlásiť sa
+                {t('adminLogin')}
               </Button>
             </CardContent>
           </Card>
@@ -699,7 +699,7 @@ export default function Domov() {
                   className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#C5A880]/10 dark:bg-white/5 border border-[#C5A880]/30 dark:border-white/10 text-xs font-semibold text-slate-700 dark:text-slate-300"
                 >
                   <span className="w-2 h-2 rounded-full bg-[#C5A880] animate-pulse"></span>
-                  <span>Prémiová americká technológia bývania na kľúč</span>
+                  <span>{t('heroBadgeText')}</span>
                 </motion.div>
               </div>
 
@@ -711,9 +711,9 @@ export default function Domov() {
                 className="text-3xl sm:text-5xl md:text-6xl font-black text-slate-900 dark:text-white mb-6 leading-[1.1] tracking-tight"
                 style={{ textShadow: '2px 2px 10px rgba(0,0,0,0.05)' }}
               >
-                Americká technológia bývania{" "}
+                {t('heroTitleFirst')}{" "}
                 <span className="bg-gradient-to-r from-[#C5A880] via-[#E2C799] to-[#C5A880] bg-clip-text text-transparent block sm:inline">
-                  bez starostí a bez kompromisov
+                  {t('heroTitleSecond')}
                 </span>
               </motion.h1>
 
@@ -724,7 +724,7 @@ export default function Domov() {
                 transition={{ duration: 0.8, delay: 0.4 }}
                 className="text-base sm:text-xl text-slate-600 dark:text-slate-300 mb-8 leading-relaxed font-light max-w-2xl"
               >
-                Nízkoenergetické montované a modulárne domy s garantovaným dodaním už od 6 do 12 týždňov, možnosťou 100% financovania a prevádzkovým grantom.
+                {t('heroDescription')}
               </motion.p>
 
               {/* CTAs */}
@@ -737,7 +737,7 @@ export default function Domov() {
                 <Link to={createPageUrl("Katalog")} className="w-full sm:w-auto">
                   <Button size="lg" className="relative w-full sm:w-auto bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-black text-lg px-8 py-7 shadow-[0_0_30px_rgba(220,38,38,0.4)] border border-red-500/50 transition-all rounded-2xl flex items-center justify-center gap-2 group">
                     <Home className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-                    <span>Zobraziť Katalóg Domov</span>
+                    <span>{t('viewCatalogButton')}</span>
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
@@ -748,13 +748,13 @@ export default function Domov() {
                   className="w-full sm:w-auto bg-white/70 dark:bg-white/5 hover:bg-[#C5A880]/10 dark:hover:bg-[#C5A880]/15 hover:border-[#C5A880]/50 text-slate-800 dark:text-white border border-slate-200 dark:border-white/15 font-bold text-base px-8 py-7 rounded-2xl transition-all flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(197,168,128,0.15)] backdrop-blur-sm shadow-sm"
                 >
                   <MessageCircle className="w-5 h-5" />
-                  <span>Konzultácia s Kexom</span>
+                  <span>{t('consultationWithKexo')}</span>
                 </Button>
               </motion.div>
 
               {/* Interactive Quick House Switcher with Real Images */}
               <div className="pt-6 border-t border-white/10 max-w-xl">
-                <p className="text-slate-450 text-xs font-bold uppercase tracking-wider mb-4">Kliknutím si pozrite najlukratívnejšie modely</p>
+                <p className="text-slate-450 text-xs font-bold uppercase tracking-wider mb-4">{t('clickToSeeMostLucrativeModels')}</p>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -821,10 +821,10 @@ export default function Domov() {
                     </div>
                     <div>
                       <p className="text-[9px] text-slate-505 dark:text-slate-400 font-semibold uppercase tracking-wider">
-                        {currentHouseData.manufacturer?.toLowerCase().includes("ticab") ? "Výroba vo fabrike" : "Dodanie na kľúč"}
+                        {currentHouseData.manufacturer?.toLowerCase().includes("ticab") ? t('factoryProduction') : t('turnkeyDelivery')}
                       </p>
                       <p className="text-xs font-black text-slate-800 dark:text-white">
-                        {currentHouseData.manufacturer?.toLowerCase().includes("ticab") ? "6 týždňov" : "Do 12 týždňov"}
+                        {currentHouseData.manufacturer?.toLowerCase().includes("ticab") ? t('sixWeeks') : t('upToTwelveWeeks')}
                       </p>
                     </div>
                   </motion.div>
@@ -839,7 +839,7 @@ export default function Domov() {
                       <Star className="w-4 h-4 text-emerald-400 animate-pulse" />
                     </div>
                     <div>
-                      <p className="text-[9px] text-slate-505 dark:text-slate-400 font-semibold uppercase tracking-wider">Zastavaná plocha</p>
+                      <p className="text-[9px] text-slate-505 dark:text-slate-400 font-semibold uppercase tracking-wider">{t('builtArea')}</p>
                       <p className="text-xs font-black text-emerald-400">{currentHouseData.area} m²</p>
                     </div>
                   </motion.div>
@@ -851,12 +851,12 @@ export default function Domov() {
                     <div>
                       <h3 className="text-base sm:text-xl font-bold text-slate-800 dark:text-white leading-tight">{currentHouseData.name}</h3>
                       <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 font-medium">
-                        {currentHouseData.rooms} izby • Výrobca: {currentHouseData.manufacturer} • <strong className="text-slate-800 dark:text-white">od {currentHouseData.price.toLocaleString()} €</strong>
+                        {currentHouseData.rooms} {t('roomsLabel')} • {t('manufacturer')}: {currentHouseData.manufacturer} • <strong className="text-slate-800 dark:text-white">{t('from')} {currentHouseData.price.toLocaleString()} €</strong>
                       </p>
                     </div>
                     <Link to={`${createPageUrl("DetailDomu")}?id=${currentHouseData.id}`}>
                       <Button variant="ghost" size="sm" className="text-xs text-[#C5A880] hover:text-[#C5A880]/80 p-0 hover:bg-transparent flex items-center gap-1 font-black transition-colors duration-300">
-                        <span>Konfigurovať</span>
+                        <span>{t('configure')}</span>
                         <ChevronRight className="w-4 h-4" />
                       </Button>
                     </Link>
@@ -912,13 +912,13 @@ export default function Domov() {
                 <Gift className="w-6 h-6 text-emerald-400 animate-pulse" />
               </div>
               <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-2">
-                Súkromný Grant AMERICANA
+                {t('trustGrantTitle')}
               </h3>
               <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-light">
-                Poskytujeme jedinečný prevádzkový grant a finančnú bonifikáciu na energetickú certifikáciu a prevádzku domu až do výšky 15 000 €.
+                {t('trustGrantDesc')}
               </p>
               <Link to={createPageUrl("DotaciaAmericana")} className="mt-4 inline-flex items-center gap-1 text-xs text-emerald-600 dark:text-emerald-400 hover:text-[#C5A880] transition-colors font-bold">
-                <span>Zistiť nárok na grant</span>
+                <span>{t('trustGrantLink')}</span>
                 <ArrowRight className="w-3 h-3" />
               </Link>
             </motion.div>
@@ -936,10 +936,10 @@ export default function Domov() {
                 <Euro className="w-6 h-6 text-[#C5A880]" />
               </div>
               <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-2">
-                100% Financovanie stavby
+                {t('trustFinanceTitle')}
               </h3>
               <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-light">
-                Nemáte hotovosť? V American Living financujeme výstavbu domu bez počiatočných úspor. Všetko vybavíme za vás vrátane hypotéky.
+                {t('trustFinanceDesc')}
               </p>
               <button 
                 onClick={() => {
@@ -949,7 +949,7 @@ export default function Domov() {
                 }}
                 className="mt-4 inline-flex items-center gap-1 text-[#C5A880] hover:text-[#C5A880]/80 transition-colors font-bold text-xs"
               >
-                <span>Spýtať sa na financovanie</span>
+                <span>{t('trustFinanceButton')}</span>
                 <ArrowRight className="w-3 h-3" />
               </button>
             </motion.div>
@@ -967,13 +967,13 @@ export default function Domov() {
                 <Clock className="w-6 h-6 text-[#C5A880] dark:text-red-400" />
               </div>
               <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-2">
-                Rýchle odovzdanie stavby
+                {t('trustBuildTitle')}
               </h3>
               <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-light">
-                Garantujeme zmluvné odovzdanie vo fabrike už do 6 týždňov pre modulárne stavby a do 12 týždňov na kľúč pre montované domy.
+                {t('trustBuildDesc')}
               </p>
               <Link to={createPageUrl("AkoToFunguje")} className="mt-4 inline-flex items-center gap-1 text-xs text-[#C5A880] dark:text-red-400 hover:text-[#b0926a] dark:hover:text-[#C5A880] transition-colors font-bold">
-                <span>Ako to funguje</span>
+                <span>{t('trustBuildLink')}</span>
                 <ArrowRight className="w-3 h-3" />
               </Link>
             </motion.div>
@@ -995,16 +995,16 @@ export default function Domov() {
                 <div className="flex-1 text-left">
                   <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#C5A880]/15 dark:bg-[#9E2A2B]/10 border border-[#C5A880]/30 dark:border-[#9E2A2B]/35 text-slate-800 dark:text-[#C5A880] text-xs sm:text-sm font-bold mb-4 sm:mb-6 animate-pulse">
                     <span className="w-2 h-2 bg-green-400 rounded-full"></span>
-                    <span>KEXO AI ASISTENT</span>
+                    <span>{t('kexoAiAssistantBadge')}</span>
                   </div>
                  <h2 className="text-2xl sm:text-4xl font-black text-slate-800 dark:text-white mb-4 sm:mb-6 leading-tight tracking-tight">
                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C5A880] via-slate-800 dark:via-white to-[#C5A880]">
-                     Poraďte sa s Kexom
+                     {t('consultWithKexoTitle')}
                    </span>
-                   {" "}— vaším AI asistentom
+                   {" "}{t('consultWithKexoSub')}
                  </h2>
                  <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed font-light mb-6 sm:mb-8">
-                   Kexo je náš vyškolený umelý inteligentný asistent, ktorý pozná celé produktové know-how, technické parametre montovaných a modulárnych domov, detaily financovania aj postup pri získavaní grantu. 
+                   {t('kexoDescription')}
                  </p>
                  <div className="flex flex-wrap gap-4">
                    <button 
@@ -1012,7 +1012,7 @@ export default function Domov() {
                      className="bg-gradient-to-r from-[#9E2A2B] to-[#b13536] hover:from-[#b13536] hover:to-[#9E2A2B] text-white font-bold px-8 py-6 rounded-2xl shadow-[0_0_20px_rgba(158,42,43,0.35)] hover:shadow-[0_0_30px_rgba(158,42,43,0.5)] border border-[#C5A880]/30 transition-all text-sm sm:text-base flex items-center justify-center gap-2 group"
                    >
                      <MessageCircle className="w-5 h-5 text-white animate-pulse" />
-                     <span>Spustiť chat s Kexom</span>
+                     <span>{t('startChatWithKexo')}</span>
                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                    </button>
                  </div>
@@ -1020,7 +1020,7 @@ export default function Domov() {
 
                {/* Right column: Interactive mock chat panel */}
                <div className="w-full lg:w-96 shrink-0">
-                 <div className="bg-white/95 dark:bg-[#08080A]/90 border border-slate-200 dark:border-[#C5A880]/15 rounded-2xl p-4 sm:p-5 shadow-xl dark:shadow-2xl relative overflow-hidden transition-colors duration-300">
+                 <div className="bg-white/95 dark:bg-[#08080A]/90 border border-slate-200 dark:border-[#C5A880]/15 rounded-2xl p-4 sm:p-5 shadow-xl dark:shadow-2xl relative overflow-hidden transition-colors duration-305">
                    {/* Top Chat Header */}
                    <div className="flex items-center gap-3 border-b border-slate-200 dark:border-[#C5A880]/10 pb-3 mb-4">
                      <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#16161D] border border-slate-200 dark:border-[#C5A880]/30 flex items-center justify-center">
@@ -1030,7 +1030,7 @@ export default function Domov() {
                        <p className="text-xs font-bold text-slate-800 dark:text-white leading-tight">Kexo</p>
                        <p className="text-[10px] text-green-500 dark:text-green-400 flex items-center gap-1.5">
                          <span className="w-1.5 h-1.5 bg-green-500 dark:bg-green-400 rounded-full animate-pulse"></span>
-                         Aktívny teraz
+                         {t('activeNow')}
                        </p>
                      </div>
                    </div>
@@ -1039,7 +1039,7 @@ export default function Domov() {
                    <div className="space-y-4 mb-4 min-h-[140px] flex flex-col justify-end">
                      <div className="flex items-start gap-2.5">
                        <div className="bg-slate-100 dark:bg-[#16161D]/80 border border-slate-200 dark:border-[#C5A880]/10 rounded-2xl px-3 py-2 text-xs text-slate-700 dark:text-slate-300 max-w-[90%]">
-                         👋 Dobrý deň! Som Kexo, váš AI expert na domy. S čím vám dnes pomôžem?
+                         {t('kexoIntroMessage')}
                        </div>
                      </div>
                    </div>
@@ -1048,7 +1048,7 @@ export default function Domov() {
                    <div className="flex gap-2">
                      <input 
                        type="text" 
-                       placeholder="Spýtajte sa ma na čokoľvek..."
+                       placeholder={t('askMeAnything')}
                        className="flex-1 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880] transition-colors"
                        readOnly
                        onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))}
@@ -1158,19 +1158,19 @@ export default function Domov() {
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <h2 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white mb-4 leading-tight transition-colors duration-300">
-              Galéria našich najlukratívnejších domov
+              {t('gallerySectionTitle')}
             </h2>
             <p className="text-slate-650 dark:text-slate-400 text-sm sm:text-lg font-light leading-relaxed transition-colors duration-300">
-              Pozrite si reálne fotografie a detaily exteriéru a interiéru z našich prémiových montovaných a modulárnych domov.
+              {t('galleryDesc')}
             </p>
           </div>
 
           {/* House Selector Tabs */}
           <div className="flex flex-wrap justify-center gap-3 mb-8">
             {[
-              { id: "6916ec94c11aacdd15248f07", name: "LONDON 144", desc: "Prémiová rodinná vila", price: "od 168 510 €" },
-              { id: "6916ec94c11aacdd15248f18", name: "FLAT DOUBLE 142", desc: "Dizajnový modulárny dom", price: "od 61 700 €" },
-              { id: "6916ec94c11aacdd15248f0b", name: "ALESSANDRIA 130", desc: "Minimalistický plochostrechý dom", price: "od 110 454 €" }
+              { id: "6916ec94c11aacdd15248f07", name: "LONDON 144", desc: t('tabLondonDesc') || "Prémiová rodinná vila", price: `${t('from')} 168 510 €` },
+              { id: "6916ec94c11aacdd15248f18", name: "FLAT DOUBLE 142", desc: t('tabFlatDoubleDesc') || "Dizajnový modulárny dom", price: `${t('from')} 61 700 €` },
+              { id: "6916ec94c11aacdd15248f0b", name: "ALESSANDRIA 130", desc: t('tabAlessandriaDesc') || "Minimalistický plochostrechý dom", price: `${t('from')} 110 454 €` }
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -1201,7 +1201,7 @@ export default function Domov() {
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
-                Exteriér domov
+                {t('exterier')}
               </button>
               <button
                 type="button"
@@ -1212,7 +1212,7 @@ export default function Domov() {
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
-                Interiér a dispozícia
+                {t('interier')}
               </button>
             </div>
           </div>
@@ -1235,7 +1235,7 @@ export default function Domov() {
                 >
                   <img
                     src={img}
-                    alt="Vizualizácia / Realizácia"
+                    alt={t('photoDetail')}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     loading="lazy"
                   />
@@ -1249,7 +1249,7 @@ export default function Domov() {
             </motion.div>
           ) : (
             <div className="text-center py-12 text-slate-500 bg-slate-100 dark:bg-slate-900/20 rounded-2xl border border-slate-200 dark:border-white/5 transition-colors duration-300">
-              Načítavajú sa fotografie z galérie...
+              {t('loadingPhotos')}
             </div>
           )}
         </div>
@@ -1272,7 +1272,7 @@ export default function Domov() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               src={lightboxImage}
-              alt="Detail fotografie"
+              alt={t('photoDetail')}
               className="max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl border border-white/15 cursor-default"
               onClick={(e) => e.stopPropagation()}
             />
@@ -1369,19 +1369,19 @@ export default function Domov() {
                   <Gift className="w-4 h-4" /> VIP Benefit Program
                 </div>
                 <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white mb-6 leading-tight transition-colors duration-300">
-                  Viac než len dom.<br />
+                  {t('moreThanJustAHouse')}<br />
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-800 dark:from-red-400 dark:to-red-600">
-                    Finančná injekcia pre váš nový začiatok.
+                    {t('financialInjection')}
                   </span>
                 </h2>
                 <p className="text-lg sm:text-xl text-slate-650 dark:text-slate-400 font-light mb-8 leading-relaxed max-w-xl transition-colors duration-300">
-                  Vieme, že stavba domu je životné rozhodnutie a obrovská finančná záťaž. Preto sme vytvorili exkluzívny program <strong className="text-slate-800 dark:text-slate-200">Súkromný grant AMERICANA</strong>, ktorý vám po podpise zmluvy pomôže pokryť náklady na energie alebo uľahčí vašu investíciu.
+                  {t('grantDescriptionPart1')} <strong className="text-slate-800 dark:text-slate-200">{t('grantDescriptionPart2')}</strong>{t('grantDescriptionPart3')}
                 </p>
                 
                 <Link to={createPageUrl("DotaciaAmericana")} className="inline-block w-full sm:w-auto">
                   <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-bold px-8 py-7 text-lg shadow-[0_0_30px_rgba(220,38,38,0.3)] hover:shadow-[0_0_50px_rgba(220,38,38,0.5)] border border-red-400/50 transition-all group rounded-2xl">
                     <span className="flex items-center justify-center gap-3">
-                      Overiť nárok na grant
+                      {t('verifyGrantEligibility')}
                       <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </span>
                   </Button>
@@ -1389,7 +1389,7 @@ export default function Domov() {
                 
                 <div className="mt-8 flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400 transition-colors duration-300">
                   <Shield className="w-5 h-5 text-slate-400 dark:text-slate-450" />
-                  <span>Garantované financovanie pre našich klientov.</span>
+                  <span>{t('guaranteedFinancing')}</span>
                 </div>
               </motion.div>
             </div>
@@ -1646,7 +1646,7 @@ export default function Domov() {
                       </div>
                       {/* Click indicator */}
                       <div className="absolute top-2 right-2 bg-white/95 dark:bg-slate-950/95 border border-slate-200 dark:border-white/15 rounded-full px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-md">
-                        <span className="text-xs font-bold text-primary">Klikni pre viac →</span>
+                        <span className="text-xs font-bold text-primary">{t('clickForMore')} →</span>
                       </div>
                     </div>
                   </Card>

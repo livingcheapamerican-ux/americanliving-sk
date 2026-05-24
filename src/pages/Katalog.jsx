@@ -602,7 +602,7 @@ export default function Katalog() {
                     <a href="tel:+421905138124">
                       <Button size="sm" variant="outline" className="bg-white/10 backdrop-blur-md border border-white/30 text-white hover:bg-white/20 hover:text-white font-bold text-xs px-3 py-1.5 h-auto transition-all shadow-lg">
                         <Phone className="mr-1 w-3 h-3" />
-                        Volať
+                        {t('callLabel')}
                       </Button>
                     </a>
                   </div>
@@ -760,7 +760,7 @@ export default function Katalog() {
                     {t('priceRange')}
                   </label>
                   <div className="mb-3">
-                    <label className="text-[10px] text-muted-foreground mb-1 block">Maximálne: {cenoveRozpatie[1].toLocaleString('sk-SK')} €</label>
+                    <label className="text-[10px] text-muted-foreground mb-1 block">{t('maximum')}: {cenoveRozpatie[1].toLocaleString('sk-SK')} €</label>
                     <Input
                       type="number"
                       min={0}
@@ -824,13 +824,13 @@ export default function Katalog() {
                 <div className="bg-background border border-primary/30 dark:border-red-500/30 rounded-lg p-3">
                   <label className="block text-xs font-semibold text-muted-foreground mb-2 flex items-center gap-1">
                     <Boxes className="w-3 h-3 text-red-500" />
-                    Modulové domy
+                    {t('modularHomesFilter')}
                   </label>
                   <div className="grid grid-cols-1 gap-1.5">
                     {[
-                      { value: 'all', label: 'Všetky', icon: Boxes },
-                      { value: '1modul', label: '1 modulové domy', icon: Home },
-                      { value: 'viacmodulov', label: 'Viac modulové domy', icon: Building2 }
+                      { value: 'all', label: t('all'), icon: Boxes },
+                      { value: '1modul', label: t('oneModularHouses'), icon: Home },
+                      { value: 'viacmodulov', label: t('multiModularHouses'), icon: Building2 }
                     ].map((opt) => {
                       const Icon = opt.icon;
                       const isSelected = moduloveDomyFilter === opt.value;
@@ -859,9 +859,9 @@ export default function Katalog() {
                   <div className="bg-background border border-primary/30 dark:border-red-500/30 rounded-lg p-3">
                     <label className="block text-xs font-semibold text-muted-foreground mb-2 flex items-center gap-1">
                       <Boxes className="w-3 h-3 text-red-500" />
-                      Počet modulov
+                      {t('numberOfModules')}
                     </label>
-                    <p className="text-[10px] text-muted-foreground mb-2">Tento výber upravuje počet modulov z ktorých sa má modulárny dom skladať</p>
+                    <p className="text-[10px] text-muted-foreground mb-2">{t('modulesSelectionDesc')}</p>
                     <div className="grid grid-cols-3 gap-1.5">
                       {Array.isArray(domy) && [...new Set(domy.filter(d => d.pocet_modulov && d.vyrobca === "Ticab house").map(d => d.pocet_modulov))].sort((a, b) => a - b).map((moduly) => {
                         const isSelected = pocetModulovFilter.includes(moduly);
@@ -899,7 +899,7 @@ export default function Katalog() {
                     {t('builtAreaFilter')}
                   </label>
                   <div className="mb-3">
-                    <label className="text-[10px] text-muted-foreground mb-1 block">Maximálne: {plocharozsah[1]} m²</label>
+                    <label className="text-[10px] text-muted-foreground mb-1 block">{t('maximum')}: {plocharozsah[1]} m²</label>
                     <Input
                       type="number"
                       min={0}
@@ -931,7 +931,7 @@ export default function Katalog() {
                     {t('usableAreaFilter')}
                   </label>
                   <div className="mb-3">
-                    <label className="text-[10px] text-muted-foreground mb-1 block">Maximálne: {uzitkovaRozsah[1]} m²</label>
+                    <label className="text-[10px] text-muted-foreground mb-1 block">{t('maximum')}: {uzitkovaRozsah[1]} m²</label>
                     <Input
                       type="number"
                       min={0}
@@ -962,16 +962,16 @@ export default function Katalog() {
                     <div className="bg-emerald-500/10 dark:bg-emerald-950/20 border border-emerald-200/50 dark:border-emerald-800/30 rounded-lg p-3">
                       <label className="block text-xs font-semibold text-foreground mb-2 flex items-center gap-1">
                         <Zap className="w-3 h-3 text-green-600 dark:text-emerald-400" />
-                        Energetická trieda
+                        {t('energyClassFilter')}
                       </label>
                       <Select value={energyCert} onValueChange={setEnergyCert}>
                         <SelectTrigger className="h-7 text-xs">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="all">Všetky</SelectItem>
-                          <SelectItem value="a0">✅ A0 (celoročný)</SelectItem>
-                          <SelectItem value="no">❌ Bez certifikátu</SelectItem>
+                          <SelectItem value="all">{t('all')}</SelectItem>
+                          <SelectItem value="a0">{t('energyClassA0')}</SelectItem>
+                          <SelectItem value="no">{t('energyClassNone')}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -985,7 +985,7 @@ export default function Katalog() {
                   className="w-full text-xs h-7"
                   onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
                 >
-                  {showAdvancedFilters ? '− Menej filtrov' : '+ Pokročilé filtre'}
+                  {showAdvancedFilters ? `− ${t('lessFilters')}` : `+ ${t('advancedFilters')}`}
                 </Button>
 
                 {/* Reset */}
@@ -1008,7 +1008,7 @@ export default function Katalog() {
                     setZoradenie("poradie");
                     setEnergyCert('all');
                   }}>
-                  Reset
+                  {t('reset')}
                 </Button>
               </div>
 
