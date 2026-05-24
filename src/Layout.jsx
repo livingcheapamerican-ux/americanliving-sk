@@ -300,7 +300,6 @@ function LayoutContent({ children }) {
                           ? 'bg-orange-500/20 text-orange-400 hover:bg-orange-500/30'
                           : 'text-slate-700 dark:text-slate-200 hover:text-red-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10'
                     }`}
-                    style={(!isDotacia && !isActive(item.path) && !isKredity) ? { textShadow: '1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 0px 4px 10px rgba(0,0,0,0.9)' } : undefined}
                   >
                     {isDotacia ? (
                       <>

@@ -542,8 +542,8 @@ export default function Domov() {
         <div className="absolute inset-0 bg-[url('https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/cbd41c122_Barnbazen.jpeg')] bg-cover bg-center opacity-[0.05] dark:opacity-[0.09] blur-[1px] pointer-events-none mix-blend-overlay" />
 
         {/* Ambient background glows - Rich premium gradients */}
-        <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] bg-red-500/10 dark:bg-red-600/15 rounded-full blur-[180px] pointer-events-none" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] bg-[#C5A880]/15 dark:bg-[#C5A880]/15 rounded-full blur-[180px] pointer-events-none" />
+        <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] bg-[#C5A880]/10 dark:bg-red-600/15 rounded-full blur-[180px] pointer-events-none" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] bg-[#C5A880]/10 dark:bg-[#C5A880]/15 rounded-full blur-[180px] pointer-events-none" />
         <div className="absolute top-[30%] left-[35%] w-[500px] h-[500px] bg-[#C5A880]/5 dark:bg-slate-900/30 rounded-full blur-[150px] pointer-events-none" />
 
         <div className="relative z-10 container mx-auto px-4">
@@ -834,11 +834,11 @@ export default function Domov() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="bg-gradient-to-br from-white to-slate-50/50 dark:from-slate-900/60 dark:to-slate-950/60 border border-slate-200 dark:border-red-500/20 hover:border-red-500/40 rounded-2xl p-6 transition-all duration-300 relative overflow-hidden group shadow-md dark:shadow-lg"
+              className="bg-gradient-to-br from-white to-slate-50/50 dark:from-slate-900/60 dark:to-slate-950/60 border border-slate-200 dark:border-red-500/20 hover:border-[#C5A880]/50 dark:hover:border-red-500/40 rounded-2xl p-6 transition-all duration-300 relative overflow-hidden group shadow-md dark:shadow-lg"
             >
-              <div className="absolute top-0 right-0 w-24 h-24 bg-red-500/5 rounded-full blur-2xl group-hover:bg-red-500/10 transition-all pointer-events-none" />
-              <div className="w-12 h-12 rounded-xl bg-red-500/10 border border-red-500/25 flex items-center justify-center mb-4">
-                <Clock className="w-6 h-6 text-red-400" />
+              <div className="absolute top-0 right-0 w-24 h-24 bg-[#C5A880]/5 dark:bg-red-500/5 rounded-full blur-2xl group-hover:bg-[#C5A880]/10 dark:group-hover:bg-red-500/10 transition-all pointer-events-none" />
+              <div className="w-12 h-12 rounded-xl bg-[#C5A880]/15 dark:bg-red-500/10 border border-[#C5A880]/30 dark:border-red-500/25 flex items-center justify-center mb-4">
+                <Clock className="w-6 h-6 text-[#C5A880] dark:text-red-400" />
               </div>
               <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-2">
                 Rýchle odovzdanie stavby
@@ -846,7 +846,7 @@ export default function Domov() {
               <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-light">
                 Garantujeme zmluvné odovzdanie vo fabrike už do 6 týždňov pre modulárne stavby a do 12 týždňov na kľúč pre montované domy.
               </p>
-              <Link to={createPageUrl("AkoToFunguje")} className="mt-4 inline-flex items-center gap-1 text-xs text-red-600 dark:text-red-400 hover:text-[#C5A880] transition-colors font-bold">
+              <Link to={createPageUrl("AkoToFunguje")} className="mt-4 inline-flex items-center gap-1 text-xs text-[#C5A880] dark:text-red-400 hover:text-[#b0926a] dark:hover:text-[#C5A880] transition-colors font-bold">
                 <span>Ako to funguje</span>
                 <ArrowRight className="w-3 h-3" />
               </Link>
@@ -859,19 +859,18 @@ export default function Domov() {
       {/* AI Consultation Section - Kexo */}
       <section className="py-12 sm:py-16 bg-background relative overflow-hidden border-b border-[#C5A880]/15 transition-colors duration-300">
         {/* Glow Effects */}
-        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-80 h-80 bg-[#9E2A2B]/10 rounded-full blur-[100px] pointer-events-none"></div>
+        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-80 h-80 bg-[#C5A880]/10 dark:bg-[#9E2A2B]/10 rounded-full blur-[100px] pointer-events-none"></div>
         <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-[#C5A880]/5 rounded-full blur-[100px] pointer-events-none"></div>
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-5xl mx-auto">
             <div className="bg-gradient-to-br from-white/95 to-slate-50/80 dark:from-[#0D0D11]/90 dark:to-[#16161D]/80 backdrop-blur-xl border border-[#C5A880]/30 dark:border-[#C5A880]/20 rounded-3xl p-6 sm:p-12 shadow-[0_15px_40px_rgba(197,168,128,0.06)] dark:shadow-[0_0_50px_rgba(197,168,128,0.08)] flex flex-col lg:flex-row items-center gap-8 sm:gap-12 transition-colors duration-300">
               
-               {/* Left column: AI pitch */}
-               <div className="flex-1 text-left">
-                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#9E2A2B]/10 border border-[#9E2A2B]/35 text-[#C5A880] text-xs sm:text-sm font-bold mb-4 sm:mb-6 animate-pulse">
-                   <span className="w-2 h-2 bg-green-400 rounded-full"></span>
-                   <span>KEXO AI ASISTENT</span>
-                 </div>
+                <div className="flex-1 text-left">
+                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#C5A880]/15 dark:bg-[#9E2A2B]/10 border border-[#C5A880]/30 dark:border-[#9E2A2B]/35 text-slate-800 dark:text-[#C5A880] text-xs sm:text-sm font-bold mb-4 sm:mb-6 animate-pulse">
+                    <span className="w-2 h-2 bg-green-400 rounded-full"></span>
+                    <span>KEXO AI ASISTENT</span>
+                  </div>
                  <h2 className="text-2xl sm:text-4xl font-black text-slate-800 dark:text-white mb-4 sm:mb-6 leading-tight tracking-tight">
                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C5A880] via-slate-800 dark:via-white to-[#C5A880]">
                      Poraďte sa s Kexom
@@ -945,15 +944,15 @@ export default function Domov() {
 
       {/* Populárne domy Carousel */}
       {domy && domy.length > 0 && (
-        <section className="py-12 sm:py-20 bg-slate-950 relative border-b border-white/5">
+        <section className="py-12 sm:py-20 bg-slate-50 dark:bg-[#050508] relative border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
           <div className="container mx-auto px-4 mb-8">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-2xl sm:text-4xl font-bold text-white mb-2">{t('popularHouses') || 'Populárne domy'}</h2>
-                <p className="text-slate-400">{t('popularHousesDesc') || 'Pozrite si najžiadanejšie modely z nášho katalógu'}</p>
+                <h2 className="text-2xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-2 transition-colors duration-300">{t('popularHouses')}</h2>
+                <p className="text-slate-650 dark:text-slate-400 transition-colors duration-300">{t('popularHousesDesc')}</p>
               </div>
-              <Link to={createPageUrl("Katalog")} className="hidden sm:flex items-center gap-2 text-primary hover:text-red-400 font-semibold transition-colors">
-                {t('showAllHouses') || 'Zobraziť všetky domy'} <ArrowRight className="w-5 h-5" />
+              <Link to={createPageUrl("Katalog")} className="hidden sm:flex items-center gap-2 text-primary hover:text-red-655 dark:hover:text-red-400 font-semibold transition-colors">
+                {t('showAllHouses')} <ArrowRight className="w-5 h-5" />
               </Link>
             </div>
           </div>
@@ -970,7 +969,7 @@ export default function Domov() {
                   className="snap-center sm:snap-start shrink-0 w-[85vw] sm:w-[400px] lg:w-[450px]"
                 >
                   <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}`}>
-                    <Card className="bg-slate-900/80 backdrop-blur-sm border-white/10 overflow-hidden group hover:-translate-y-2 transition-all duration-300 shadow-xl hover:shadow-red-900/20">
+                    <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-white/10 overflow-hidden group hover:-translate-y-2 transition-all duration-300 shadow-md dark:shadow-xl hover:shadow-[#C5A880]/15 dark:hover:shadow-red-950/20">
                       <div className="aspect-[4/3] overflow-hidden relative">
                         <img 
                           src={dom.hlavny_obrazok || dom.obrazky?.[0]} 
@@ -990,13 +989,13 @@ export default function Domov() {
                           <h3 className="text-xl sm:text-2xl font-bold text-white mb-1 drop-shadow-md">{dom.nazov}</h3>
                           <div className="flex flex-wrap gap-2 mt-2">
                             {dom.zastavana_plocha && (
-                              <span className="text-xs font-semibold bg-slate-800/80 backdrop-blur-md text-slate-200 px-2 py-1 rounded-md border border-white/10">
+                              <span className="text-xs font-semibold bg-slate-955/60 backdrop-blur-md text-slate-200 px-2 py-1 rounded-md border border-white/10">
                                 {dom.zastavana_plocha} m²
                               </span>
                             )}
                             {dom.pocet_izieb && (
-                              <span className="text-xs font-semibold bg-slate-800/80 backdrop-blur-md text-slate-200 px-2 py-1 rounded-md border border-white/10">
-                                {dom.pocet_izieb} {t('rooms') || 'izby'}
+                              <span className="text-xs font-semibold bg-slate-955/60 backdrop-blur-md text-slate-200 px-2 py-1 rounded-md border border-white/10">
+                                {dom.pocet_izieb} {t('roomsLabel') || 'izby'}
                               </span>
                             )}
                           </div>
@@ -1004,11 +1003,11 @@ export default function Domov() {
                       </div>
                       <div className="p-5">
                         <div className="flex items-center justify-between mb-4">
-                          <div className="text-xs text-slate-400">{t('priceFrom') || 'Cena od'}</div>
-                          <div className="text-xl font-black text-white">{dom.zakladna_cena?.toLocaleString('sk-SK')} €</div>
+                          <div className="text-xs text-slate-500 dark:text-slate-400 transition-colors duration-300">{t('priceFrom')}</div>
+                          <div className="text-xl font-black text-slate-900 dark:text-white transition-colors duration-300">{dom.zakladna_cena?.toLocaleString('sk-SK')} €</div>
                         </div>
-                        <Button variant="outline" className="w-full border-white/10 hover:bg-white hover:text-slate-900 bg-transparent text-white transition-all group-hover:border-white">
-                          {t('houseDetail') || 'Detail domu'} <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        <Button variant="outline" className="w-full border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white hover:text-slate-900 dark:hover:text-slate-950 bg-white/70 dark:bg-transparent text-slate-800 dark:text-white transition-all">
+                          {t('houseDetail')} <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </Button>
                       </div>
                     </Card>
@@ -1018,25 +1017,24 @@ export default function Domov() {
             </div>
           </div>
           <div className="container mx-auto px-4 mt-4 sm:hidden">
-            <Link to={createPageUrl("Katalog")} className="flex items-center justify-center gap-2 text-primary hover:text-red-400 font-semibold transition-colors w-full bg-slate-900/50 py-3 rounded-xl border border-white/5">
-              {t('showAllHouses') || 'Zobraziť všetky domy'} <ArrowRight className="w-5 h-5" />
+            <Link to={createPageUrl("Katalog")} className="flex items-center justify-center gap-2 text-primary hover:text-red-655 font-semibold transition-colors w-full bg-white dark:bg-slate-900/50 py-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm">
+              {t('showAllHouses')} <ArrowRight className="w-5 h-5" />
             </Link>
           </div>
         </section>
       )}
 
       {/* Premium Showcase Gallery Section */}
-      <section className="py-16 sm:py-24 bg-slate-950 relative border-b border-white/5">
+      <section className="py-16 sm:py-24 bg-white dark:bg-[#050508] relative border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
         {/* Decorative Grid Background */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px),linear-gradient(to_bottom,#ffffff02_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-slate-900/40 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--grid-color)_1px,transparent_1px),linear-gradient(to_bottom,var(--grid-color)_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
         
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center max-w-3xl mx-auto mb-12">
-            <h2 className="text-3xl sm:text-5xl font-black text-white mb-4 leading-tight">
+            <h2 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white mb-4 leading-tight transition-colors duration-300">
               Galéria našich najlukratívnejších domov
             </h2>
-            <p className="text-slate-400 text-sm sm:text-lg font-light leading-relaxed">
+            <p className="text-slate-650 dark:text-slate-400 text-sm sm:text-lg font-light leading-relaxed transition-colors duration-300">
               Pozrite si reálne fotografie a detaily exteriéru a interiéru z našich prémiových montovaných a modulárnych domov.
             </p>
           </div>
@@ -1054,11 +1052,11 @@ export default function Domov() {
                 onClick={() => setActiveShowcaseHouseId(tab.id)}
                 className={`px-6 py-4 rounded-2xl border text-left transition-all ${
                   activeShowcaseHouseId === tab.id
-                    ? 'bg-gradient-to-br from-slate-900 to-slate-950 border-[#C5A880] text-white shadow-lg shadow-[#C5A880]/10 ring-1 ring-[#C5A880]'
-                    : 'bg-slate-900/30 border-white/5 text-slate-400 hover:border-white/10 hover:text-white'
+                    ? 'bg-slate-105 dark:bg-slate-900 border-[#C5A880] text-slate-950 dark:text-white shadow-md shadow-[#C5A880]/10 ring-1 ring-[#C5A880]'
+                    : 'bg-slate-50 dark:bg-slate-900/30 border-slate-200 dark:border-white/5 text-slate-500 dark:text-slate-400 hover:border-slate-300 dark:hover:border-white/10 hover:text-slate-800 dark:hover:text-white'
                 }`}
               >
-                <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">{tab.desc}</p>
+                <p className="text-[10px] text-slate-500 dark:text-slate-500 font-bold uppercase tracking-wider">{tab.desc}</p>
                 <h4 className="text-lg font-black mt-1">{tab.name}</h4>
                 <p className="text-xs text-[#C5A880] font-semibold mt-0.5">{tab.price}</p>
               </button>
@@ -1067,14 +1065,14 @@ export default function Domov() {
 
           {/* Tab Selector: Exterior vs Interior */}
           <div className="flex justify-center mb-10">
-            <div className="bg-slate-900/60 p-1.5 rounded-xl border border-white/5 flex gap-1">
+            <div className="bg-slate-100 dark:bg-slate-900/60 p-1.5 rounded-xl border border-slate-200 dark:border-white/5 flex gap-1 transition-colors duration-300">
               <button
                 type="button"
                 onClick={() => setActiveShowcaseTab("exterier")}
                 className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${
                   activeShowcaseTab === "exterier"
                     ? 'bg-[#C5A880] text-slate-950 shadow-md'
-                    : 'text-slate-400 hover:text-white'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 Exteriér domov
@@ -1085,7 +1083,7 @@ export default function Domov() {
                 className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${
                   activeShowcaseTab === "interier"
                     ? 'bg-[#C5A880] text-slate-950 shadow-md'
-                    : 'text-slate-400 hover:text-white'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 Interiér a dispozícia
@@ -1107,7 +1105,7 @@ export default function Domov() {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.4, delay: index * 0.05 }}
                   onClick={() => setLightboxImage(img)}
-                  className="aspect-[4/3] rounded-2xl overflow-hidden relative border border-white/5 bg-slate-900 cursor-pointer group shadow-xl hover:-translate-y-1 transition-all duration-300"
+                  className="aspect-[4/3] rounded-2xl overflow-hidden relative border border-slate-200 dark:border-white/5 bg-slate-100 dark:bg-slate-900 cursor-pointer group shadow-md dark:shadow-xl hover:-translate-y-1 transition-all duration-300"
                 >
                   <img
                     src={img}
@@ -1124,7 +1122,7 @@ export default function Domov() {
               ))}
             </motion.div>
           ) : (
-            <div className="text-center py-12 text-slate-500 bg-slate-900/20 rounded-2xl border border-white/5">
+            <div className="text-center py-12 text-slate-500 bg-slate-100 dark:bg-slate-900/20 rounded-2xl border border-slate-200 dark:border-white/5 transition-colors duration-300">
               Načítavajú sa fotografie z galérie...
             </div>
           )}
@@ -1157,13 +1155,13 @@ export default function Domov() {
       </section>
 
       {/* Trusted Partners Section - Overení partneri */}
-      <section className="py-12 sm:py-24 bg-slate-950 relative overflow-hidden">
-        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+      <section className="py-12 sm:py-24 bg-slate-50 dark:bg-[#050508] relative overflow-hidden border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
+        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#C5A880]/20 to-transparent"></div>
         <div className="container mx-auto px-4 relative z-10">
             <motion.h2 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              className="text-2xl sm:text-4xl md:text-5xl font-bold text-center mb-8 sm:mb-16 text-white"
+              className="text-2xl sm:text-4xl md:text-5xl font-bold text-center mb-8 sm:mb-16 text-slate-900 dark:text-white transition-colors duration-300"
             >
             {t('trustedPartnersTitle')}
           </motion.h2>
@@ -1173,7 +1171,7 @@ export default function Domov() {
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              className="bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-3xl p-6 sm:p-10 shadow-2xl hover:bg-slate-800/50 transition-all"
+              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-3xl p-6 sm:p-10 shadow-md dark:shadow-2xl hover:shadow-[#C5A880]/10 dark:hover:bg-slate-800/50 transition-all duration-300"
             >
               <div className="mb-3 sm:mb-6">
                 <div className="aspect-[16/9] overflow-hidden rounded-xl">
@@ -1187,10 +1185,10 @@ export default function Domov() {
                   />
                 </div>
               </div>
-              <h3 className="text-xl sm:text-3xl font-bold mb-3 sm:mb-5 text-white">
+              <h3 className="text-xl sm:text-3xl font-bold mb-3 sm:mb-5 text-slate-900 dark:text-white transition-colors duration-300">
                 {t('prostoTitle')}
               </h3>
-              <p className="text-slate-400 leading-relaxed text-sm sm:text-lg font-light">
+              <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm sm:text-lg font-light transition-colors duration-300">
                 {t('prostoBody')}
               </p>
             </motion.div>
@@ -1199,7 +1197,7 @@ export default function Domov() {
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              className="bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-3xl p-6 sm:p-10 shadow-2xl hover:bg-slate-800/50 transition-all"
+              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-3xl p-6 sm:p-10 shadow-md dark:shadow-2xl hover:shadow-[#C5A880]/10 dark:hover:bg-slate-800/50 transition-all duration-300"
             >
               <div className="mb-3 sm:mb-6">
                 <div className="aspect-[16/9] overflow-hidden rounded-xl">
@@ -1213,10 +1211,10 @@ export default function Domov() {
                   />
                 </div>
               </div>
-              <h3 className="text-xl sm:text-3xl font-bold mb-3 sm:mb-5 text-white">
+              <h3 className="text-xl sm:text-3xl font-bold mb-3 sm:mb-5 text-slate-900 dark:text-white transition-colors duration-300">
                 {t('ticabTitle')}
               </h3>
-              <p className="text-slate-400 leading-relaxed text-sm sm:text-lg font-light">
+              <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm sm:text-lg font-light transition-colors duration-300">
                 {t('ticabBody')}
               </p>
             </motion.div>
@@ -1225,10 +1223,10 @@ export default function Domov() {
       </section>
 
       {/* SÚKROMNÝ GRANT AMERICANA - Premium Redesign */}
-      <section className="py-16 sm:py-28 bg-slate-950 relative overflow-hidden border-t border-white/5">
+      <section className="py-16 sm:py-28 bg-slate-50 dark:bg-[#050508] relative overflow-hidden border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
         {/* Glow effects */}
-        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-red-600/10 rounded-full blur-[120px] pointer-events-none"></div>
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-red-900/10 rounded-full blur-[150px] pointer-events-none"></div>
+        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-[#C5A880]/10 dark:bg-red-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#C5A880]/5 dark:bg-red-900/10 rounded-full blur-[150px] pointer-events-none"></div>
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
@@ -1241,17 +1239,17 @@ export default function Domov() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
               >
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-bold mb-6">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#C5A880]/15 dark:bg-red-500/10 border border-[#C5A880]/30 dark:border-red-500/20 text-slate-800 dark:text-red-400 text-sm font-bold mb-6">
                   <Gift className="w-4 h-4" /> VIP Benefit Program
                 </div>
-                <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight">
+                <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white mb-6 leading-tight transition-colors duration-300">
                   Viac než len dom.<br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-600">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-800 dark:from-red-400 dark:to-red-600">
                     Finančná injekcia pre váš nový začiatok.
                   </span>
                 </h2>
-                <p className="text-lg sm:text-xl text-slate-400 font-light mb-8 leading-relaxed max-w-xl">
-                  Vieme, že stavba domu je životné rozhodnutie a obrovská finančná záťaž. Preto sme vytvorili exkluzívny program <strong className="text-slate-200">Súkromný grant AMERICANA</strong>, ktorý vám po podpise zmluvy pomôže pokryť náklady na energie alebo uľahčí vašu investíciu.
+                <p className="text-lg sm:text-xl text-slate-650 dark:text-slate-400 font-light mb-8 leading-relaxed max-w-xl transition-colors duration-300">
+                  Vieme, že stavba domu je životné rozhodnutie a obrovská finančná záťaž. Preto sme vytvorili exkluzívny program <strong className="text-slate-800 dark:text-slate-200">Súkromný grant AMERICANA</strong>, ktorý vám po podpise zmluvy pomôže pokryť náklady na energie alebo uľahčí vašu investíciu.
                 </p>
                 
                 <Link to={createPageUrl("DotaciaAmericana")} className="inline-block w-full sm:w-auto">
@@ -1263,8 +1261,8 @@ export default function Domov() {
                   </Button>
                 </Link>
                 
-                <div className="mt-8 flex items-center gap-3 text-sm text-slate-500">
-                  <Shield className="w-5 h-5 text-slate-400" />
+                <div className="mt-8 flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400 transition-colors duration-300">
+                  <Shield className="w-5 h-5 text-slate-400 dark:text-slate-450" />
                   <span>Garantované financovanie pre našich klientov.</span>
                 </div>
               </motion.div>
@@ -1280,25 +1278,25 @@ export default function Domov() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, delay: 0.2 }}
-                  className="bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-3xl p-6 sm:p-8 hover:bg-slate-800/60 transition-all shadow-2xl relative overflow-hidden group"
+                  className="bg-white dark:bg-slate-900/40 backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-3xl p-6 sm:p-8 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-all shadow-md dark:shadow-2xl relative overflow-hidden group"
                 >
                   <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl group-hover:bg-emerald-500/20 transition-all"></div>
                   <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-emerald-900/50">
                     <Home className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-4">{t('forFamilies')}</h3>
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 transition-colors duration-300">{t('forFamilies')}</h3>
                   <ul className="space-y-4">
                     <li className="flex items-start gap-3">
                       <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
-                      <span className="text-slate-300 text-sm leading-relaxed">{t('grantAtSigning')}</span>
+                      <span className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed transition-colors duration-300">{t('grantAtSigning')}</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
-                      <span className="text-slate-300 text-sm leading-relaxed">{t('energyFullyRefunded')}</span>
+                      <span className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed transition-colors duration-300">{t('energyFullyRefunded')}</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
-                      <span className="text-slate-300 text-sm leading-relaxed">{t('supportAfterHandover')}</span>
+                      <span className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed transition-colors duration-300">{t('supportAfterHandover')}</span>
                     </li>
                   </ul>
                 </motion.div>
@@ -1309,32 +1307,32 @@ export default function Domov() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, delay: 0.4 }}
-                  className="bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-3xl p-6 sm:p-8 hover:bg-slate-800/60 transition-all shadow-2xl relative overflow-hidden lg:mt-12 group"
+                  className="bg-white dark:bg-slate-900/40 backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-3xl p-6 sm:p-8 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-all shadow-md dark:shadow-2xl relative overflow-hidden lg:mt-12 group"
                 >
                   <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/10 rounded-full blur-3xl group-hover:bg-yellow-500/20 transition-all"></div>
                   <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-yellow-700 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-yellow-900/50">
                     <TrendingUp className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-4">{t('forInvestors')}</h3>
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 transition-colors duration-300">{t('forInvestors')}</h3>
                   <ul className="space-y-4">
                     <li className="flex items-start gap-3">
                       <CheckCircle className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />
-                      <span className="text-slate-300 text-sm leading-relaxed">{t('grantAtSigning')}</span>
+                      <span className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed transition-colors duration-300">{t('grantAtSigning')}</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <CheckCircle className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />
-                      <span className="text-slate-300 text-sm leading-relaxed">{t('marketingFree')}</span>
+                      <span className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed transition-colors duration-300">{t('marketingFree')}</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <CheckCircle className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />
-                      <span className="text-slate-300 text-sm leading-relaxed">{t('passiveIncomeFromAirbnb')}</span>
+                      <span className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed transition-colors duration-300">{t('passiveIncomeFromAirbnb')}</span>
                     </li>
                   </ul>
                 </motion.div>
 
               </div>
               <div className="mt-6 text-center lg:text-right">
-                <p className="inline-block px-4 py-2 bg-slate-900/80 rounded-lg border border-white/5 text-xs text-slate-500 italic">
+                <p className="inline-block px-4 py-2 bg-slate-100 dark:bg-slate-900/80 rounded-lg border border-slate-200 dark:border-white/5 text-xs text-slate-605 dark:text-slate-500 italic transition-colors duration-300">
                   💡 {t('grantAmountVaries')}
                 </p>
               </div>
@@ -1355,19 +1353,19 @@ export default function Domov() {
       `}</style>
 
       {/* 100% Financovanie Bez Úspor Banner */}
-      <section className="py-12 sm:py-20 bg-[#08080A] relative overflow-hidden border-t border-white/5">
-        <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-red-950/15 rounded-full blur-[120px] pointer-events-none"></div>
+      <section className="py-12 sm:py-20 bg-slate-50 dark:bg-[#08080A] relative overflow-hidden border-t border-slate-200 dark:border-white/5 transition-colors duration-300">
+        <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-[#C5A880]/10 dark:bg-red-950/15 rounded-full blur-[120px] pointer-events-none"></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-5xl mx-auto">
-            <div className="bg-gradient-to-br from-slate-900/90 to-slate-950/90 border border-[#C5A880]/30 rounded-3xl p-8 sm:p-12 shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="bg-white dark:bg-gradient-to-br dark:from-slate-900/90 dark:to-slate-950/90 border border-slate-200 dark:border-[#C5A880]/30 rounded-3xl p-8 sm:p-12 shadow-md dark:shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 transition-colors duration-300">
               <div className="absolute top-0 left-0 w-3 h-full bg-[#C5A880]"></div>
               
               <div className="flex-1 text-center md:text-left">
-                <h2 className="text-2xl sm:text-4xl font-black text-white mb-4 leading-tight">
+                <h2 className="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white mb-4 leading-tight transition-colors duration-300">
                   Chcete si postaviť nový dom a nemáte na to kapitál?
                 </h2>
-                <p className="text-slate-300 text-sm sm:text-lg font-light leading-relaxed max-w-2xl">
-                  Žiadny problém! Máme model financovania pre tých, ktorí nemajú našetrené. Pomôžeme vám vyriešiť financovanie celej výstavby od A po Z.
+                <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-lg font-light leading-relaxed max-w-2xl transition-colors duration-300">
+                  Žiadny problém! Máme model financovania pre tých, ktorí nemajú našetrené. Pomôžeme vám vyriešiть financovanie celej výstavby od A po Z.
                 </p>
               </div>
               
@@ -1380,7 +1378,7 @@ export default function Domov() {
                     window.dispatchEvent(event);
                   }}
                   size="lg"
-                  className="bg-[#C5A880] hover:bg-[#b0926a] text-slate-950 font-black px-8 py-6 rounded-2xl shadow-xl flex items-center gap-2 active:scale-95 transition-all text-base border border-[#C5A880]/40"
+                  className="bg-[#C5A880] hover:bg-[#b0926a] text-slate-950 hover:text-slate-900 font-black px-8 py-6 rounded-2xl shadow-md dark:shadow-xl flex items-center gap-2 active:scale-95 transition-all text-base border border-[#C5A880]/40"
                 >
                   <MessageCircle className="w-5 h-5 text-slate-950" />
                   <span>Opýtať sa Kexa na financovanie</span>
@@ -1392,8 +1390,8 @@ export default function Domov() {
       </section>
 
       {/* Fixácia úrokov - Nová sekcia */}
-      <section className="py-6 sm:py-16 bg-gradient-to-br from-red-900 via-red-800 to-red-700 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-orange-600/20 via-transparent to-transparent"></div>
+      <section className="py-12 sm:py-20 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-white/5 relative overflow-hidden transition-colors duration-300">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-orange-600/10 dark:from-orange-600/20 via-transparent to-transparent pointer-events-none"></div>
         <div className="container mx-auto px-2 sm:px-8 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -1401,7 +1399,7 @@ export default function Domov() {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <Card className="bg-gradient-to-br from-red-600 via-orange-600 to-red-700 border-[3px] sm:border-[6px] border-orange-400 p-4 sm:p-12 shadow-[0_20px_60px_rgba(249,115,22,0.4)] hover:shadow-[0_25px_70px_rgba(249,115,22,0.5)] transition-all">
+            <Card className="bg-white dark:bg-gradient-to-br dark:from-red-600 dark:via-orange-600 dark:to-red-700 border-[3px] sm:border-[6px] border-[#C5A880] dark:border-orange-400 p-6 sm:p-12 shadow-lg dark:shadow-[0_20px_60px_rgba(249,115,22,0.4)] hover:shadow-[#C5A880]/20 dark:hover:shadow-[0_25px_70px_rgba(249,115,22,0.5)] transition-all rounded-3xl">
               <div className="flex flex-col md:flex-row gap-4 sm:gap-8 items-center">
                 <motion.div
                   animate={{ 
@@ -1411,21 +1409,21 @@ export default function Domov() {
                   transition={{ duration: 3, repeat: Infinity }}
                   className="flex-shrink-0"
                 >
-                  <div className="w-20 h-20 sm:w-36 sm:h-36 bg-white/25 backdrop-blur-md rounded-full flex items-center justify-center border-[3px] sm:border-[6px] border-white/50 shadow-2xl">
-                    <Euro className="w-10 h-10 sm:w-20 sm:h-20 text-white drop-shadow-lg" />
+                  <div className="w-20 h-20 sm:w-36 sm:h-36 bg-[#9E2A2B]/10 dark:bg-white/25 backdrop-blur-md rounded-full flex items-center justify-center border-[3px] sm:border-[6px] border-[#9E2A2B] dark:border-white/50 shadow-md dark:shadow-2xl">
+                    <Euro className="w-10 h-10 sm:w-20 sm:h-20 text-[#9E2A2B] dark:text-white drop-shadow-md" />
                   </div>
                 </motion.div>
                 <div className="flex-1 text-center md:text-left">
-                  <h2 className="text-xl sm:text-5xl font-black text-white mb-3 sm:mb-5 leading-tight drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
+                  <h2 className="text-2xl sm:text-5xl font-black text-slate-900 dark:text-white mb-3 sm:mb-5 leading-tight transition-colors duration-300">
                     {t('mortgageFixationTitle')}
                   </h2>
-                  <p className="text-sm sm:text-2xl text-white/98 leading-relaxed font-semibold drop-shadow-md mb-4 sm:mb-8">
+                  <p className="text-sm sm:text-2xl text-slate-700 dark:text-white/98 leading-relaxed font-semibold mb-4 sm:mb-8 transition-colors duration-300">
                     {t('mortgageFixationDesc')}
                   </p>
                   <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 justify-center md:justify-start">
                     <Link to={createPageUrl("Kontakt")}>
                       <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                        <Button size="lg" className="bg-white text-red-700 hover:bg-yellow-100 font-black px-6 py-4 sm:px-10 sm:py-7 text-sm sm:text-xl shadow-2xl w-full sm:w-auto">
+                        <Button size="lg" className="bg-[#9E2A2B] text-white hover:bg-[#802021] dark:bg-white dark:text-red-700 dark:hover:bg-yellow-100 font-black px-6 py-4 sm:px-10 sm:py-7 text-sm sm:text-xl shadow-md dark:shadow-2xl w-full sm:w-auto border border-[#9E2A2B]/40 dark:border-none transition-all">
                           {t('contactUs')}
                           <ArrowRight className="ml-1 w-4 h-4 sm:ml-2 sm:w-6 sm:h-6" />
                         </Button>
@@ -1433,7 +1431,7 @@ export default function Domov() {
                     </Link>
                     <a href="tel:+421905138124">
                       <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                        <Button size="lg" variant="outline" className="bg-white/10 backdrop-blur-sm border-2 sm:border-[4px] border-white text-white hover:bg-white hover:text-red-700 font-black px-6 py-4 sm:px-10 sm:py-7 text-sm sm:text-xl shadow-2xl w-full sm:w-auto">
+                        <Button size="lg" variant="outline" className="bg-white text-slate-800 border-2 border-slate-200 hover:bg-slate-50 dark:bg-white/10 dark:backdrop-blur-sm dark:border-2 dark:sm:border-[4px] dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-red-700 font-black px-6 py-4 sm:px-10 sm:py-7 text-sm sm:text-xl shadow-md dark:shadow-2xl w-full sm:w-auto transition-all">
                           <Phone className="mr-1 w-4 h-4 sm:mr-2 sm:w-6 sm:h-6" />
                           +421 905 138 124
                         </Button>
@@ -1546,7 +1544,7 @@ export default function Domov() {
       </section>
 
       {/* Prečo American Living */}
-      <section className="py-12 sm:py-24 bg-slate-100 dark:bg-slate-950 border-t border-slate-200 dark:border-white/5 transition-colors duration-300">
+      <section className="py-12 sm:py-24 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-white/5 transition-colors duration-300">
         <div className="container mx-auto px-2 sm:px-4">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -1734,7 +1732,7 @@ export default function Domov() {
       )}
 
       {/* Proces realizácie */}
-      <section className="py-6 sm:py-16 bg-slate-100 dark:bg-slate-950 border-t border-slate-200 dark:border-white/5 transition-colors duration-300">
+      <section className="py-6 sm:py-16 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-white/5 transition-colors duration-300">
         <div className="container mx-auto px-2 sm:px-4">
           <div className="text-center mb-4 sm:mb-8">
             <h2 className="text-sm sm:text-2xl font-bold text-slate-900 dark:text-white transition-colors duration-300">{t('implementationProcess')}</h2>
@@ -1760,8 +1758,8 @@ export default function Domov() {
       />
 
       {/* CTA Section */}
-      <section className="py-12 sm:py-24 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-white/10 relative overflow-hidden transition-colors duration-300">
-        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-80 h-80 bg-red-500/5 dark:bg-red-500/10 rounded-full blur-[100px] pointer-events-none" />
+      <section className="py-12 sm:py-24 bg-background dark:bg-slate-950 border-t border-slate-200 dark:border-white/10 relative overflow-hidden transition-colors duration-300">
+        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-80 h-80 bg-[#C5A880]/10 dark:bg-red-500/10 rounded-full blur-[100px] pointer-events-none" />
         <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-[#C5A880]/5 dark:bg-[#C5A880]/10 rounded-full blur-[100px] pointer-events-none" />
         <div className="container mx-auto px-2 sm:px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
