@@ -498,15 +498,15 @@ export default function KatalogMontovaneDomy() {
       {/* SEO Rich Text Section (Information Gain) */}
       <section className="py-20 bg-card border-t border-border">
         <div className="container mx-auto px-4 max-w-4xl">
-          <div className="prose prose-invert prose-lg max-w-none prose-a:text-red-400">
-            <h2 className="text-3xl font-bold text-white mb-6">{mt.whyTrendTitle}</h2>
+          <div className="prose dark:prose-invert prose-lg max-w-none prose-a:text-red-400">
+            <h2 className="text-3xl font-bold text-foreground mb-6">{mt.whyTrendTitle}</h2>
             <p>
               {mt.whyTrendDesc}
             </p>
             
-            <h3 className="text-2xl font-bold text-white mt-8 mb-4">{mt.advantagesTitle}</h3>
+            <h3 className="text-2xl font-bold text-foreground mt-8 mb-4">{mt.advantagesTitle}</h3>
             <div className="grid md:grid-cols-2 gap-8 mb-8">
-              <div className="bg-emerald-950/30 p-6 rounded-xl border border-emerald-900/20">
+              <div className="bg-emerald-500/10 p-6 rounded-xl border border-emerald-500/20">
                 <h4 className="text-emerald-500 font-bold mb-4 flex items-center gap-2"><CheckCircle className="w-5 h-5"/> {mt.advantagesHeader}</h4>
                 <ul className="space-y-2 text-sm text-muted-foreground">
                   <li className="flex gap-2"><span>•</span> {mt.advantage1}</li>
@@ -523,11 +523,11 @@ export default function KatalogMontovaneDomy() {
               </div>
             </div>
 
-            <h3 className="text-2xl font-bold text-white mt-8 mb-4">{mt.faqTitle}</h3>
+            <h3 className="text-2xl font-bold text-foreground mt-8 mb-4">{mt.faqTitle}</h3>
             <div className="space-y-6">
               {schemaData.mainEntity.map((faq, i) => (
-                <div key={i} className="bg-slate-950 p-6 rounded-xl border border-slate-800">
-                  <h4 className="text-lg font-bold text-white mb-2">{faq.name}</h4>
+                <div key={i} className="bg-card p-6 rounded-xl border border-border">
+                  <h4 className="text-lg font-bold text-foreground mb-2">{faq.name}</h4>
                   <p className="text-muted-foreground text-sm leading-relaxed">{faq.acceptedAnswer.text}</p>
                 </div>
               ))}

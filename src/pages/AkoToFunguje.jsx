@@ -1229,9 +1229,21 @@ const pageTranslations = {
 export default function AkoToFunguje() {
   const { language } = useLanguage();
   const t = pageTranslations[language] || pageTranslations.sk;
-  const proces = t.proces;
-  const technologia = t.technologia;
-  const faq = t.faq;
+  
+  const stepIcons = [MessageCircle, FileText, Shield, Hammer, Key];
+  const techIcons = [Zap, ThermometerSun, Clock];
+
+  const proces = (t.proces || []).map((krok, index) => ({
+    ...krok,
+    icon: stepIcons[index] || CheckCircle
+  }));
+
+  const technologia = (t.technologia || []).map((tech, index) => ({
+    ...tech,
+    icon: techIcons[index] || CheckCircle
+  }));
+
+  const faq = t.faq || [];
 
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
@@ -1243,8 +1255,8 @@ export default function AkoToFunguje() {
             animate={{ opacity: 1, y: 0 }}
             className="max-w-3xl"
           >
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">
-              Ako to funguje?
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 font-serif">
+              {t.title}
             </h1>
             <p className="text-xl text-white">
               {t.subtitle}
@@ -1263,11 +1275,11 @@ export default function AkoToFunguje() {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl font-bold text-foreground mb-4">
-                Proces v 5 krokoch
+              <h2 className="text-4xl font-bold text-foreground mb-4 font-serif">
+                {t.stepsTitle}
               </h2>
               <p className="text-xl text-muted-foreground">
-                Od sna po realitu - jasný a prehľadný proces
+                {t.stepsSubtitle}
               </p>
             </motion.div>
 
@@ -1280,7 +1292,7 @@ export default function AkoToFunguje() {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <Card className="overflow-hidden hover:shadow-xl transition-shadow">
+                  <Card className="overflow-hidden hover:shadow-xl border border-border transition-shadow bg-card">
                     <div className="flex flex-col md:flex-row">
                       <div className="bg-gradient-to-br from-primary to-secondary text-white p-8 md:w-48 flex-shrink-0 flex items-center justify-center">
                         <div className="text-center">
@@ -1289,11 +1301,11 @@ export default function AkoToFunguje() {
                         </div>
                       </div>
                       <div className="p-8 flex-grow bg-card text-foreground transition-colors duration-300">
-                        <h3 className="text-2xl font-bold text-gray-900 mb-3">{krok.nazov}</h3>
-                        <p className="text-gray-700 mb-4 leading-relaxed">{krok.popis}</p>
+                        <h3 className="text-2xl font-bold text-foreground mb-3 font-serif">{krok.nazov}</h3>
+                        <p className="text-muted-foreground mb-4 leading-relaxed">{krok.popis}</p>
                         <ul className="space-y-2">
                           {krok.details.map((detail, i) => (
-                            <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
+                            <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
                               <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
                               <span>{detail}</span>
                             </li>
@@ -1310,7 +1322,7 @@ export default function AkoToFunguje() {
       </section>
 
       {/* Technológia */}
-      <section className="py-20 bg-muted/30 border-y border-border transition-colors duration-300">
+      <section className="py-20 bg-muted/35 border-y border-border transition-colors duration-300">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -1318,11 +1330,11 @@ export default function AkoToFunguje() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Technológia a kvalita
+            <h2 className="text-4xl font-bold text-foreground mb-4 font-serif">
+              {t.techTitle}
             </h2>
-            <p className="text-xl text-gray-700 max-w-2xl mx-auto">
-              Používame najmodernejšie technológie a kvalitné materiály pre váš komfort a úspory
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              {t.techSubtitle}
             </p>
           </motion.div>
 
@@ -1339,11 +1351,11 @@ export default function AkoToFunguje() {
                   <div className="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
                     <tech.icon className="w-8 h-8 text-primary" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">{tech.nazov}</h3>
-                  <p className="text-gray-700 mb-4 leading-relaxed">{tech.popis}</p>
+                  <h3 className="text-xl font-bold text-foreground mb-3 font-serif">{tech.nazov}</h3>
+                  <p className="text-muted-foreground mb-4 leading-relaxed">{tech.popis}</p>
                   <ul className="space-y-2">
                     {tech.features.map((feature, i) => (
-                      <li key={i} className="flex items-center gap-2 text-sm text-gray-700">
+                      <li key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
                         <CheckCircle className="w-4 h-4 text-green-600" />
                         <span>{feature}</span>
                       </li>
@@ -1365,11 +1377,11 @@ export default function AkoToFunguje() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Často kladené otázky
+            <h2 className="text-4xl font-bold text-foreground mb-4 font-serif">
+              {t.faqTitle}
             </h2>
-            <p className="text-xl text-gray-700">
-              Odpovede na najčastejšie otázky našich klientov
+            <p className="text-xl text-muted-foreground">
+              {t.faqSubtitle}
             </p>
           </motion.div>
 
@@ -1383,11 +1395,11 @@ export default function AkoToFunguje() {
                 transition={{ delay: index * 0.05 }}
               >
                 <Card className="p-6 hover:shadow-lg border border-border transition-shadow bg-card">
-                  <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-start gap-3">
+                  <h3 className="text-lg font-bold text-foreground mb-3 flex items-start gap-3 font-serif">
                     <span className="text-secondary flex-shrink-0">Q:</span>
                     {item.otazka}
                   </h3>
-                  <p className="text-gray-700 leading-relaxed pl-8">
+                  <p className="text-muted-foreground leading-relaxed pl-8">
                     {item.odpoved}
                   </p>
                 </Card>
@@ -1398,31 +1410,32 @@ export default function AkoToFunguje() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-gradient-to-br from-primary to-blue-600 text-white">
-        <div className="container mx-auto px-4">
+      <section className="py-20 bg-gradient-to-br from-primary to-secondary text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-primary/20 mix-blend-overlay pointer-events-none" />
+        <div className="container mx-auto px-4 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="max-w-3xl mx-auto text-center"
           >
-            <Phone className="w-16 h-16 mx-auto mb-6" />
-            <h2 className="text-4xl font-bold mb-6">
-              Máte ďalšie otázky?
+            <Phone className="w-16 h-16 mx-auto mb-6 text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]" />
+            <h2 className="text-4xl font-bold mb-6 font-serif">
+              {t.ctaTitle}
             </h2>
-            <p className="text-xl mb-8 text-white">
-              Radi vám poradíme a zodpovieme všetky vaše otázky. Kontaktujte nás ešte dnes!
+            <p className="text-xl mb-8 text-white/90">
+              {t.ctaSubtitle}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to={createPageUrl("Kontakt")}>
-                <Button size="lg" className="bg-red hover:bg-red/90 text-white font-semibold px-8 w-full sm:w-auto">
-                  Kontaktovať nás
+                <Button size="lg" className="bg-white hover:bg-slate-100 text-primary font-bold px-8 w-full sm:w-auto shadow-xl hover:scale-105 transition-all">
+                  {t.contactUs}
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </Link>
               <Link to={createPageUrl("Katalog")}>
-                <Button size="lg" variant="outline" className="bg-white/10 border-2 border-white text-white hover:bg-white hover:text-navy font-semibold px-8 w-full sm:w-auto">
-                  Prezrieť katalóg
+                <Button size="lg" variant="outline" className="bg-transparent border-2 border-white text-white hover:bg-white/10 font-bold px-8 w-full sm:w-auto hover:scale-105 transition-all">
+                  {t.viewCatalog}
                 </Button>
               </Link>
             </div>

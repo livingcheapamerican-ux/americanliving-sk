@@ -28,7 +28,12 @@ function LayoutContent({ children }) {
   
   // Theme state: default is 'light' (approved by user), persisted in localStorage
   const [theme, setTheme] = useState(() => {
-    return localStorage.getItem("theme") || "light";
+    try {
+      return localStorage.getItem("theme") || "light";
+    } catch (e) {
+      console.warn("localStorage is not available:", e);
+      return "light";
+    }
   });
 
   // Apply theme class to document element
@@ -38,12 +43,21 @@ function LayoutContent({ children }) {
     } else {
       document.documentElement.classList.remove("dark");
     }
-    localStorage.setItem("theme", theme);
+    try {
+      localStorage.setItem("theme", theme);
+    } catch (e) {
+      console.warn("Failed to save theme to localStorage:", e);
+    }
   }, [theme]);
 
   const toggleTheme = () => {
     setTheme(prev => prev === "light" ? "dark" : "light");
   };
+
+  // Scroll to top on page navigation
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   // Noindex meta tag for admin/internal pages
   const noindexPaths = ['/AIMarketingInsights', '/AdminCennik', '/AutoSEOTrigger', '/AdminAnalyzaSessions', '/Admin', '/Test', '/Auto', '/Regeneruj', '/MojeKonto', '/MojaPonuka', '/AdminMojeKonto'];

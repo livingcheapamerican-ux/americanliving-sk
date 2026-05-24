@@ -398,7 +398,7 @@ export default function DotaciaAmericana() {
             {/* Edit Button */}
             <button
               onClick={() => setShowPhotoManager('rodina')}
-              className="absolute top-4 right-4 z-30 bg-slate-900/90 hover:bg-slate-900 p-3 rounded-full shadow-lg transition-all"
+              className="absolute top-4 right-4 z-30 bg-background/90 hover:bg-background border border-border p-3 rounded-full shadow-lg transition-all text-foreground"
             >
               <Edit className="w-5 h-5 text-emerald-500" />
             </button>
@@ -548,7 +548,7 @@ export default function DotaciaAmericana() {
             
             <button
               onClick={(e) => { e.stopPropagation(); setShowPhotoManager('rodina'); }}
-              className="absolute top-4 right-4 z-30 bg-slate-900/90 hover:bg-slate-900 p-3 rounded-full shadow-lg transition-all"
+              className="absolute top-4 right-4 z-30 bg-background/90 hover:bg-background border border-border p-3 rounded-full shadow-lg transition-all text-foreground"
             >
               <Edit className="w-5 h-5 text-emerald-500" />
             </button>
@@ -627,7 +627,7 @@ export default function DotaciaAmericana() {
 
             <button
               onClick={(e) => { e.stopPropagation(); setShowPhotoManager('investor'); }}
-              className="absolute top-4 right-4 z-30 bg-slate-900/90 hover:bg-slate-900 p-3 rounded-full shadow-lg transition-all"
+              className="absolute top-4 right-4 z-30 bg-background/90 hover:bg-background border border-border p-3 rounded-full shadow-lg transition-all text-foreground"
             >
               <Edit className="w-5 h-5 text-yellow-500" />
             </button>
@@ -1084,7 +1084,7 @@ export default function DotaciaAmericana() {
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     required
-                    className="text-base p-4 font-sans bg-slate-900 border-white/10 text-white placeholder:text-slate-500"
+                    className="text-sm sm:text-base p-3 sm:p-4 font-sans bg-background border-border text-foreground placeholder:text-muted-foreground min-h-[48px]"
                   />
                   <Input
                     type="tel"
@@ -1092,14 +1092,14 @@ export default function DotaciaAmericana() {
                     value={formData.telefon}
                     onChange={(e) => setFormData({ ...formData, telefon: e.target.value })}
                     required
-                    className="text-base p-4 font-sans bg-slate-900 border-white/10 text-white placeholder:text-slate-500"
+                    className="text-sm sm:text-base p-3 sm:p-4 font-sans bg-background border-border text-foreground placeholder:text-muted-foreground min-h-[48px]"
                   />
                   <div>
-                    <label className="block text-sm font-semibold text-slate-300 mb-2">
+                    <label className="block text-sm font-semibold text-muted-foreground mb-2">
                       {t('dotaciaFormTypeGrant')} <span className="text-red-600">*</span>
                     </label>
                     <Select value={formData.typ_grantu} onValueChange={(value) => setFormData({ ...formData, typ_grantu: value })} required>
-                      <SelectTrigger className="text-base p-4 font-sans bg-slate-900 border-white/10 text-white h-auto">
+                      <SelectTrigger className="text-sm sm:text-base p-3 sm:p-4 font-sans bg-background border-border text-foreground h-auto min-h-[48px]">
                         <SelectValue placeholder={t('dotaciaFormTypeGrantPlaceholder')} />
                       </SelectTrigger>
                       <SelectContent>
@@ -1114,7 +1114,7 @@ export default function DotaciaAmericana() {
                   </div>
                   <div>
                     <Select value={formData.dom_id} onValueChange={(value) => setFormData({ ...formData, dom_id: value })} required>
-                      <SelectTrigger className="text-base p-4 font-sans bg-slate-900 border-white/10 text-white h-auto">
+                      <SelectTrigger className="text-sm sm:text-base p-3 sm:p-4 font-sans bg-background border-border text-foreground h-auto min-h-[48px]">
                         <SelectValue placeholder={t('dotaciaFormHousePlaceholder')} />
                       </SelectTrigger>
                       <SelectContent>
@@ -1130,11 +1130,11 @@ export default function DotaciaAmericana() {
                     </Select>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-slate-300 mb-2">
+                    <label className="block text-sm font-semibold text-muted-foreground mb-2">
                       {t('dotaciaFormFinancing')} <span className="text-red-600">*</span>
                     </label>
                     <Select value={formData.forma_financovania} onValueChange={(value) => setFormData({ ...formData, forma_financovania: value })} required>
-                      <SelectTrigger className="text-base p-4 font-sans bg-slate-900 border-white/10 text-white h-auto">
+                      <SelectTrigger className="text-sm sm:text-base p-3 sm:p-4 font-sans bg-background border-border text-foreground h-auto min-h-[48px]">
                         <SelectValue placeholder={t('dotaciaFormFinancingPlaceholder')} />
                       </SelectTrigger>
                       <SelectContent>
@@ -1177,7 +1177,7 @@ export default function DotaciaAmericana() {
       </section>
 
       {/* SEKCIA: PROCES ČERPANIA DOTÁCIE */}
-      <section id="proces-section" className="py-10 sm:py-16 md:py-20 bg-slate-950 border-t border-white/10">
+      <section id="proces-section" className="py-10 sm:py-16 md:py-20 bg-muted/30 border-t border-border">
         <div className="container mx-auto px-4 sm:px-6 md:px-8">
           <div className="max-w-6xl mx-auto">
             <motion.div
@@ -1198,62 +1198,62 @@ export default function DotaciaAmericana() {
             </motion.div>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mb-8 sm:mb-12">
-              <Card className="p-8 bg-slate-900 border-2 border-emerald-300/50 hover:shadow-2xl transition-all">
+              <Card className="p-8 bg-card border-2 border-emerald-300/50 dark:border-emerald-500/30 hover:shadow-2xl transition-all text-foreground">
                 <div className="w-16 h-16 bg-emerald-500/20 rounded-lg flex items-center justify-center mb-6">
                   <CheckCircle className="w-8 h-8 text-emerald-500" />
                 </div>
                 <div className="mb-4 inline-block bg-primary text-white px-3 py-1 rounded text-xs font-sans font-bold">
                   {t('dotaciaProcessStep1')}
                 </div>
-                <h3 className="text-xl font-serif font-bold text-white mb-4">
+                <h3 className="text-xl font-serif font-bold text-foreground mb-4">
                   {t('dotaciaProcessStep1Title')}
                 </h3>
-                <p className="text-slate-400 leading-relaxed font-sans">
+                <p className="text-muted-foreground leading-relaxed font-sans">
                   {t('dotaciaProcessStep1Desc')}
                 </p>
               </Card>
 
-              <Card className="p-8 bg-slate-900 border-2 border-emerald-300/50 hover:shadow-2xl transition-all">
+              <Card className="p-8 bg-card border-2 border-emerald-300/50 dark:border-emerald-500/30 hover:shadow-2xl transition-all text-foreground">
                 <div className="w-16 h-16 bg-yellow-500/20 rounded-lg flex items-center justify-center mb-6">
                   <FileText className="w-8 h-8 text-yellow-500" />
                 </div>
                 <div className="mb-4 inline-block bg-primary text-white px-3 py-1 rounded text-xs font-sans font-bold">
                   {t('dotaciaProcessStep2')}
                 </div>
-                <h3 className="text-xl font-serif font-bold text-white mb-4">
+                <h3 className="text-xl font-serif font-bold text-foreground mb-4">
                   {t('dotaciaProcessStep2Title')}
                 </h3>
-                <p className="text-slate-400 leading-relaxed font-sans">
+                <p className="text-muted-foreground leading-relaxed font-sans">
                   {t('dotaciaProcessStep2Desc')}
                 </p>
               </Card>
 
-              <Card className="p-8 bg-slate-900 border-2 border-emerald-300/50 hover:shadow-2xl transition-all">
+              <Card className="p-8 bg-card border-2 border-emerald-300/50 dark:border-emerald-500/30 hover:shadow-2xl transition-all text-foreground">
                 <div className="w-16 h-16 bg-emerald-500/20 rounded-lg flex items-center justify-center mb-6">
                   <Euro className="w-8 h-8 text-green-600" />
                 </div>
                 <div className="mb-4 inline-block bg-primary text-white px-3 py-1 rounded text-xs font-sans font-bold">
                   {t('dotaciaProcessStep3')}
                 </div>
-                <h3 className="text-xl font-serif font-bold text-white mb-4">
+                <h3 className="text-xl font-serif font-bold text-foreground mb-4">
                   {t('dotaciaProcessStep3Title')}
                 </h3>
                 <div className="space-y-4">
                   <div className="p-4 bg-emerald-500/10 rounded-lg border-l-4 border-success">
                     <p className="text-sm font-bold text-success mb-2">🏡 {t('dotaciaProcessBenefitRodinaTitle')}</p>
-                    <p className="text-slate-400 text-sm leading-relaxed font-sans mb-3">
+                    <p className="text-muted-foreground text-sm leading-relaxed font-sans mb-3">
                       {t('dotaciaProcessBenefitRodinaDesc')}
                     </p>
-                    <div className="bg-slate-900/80 p-3 rounded border border-emerald-500/30">
+                    <div className="bg-muted/50 p-3 rounded border border-emerald-500/30">
                       <p className="text-xs font-bold text-success mb-1">✨ {t('dotaciaBonusNote')}</p>
-                      <p className="text-xs text-slate-300 leading-relaxed">
+                      <p className="text-xs text-muted-foreground leading-relaxed">
                         {t('dotaciaBonusRealHelp')}
                       </p>
                     </div>
                   </div>
                   <div className="p-4 bg-yellow-500/10 rounded-lg border-l-4 border-yellow-500">
-                    <p className="text-sm font-bold text-yellow-400 mb-2">📈 {t('dotaciaProcessBenefitInvestorTitle')}</p>
-                    <p className="text-slate-400 text-sm leading-relaxed font-sans">
+                    <p className="text-sm font-bold text-yellow-600 dark:text-yellow-450 mb-2">📈 {t('dotaciaProcessBenefitInvestorTitle')}</p>
+                    <p className="text-muted-foreground text-sm leading-relaxed font-sans">
                       {t('dotaciaProcessBenefitInvestorDesc')}
                     </p>
                   </div>
@@ -1265,7 +1265,7 @@ export default function DotaciaAmericana() {
       </section>
 
       {/* GRAFICKÉ ZNÁZORNENIE DOTÁCIE */}
-      <section className="py-20 bg-slate-900">
+      <section className="py-20 bg-muted/20 border-t border-border">
         <div className="container mx-auto px-4 sm:px-8">
           <div className="max-w-6xl mx-auto">
             <motion.div
@@ -1278,28 +1278,28 @@ export default function DotaciaAmericana() {
               <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-bold text-primary mb-4">
                 {t('dotaciaVisualizationTitle')}
               </h2>
-              <p className="text-base sm:text-xl text-slate-300 font-sans">
+              <p className="text-base sm:text-xl text-muted-foreground font-sans">
                 {t('dotaciaVisualizationSubtitle')}
               </p>
             </motion.div>
 
             <div className="grid md:grid-cols-2 gap-8">
               {/* PROGRAM AMBASSADOR */}
-              <Card className="p-6 bg-slate-900/50 backdrop-blur border border-emerald-500/30 shadow-[0_0_30px_rgba(16,185,129,0.1)]">
+              <Card className="p-6 bg-card backdrop-blur border border-emerald-500/30 shadow-[0_0_30px_rgba(16,185,129,0.1)] text-foreground">
                 <div className="text-center mb-6">
                   <div className="inline-block bg-success text-white px-4 py-2 rounded-lg text-sm font-bold mb-2">
                     {t('dotaciaVisualizationAmbassador')}
                   </div>
-                  <h3 className="text-xl font-serif font-bold text-white">{t('dotaciaVisualizationAmbassadorSubtitle')}</h3>
+                  <h3 className="text-xl font-serif font-bold text-foreground">{t('dotaciaVisualizationAmbassadorSubtitle')}</h3>
                 </div>
 
                 {/* Vizualizácia */}
                 <div className="space-y-4">
                   {/* Cenníková hodnota */}
-                  <div className="bg-slate-900 p-4 rounded-lg border-2 border-white/10">
-                    <p className="text-sm text-slate-400 mb-2">{t('dotaciaCatalogPrice')}</p>
-                    <div className="h-12 bg-slate-800 rounded flex items-center justify-center">
-                      <p className="text-lg font-bold text-slate-300">100%</p>
+                  <div className="bg-muted/50 p-4 rounded-lg border border-border">
+                    <p className="text-sm text-muted-foreground mb-2">{t('dotaciaCatalogPrice')}</p>
+                    <div className="h-12 bg-muted rounded flex items-center justify-center">
+                      <p className="text-lg font-bold text-muted-foreground">100%</p>
                     </div>
                   </div>
 
@@ -1313,7 +1313,7 @@ export default function DotaciaAmericana() {
                   </div>
 
                   {/* Váš doplatok */}
-                  <div className="bg-slate-800 p-4 rounded-lg border border-white/10">
+                  <div className="bg-muted p-4 rounded-lg border border-border">
                     <p className="text-sm text-primary font-bold mb-2">💰 {t('dotaciaYourPayment')}</p>
                     <div className="h-12 bg-primary rounded flex items-center justify-center">
                       <p className="text-lg font-bold text-white">{t('dotaciaYourPaymentAmount')}</p>
@@ -1322,8 +1322,8 @@ export default function DotaciaAmericana() {
 
                   {/* Bonusy */}
                   <div className="bg-yellow-500/10 p-4 rounded-lg border border-yellow-500/30">
-                    <p className="text-sm text-yellow-400 font-bold mb-3">🎁 {t('dotaciaBonusTitle')}</p>
-                    <ul className="space-y-2 text-xs text-yellow-400 mb-3">
+                    <p className="text-sm text-yellow-500 font-bold mb-3">🎁 {t('dotaciaBonusTitle')}</p>
+                    <ul className="space-y-2 text-xs text-yellow-600 dark:text-yellow-400 mb-3">
                       <li className="flex items-center gap-2">
                         <CheckCircle className="w-4 h-4 text-yellow-500" />
                         <span>{t('dotaciaBonusEnergy')}</span>
@@ -1337,9 +1337,9 @@ export default function DotaciaAmericana() {
                         <span>{t('dotaciaBonusRef')}</span>
                       </li>
                     </ul>
-                    <div className="bg-slate-900/80 p-3 rounded border border-emerald-500/30">
+                    <div className="bg-muted/50 p-3 rounded border border-emerald-500/30">
                       <p className="text-xs font-bold text-success mb-1">✨ {t('dotaciaBonusNote')}</p>
-                      <p className="text-xs text-slate-300 leading-relaxed">
+                      <p className="text-xs text-muted-foreground leading-relaxed">
                         {t('dotaciaBonusRealHelp')}
                       </p>
                     </div>
@@ -1348,21 +1348,21 @@ export default function DotaciaAmericana() {
               </Card>
 
               {/* PROGRAM INVESTOR & PARTNER */}
-              <Card className="p-6 bg-slate-900/50 backdrop-blur border border-yellow-500/30 shadow-[0_0_30px_rgba(234,179,8,0.1)]">
+              <Card className="p-6 bg-card backdrop-blur border border-yellow-500/30 shadow-[0_0_30px_rgba(234,179,8,0.1)] text-foreground">
                 <div className="text-center mb-6">
                   <div className="inline-block bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm font-bold mb-2">
                     {t('dotaciaVisualizationInvestor')}
                   </div>
-                  <h3 className="text-xl font-serif font-bold text-white">{t('dotaciaVisualizationInvestorSubtitle')}</h3>
+                  <h3 className="text-xl font-serif font-bold text-foreground">{t('dotaciaVisualizationInvestorSubtitle')}</h3>
                 </div>
 
                 {/* Vizualizácia */}
                 <div className="space-y-4">
                   {/* Cenníková hodnota */}
-                  <div className="bg-slate-900 p-4 rounded-lg border-2 border-white/10">
-                    <p className="text-sm text-slate-400 mb-2">{t('dotaciaCatalogPrice')}</p>
-                    <div className="h-12 bg-slate-800 rounded flex items-center justify-center">
-                      <p className="text-lg font-bold text-slate-300">100%</p>
+                  <div className="bg-muted/50 p-4 rounded-lg border border-border">
+                    <p className="text-sm text-muted-foreground mb-2">{t('dotaciaCatalogPrice')}</p>
+                    <div className="h-12 bg-muted rounded flex items-center justify-center">
+                      <p className="text-lg font-bold text-muted-foreground">100%</p>
                     </div>
                   </div>
 
@@ -1376,8 +1376,8 @@ export default function DotaciaAmericana() {
                   </div>
 
                   {/* Váš doplatok */}
-                  <div className="bg-slate-800 p-4 rounded-lg border border-white/10">
-                    <p className="text-sm text-orange-800 font-bold mb-2">💰 {t('dotaciaYourPayment')}</p>
+                  <div className="bg-muted p-4 rounded-lg border border-border">
+                    <p className="text-sm text-orange-600 font-bold mb-2">💰 {t('dotaciaYourPayment')}</p>
                     <div className="h-12 bg-orange-500 rounded flex items-center justify-center">
                       <p className="text-lg font-bold text-white">{t('dotaciaYourPaymentAmount')}</p>
                     </div>
@@ -1409,7 +1409,7 @@ export default function DotaciaAmericana() {
       </section>
 
       {/* PRODUKTOVÁ SEKCIA */}
-      <section className="py-10 sm:py-16 md:py-20 bg-slate-950 border-t border-white/10">
+      <section className="py-10 sm:py-16 md:py-20 bg-background border-t border-border">
         <div className="container mx-auto px-4 sm:px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -1421,7 +1421,7 @@ export default function DotaciaAmericana() {
             <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-bold text-primary mb-4">
               {t('dotaciaProductsTitle')}
             </h2>
-            <p className="text-base sm:text-xl text-slate-300 font-sans">
+            <p className="text-base sm:text-xl text-muted-foreground font-sans">
               {t('dotaciaProductsSubtitle')}
             </p>
           </motion.div>
@@ -1441,7 +1441,7 @@ export default function DotaciaAmericana() {
                       transition={{ duration: 0.5 }}
                       viewport={{ once: true }}
                     >
-                      <Card className="overflow-hidden hover:shadow-2xl transition-all border border-white/10 bg-slate-900">
+                      <Card className="overflow-hidden hover:shadow-2xl transition-all border border-border bg-card">
                         <div className="grid grid-cols-2 gap-2">
                           <img 
                             src={dom.hlavny_obrazok} 
@@ -1456,21 +1456,21 @@ export default function DotaciaAmericana() {
                             />
                           )}
                         </div>
-                        <div className="p-4 sm:p-6 bg-slate-900">
-                          <h3 className="text-base sm:text-xl font-serif font-bold text-white mb-4">{dom.nazov} - {t('dotaciaEdition2026')}</h3>
+                        <div className="p-4 sm:p-6 bg-card">
+                          <h3 className="text-base sm:text-xl font-serif font-bold text-foreground mb-4">{dom.nazov} - {t('dotaciaEdition2026')}</h3>
 
-                          <div className="bg-slate-900 border border-white/10 bg-slate-900 rounded-lg p-4 mb-4 font-sans">
+                          <div className="bg-muted/50 border border-border rounded-lg p-4 mb-4 font-sans">
                             <div className="flex justify-between items-center mb-2 pb-2 border-b">
-                              <span className="text-xs sm:text-sm text-slate-400">{t('dotaciaCatalogPrice')}:</span>
-                              <span className="text-sm sm:text-base font-bold text-white">{cennikova?.toLocaleString()} €</span>
+                              <span className="text-xs sm:text-sm text-muted-foreground">{t('dotaciaCatalogPrice')}:</span>
+                              <span className="text-sm sm:text-base font-bold text-foreground">{cennikova?.toLocaleString()} €</span>
                             </div>
                             <div className="mb-3 pb-3 border-b">
-                              <p className="text-xs sm:text-sm font-bold text-slate-300 mb-2 uppercase">
+                              <p className="text-xs sm:text-sm font-bold text-foreground mb-2 uppercase">
                                 {t('dotaciaGrant')}
                               </p>
-                              <p className="text-xs text-slate-400 mb-2">{t('dotaciaGrantAmount')}</p>
+                              <p className="text-xs text-muted-foreground mb-2">{t('dotaciaGrantAmount')}</p>
                               <div className="flex justify-between items-center">
-                                <span className="text-xs sm:text-sm text-slate-400">{t('dotaciaGrantForModel')}</span>
+                                <span className="text-xs sm:text-sm text-muted-foreground">{t('dotaciaGrantForModel')}</span>
                                 <span className="text-lg sm:text-2xl font-bold text-success">{dotacia?.toLocaleString()} €</span>
                               </div>
                             </div>
@@ -1481,7 +1481,7 @@ export default function DotaciaAmericana() {
                           </div>
 
                           <div className="bg-emerald-500/10 border border-emerald-500/30 p-4 mb-4 rounded-lg">
-                            <p className="text-xs sm:text-sm font-sans font-bold text-slate-300 mb-3">
+                            <p className="text-xs sm:text-sm font-sans font-bold text-foreground/80 mb-3">
                               {t('dotaciaSelectProgram')}
                             </p>
                             <div className="space-y-2">
@@ -1489,7 +1489,7 @@ export default function DotaciaAmericana() {
                                 <span className="text-success text-lg">🏡</span>
                                 <div>
                                   <p className="text-xs sm:text-sm font-bold text-success">{t('dotaciaAmbassador')}</p>
-                                  <p className="text-xs text-slate-300">{t('dotaciaGrant')} {dotacia?.toLocaleString()} € + {t('dotaciaBonusEnergy')}</p>
+                                  <p className="text-xs text-muted-foreground">{t('dotaciaGrant')} {dotacia?.toLocaleString()} € + {t('dotaciaBonusEnergy')}</p>
                                   <p className="text-xs text-success font-semibold mt-1">✨ {t('dotaciaBonusNote')}</p>
                                 </div>
                               </div>
@@ -1497,7 +1497,7 @@ export default function DotaciaAmericana() {
                                 <span className="text-yellow-500 text-lg">📈</span>
                                 <div>
                                   <p className="text-xs sm:text-sm font-bold text-yellow-400">{t('dotaciaInvestor')}</p>
-                                  <p className="text-xs text-slate-300">{t('dotaciaGrant')} {dotacia?.toLocaleString()} € + {t('dotaciaInvestorBonusMarketing')}</p>
+                                  <p className="text-xs text-muted-foreground">{t('dotaciaGrant')} {dotacia?.toLocaleString()} € + {t('dotaciaInvestorBonusMarketing')}</p>
                                 </div>
                               </div>
                             </div>
@@ -1518,16 +1518,16 @@ export default function DotaciaAmericana() {
       </section>
 
       {/* PÄTIČKA */}
-      <footer className="py-12 bg-gray-900 text-white">
+      <footer className="py-12 bg-card text-foreground border-t border-border">
         <div className="container mx-auto px-4 text-center">
           <p className="text-lg font-serif font-bold mb-2">
             {t('dotaciaFooterTitle')}
           </p>
-          <p className="text-gray-400 text-sm mb-6 font-sans">
+          <p className="text-muted-foreground text-sm mb-6 font-sans">
             {t('dotaciaFooterSubtitle')}
           </p>
-          <div className="border-t border-gray-700 pt-6">
-            <p className="text-slate-400 text-xs max-w-3xl mx-auto font-sans leading-relaxed">
+          <div className="border-t border-border pt-6">
+            <p className="text-muted-foreground text-xs max-w-3xl mx-auto font-sans leading-relaxed">
               ⚖️ {t('dotaciaLegalNotice')}
             </p>
           </div>
