@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,16 +15,25 @@ import { useLanguage } from "../components/LanguageContext";
 
 export default function BlogDetail() {
   const { t, language } = useLanguage();
+  const { slug: routeSlug } = useParams();
   const urlParams = new URLSearchParams(window.location.search);
   const postId = urlParams.get('id');
+  const postSlug = urlParams.get('slug') || routeSlug;
 
   const { data: post, isLoading } = useQuery({
-    queryKey: ['blog-post', postId],
+    queryKey: ['blog-post', postId, postSlug],
     queryFn: async () => {
-      const posts = await base44.entities.BlogPost.filter({ id: postId });
-      return posts[0] || null;
+      if (postId) {
+        const posts = await base44.entities.BlogPost.filter({ id: postId });
+        return posts[0] || null;
+      }
+      if (postSlug) {
+        const posts = await base44.entities.BlogPost.filter({ slug: postSlug });
+        return posts[0] || null;
+      }
+      return null;
     },
-    enabled: !!postId
+    enabled: !!postId || !!postSlug
   });
 
   // MUST be before any conditional returns
@@ -127,15 +136,20 @@ export default function BlogDetail() {
     return translatedField || post[field];
   };
 
+  const canonicalUrl = post
+    ? `https://americanliving.sk/blog/${post.slug}`
+    : 'https://americanliving.sk/blog';
+
   return (
     <div className="min-h-screen bg-gray-50">
-      {faqSchemaData && (
-        <Helmet>
+      <Helmet>
+        <link rel="canonical" href={canonicalUrl} />
+        {faqSchemaData && (
           <script type="application/ld+json">
             {JSON.stringify(faqSchemaData)}
           </script>
-        </Helmet>
-      )}
+        )}
+      </Helmet>
       {/* Back Button */}
       <div className="bg-white border-b">
         <div className="container mx-auto px-4 py-3">

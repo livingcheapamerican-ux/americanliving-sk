@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,8 +10,9 @@ import { ArrowLeft, MapPin, Home } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function LokaciaDetail() {
+  const { slug: routeSlug } = useParams();
   const urlParams = new URLSearchParams(window.location.search);
-  const slug = urlParams.get('slug');
+  const slug = urlParams.get('slug') || routeSlug;
 
   const { data: lokacia, isLoading } = useQuery({
     queryKey: ['lokacia', slug],
@@ -91,20 +92,20 @@ export default function LokaciaDetail() {
         <meta name="description" content={lokacia.meta_description || `Modulárne, montované a mobilné domy v okolí ${lokacia.nazov_mesta}. Kvalitné domy za najlepšie ceny. Bezplatná konzultácia.`} />
         <meta property="og:title" content={lokacia.meta_title || lokacia.nazov_mesta} />
         <meta property="og:description" content={lokacia.meta_description || ''} />
-        <link rel="canonical" href={`https://www.americanliving.sk/lokalita/${lokacia.slug}`} />
+        <link rel="canonical" href={`https://americanliving.sk/lokalita/${lokacia.slug}`} />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "WebPage",
-          "@id": `https://www.americanliving.sk/lokalita/${lokacia.slug}#webpage`,
-          "url": `https://www.americanliving.sk/lokalita/${lokacia.slug}`,
+          "@id": `https://americanliving.sk/lokalita/${lokacia.slug}#webpage`,
+          "url": `https://americanliving.sk/lokalita/${lokacia.slug}`,
           "name": lokacia.meta_title || `Domy ${lokacia.nazov_mesta}`,
           "description": lokacia.meta_description || '',
-          "isPartOf": { "@id": "https://www.americanliving.sk/#website" },
+          "isPartOf": { "@id": "https://americanliving.sk/#website" },
           "about": {
             "@type": "LocalBusiness",
-            "@id": "https://www.americanliving.sk/#organization",
+            "@id": "https://americanliving.sk/#organization",
             "name": "American Living",
-            "url": "https://www.americanliving.sk",
+            "url": "https://americanliving.sk",
             "telephone": "+421905138124",
             "email": "info@americanliving.sk",
             "areaServed": {
@@ -128,17 +129,17 @@ export default function LokaciaDetail() {
           "@context": "https://schema.org",
           "@type": "BreadcrumbList",
           "itemListElement": [
-            { "@type": "ListItem", "position": 1, "name": "Domov", "item": "https://www.americanliving.sk/" },
-            { "@type": "ListItem", "position": 2, "name": "Kde staviame", "item": "https://www.americanliving.sk/" },
-            { "@type": "ListItem", "position": 3, "name": lokacia.nazov_mesta, "item": `https://www.americanliving.sk/lokalita/${lokacia.slug}` }
+            { "@type": "ListItem", "position": 1, "name": "Domov", "item": "https://americanliving.sk/" },
+            { "@type": "ListItem", "position": 2, "name": "Kde staviame", "item": "https://americanliving.sk/" },
+            { "@type": "ListItem", "position": 3, "name": lokacia.nazov_mesta, "item": `https://americanliving.sk/lokalita/${lokacia.slug}` }
           ]
         })}</script>
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "LocalBusiness",
-          "@id": "https://www.americanliving.sk/#organization",
+          "@id": "https://americanliving.sk/#organization",
           "name": "American Living",
-          "url": "https://www.americanliving.sk",
+          "url": "https://americanliving.sk",
           "telephone": "+421905138124",
           "email": "info@americanliving.sk",
           "image": "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/0a055b39a_AmericanLiving.png",

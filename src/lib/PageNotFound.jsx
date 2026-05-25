@@ -11,7 +11,7 @@ export default function PageNotFound({}) {
     const pageName = location.pathname.substring(1);
 
     // Auto-redirect: ak pathname vyzerá ako slug domu (napr. /zre-prosthouse), 
-    // skús nájsť dom v databáze a presmeruj na DetailDomu?slug=...
+    // skús nájsť dom v databáze a presmeruj na detail-domu?slug=...
     const potentialSlug = pageName.toLowerCase().replace(/\//g, '');
     const { data: domBySlug } = useQuery({
         queryKey: ['dom-by-slug-404', potentialSlug],
@@ -20,14 +20,34 @@ export default function PageNotFound({}) {
             const results = await base44.entities.Dom.filter({ slug: potentialSlug });
             return results[0] || null;
         },
-        enabled: !!potentialSlug && potentialSlug.length >= 3
+        enabled: !!potentialSlug && potentialSlug.length >= 3 && !location.pathname.startsWith('/blog/')
     });
 
     useEffect(() => {
         if (domBySlug) {
-            navigate(`/DetailDomu?slug=${domBySlug.slug}`, { replace: true });
+            navigate(`/detail-domu?slug=${domBySlug.slug}`, { replace: true });
         }
     }, [domBySlug, navigate]);
+
+    // Blog auto-redirect: ak pathname začína na /blog/ a neexistuje zhoda v routoch,
+    // skús vyhľadať blogový príspevok podľa slugu a presmeruj
+    const isBlogPath = location.pathname.startsWith('/blog/');
+    const potentialBlogSlug = isBlogPath ? location.pathname.substring(6).replace(/\/$/, '') : '';
+    const { data: blogBySlug } = useQuery({
+        queryKey: ['blog-by-slug-404', potentialBlogSlug],
+        queryFn: async () => {
+            if (!potentialBlogSlug) return null;
+            const results = await base44.entities.BlogPost.filter({ slug: potentialBlogSlug });
+            return results[0] || null;
+        },
+        enabled: isBlogPath && !!potentialBlogSlug
+    });
+
+    useEffect(() => {
+        if (blogBySlug) {
+            navigate(`/blog/${blogBySlug.slug}`, { replace: true });
+        }
+    }, [blogBySlug, navigate]);
 
     const { data: authData, isFetched } = useQuery({
         queryKey: ['user'],

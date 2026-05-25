@@ -552,7 +552,7 @@ export default function Katalog() {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={metaTitle} />
         <meta name="twitter:description" content={metaDescription} />
-        <link rel="canonical" href={`https://www.americanliving.sk/Katalog`} />
+        <link rel="canonical" href={`https://americanliving.sk/katalog`} />
         <script type="application/ld+json">
           {JSON.stringify(generateSchemaOrg())}
         </script>

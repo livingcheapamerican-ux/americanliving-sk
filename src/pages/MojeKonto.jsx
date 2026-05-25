@@ -63,10 +63,10 @@ export default function MojeKonto() {
       {(user?.role === 'admin' || user?.super_admin) && (
         <div className="bg-red-600 text-white text-center py-2 px-4 flex justify-center items-center gap-4 text-sm font-medium">
           <span>Režim administrátora aktívny</span>
-          <Link to="/AdminMojeKonto" className="bg-white text-red-600 px-3 py-1 rounded-full text-xs font-bold hover:bg-red-50 transition-colors shadow-sm">
+          <Link to="/admin-moje-konto" className="bg-white text-red-600 px-3 py-1 rounded-full text-xs font-bold hover:bg-red-50 transition-colors shadow-sm">
             Prejsť do Admin Dashboardu →
           </Link>
-          <Link to="/AdminZnalostnaBaza" className="bg-white text-red-600 px-3 py-1 rounded-full text-xs font-bold hover:bg-red-50 transition-colors shadow-sm">
+          <Link to="/admin-znalostna-baza" className="bg-white text-red-600 px-3 py-1 rounded-full text-xs font-bold hover:bg-red-50 transition-colors shadow-sm">
             🧠 AI Znalostná Báza
           </Link>
         </div>
@@ -137,7 +137,7 @@ export default function MojeKonto() {
           <div>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-gray-900">{t('myQuotesTitle')}</h2>
-              <Link to="/Katalog">
+              <Link to="/katalog">
                 <Button size="sm" className="bg-red-600 hover:bg-red-700 text-white gap-2">
                   <Plus className="w-4 h-4" />
                   {t('newConfiguration')}
@@ -152,7 +152,7 @@ export default function MojeKonto() {
                 <Home className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                 <p className="text-gray-500 font-medium">{t('noQuotesTitle')}</p>
                 <p className="text-gray-400 text-sm mt-1 mb-4">{t('noQuotesDesc')}</p>
-                <Link to="/Katalog">
+                <Link to="/katalog">
                   <Button className="bg-red-600 hover:bg-red-700 text-white">{t('goToCatalog')}</Button>
                 </Link>
               </div>

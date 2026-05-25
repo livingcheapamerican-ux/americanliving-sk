@@ -83,7 +83,7 @@ export default function DetailDomu() {
     queryFn: () => base44.entities.ExternalReview.list()
   });
 
-  const organizationId = "https://www.americanliving.sk/#organization";
+  const organizationId = "https://americanliving.sk/#organization";
 
   // MUST be at top level before any conditional returns
   const faqSchemaData = React.useMemo(() => {
@@ -106,7 +106,7 @@ export default function DetailDomu() {
   // Build enhanced Product schema with merchant/shipping/reviews
   const productSchemaData = React.useMemo(() => {
     if (!dom) return null;
-    const canonicalUrl = `${window.location.origin}${window.location.pathname}${dom.slug ? `?slug=${dom.slug}` : `?id=${dom.id}`}`;
+    const canonicalUrl = `https://americanliving.sk/detail-domu${dom.slug ? `?slug=${dom.slug.toLowerCase()}` : `?id=${dom.id}`}`;
     const houseType = dom.typ_domu === 'modularny' ? 'Modulárny dom' : dom.typ_domu === 'montovany' ? 'Montovaný dom' : 'Mobilný dom';
     const metaDescription = dom.meta_description || `${dom.nazov} od ${dom.vyrobca} - ${houseType} s plochou ${dom.zastavana_plocha}m². Cena od ${dom.zakladna_cena?.toLocaleString('sk-SK')}€ s DPH.`;
 
@@ -176,7 +176,7 @@ export default function DetailDomu() {
     if (relevantReviews.length === 0) return null;
     const totalRating = relevantReviews.reduce((sum, r) => sum + (r.rating || 5), 0);
     const avgRating = (totalRating / relevantReviews.length).toFixed(1);
-    const productId = `${window.location.origin}${window.location.pathname}${dom.slug ? `?slug=${dom.slug}` : `?id=${dom.id}`}#product`;
+    const productId = `https://americanliving.sk/detail-domu${dom.slug ? `?slug=${dom.slug.toLowerCase()}` : `?id=${dom.id}`}#product`;
     return {
       "@context": "https://schema.org",
       "@type": "Product",
@@ -359,7 +359,7 @@ export default function DetailDomu() {
       const metaTitle = dom.meta_title || `${dom.nazov} - ${dom.vyrobca} | ${dom.zastavana_plocha}m²${dom.pocet_izieb ? ` | ${dom.pocet_izieb} ${t('roomsLabel')}` : ''} | American Living`;
       const metaDescription = dom.meta_description || `${dom.nazov} od ${dom.vyrobca} - ${houseType} s plochou ${dom.zastavana_plocha}m²${dom.uzitkova_plocha ? `, úžitková ${dom.uzitkova_plocha}m²` : ''}. ${t('priceFromLabel')} ${dom.zakladna_cena?.toLocaleString('sk-SK')}€ ${t('withVAT')}.${dom.energeticky_certifikat ? ` ${t('energyClass')} A0.` : ''}${dom.celorocny ? ` ${t('yearRound')}.` : ''}`;
       const currentUrl = window.location.href;
-      const canonicalUrl = `${window.location.origin}${window.location.pathname}${dom.slug ? `?slug=${dom.slug}` : `?id=${dom.id}`}`;
+      const canonicalUrl = `https://americanliving.sk/detail-domu${dom.slug ? `?slug=${dom.slug.toLowerCase()}` : `?id=${dom.id}`}`;
       
       document.title = metaTitle;
       
@@ -373,15 +373,6 @@ export default function DetailDomu() {
         }
         tag.content = content;
       };
-
-      // Canonical URL
-      let canonicalLink = document.querySelector('link[rel="canonical"]');
-      if (!canonicalLink) {
-        canonicalLink = document.createElement('link');
-        canonicalLink.rel = 'canonical';
-        document.head.appendChild(canonicalLink);
-      }
-      canonicalLink.href = canonicalUrl;
 
       // Basic meta tags
       setMetaTag('meta[name="description"]', 'name', 'description', metaDescription);
@@ -410,10 +401,6 @@ export default function DetailDomu() {
     // Cleanup function
     return () => {
       try {
-        const canonicalLink = document.querySelector('link[rel="canonical"]');
-        if (canonicalLink && document.head.contains(canonicalLink)) {
-          canonicalLink.remove();
-        }
         const schemaScripts = document.querySelectorAll('script[type="application/ld+json"][data-schema]');
         schemaScripts.forEach(script => {
           if (document.head.contains(script)) {
@@ -524,8 +511,8 @@ export default function DetailDomu() {
   };
 
   const canonicalUrl = dom
-    ? `${window.location.origin}${window.location.pathname}${dom.slug ? `?slug=${dom.slug}` : `?id=${dom.id}`}`
-    : window.location.href;
+    ? `https://americanliving.sk/detail-domu${dom.slug ? `?slug=${dom.slug.toLowerCase()}` : `?id=${dom.id}`}`
+    : 'https://americanliving.sk/detail-domu';
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden max-w-full font-['Outfit']">

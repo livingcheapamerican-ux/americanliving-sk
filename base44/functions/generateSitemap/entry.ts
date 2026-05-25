@@ -4,7 +4,7 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     
-    const baseUrl = 'https://www.americanliving.sk';
+    const baseUrl = 'https://americanliving.sk';
     
     // Načítaj všetky verejné domy
     const domy = await base44.asServiceRole.entities.Dom.filter({ verejny: true });
@@ -53,8 +53,8 @@ Deno.serve(async (req) => {
     for (const dom of domy) {
       if (!dom.verejny) continue;
       const domUrl = dom.slug
-        ? `${baseUrl}/DetailDomu?slug=${dom.slug}`
-        : `${baseUrl}/DetailDomu?id=${dom.id}`;
+        ? `${baseUrl}/detail-domu?slug=${dom.slug}`
+        : `${baseUrl}/detail-domu?id=${dom.id}`;
       xml += `  <url>\n`;
       xml += `    <loc>${domUrl}</loc>\n`;
       xml += `    <changefreq>weekly</changefreq>\n`;

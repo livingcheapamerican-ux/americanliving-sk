@@ -63,17 +63,26 @@ function LayoutContent({ children }) {
   const noindexPaths = ['/AIMarketingInsights', '/AdminCennik', '/AutoSEOTrigger', '/AdminAnalyzaSessions', '/Admin', '/Test', '/Auto', '/Regeneruj', '/MojeKonto', '/MojaPonuka', '/AdminMojeKonto'];
   const shouldNoindex = noindexPaths.some(path => location.pathname.startsWith(path));
 
-  // Dynamic canonical for current page
-  useEffect(() => {
-    const canonical = window.location.href;
-    let link = document.querySelector('link[rel="canonical"]');
-    if (!link) {
-      link = document.createElement('link');
-      link.rel = 'canonical';
-      document.head.appendChild(link);
+  // Base canonical URL calculation (no-www, lowercase path)
+  const cleanPath = location.pathname.toLowerCase().replace(/\/+$/, '');
+  const searchParams = new URLSearchParams(location.search);
+  let defaultCanonical = `https://americanliving.sk${cleanPath || '/'}`;
+
+  // Keep allowed query parameters for specific routes
+  if (cleanPath === '/detail-domu' || cleanPath.includes('detaildomu')) {
+    const slug = searchParams.get('slug');
+    const id = searchParams.get('id');
+    if (slug) {
+      defaultCanonical += `?slug=${slug.toLowerCase()}`;
+    } else if (id) {
+      defaultCanonical += `?id=${id}`;
     }
-    link.href = canonical;
-  }, [location.pathname, location.search]);
+  } else if (cleanPath === '/blog-detail' || cleanPath.includes('blogdetail')) {
+    const id = searchParams.get('id');
+    if (id) {
+      defaultCanonical += `?id=${id}`;
+    }
+  }
 
 
 
@@ -199,6 +208,7 @@ function LayoutContent({ children }) {
     <div className="min-h-screen bg-background text-foreground font-['Outfit'] transition-colors duration-300">
       <Helmet>
         {shouldNoindex && <meta name="robots" content="noindex, nofollow" />}
+        <link rel="canonical" href={defaultCanonical} />
       </Helmet>
       <style>{`
         :root {
@@ -945,9 +955,9 @@ function LayoutContent({ children }) {
             "@graph": [
               {
                 "@type": "Organization",
-                "@id": "https://www.americanliving.sk/#organization",
+                "@id": "https://americanliving.sk/#organization",
                 "name": "American Living",
-                "url": "https://www.americanliving.sk",
+                "url": "https://americanliving.sk",
                 "logo": {
                   "@type": "ImageObject",
                   "url": "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/0a055b39a_AmericanLiving.png",
@@ -966,13 +976,13 @@ function LayoutContent({ children }) {
               },
               {
                 "@type": "WebSite",
-                "@id": "https://www.americanliving.sk/#website",
-                "url": "https://www.americanliving.sk",
+                "@id": "https://americanliving.sk/#website",
+                "url": "https://americanliving.sk",
                 "name": "American Living – modulárne a montované domy",
-                "publisher": { "@id": "https://www.americanliving.sk/#organization" },
+                "publisher": { "@id": "https://americanliving.sk/#organization" },
                 "potentialAction": {
                   "@type": "SearchAction",
-                  "target": "https://www.americanliving.sk/Katalog?q={search_term_string}",
+                  "target": "https://americanliving.sk/katalog?q={search_term_string}",
                   "query-input": "required name=search_term_string"
                 }
               }

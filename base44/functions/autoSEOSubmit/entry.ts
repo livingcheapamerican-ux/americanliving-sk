@@ -7,21 +7,11 @@ Deno.serve(async (req) => {
     console.log('🚀 Automatické SEO odoslanie...');
     
     // 1. Generuj sitemap (zavolaj funkciu)
-    const sitemapResponse = await fetch('https://www.americanliving.sk/api/generateSitemap');
+    const sitemapResponse = await fetch('https://americanliving.sk/api/generateSitemap');
     console.log('✅ Sitemap generovaná');
     
-    // 2. Ping Google o novej sitemap
-    const googlePingUrl = `https://www.google.com/ping?sitemap=${encodeURIComponent('https://www.americanliving.sk/api/generateSitemap')}`;
-    
-    try {
-      await fetch(googlePingUrl);
-      console.log('✅ Google informovaný o sitemap');
-    } catch (e) {
-      console.log('⚠️ Google ping zlyhal (nie je kritické):', e.message);
-    }
-    
-    // 3. Ping Bing o novej sitemap
-    const bingPingUrl = `https://www.bing.com/ping?sitemap=${encodeURIComponent('https://www.americanliving.sk/api/generateSitemap')}`;
+    // 2. Ping Bing o novej sitemap
+    const bingPingUrl = `https://www.bing.com/ping?sitemap=${encodeURIComponent('https://americanliving.sk/api/generateSitemap')}`;
     
     try {
       await fetch(bingPingUrl);
@@ -30,7 +20,7 @@ Deno.serve(async (req) => {
       console.log('⚠️ Bing ping zlyhal (nie je kritické):', e.message);
     }
     
-    // 4. Odošli email report
+    // 3. Odošli email report
     const reportHtml = `
 <!DOCTYPE html>
 <html>
@@ -44,13 +34,12 @@ Deno.serve(async (req) => {
 <body>
   <h1>🚀 SEO Automatizácia - Report</h1>
   
-  <p class="success">✅ Sitemap úspešne aktualizovaná a odoslaná do Google a Bing</p>
+  <p class="success">✅ Sitemap úspešne aktualizovaná a odoslaná do Bing</p>
   
   <div class="info">
     <h3>Čo sa udialo:</h3>
     <ul>
       <li>Vygenerovaná nová sitemap.xml so všetkými aktuálnymi stránkami</li>
-      <li>Google Search bol informovaný o novej sitemap</li>
       <li>Bing bol informovaný o novej sitemap</li>
       <li>Redirecty z starých URL na nové sú aktívne</li>
     </ul>
@@ -66,8 +55,8 @@ Deno.serve(async (req) => {
     </ul>
   </div>
   
-  <p><strong>Sitemap URL:</strong> <a href="https://www.americanliving.sk/api/generateSitemap">https://www.americanliving.sk/api/generateSitemap</a></p>
-  <p><strong>Robots.txt URL:</strong> <a href="https://www.americanliving.sk/api/generateRobotsTxt">https://www.americanliving.sk/api/generateRobotsTxt</a></p>
+  <p><strong>Sitemap URL:</strong> <a href="https://americanliving.sk/api/generateSitemap">https://americanliving.sk/api/generateSitemap</a></p>
+  <p><strong>Robots.txt URL:</strong> <a href="https://americanliving.sk/api/generateRobotsTxt">https://americanliving.sk/api/generateRobotsTxt</a></p>
   
   <p style="margin-top: 30px; color: #6b7280; font-size: 14px;">
     Tento proces sa bude automaticky opakovať pri každej zmene obsahu stránky.
@@ -84,13 +73,12 @@ Deno.serve(async (req) => {
       message: 'SEO automatizácia dokončená',
       actions: [
         'Sitemap vygenerovaná',
-        'Google informovaný',
         'Bing informovaný',
         'Email report odoslaný'
       ],
       urls: {
-        sitemap: 'https://www.americanliving.sk/api/generateSitemap',
-        robots: 'https://www.americanliving.sk/api/generateRobotsTxt'
+        sitemap: 'https://americanliving.sk/api/generateSitemap',
+        robots: 'https://americanliving.sk/api/generateRobotsTxt'
       }
     });
     

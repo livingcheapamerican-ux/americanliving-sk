@@ -29,7 +29,7 @@ Deno.serve(async (req) => {
   
   // Ak existuje redirect, presmeruj
   if (redirects[path]) {
-    return Response.redirect(`https://www.americanliving.sk${redirects[path]}`, 301);
+    return Response.redirect(`https://americanliving.sk${redirects[path]}`, 301);
   }
   
   // Ak URL obsahuje znaky zo starej stránky, presmeruj na katalóg
@@ -37,7 +37,7 @@ Deno.serve(async (req) => {
   const shouldRedirectToCatalog = oldSitePatterns.some(pattern => path.toLowerCase().includes(pattern));
   
   if (shouldRedirectToCatalog) {
-    return Response.redirect('https://www.americanliving.sk/katalog', 301);
+    return Response.redirect('https://americanliving.sk/katalog', 301);
   }
   
   // Ak nie, vráť info o dostupných redirectoch
