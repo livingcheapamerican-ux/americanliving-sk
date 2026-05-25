@@ -59,14 +59,21 @@ function LayoutContent({ children }) {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
-  // Noindex meta tag for admin/internal pages
+  // Noindex meta tag for admin/internal pages and configuration variants
   const noindexPaths = ['/AIMarketingInsights', '/AdminCennik', '/AutoSEOTrigger', '/AdminAnalyzaSessions', '/Admin', '/Test', '/Auto', '/Regeneruj', '/MojeKonto', '/MojaPonuka', '/AdminMojeKonto'];
-  const shouldNoindex = noindexPaths.some(path => location.pathname.startsWith(path));
-
+  
   // Base canonical URL calculation (no-www, lowercase path)
   const cleanPath = location.pathname.toLowerCase().replace(/\/+$/, '');
   const searchParams = new URLSearchParams(location.search);
   let defaultCanonical = `https://americanliving.sk${cleanPath || '/'}`;
+
+  // Client-side variant parameter detection for noindex, follow injection
+  const variantKeys = ['color', 'option', 'facade', 'strecha', 'okna', 'material', 'vybava', 'typ', 'vyrobca', 'kategoria'];
+  const hasVariantParams = variantKeys.some(key => searchParams.has(key));
+  const isConfiguratorOrCatalog = cleanPath.includes('konfigurator') || cleanPath.includes('katalog') || cleanPath.includes('detail-domu');
+
+  const shouldNoindex = noindexPaths.some(path => location.pathname.startsWith(path));
+  const shouldNoindexFollow = isConfiguratorOrCatalog && hasVariantParams;
 
   // Keep allowed query parameters for specific routes
   if (cleanPath === '/detail-domu' || cleanPath.includes('detaildomu')) {
@@ -208,6 +215,7 @@ function LayoutContent({ children }) {
     <div className="min-h-screen bg-background text-foreground font-['Outfit'] transition-colors duration-300">
       <Helmet>
         {shouldNoindex && <meta name="robots" content="noindex, nofollow" />}
+        {shouldNoindexFollow && !shouldNoindex && <meta name="robots" content="noindex, follow" />}
         <link rel="canonical" href={defaultCanonical} />
       </Helmet>
       <style>{`
