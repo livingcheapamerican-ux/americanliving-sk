@@ -21,7 +21,7 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
   return (
   <div 
     onClick={onClick} 
-    className={`relative flex flex-col p-5 rounded-3xl border-2 transition-all duration-500 w-full text-left active:scale-[0.98] gap-4 overflow-hidden group cursor-pointer backdrop-blur-md ${
+    className={`relative flex flex-col p-4 sm:p-5 rounded-2xl sm:rounded-3xl border-2 transition-all duration-500 w-full text-left active:scale-[0.98] gap-3 sm:gap-4 overflow-hidden group cursor-pointer backdrop-blur-md ${
       selected 
         ? 'border-red-500 bg-red-500/10 dark:bg-gradient-to-br dark:from-red-500/10 dark:to-red-900/10 shadow-[0_0_30px_rgba(239,68,68,0.2)] scale-[1.02]' 
         : isStandard 
@@ -30,21 +30,21 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
     }`}
   >
     {selected && <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-orange-500 opacity-80" />}
-    <div className="flex items-start gap-4 w-full relative z-10">
+    <div className="flex items-start gap-3 sm:gap-4 w-full relative z-10">
       {Icon && (
-        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all duration-500 ${
+        <div className={`w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl flex items-center justify-center flex-shrink-0 transition-all duration-500 ${
           selected 
             ? 'bg-gradient-to-br from-red-500 to-red-700 text-white shadow-xl shadow-red-500/30 rotate-3' 
             : 'bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 group-hover:scale-110'
         }`}>
-          <Icon className={`w-7 h-7 transition-transform duration-500 ${selected ? 'scale-110' : 'scale-100'}`} />
+          <Icon className={`w-5 h-5 sm:w-7 sm:h-7 transition-transform duration-500 ${selected ? 'scale-110' : 'scale-100'}`} />
         </div>
       )}
       
       <div className="flex-1 min-w-0 mt-1">
         <div className="flex items-center gap-2 flex-wrap mb-1.5">
-          <span className={`font-black text-lg transition-colors duration-300 ${selected ? 'text-red-950 dark:text-white' : 'text-slate-800 dark:text-slate-200'}`}>{label}</span>
-          {isA0 && <span className="bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.2)]">A0 Certifikácia</span>}
+          <span className={`font-black text-base sm:text-lg transition-colors duration-300 ${selected ? 'text-red-950 dark:text-white' : 'text-slate-800 dark:text-slate-200'}`}>{label}</span>
+          {isA0 && <span className="bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full uppercase tracking-wider animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.2)]">A0 Certifikácia</span>}
         </div>
         {description && <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-2">{description}</p>}
         {onShowGallery && (
@@ -53,21 +53,21 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
               e.stopPropagation();
               onShowGallery();
             }}
-            className="mt-2 text-xs font-bold text-[#C5A880] hover:text-white flex items-center gap-1.5 bg-[#C5A880]/10 hover:bg-[#C5A880]/20 px-3 py-1.5 rounded-lg border border-[#C5A880]/20 transition-all w-fit"
+            className="mt-1 sm:mt-2 text-[11px] sm:text-xs font-bold text-[#C5A880] hover:text-white flex items-center gap-1 bg-[#C5A880]/10 hover:bg-[#C5A880]/20 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-[#C5A880]/20 transition-all w-fit"
           >
-            <Eye className="w-3.5 h-3.5 text-[#C5A880]" />
+            <Eye className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#C5A880]" />
             <span>Pozrieť ukážku</span>
           </button>
         )}
       </div>
       
       <div className="flex flex-col items-end flex-shrink-0">
-        <div className={`w-7 h-7 mb-3 rounded-full border-2 flex items-center justify-center transition-all duration-500 ${
+        <div className={`w-6 h-6 sm:w-7 sm:h-7 mb-2 sm:mb-3 rounded-full border-2 flex items-center justify-center transition-all duration-500 ${
           selected 
             ? 'border-red-500 bg-red-500 scale-110 shadow-lg shadow-red-500/40' 
             : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950/50'
         }`}>
-          {selected && <Check className="w-4 h-4 text-white" />}
+          {selected && <Check className="w-3 h-3 sm:w-4 sm:h-4 text-white" />}
         </div>
         
         {isAdmin && onPriceChange ? (
@@ -76,7 +76,7 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
             <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-20 text-sm font-bold text-red-400 bg-transparent outline-none" />
           </div>
         ) : (
-          <span className={`text-base font-black whitespace-nowrap transition-colors duration-300 ${
+          <span className={`text-sm sm:text-base font-black whitespace-nowrap transition-colors duration-300 ${
             selected 
               ? 'text-red-600 dark:text-red-400' 
               : isStandard 
@@ -95,7 +95,7 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
 const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = false, isAdmin, onPriceChange, description, t, icon: Icon }) => (
   <button 
     onClick={!disabled && !locked ? onChange : undefined} 
-    className={`flex items-center justify-between p-4 rounded-2xl border-2 transition-all duration-500 w-full active:scale-[0.98] group overflow-hidden relative ${
+    className={`flex items-center justify-between p-3 sm:p-4 rounded-xl sm:rounded-2xl border-2 transition-all duration-500 w-full active:scale-[0.98] group overflow-hidden relative ${
       locked 
         ? 'border-emerald-500/30 bg-emerald-500/5 cursor-not-allowed shadow-[0_0_20px_rgba(16,185,129,0.15)] backdrop-blur-md' 
         : checked 
@@ -106,38 +106,38 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
     }`}
   >
     {checked && !locked && <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500" />}
-    <div className="flex items-center gap-4 relative z-10">
-      <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors duration-500 ${
+    <div className="flex items-center gap-3 sm:gap-4 relative z-10 min-w-0 flex-1">
+      <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0 transition-colors duration-500 ${
         locked 
           ? 'bg-emerald-500/20 text-emerald-400' 
           : checked 
             ? 'bg-gradient-to-br from-red-500 to-red-600 text-white shadow-lg shadow-red-500/20' 
             : 'bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 group-hover:scale-110 transition-transform duration-300'
       }`}>
-        {Icon ? <Icon className={`w-6 h-6 transition-transform duration-500 ${checked ? 'scale-110' : 'scale-100'}`} /> : (locked ? <Lock className="w-5 h-5" /> : <CheckSquare className="w-5 h-5" />)}
+        {Icon ? <Icon className={`w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-500 ${checked ? 'scale-110' : 'scale-100'}`} /> : (locked ? <Lock className="w-4 h-4 sm:w-5 sm:h-5" /> : <CheckSquare className="w-4 h-4 sm:w-5 sm:h-5" />)}
       </div>
-      <div className="text-left">
-        <span className={`font-bold text-lg block transition-colors duration-300 ${
-          checked || locked ? 'text-red-955 dark:text-white' : 'text-slate-800 dark:text-slate-200'
+      <div className="text-left min-w-0 flex-1">
+        <span className={`font-bold text-base sm:text-lg block transition-colors duration-300 truncate ${
+          checked || locked ? 'text-red-950 dark:text-white' : 'text-slate-800 dark:text-slate-200'
         }`}>{label}</span>
-        {description && <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">{description}</p>}
-        {locked && <span className="text-[11px] uppercase font-bold text-emerald-500 tracking-wider flex items-center gap-1 mt-1"><CheckCircle className="w-3 h-3" /> {t ? t('requiredForA0') : 'Vyžadované pre A0'}</span>}
+        {description && <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5 sm:mt-1 leading-relaxed">{description}</p>}
+        {locked && <span className="text-[10px] sm:text-[11px] uppercase font-bold text-emerald-500 tracking-wider flex items-center gap-1 mt-0.5 sm:mt-1"><CheckCircle className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> {t ? t('requiredForA0') : 'Vyžadované pre A0'}</span>}
       </div>
     </div>
-    <div className="flex items-center gap-4 ml-3 flex-shrink-0 relative z-10">
-      <div className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-all duration-300 ${
+    <div className="flex items-center gap-3 sm:gap-4 ml-2 sm:ml-3 flex-shrink-0 relative z-10">
+      <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded border-2 flex items-center justify-center transition-all duration-300 ${
         locked ? 'bg-emerald-500 border-emerald-500' : checked ? 'bg-red-500 border-red-500 scale-110' : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950/50'
       }`}>
-        {locked ? <Lock className="w-4 h-4 text-white" /> : checked && <Check className="w-4 h-4 text-white" />}
+        {locked ? <Lock className="w-3 h-3 text-white" /> : checked && <Check className="w-3 h-3 text-white" />}
       </div>
-      <div className="flex-shrink-0 min-w-[70px] text-right">
+      <div className="flex-shrink-0 min-w-[60px] sm:min-w-[70px] text-right">
         {isAdmin && onPriceChange ? (
-          <div className="flex items-center gap-1 bg-slate-950/80 border border-red-500/30 rounded px-2 py-1 backdrop-blur-sm" onClick={e => e.stopPropagation()}>
+          <div className="flex items-center gap-1 bg-slate-950/80 border border-red-500/30 rounded px-1.5 sm:px-2 py-0.5 sm:py-1 backdrop-blur-sm" onClick={e => e.stopPropagation()}>
             <span className="text-xs text-slate-500">€</span>
-            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-20 text-sm font-bold text-red-400 bg-transparent outline-none" />
+            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-16 sm:w-20 text-xs sm:text-sm font-bold text-red-400 bg-transparent outline-none" />
           </div>
         ) : (
-          <span className={`text-base font-black whitespace-nowrap transition-colors duration-300 ${
+          <span className={`text-sm sm:text-base font-black whitespace-nowrap transition-colors duration-300 ${
             locked ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-600 dark:text-slate-400'
           }`}>
             {price === 0 ? '0 €' : `+${price.toLocaleString()} €`}
@@ -149,43 +149,43 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
 );
 
 const CounterRow = ({ label, price, value, onChange, isAdmin, onPriceChange, icon: Icon }) => (
-  <div className="flex items-center justify-between p-4 rounded-2xl border-2 border-slate-200 dark:border-white/5 bg-white dark:bg-white/[0.02] backdrop-blur-sm transition-all duration-500 hover:border-slate-300 dark:hover:border-white/20 group relative overflow-hidden">
+  <div className="flex items-center justify-between p-3 sm:p-4 rounded-xl sm:rounded-2xl border-2 border-slate-200 dark:border-white/5 bg-white dark:bg-white/[0.02] backdrop-blur-sm transition-all duration-500 hover:border-slate-300 dark:hover:border-white/20 group relative overflow-hidden">
     {value > 0 && <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500" />}
-    <div className="flex items-center gap-4 relative z-10">
+    <div className="flex items-center gap-3 sm:gap-4 relative z-10 min-w-0 flex-1">
       {Icon && (
-        <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors duration-500 ${
+        <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0 transition-colors duration-500 ${
           value > 0 ? 'bg-slate-800 dark:bg-white/10 text-white' : 'bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 group-hover:scale-110 transition-transform duration-300'
         }`}>
-          <Icon className={`w-6 h-6 transition-transform duration-500 ${value > 0 ? 'scale-110' : ''}`} />
+          <Icon className={`w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-500 ${value > 0 ? 'scale-110' : ''}`} />
         </div>
       )}
-      <div>
-        <div className={`font-bold text-lg transition-colors duration-300 ${
+      <div className="min-w-0 flex-1 text-left">
+        <div className={`font-bold text-base sm:text-lg transition-colors duration-300 truncate ${
           value > 0 ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400'
         }`}>{label}</div>
         {isAdmin && onPriceChange ? (
           <div className="flex items-center gap-1 mt-1">
             <span className="text-xs text-slate-500">€</span>
-            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-16 text-sm font-bold text-red-400 bg-slate-950 outline-none border border-red-500/30 rounded px-1 py-0.5" />
+            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-16 text-xs sm:text-sm font-bold text-red-400 bg-slate-950 outline-none border border-red-500/30 rounded px-1 py-0.5" />
           </div>
         ) : (
-          <div className="text-sm text-red-600 dark:text-red-400 font-bold mt-1">{price} € / ks</div>
+          <div className="text-xs sm:text-sm text-red-600 dark:text-red-400 font-bold mt-0.5 sm:mt-1">{price} € / ks</div>
         )}
       </div>
     </div>
-    <div className="flex items-center gap-4 relative z-10">
+    <div className="flex items-center gap-2 sm:gap-4 relative z-10 flex-shrink-0">
       <button 
         onClick={() => onChange(Math.max(0, value - 1))} 
-        className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 flex items-center justify-center font-bold text-slate-800 dark:text-slate-300 active:scale-90 transition-all border border-slate-200 dark:border-white/10 backdrop-blur-sm"
+        className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 flex items-center justify-center font-bold text-slate-800 dark:text-slate-300 active:scale-90 transition-all border border-slate-200 dark:border-white/10 backdrop-blur-sm"
       >
         −
       </button>
-      <span className={`w-8 text-center font-black text-xl transition-colors duration-300 ${
+      <span className={`w-6 sm:w-8 text-center font-black text-lg sm:text-xl transition-colors duration-300 ${
         value > 0 ? 'text-slate-900 dark:text-white' : 'text-slate-400 dark:text-slate-500'
       }`}>{value}</span>
       <button 
         onClick={() => onChange(value + 1)} 
-        className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 flex items-center justify-center font-bold active:scale-90 transition-all shadow-[0_0_15px_rgba(239,68,68,0.4)]"
+        className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 flex items-center justify-center font-bold active:scale-90 transition-all shadow-[0_0_15px_rgba(239,68,68,0.4)]"
       >
         +
       </button>
@@ -535,7 +535,7 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
   const phCode = houseCode.replace('ph0', 'PH-0').replace('ph', 'PH-');
 
   return (
-    <div className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen pb-40 lg:pb-32 font-['Outfit'] relative transition-colors duration-300">
+    <div className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen pb-40 lg:pb-32 font-['Outfit'] relative transition-colors duration-300 w-full max-w-full overflow-hidden">
       
       {/* Background ambient glow */}
       <div className="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0 opacity-40 dark:opacity-100">
@@ -543,7 +543,7 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-500/5 dark:bg-blue-900/10 blur-[120px]" />
       </div>
 
-      <div className="container mx-auto px-4 py-8 lg:py-12 max-w-7xl relative z-10">
+      <div className="w-full px-2 sm:px-4 py-8 lg:py-12 max-w-7xl mx-auto relative z-10">
         
         {/* Hlavička domu */}
         <div className="mb-8 lg:mb-12">
@@ -560,7 +560,7 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-12 gap-8 lg:gap-16 items-start relative">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start relative">
           
           {/* ĽAVÝ STĹPEC: Sticky Progress Menu (Len pre Desktop) */}
           <div className="hidden lg:block lg:col-span-4 sticky top-28">
@@ -645,7 +645,7 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
             <div id="section-0" className="scroll-mt-28">
               <BigSectionHeader title="Základné rozhodnutie" description="Na aký účel plánujete dom využívať? Toto rozhodnutie nám pomôže automaticky predvybrať technológie potrebné pre stavebné povolenie." icon={Home} stepIdx={0} totalSteps={6} />
               
-              <div className="grid sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <OptionCard 
                   icon={Sun} label={t('recreationalBuilding')} description="Chata, víkendový dom. Nevyžaduje energetický certifikát A0." 
                   price={0} selected={typStavby === 'rekreacna'} onClick={() => setTypStavby('rekreacna')} 
@@ -667,7 +667,7 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
                 {hasExtension && (
                   <div>
                     <SectionLabel label={t('houseExtension')} color="teal" />
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {house.options.extension.map((opt, i) => {
                         const labels = { 0: t('noExtension'), 1: '+1,2 m', 2: '+2,4 m', 3: '+3,6 m', 4: '+4,8 m' };
                         return <OptionCard key={i} icon={Maximize} label={labels[i] || opt.label} price={getPrice('extension', i, opt.price)} selected={extensionIdx === i} onClick={() => setExtensionIdx(i)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('extension', i, p)} />;

@@ -624,7 +624,7 @@ export default function DetailDomu() {
       </div>
 
       <div className="container mx-auto px-4 py-8 max-w-full overflow-hidden">
-        <div className="grid lg:grid-cols-3 gap-8 w-full max-w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 w-full max-w-full">
           {/* Ľavý stĺpec - Špecifikácie */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -1804,11 +1804,11 @@ export default function DetailDomu() {
         </div>
       </div>
 
-      {/* Floating Price Display - len ak nie je JAK Modules */}
-      {!isJAKModules && (
+      {/* Floating Price Display - len ak nie je JAK Modules, Prosto House a Ticabhouse */}
+      {!isJAKModules && !isProstoHouse && !isTicabhouse && (
         <FloatingPrice 
-          price={isTicabhouse ? (ticabKonfiguracia?.celkovaCena || dom.zakladna_cena) : (isProstoHouse ? (prostoKonfiguracia?.celkovaCena || dom.zakladna_cena) : calculatedPrice)} 
-          isVisible={showCalculator || isTicabhouse || isProstoHouse} 
+          price={calculatedPrice} 
+          isVisible={showCalculator} 
           onSendQuote={handleSendQuote}
           dom={dom}
         />
