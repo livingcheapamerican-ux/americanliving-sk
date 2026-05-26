@@ -1213,7 +1213,9 @@ export default function DetailDomu() {
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-2 sm:mb-3 break-words hidden lg:block">
                 {dom.nazov}
               </h1>
-              <p className="text-base sm:text-lg font-semibold text-slate-700 dark:text-slate-300 mb-3 hidden lg:block">{t('ceilingHeight270A0')}</p>
+              {dom.prosto_house_kod === "PH-006" && (
+                <p className="text-base sm:text-lg font-semibold text-slate-700 dark:text-slate-300 mb-3 hidden lg:block">{t('ceilingHeight270A0')}</p>
+              )}
               
               {/* Desktop verzia - cena */}
               <div className="hidden lg:block bg-slate-900 p-5 rounded-xl border border-white/10 shadow-xl backdrop-blur-sm">
