@@ -1,0 +1,13 @@
+{
+  "summary": "Records critical fixes for MIRA RRM Voice Dump (Multi-Device Porada) and Base44 environment quirks. Covers Vite plugin crashes due to ServiceWorker SecurityErrors, PWA bundle size limits, stringified JSON metadata corruption in Base44 edge functions, and defensive state handling for media recording.",
+  "timestamps": {
+    "created": "2026-05-18T06:00:00Z",
+    "updated": "2026-05-18T06:00:00Z"
+  },
+  "references": [
+    "src/main.jsx",
+    "src/AppView.jsx",
+    "src/components/voicedump/MeetingSetup.jsx",
+    "base44/functions/processVoiceDump/entry.ts"
+  ]
+}

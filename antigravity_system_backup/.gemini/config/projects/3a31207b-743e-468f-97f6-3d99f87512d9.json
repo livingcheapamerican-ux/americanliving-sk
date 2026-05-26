@@ -1,0 +1,15 @@
+{
+  "id":  "3a31207b-743e-468f-97f6-3d99f87512d9",
+  "name":  "american-living-sk 3",
+  "projectResources":  {
+    "resources":  [
+      {
+        "gitFolder":  {
+          "folderUri":  "file:///Users/richardkovac/Documents/american_living_web/american-living-sk",
+          "defaultBranch":  "main",
+          "allowWrite":  true
+        }
+      }
+    ]
+  }
+}

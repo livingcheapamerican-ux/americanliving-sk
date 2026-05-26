@@ -1,0 +1,8 @@
+- [x] 1. Úprava kódu cenníka a konfigurátora
+  - [x] Upraviť `src/pages/KonfiguratorPH004.jsx`
+  - [x] Upraviť `base44/functions/analyzeProstoHouseCennik/entry.ts`
+  - [x] Upraviť `scratch/update_prices.js`
+- [x] 2. Aktualizácia databázy
+  - [x] Spustiť `node scratch/update_prices.js`
+- [x] 3. Overenie
+  - [x] Spustiť `npm run build` na overenie kompilácie Reactu

@@ -1,0 +1,15 @@
+{
+  "id":  "7c387e26-dd99-452e-b8f3-649f8d89027a",
+  "name":  "mira-rrm 4",
+  "projectResources":  {
+    "resources":  [
+      {
+        "gitFolder":  {
+          "folderUri":  "file:///Users/richardkovac/Documents/mira-rrm/mira-rrm",
+          "defaultBranch":  "main",
+          "allowWrite":  true
+        }
+      }
+    ]
+  }
+}

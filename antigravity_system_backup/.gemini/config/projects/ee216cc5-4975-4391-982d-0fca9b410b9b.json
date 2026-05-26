@@ -1,0 +1,14 @@
+{
+  "id":  "ee216cc5-4975-4391-982d-0fca9b410b9b",
+  "name":  "Konfiga_ARES_Extension",
+  "projectResources":  {
+    "resources":  [
+      {
+        "gitFolder":  {
+          "folderUri":  "file:///Users/richardkovac/Documents/Konfiga_ARES_Extension",
+          "allowWrite":  true
+        }
+      }
+    ]
+  }
+}

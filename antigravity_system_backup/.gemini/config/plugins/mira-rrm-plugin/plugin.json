@@ -1,0 +1,9 @@
+{
+  "name": "mira-rrm-plugin",
+  "version": "1.0.0",
+  "description": "Custom pluginy pre MIRA RRM a Base44 platformu",
+  "skills": [
+    "base44-automation-ops",
+    "playwright-udrzbar-qa"
+  ]
+}

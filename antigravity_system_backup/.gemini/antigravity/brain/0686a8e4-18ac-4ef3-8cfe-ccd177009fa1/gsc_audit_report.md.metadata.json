@@ -1,0 +1,6 @@
+{
+  "artifactType": "ARTIFACT_TYPE_IMPLEMENTATION_PLAN",
+  "summary": "Detailed audit report of Google Search Console errors for americanliving.sk. Explains 9 indexing issue types (such as Soft 404s, canonical domain mismatches, and layout canonical tag issues) and provides an actionable plan to resolve them in the React codebase.",
+  "updatedAt": "2026-05-25T17:35:41.464504Z",
+  "requestFeedback": true
+}

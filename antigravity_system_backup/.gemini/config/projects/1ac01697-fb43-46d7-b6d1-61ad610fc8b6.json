@@ -1,0 +1,15 @@
+{
+  "id":  "1ac01697-fb43-46d7-b6d1-61ad610fc8b6",
+  "name":  "konfiga-crm 2",
+  "projectResources":  {
+    "resources":  [
+      {
+        "gitFolder":  {
+          "folderUri":  "file:///Users/richardkovac/Documents/konfiga-crm",
+          "defaultBranch":  "main",
+          "allowWrite":  true
+        }
+      }
+    ]
+  }
+}

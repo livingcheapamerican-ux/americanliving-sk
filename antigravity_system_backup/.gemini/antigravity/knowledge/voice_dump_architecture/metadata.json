@@ -1,0 +1,6 @@
+{
+  "title": "Voice Dump Client-Side Architecture & Sandbox Proxy Bypass",
+  "summary": "Explains why long-running AI processes (like Voice Dump) must be processed client-side to bypass Edge Function timeouts, and documents the strict requirement to use absolute fetch URLs (https://app.base44.com/api/...) instead of base44.functions.invoke() when sending FormData to avoid 404/400 Sandbox proxy errors.",
+  "createdAt": "2026-05-16T20:00:00Z",
+  "updatedAt": "2026-05-16T20:00:00Z"
+}

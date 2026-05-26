@@ -1,0 +1,12 @@
+{
+  "title": "Cost Effective Direct-To-Provider API Architecture Rule",
+  "summary": "Mandates the use of direct, raw API fetch calls to LLM providers (e.g. Gemini, OpenAI) instead of platform wrappers (like InvokeLLM) to save costs and eliminate markup.",
+  "created_at": "2026-05-16T15:00:00Z",
+  "updated_at": "2026-05-16T15:00:00Z",
+  "references": [
+    "Conversation 43c50523-10f3-484d-9581-45651aeb671a"
+  ],
+  "artifacts": [
+    "artifacts/rule.md"
+  ]
+}
