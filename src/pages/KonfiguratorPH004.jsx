@@ -76,7 +76,7 @@ const HOUSE = {
       },
       {
         label: "Sadrokartón",
-        price: 11655,
+        price: 29555,
         description: "Hladké steny"
       }
     ],

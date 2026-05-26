@@ -111,7 +111,7 @@ const NEW_PRICES = {
     "options": {
       "mounting-1": 15650,
       "interior-1": 25700,
-      "interior-2": 11655
+      "interior-2": 29555
     },
     "addons": {
       "addon-electricity": 7500,
