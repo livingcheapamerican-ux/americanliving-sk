@@ -62,7 +62,7 @@ const ConfiguratorRow = ({
 
       {/* DOLNÁ STRANA: Prepínač (Segmented pill selector) - na celú šírku s vertikálnym vnútorným rozložením tlačidiel pre texty a lepším kontrastom */}
       <div className="w-full mt-2">
-        <div className="flex flex-col sm:flex-row gap-2 bg-slate-150/90 dark:bg-slate-950/60 p-1.5 rounded-2xl border border-slate-200/50 dark:border-white/5 w-full overflow-x-auto sm:overflow-visible no-scrollbar">
+        <div className="flex flex-col sm:flex-row flex-wrap gap-2 bg-slate-150/90 dark:bg-slate-950/60 p-1.5 rounded-2xl border border-slate-200/50 dark:border-white/5 w-full">
           {options.map((opt) => {
             const isSelected = selectedValue === opt.value;
             const isStandard = opt.price === 0;
@@ -93,7 +93,7 @@ const ConfiguratorRow = ({
                 {/* Admin Mode Price Edit */}
                 {isAdmin && onPriceChange && opt.priceKey ? (
                   <div 
-                    className="flex items-center gap-0.5 bg-slate-950/80 border border-red-500/30 rounded px-1 py-0.5 font-mono text-[10px] mt-1"
+                    className="flex items-center gap-0.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded px-1 py-0.5 font-mono text-[10px] mt-1 shadow-sm text-slate-800 dark:text-white"
                     onClick={e => e.stopPropagation()}
                   >
                     <span>€</span>
@@ -101,7 +101,7 @@ const ConfiguratorRow = ({
                       type="number" 
                       value={opt.price} 
                       onChange={e => onPriceChange(opt.priceKey, Number(e.target.value))} 
-                      className="w-12 text-[10px] font-bold text-red-400 bg-transparent outline-none text-center" 
+                      className="w-12 text-[10px] font-bold text-slate-800 dark:text-white bg-transparent outline-none text-center focus:ring-1 focus:ring-[#C5A880] rounded" 
                     />
                   </div>
                 ) : (
@@ -190,9 +190,9 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
       isA0 && !selected ? 'border-blue-500/20' : 'border-slate-200 dark:border-white/5'
     }`}>
       {isAdmin && onPriceChange ? (
-        <div className="flex items-center gap-1 bg-slate-950/80 border border-red-500/30 rounded px-2 py-1 backdrop-blur-md" onClick={e => e.stopPropagation()}>
-          <span className="text-xs text-slate-500">€</span>
-          <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-20 text-sm font-bold text-red-400 bg-transparent outline-none" />
+        <div className="flex items-center gap-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded px-2 py-1 shadow-sm text-slate-850 dark:text-white" onClick={e => e.stopPropagation()}>
+          <span className="text-xs text-slate-400 dark:text-slate-500">€</span>
+          <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-20 text-sm font-bold text-slate-850 dark:text-white bg-transparent outline-none focus:ring-1 focus:ring-[#C5A880] rounded" />
         </div>
       ) : (
         <div className="text-right flex flex-col items-end justify-center">
@@ -214,7 +214,7 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
   );
 };
 
-const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = false, isAdmin, onPriceChange, description, t: propT, icon: Icon }) => {
+const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = false, isAdmin, onPriceChange, description, t: propT, icon: Icon, priceZeroLabel }) => {
   const { t: contextT } = useLanguage();
   const t = propT || contextT;
   return (
@@ -279,9 +279,9 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
     } sm:border-0 relative z-10 gap-4`}>
       <div className="flex-shrink-0 text-right">
         {isAdmin && onPriceChange ? (
-          <div className="flex items-center gap-1 bg-slate-950/80 border border-red-500/30 rounded px-2 py-1 backdrop-blur-sm" onClick={e => e.stopPropagation()}>
-            <span className="text-xs text-slate-500">€</span>
-            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-20 text-sm font-bold text-red-400 bg-transparent outline-none" />
+          <div className="flex items-center gap-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded px-2 py-1 shadow-sm text-slate-850 dark:text-white" onClick={e => e.stopPropagation()}>
+            <span className="text-xs text-slate-400 dark:text-slate-500">€</span>
+            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-20 text-sm font-bold text-slate-850 dark:text-white bg-transparent outline-none focus:ring-1 focus:ring-[#C5A880] rounded" />
           </div>
         ) : (
           <div className="text-right flex flex-col items-end justify-center">
@@ -290,9 +290,9 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
                 ? 'text-base text-blue-600 dark:text-blue-300' 
                 : price === 0 
                   ? 'text-sm text-emerald-600 dark:text-emerald-400' 
-                  : 'text-base text-slate-650 dark:text-slate-400'
+                  : 'text-base text-slate-655 dark:text-slate-400'
             }`}>
-              {price === 0 ? `✓ ${t('includedInPriceShort') || 'V základnej cene'}` : `+${price.toLocaleString()} €`}
+              {price === 0 ? (priceZeroLabel !== undefined ? priceZeroLabel : `✓ ${t('includedInPriceShort') || 'V základnej cene'}`) : `+${price.toLocaleString()} €`}
             </span>
           </div>
         )}
@@ -329,9 +329,9 @@ const CounterRow = ({ label, price, value, onChange, isAdmin, onPriceChange, ico
           value > 0 ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400'
         }`}>{label}</div>
         {isAdmin && onPriceChange ? (
-          <div className="flex items-center gap-1 mt-1">
-            <span className="text-xs text-slate-500">€</span>
-            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-16 text-sm font-bold text-red-400 bg-slate-950 outline-none border border-red-500/30 rounded px-1 py-0.5" />
+          <div className="flex items-center gap-1 mt-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded px-1.5 py-0.5 shadow-sm text-slate-850 dark:text-white">
+            <span className="text-xs text-slate-400 dark:text-slate-500">€</span>
+            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-16 text-sm font-bold text-slate-850 dark:text-white bg-transparent outline-none focus:ring-1 focus:ring-[#C5A880] rounded text-center" />
           </div>
         ) : (
           <div className="text-sm text-slate-700 dark:text-slate-300 font-bold mt-1">{price} € / ks</div>
@@ -662,7 +662,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
   React.useEffect(() => { if (setElektro) setElektro(elektro); }, [elektro]);
   React.useEffect(() => { if (setBleskozvod) setBleskozvod(bleskozvod); }, [bleskozvod]);
   React.useEffect(() => { if (setPrepat) setPrepat(prepat); }, [prepat]);
-  React.useEffect(() => { if (setPripravaNaSolarnePanely) setPripravaNaSolarnePanely(pripravaNaSolarnePanely); }, [pripravaNaSolarnePanely]);
+  React.useEffect(() => { if (setPripravaNaSolarnePanely) setPripravaNaSolarnePanely(pripravaNaSolarnePanely); }, [setPripravaNaSolarnePanely]);
   React.useEffect(() => { if (setPripravaNaRekuperaciu) setPripravaNaRekuperaciu(pripravaNaRekuperaciu); }, [pripravaNaRekuperaciu]);
   React.useEffect(() => { if (setKlimatizacia) setKlimatizacia(klimatizacia); }, [klimatizacia]);
   React.useEffect(() => { if (setSprchovyKut) setSprchovyKut(sprchovyKut); }, [sprchovyKut]);
@@ -843,7 +843,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
             label: t('summaryWallCladding') || "Obklad stien", 
             value: obkladStien === "smrek_8cm" ? (t('summarySpruce8cm') || "Smrek 8cm") :
                    obkladStien === "smrek_bez_uzlov" ? (t('summarySpruceNoKnots') || "Smrek bez uzlov") :
-                   obkladStien === "sadrokarton_tapeta" ? (t('summaryPlasterboardWallpaper') || "Sadrokartón/Tapeta") : (t('summaryOsbPanel') || "OSB panel"), 
+                   obkladStien === "sadrokarton_tapeta" ? (t('summaryPlasterboardWallpaper') || "Sadrokartón/Tapeta") : (t('osbLaminatePanel') || "OSB + laminátový panel"), 
             price: obkladStien === "smrek_8cm" ? 0 : (CENY[`obklad_${obkladStien}`] || 0),
             isStandard: obkladStien === "smrek_8cm"
           },
@@ -913,9 +913,9 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
           { label: t('summaryRevision') || "Revízia", value: t('summaryYes') || "Áno", price: CENY.revizia || 0, isStandard: false, active: revizia, hideIfStandard: true },
           { label: t('summaryAssembly') || "Montáž domu", value: t('summaryYes') || "Áno", price: CENY.montaz || 0, isStandard: false, active: montaz, hideIfStandard: true },
           { label: t('summaryTransport') || "Doprava", value: t('summaryYes') || "Áno", price: CENY.doprava || 0, isStandard: false, active: doprava && dopravaViditelna, hideIfStandard: true, condition: dopravaViditelna },
-          { label: t('summaryPropertySale') || "Predaj nehnuteľnosti", value: t('summaryYes') || "Áno", price: 0, isStandard: true, active: predajNehnutelnosti, hideIfStandard: true },
-          { label: t('summaryWantLand') || "Chcem pozemok", value: t('summaryYes') || "Áno", price: 0, isStandard: true, active: hladamPozemok, hideIfStandard: true },
-          { label: t('summaryFinance') || "Finančné služby", value: t('summaryYes') || "Áno", price: 0, isStandard: true, active: financneSluzby, hideIfStandard: true },
+          { label: t('summaryPropertySale') || "Predaj nehnuteľnosti", value: t('summaryYes') || "Áno", price: 0, isStandard: false, active: predajNehnutelnosti, hideIfStandard: true },
+          { label: t('summaryWantLand') || "Chcem pozemok", value: t('summaryYes') || "Áno", price: 0, isStandard: false, active: hladamPozemok, hideIfStandard: true },
+          { label: t('summaryFinance') || "Finančné služby", value: t('summaryYes') || "Áno", price: 0, isStandard: false, active: financneSluzby, hideIfStandard: true },
         ]
       }
     ];
@@ -1223,7 +1223,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
               { value: "smrek_8cm", label: getTranslatedText('obklad_smrek_8cm', 'nazov') || 'Smrek 8cm', price: 0 },
               { value: "smrek_bez_uzlov", label: getTranslatedText('obklad_smrek_bez_uzlov', 'nazov') || 'Smrek bez uzlov', price: CENY.obklad_smrek_bez_uzlov, priceKey: 'obklad_smrek_bez_uzlov' },
               { value: "sadrokarton_tapeta", label: getTranslatedText('obklad_sadrokarton', 'nazov') || 'Sadrokartón/Tapeta', price: CENY.obklad_sadrokarton_tapeta, priceKey: 'obklad_sadrokarton_tapeta' },
-              { value: "osb_panel", label: getTranslatedText('obklad_osb', 'nazov') || 'OSB panel', price: CENY.obklad_osb_panel, priceKey: 'obklad_osb_panel' }
+              { value: "osb_panel", label: getTranslatedText('obklad_osb', 'nazov') || t('osbLaminatePanel') || 'OSB + laminátový panel', price: CENY.obklad_osb_panel, priceKey: 'obklad_osb_panel' }
             ]}
             icon={Layout}
           />
@@ -1431,6 +1431,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
               checked={predajNehnutelnosti} 
               onChange={() => setPredajNehnutelnosti(!predajNehnutelnosti)} 
               price={0} 
+              priceZeroLabel=""
             />
             <AddonRow 
               icon={Wrench} 
@@ -1439,6 +1440,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
               checked={hladamPozemok} 
               onChange={() => setHladamPozemok(!hladamPozemok)} 
               price={0} 
+              priceZeroLabel=""
             />
             <AddonRow 
               icon={Zap} 
@@ -1447,6 +1449,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
               checked={financneSluzby} 
               onChange={() => setFinancneSluzby(!financneSluzby)} 
               price={0} 
+              priceZeroLabel=""
             />
           </div>
         </section>

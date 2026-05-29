@@ -65,7 +65,7 @@ const ConfiguratorRow = ({
 
       {/* DOLNÁ STRANA: Prepínač (Segmented pill selector) - na celú šírku s vertikálnym vnútorným rozložením tlačidiel pre texty a lepším kontrastom */}
       <div className="w-full mt-2">
-        <div className="flex flex-col sm:flex-row gap-2 bg-slate-150/90 dark:bg-slate-950/60 p-1.5 rounded-2xl border border-slate-200/50 dark:border-white/5 w-full overflow-x-auto sm:overflow-visible no-scrollbar">
+        <div className="flex flex-col sm:flex-row flex-wrap gap-2 bg-slate-150/90 dark:bg-slate-950/60 p-1.5 rounded-2xl border border-slate-200/50 dark:border-white/5 w-full">
           {options.map((opt) => {
             const isSelected = selectedValue === opt.value;
             const isStandard = opt.price === 0;
@@ -96,7 +96,7 @@ const ConfiguratorRow = ({
                 {/* Admin Mode Price Edit */}
                 {isAdmin && onPriceChange && opt.priceKey !== undefined ? (
                   <div 
-                    className="flex items-center gap-0.5 bg-slate-950/80 border border-red-500/30 rounded px-1 py-0.5 font-mono text-[10px] mt-1"
+                    className="flex items-center gap-0.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded px-1 py-0.5 font-mono text-[10px] mt-1 shadow-sm text-slate-800 dark:text-white"
                     onClick={e => e.stopPropagation()}
                   >
                     <span>€</span>
@@ -104,7 +104,7 @@ const ConfiguratorRow = ({
                       type="number" 
                       value={opt.price} 
                       onChange={e => onPriceChange(opt.priceKey, Number(e.target.value))} 
-                      className="w-12 text-[10px] font-bold text-red-400 bg-transparent outline-none text-center" 
+                      className="w-12 text-[10px] font-bold text-slate-800 dark:text-white bg-transparent outline-none text-center focus:ring-1 focus:ring-red-500 rounded" 
                     />
                   </div>
                 ) : (
@@ -182,9 +182,9 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
         </div>
         
         {isAdmin && onPriceChange ? (
-          <div className="flex items-center gap-1 bg-slate-950/80 border border-red-550/30 rounded px-2 py-1 mt-1 backdrop-blur-md" onClick={e => e.stopPropagation()}>
-            <span className="text-xs text-slate-500">€</span>
-            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-20 text-sm font-bold text-red-400 bg-transparent outline-none" />
+          <div className="flex items-center gap-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded px-2 py-1 mt-1 shadow-sm text-slate-800 dark:text-white" onClick={e => e.stopPropagation()}>
+            <span className="text-xs text-slate-400 dark:text-slate-500">€</span>
+            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-20 text-sm font-bold text-slate-805 dark:text-white bg-transparent outline-none focus:ring-1 focus:ring-red-500 rounded" />
           </div>
         ) : (
           <span className={`text-sm sm:text-base font-black whitespace-nowrap transition-colors duration-300 ${
@@ -203,7 +203,7 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
   );
 };
 
-const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = false, isAdmin, onPriceChange, description, t, icon: Icon }) => (
+const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = false, isAdmin, onPriceChange, description, t, icon: Icon, priceZeroLabel }) => (
   <button 
     type="button"
     onClick={!disabled && !locked ? onChange : undefined} 
@@ -266,9 +266,9 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
     } sm:border-0 relative z-10 gap-4`}>
       <div className="flex-shrink-0 text-right">
         {isAdmin && onPriceChange ? (
-          <div className="flex items-center gap-1 bg-slate-950/80 border border-red-500/30 rounded px-2 py-1 backdrop-blur-sm" onClick={e => e.stopPropagation()}>
-            <span className="text-xs text-slate-500">€</span>
-            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-20 text-sm font-bold text-red-400 bg-transparent outline-none" />
+          <div className="flex items-center gap-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded px-2 py-1 shadow-sm text-slate-855 dark:text-white" onClick={e => e.stopPropagation()}>
+            <span className="text-xs text-slate-400 dark:text-slate-500">€</span>
+            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-20 text-sm font-bold text-slate-855 dark:text-white bg-transparent outline-none focus:ring-1 focus:ring-red-500 rounded" />
           </div>
         ) : (
           <div className="text-right flex flex-col items-end justify-center">
@@ -277,9 +277,9 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
                 ? 'text-base text-emerald-600 dark:text-emerald-305' 
                 : price === 0 
                   ? 'text-sm text-emerald-600 dark:text-emerald-400' 
-                  : 'text-base text-slate-650 dark:text-slate-405'
+                  : 'text-base text-slate-655 dark:text-slate-405'
             }`}>
-              {price === 0 ? 'V cene' : `+${price.toLocaleString()} €`}
+              {price === 0 ? (priceZeroLabel !== undefined ? priceZeroLabel : 'V cene') : `+${price.toLocaleString()} €`}
             </span>
           </div>
         )}
@@ -316,9 +316,9 @@ const CounterRow = ({ label, price, value, onChange, isAdmin, onPriceChange, ico
           value > 0 ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400'
         }`}>{label}</h4>
         {isAdmin && onPriceChange ? (
-          <div className="flex items-center gap-1 mt-1">
-            <span className="text-xs text-slate-500">€</span>
-            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-16 text-xs sm:text-sm font-bold text-red-400 bg-slate-955 outline-none border border-red-500/30 rounded px-1 py-0.5" />
+          <div className="flex items-center gap-1 mt-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded px-1.5 py-0.5 shadow-sm text-slate-850 dark:text-white">
+            <span className="text-xs text-slate-400 dark:text-slate-500">€</span>
+            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-16 text-xs sm:text-sm font-bold text-slate-850 dark:text-white bg-transparent outline-none focus:ring-1 focus:ring-red-500 rounded text-center" />
           </div>
         ) : (
           <div className="text-xs sm:text-sm text-red-655 dark:text-red-400 font-bold mt-1">{price.toLocaleString()} € / ks</div>
@@ -1032,9 +1032,9 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
 
                 <SectionLabel label={t('freeServices')} color="gray" />
                 <div className="space-y-3 mb-10">
-                  <AddonRow icon={Home} label={t('realEstate')} price={0} checked={realEstate} onChange={() => setRealEstate(!realEstate)} t={t} />
-                  <AddonRow icon={Sun} label={t('landSearch')} price={0} checked={landSearch} onChange={() => setLandSearch(!landSearch)} t={t} />
-                  <AddonRow icon={FileText} label={t('financing')} price={0} checked={financing} onChange={() => setFinancing(!financing)} t={t} />
+                  <AddonRow icon={Home} label={t('realEstate')} price={0} checked={realEstate} onChange={() => setRealEstate(!realEstate)} t={t} priceZeroLabel="" />
+                  <AddonRow icon={Sun} label={t('landSearch')} price={0} checked={landSearch} onChange={() => setLandSearch(!landSearch)} t={t} priceZeroLabel="" />
+                  <AddonRow icon={FileText} label={t('financing')} price={0} checked={financing} onChange={() => setFinancing(!financing)} t={t} priceZeroLabel="" />
                 </div>
                 
                 <div className="pt-8 border-t border-slate-200 dark:border-white/10">
