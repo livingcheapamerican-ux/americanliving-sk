@@ -1228,5 +1228,7 @@ export default {
   "a0Compliance": "A0 szabvány",
   "a0ComplianceDesc": "A konfigurátor elvezeti Önt az A0-s építési szabványoknak megfelelő berendezésekhez.",
   "customOptions": "Széles választék",
-  "customOptionsDesc": "Ablakszínektől a homlokzati típusokon át a kulcsfontosságú gépészetig és alapozásig."
+  "customOptionsDesc": "Ablakszínektől a homlokzati típusokon át a kulcsfontosságú gépészetig és alapozásig.",
+  "viewShowcase": "Bemutató megtekintése",
+  "consultWithKexo": "Konzultáljon Kexóval"
 };

@@ -1200,5 +1200,7 @@ export default {
   "a0Compliance": "A0 Standard",
   "a0ComplianceDesc": "Konfigurator će vas sam voditi do opreme koja ispunjava građevinske standarde A0.",
   "customOptions": "Širok izbor",
-  "customOptionsDesc": "Od boje prozora preko tipova fasade do ključnih instalacija i temelja."
+  "customOptionsDesc": "Od boje prozora preko tipova fasade do ključnih instalacija i temelja.",
+  "viewShowcase": "Pogledaj prikaz",
+  "consultWithKexo": "Konzultirajte se s Kexom"
 };

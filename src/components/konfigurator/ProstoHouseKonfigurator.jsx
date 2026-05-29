@@ -27,6 +27,7 @@ const ConfiguratorRow = ({
   onShowGallery, 
   icon: Icon 
 }) => {
+  const { t } = useLanguage();
   return (
     <div className="flex flex-col p-5 md:p-6 rounded-3xl border border-slate-200/60 dark:border-white/5 bg-white/40 dark:bg-white/[0.01] hover:border-slate-300 dark:hover:border-white/10 transition-all duration-300 gap-4 backdrop-blur-md w-full">
       
@@ -57,7 +58,7 @@ const ConfiguratorRow = ({
               className="mt-2 text-[11px] sm:text-xs font-bold text-red-500 hover:text-white flex items-center gap-1.5 bg-red-500/10 hover:bg-red-500/20 px-2.5 py-1.5 rounded-lg border border-red-500/20 transition-all w-fit cursor-pointer"
             >
               <Eye className="w-3.5 h-3.5" />
-              <span>Pozrieť ukážku</span>
+              <span>{t('viewShowcase')}</span>
             </button>
           )}
         </div>
@@ -128,6 +129,7 @@ const ConfiguratorRow = ({
 };
 
 const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmin, onPriceChange, icon: Icon, onShowGallery }) => {
+  const { t } = useLanguage();
   const isStandard = price === 0;
   return (
   <div 
@@ -167,7 +169,7 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
             className="mt-1 sm:mt-2 text-[11px] sm:text-xs font-bold text-[#C5A880] hover:text-white flex items-center gap-1 bg-[#C5A880]/10 hover:bg-[#C5A880]/20 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-[#C5A880]/20 transition-all w-fit"
           >
             <Eye className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#C5A880]" />
-            <span>Pozrieť ukážku</span>
+            <span>{t('viewShowcase')}</span>
           </button>
         )}
       </div>
@@ -412,7 +414,18 @@ const ContactModal = ({ isOpen, onClose, onSubmit, isSubmitting, t }) => {
 
 export default function ProstoHouseKonfigurator({ house, houseCode, dom: domProp }) {
   const { language, t: globalT } = useLanguage();
-  const t = (key) => prostoHouseTranslations[language]?.[key] || prostoHouseTranslations['sk']?.[key] || globalT(key) || key;
+  const t = (key, params = {}) => {
+    let text = prostoHouseTranslations[language]?.[key] || prostoHouseTranslations['sk']?.[key];
+    if (text === undefined || text === null) {
+      return globalT(key, params);
+    }
+    if (typeof text === 'string') {
+      Object.keys(params).forEach(pKey => {
+        text = text.replace(new RegExp(`{${pKey}}`, 'g'), params[pKey]);
+      });
+    }
+    return text;
+  };
 
   const urlParams = new URLSearchParams(window.location.search);
   const domIdFromUrl = urlParams.get('id');
@@ -787,7 +800,7 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
                 className="w-full mt-3 bg-[#C5A880]/10 hover:bg-[#C5A880]/20 text-[#C5A880] border border-[#C5A880]/30 hover:border-[#C5A880] font-bold px-6 py-3.5 rounded-2xl flex items-center justify-center gap-2 active:scale-95 transition-all text-base shadow-md"
               >
                 <MessageCircle className="w-5 h-5" />
-                <span>Konzultovať s Kexom</span>
+                <span>{t('consultWithKexo')}</span>
               </button>
             </div>
           </div>
@@ -1056,7 +1069,7 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
                       onClick={() => setModalOpen(true)} 
                       className="w-full bg-red-600 hover:bg-red-700 text-white font-black px-6 py-4 rounded-2xl flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(239,68,68,0.4)] hover:shadow-[0_0_30px_rgba(239,68,68,0.6)] active:scale-95 transition-all text-xl"
                     >
-                      <span>{t('sendQuote')} na sumu {totalPrice.toLocaleString()} €</span>
+                      <span>{t('sendQuoteForAmount', { amount: totalPrice.toLocaleString() })}</span>
                       <Send className="w-6 h-6" />
                     </button>
                   </div>
@@ -1090,7 +1103,7 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
             <button 
               onClick={handleConsultWithKexo} 
               className="bg-[#C5A880]/15 hover:bg-[#C5A880]/25 text-[#C5A880] border border-[#C5A880]/30 hover:border-[#C5A880] font-bold p-3 rounded-xl flex items-center gap-2 active:scale-95 transition-all"
-              title="Konzultovať s Kexom"
+              title={t('consultWithKexo')}
             >
               <MessageCircle className="w-5 h-5" />
             </button>

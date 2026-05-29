@@ -1275,5 +1275,7 @@ export default {
   "a0Compliance": "A0 Standard",
   "a0ComplianceDesc": "Der Konfigurator führt Sie zu Ausstattungen, die den Baustandards A0 entsprechen.",
   "customOptions": "Breite Auswahl",
-  "customOptionsDesc": "Von der Fensterfarbe über Fassadentypen bis hin zu Schlüsselinstallationen und Fundamenten."
+  "customOptionsDesc": "Von der Fensterfarbe über Fassadentypen bis hin zu Schlüsselinstallationen und Fundamenten.",
+  "viewShowcase": "Vorschau anzeigen",
+  "consultWithKexo": "Mit Kexo besprechen"
 };

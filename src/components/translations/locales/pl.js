@@ -1201,5 +1201,7 @@ export default {
   "a0Compliance": "Standard A0",
   "a0ComplianceDesc": "Konfigurator sam poprowadzi Cię do wyposażenia spełniającego normy budowlane A0.",
   "customOptions": "Szeroki wybór",
-  "customOptionsDesc": "Od koloru okien przez typy elewacji po kluczowe instalacje i fundamenty."
+  "customOptionsDesc": "Od koloru okien przez typy elewacji po kluczowe instalacje i fundamenty.",
+  "viewShowcase": "Zobacz pokaz",
+  "consultWithKexo": "Skonsultuj się z Kexo"
 };

@@ -1236,5 +1236,7 @@ export default {
   "a0Compliance": "A0 Standard",
   "a0ComplianceDesc": "The configurator will guide you to equipment that meets building standards A0.",
   "customOptions": "Wide choice",
-  "customOptionsDesc": "From window color through facade types to key installations and foundations."
+  "customOptionsDesc": "From window color through facade types to key installations and foundations.",
+  "viewShowcase": "View showcase",
+  "consultWithKexo": "Consult with Kexo"
 };

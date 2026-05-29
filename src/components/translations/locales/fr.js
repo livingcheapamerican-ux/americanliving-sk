@@ -1274,5 +1274,7 @@ export default {
   "a0Compliance": "Norme A0",
   "a0ComplianceDesc": "Le configurateur vous guidera vers les équipements répondant aux normes de construction A0.",
   "customOptions": "Large choix",
-  "customOptionsDesc": "De la couleur des fenêtres aux types de façades, en passant par les installations clés et les fondations."
+  "customOptionsDesc": "De la couleur des fenêtres aux types de façades, en passant par les installations clés et les fondations.",
+  "viewShowcase": "Voir la démonstration",
+  "consultWithKexo": "Consulter Kexo"
 };

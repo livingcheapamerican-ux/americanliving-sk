@@ -54,7 +54,7 @@ const ConfiguratorRow = ({
               className="mt-2 text-[11px] sm:text-xs font-bold text-[#C5A880] hover:text-[#bfa177] flex items-center gap-1.5 bg-[#C5A880]/10 hover:bg-[#C5A880]/15 px-2.5 py-1.5 rounded-lg border border-[#C5A880]/20 transition-all w-fit cursor-pointer"
             >
               <Eye className="w-3.5 h-3.5" />
-              <span>Pozrieť ukážku</span>
+              <span>{t('viewShowcase')}</span>
             </button>
           )}
         </div>

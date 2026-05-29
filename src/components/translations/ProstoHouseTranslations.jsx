@@ -37,7 +37,7 @@ export const prostoHouseTranslations = {
     "extra300mmDesc": "Extra úspora",
     "facade": "Fasáda",
     "facadeStandard": "Štandardná",
-    "facadeStandardDesc": "Drevený obklad",
+    "facadeStandardDesc": "Kombinácia antracitového plechu a dreva",
     "facadeStucco": "Šúchaná fasáda",
     "facadeStuccoDesc": "Biela omietka",
     "entryDoors": "Vstupné dvere",
@@ -161,7 +161,9 @@ export const prostoHouseTranslations = {
     "noInteriorAddons": "Bez doplnkov interiéru",
     "noTechnologies": "Bez technológií",
     "configuratorLabel": "Konfigurátor",
-    "includedInPrice": "V cene"
+    "includedInPrice": "V cene",
+    "sendQuoteForAmount": "Odoslať cenovú ponuku na sumu {amount} €",
+    "viewShowcase": "Pozrieť ukážku"
   },
   "en": {
     "selectProjectType": "Click on the building type to start the configurator",
@@ -201,7 +203,7 @@ export const prostoHouseTranslations = {
     "extra300mmDesc": "Extra savings",
     "facade": "Facade",
     "facadeStandard": "Standard",
-    "facadeStandardDesc": "Wood cladding",
+    "facadeStandardDesc": "Combination of anthracite sheet metal and wood",
     "facadeStucco": "Stucco facade",
     "facadeStuccoDesc": "White plaster",
     "entryDoors": "Entry doors",
@@ -325,7 +327,9 @@ export const prostoHouseTranslations = {
     "noInteriorAddons": "No interior extras",
     "noTechnologies": "No technologies",
     "configuratorLabel": "Configurator",
-    "includedInPrice": "Included"
+    "includedInPrice": "Included",
+    "sendQuoteForAmount": "Send price quote for the amount of {amount} €",
+    "viewShowcase": "View showcase"
   },
   "de": {
     "selectProjectType": "Klicken Sie auf den Gebäudetyp, um den Konfigurator zu starten",
@@ -365,7 +369,7 @@ export const prostoHouseTranslations = {
     "extra300mmDesc": "Extra Ersparnis",
     "facade": "Fassade",
     "facadeStandard": "Standard",
-    "facadeStandardDesc": "Holzverkleidung",
+    "facadeStandardDesc": "Kombination aus anthrazitfarbenem Blech und Holz",
     "facadeStucco": "Putzfassade",
     "facadeStuccoDesc": "Weißer Putz",
     "entryDoors": "Eingangstüren",
@@ -489,7 +493,9 @@ export const prostoHouseTranslations = {
     "noInteriorAddons": "Keine Innenextras",
     "noTechnologies": "Keine Technologien",
     "configuratorLabel": "Konfigurator",
-    "includedInPrice": "Im Preis"
+    "includedInPrice": "Im Preis",
+    "sendQuoteForAmount": "Preisangebot über den Betrag von {amount} € senden",
+    "viewShowcase": "Vorschau anzeigen"
   },
   "fr": {
     "selectProjectType": "Cliquez sur le type de bâtiment pour démarrer le configurateur",
@@ -529,7 +535,7 @@ export const prostoHouseTranslations = {
     "extra300mmDesc": "Économie supplémentaire",
     "facade": "Façade",
     "facadeStandard": "Standard",
-    "facadeStandardDesc": "Bardage bois",
+    "facadeStandardDesc": "Combinaison de tôle anthracite et de bois",
     "facadeStucco": "Façade crépie",
     "facadeStuccoDesc": "Crépi blanc",
     "entryDoors": "Portes d'entrée",
@@ -653,7 +659,9 @@ export const prostoHouseTranslations = {
     "noInteriorAddons": "Pas d'extras intérieurs",
     "noTechnologies": "Pas de technologies",
     "configuratorLabel": "Configurateur",
-    "includedInPrice": "Inclus"
+    "includedInPrice": "Inclus",
+    "sendQuoteForAmount": "Envoyer le devis d'un montant de {amount} €",
+    "viewShowcase": "Voir la démonstration"
   },
   "hu": {
     "selectProjectType": "Kattintson az épülettípusra a konfigurátor indításához",
@@ -693,7 +701,7 @@ export const prostoHouseTranslations = {
     "extra300mmDesc": "Extra megtakarítás",
     "facade": "Homlokzat",
     "facadeStandard": "Standard",
-    "facadeStandardDesc": "Fa burkolat",
+    "facadeStandardDesc": "Antracit lemez és fa kombinációja",
     "facadeStucco": "Vakolat homlokzat",
     "facadeStuccoDesc": "Fehér vakolat",
     "entryDoors": "Bejárati ajtók",
@@ -817,7 +825,9 @@ export const prostoHouseTranslations = {
     "noInteriorAddons": "Nincs belső kiegészítő",
     "noTechnologies": "Nincs technológia",
     "configuratorLabel": "Konfigurátor",
-    "includedInPrice": "Az árban"
+    "includedInPrice": "Az árban",
+    "sendQuoteForAmount": "Árajánlat küldése {amount} € értékben",
+    "viewShowcase": "Bemutató megtekintése"
   },
   "pl": {
     "selectProjectType": "Kliknij na typ budynku, aby uruchomić konfigurator",
@@ -857,7 +867,7 @@ export const prostoHouseTranslations = {
     "extra300mmDesc": "Dodatkowa oszczędność",
     "facade": "Elewacja",
     "facadeStandard": "Standardowa",
-    "facadeStandardDesc": "Okładzina drewniana",
+    "facadeStandardDesc": "Połączenie blachy antracytowej i drewna",
     "facadeStucco": "Elewacja tynkowana",
     "facadeStuccoDesc": "Biały tynk",
     "entryDoors": "Drzwi wejściowe",
@@ -981,7 +991,9 @@ export const prostoHouseTranslations = {
     "noInteriorAddons": "Bez dodatków wnętrza",
     "noTechnologies": "Bez technologii",
     "configuratorLabel": "Konfigurator",
-    "includedInPrice": "W cenie"
+    "includedInPrice": "W cenie",
+    "sendQuoteForAmount": "Wyślij ofertę cenową na kwotę {amount} €",
+    "viewShowcase": "Zobacz pokaz"
   },
   "uk": {
     "selectProjectType": "Натисніть на тип будівлі, щоб запустити конфігуратор",
@@ -1021,7 +1033,7 @@ export const prostoHouseTranslations = {
     "extra300mmDesc": "Екстра економія",
     "facade": "Фасад",
     "facadeStandard": "Стандартний",
-    "facadeStandardDesc": "Дерев'яна обшивка",
+    "facadeStandardDesc": "Поєднання антрацитового листа та дерева",
     "facadeStucco": "Штукатурний фасад",
     "facadeStuccoDesc": "Біла штукатурка",
     "entryDoors": "Вхідні двері",
@@ -1145,7 +1157,9 @@ export const prostoHouseTranslations = {
     "noInteriorAddons": "Без доповнень інтер'єру",
     "noTechnologies": "Без технологій",
     "configuratorLabel": "Конфігуратор",
-    "includedInPrice": "У ціні"
+    "includedInPrice": "У ціні",
+    "sendQuoteForAmount": "Надіслати цінову пропозицію на суму {amount} €",
+    "viewShowcase": "Переглянути демонстрацію"
   },
   "sr": {
     "selectProjectType": "Кликните на тип зграде да покренете конфигуратор",
@@ -1185,7 +1199,7 @@ export const prostoHouseTranslations = {
     "extra300mmDesc": "Екстра уштеда",
     "facade": "Фасада",
     "facadeStandard": "Стандардна",
-    "facadeStandardDesc": "Дрвена облога",
+    "facadeStandardDesc": "Комбинација антрацит лима и дрвета",
     "facadeStucco": "Малтерна фасада",
     "facadeStuccoDesc": "Бели малтер",
     "entryDoors": "Улазна врата",
@@ -1309,7 +1323,9 @@ export const prostoHouseTranslations = {
     "noInteriorAddons": "Без додатака ентеријера",
     "noTechnologies": "Без технологија",
     "configuratorLabel": "Конфигуратор",
-    "includedInPrice": "У цени"
+    "includedInPrice": "У цени",
+    "sendQuoteForAmount": "Пошаљите понуду у износу од {amount} €",
+    "viewShowcase": "Погледај приказ"
   },
   "hr": {
     "selectProjectType": "Kliknite na tip zgrade za pokretanje konfiguratora",
@@ -1349,7 +1365,7 @@ export const prostoHouseTranslations = {
     "extra300mmDesc": "Ekstra ušteda",
     "facade": "Fasada",
     "facadeStandard": "Standardna",
-    "facadeStandardDesc": "Drvena obloga",
+    "facadeStandardDesc": "Kombinacija antracitnog lima i drva",
     "facadeStucco": "Žbukana fasada",
     "facadeStuccoDesc": "Bijela žbuka",
     "entryDoors": "Ulazna vrata",
@@ -1473,7 +1489,9 @@ export const prostoHouseTranslations = {
     "noInteriorAddons": "Bez dodataka interijera",
     "noTechnologies": "Bez tehnologija",
     "configuratorLabel": "Konfigurator",
-    "includedInPrice": "U cijeni"
+    "includedInPrice": "U cijeni",
+    "sendQuoteForAmount": "Pošaljite ponudu u iznosu od {amount} €",
+    "viewShowcase": "Pogledaj prikaz"
   },
   "el": {
     "selectProjectType": "Κάντε κλικ στον τύπο κτιρίου για να ξεκινήσετε τον διαμορφωτή",
@@ -1513,7 +1531,7 @@ export const prostoHouseTranslations = {
     "extra300mmDesc": "Επιπλέον εξοικονόμηση",
     "facade": "Πρόσοψη",
     "facadeStandard": "Πρότυπη",
-    "facadeStandardDesc": "Ξύλινη επένδυση",
+    "facadeStandardDesc": "Συνδυασμός ανθρακί λαμαρίνας και ξύλου",
     "facadeStucco": "Σοβάς πρόσοψη",
     "facadeStuccoDesc": "Λευκός σοβάς",
     "entryDoors": "Πόρτες εισόδου",
@@ -1637,6 +1655,8 @@ export const prostoHouseTranslations = {
     "noInteriorAddons": "Χωρίς εξτρά εσωτερικού",
     "noTechnologies": "Χωρίς τεχνολογίες",
     "configuratorLabel": "Διαμορφωτής",
-    "includedInPrice": "Συμπεριλαμβάνεται"
+    "includedInPrice": "Συμπεριλαμβάνεται",
+    "sendQuoteForAmount": "Αποστολή προσφοράς για το ποσό των {amount} €",
+    "viewShowcase": "Προβολή δείγματος"
   }
 };

@@ -1391,5 +1391,7 @@ export default {
   "a0Compliance": "A0 Štandard",
   "a0ComplianceDesc": "Konfigurátor vás sám navedie na výbavu spĺňajúcu stavebné normy A0.",
   "customOptions": "Široká voľba",
-  "customOptionsDesc": "Od farby okien cez typy fasády až po kľúčové inštalácie a základy."
+  "customOptionsDesc": "Od farby okien cez typy fasády až po kľúčové inštalácie a základy.",
+  "viewShowcase": "Pozrieť ukážku",
+  "consultWithKexo": "Konzultovať s Kexom"
 };
