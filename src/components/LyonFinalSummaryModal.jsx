@@ -483,10 +483,10 @@ export default function LyonFinalSummaryModal({
                     />
                     <div className="absolute top-2 left-2">
                       <Badge className={`${fasada === "omietka" ? "bg-orange-500" : "bg-amber-600"} text-white text-xs`}>
-                        {fasada === "omietka" ? "Šúchaná fasáda" : 
-                         fasada === "drevo_smrek" ? "Drevený obklad" :
-                         fasada === "smrekovec" ? "Smrekovec" :
-                         fasada === "falcovane" ? "Falcované panely" : "Thermowood"}
+                        {fasada === "omietka" ? (t('scratchedPlaster') || t('summaryPlaster') || "Šúchaná fasáda") : 
+                         fasada === "drevo_smrek" ? (t('summarySpruce') || "Drevený obklad") :
+                         fasada === "smrekovec" ? (t('summaryLarch') || "Smrekovec") :
+                         fasada === "falcovane" ? (t('summaryFoldedPanels') || "Falcované panely") : (t('summaryThermowood') || "Thermowood")}
                       </Badge>
                     </div>
                   </div>
