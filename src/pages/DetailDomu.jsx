@@ -818,6 +818,69 @@ export default function DetailDomu() {
               return <YoutubePlayer videoId={videoId} title={dom.nazov} />;
             })()}
 
+
+            {/* Uvádzací Banner pre Konfigurátor */}
+            {(isProstoHouse || isTicabhouse) && (
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+                className="mt-16 mb-12 relative rounded-3xl overflow-hidden border border-[#C5A880]/30 bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 p-6 sm:p-10 md:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)] text-white"
+              >
+                {/* Background glow lines */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-red-500/10 rounded-full blur-[100px] pointer-events-none" />
+                <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#C5A880]/10 rounded-full blur-[100px] pointer-events-none" />
+
+                <div className="relative z-10 flex flex-col items-center text-center max-w-3xl mx-auto">
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#C5A880]/10 border border-[#C5A880]/20 text-[#C5A880] text-xs font-bold uppercase tracking-widest mb-6 animate-pulse">
+                    <Settings className="w-4 h-4 animate-[spin_8s_linear_infinite]" />
+                    {t('interactiveConfigurator') || 'Interaktívny konfigurátor'}
+                  </div>
+
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4 bg-gradient-to-r from-white via-slate-200 to-[#C5A880] bg-clip-text text-transparent">
+                    {t('configuratorTitle') || `Prispôsobte si ${dom.nazov}`}
+                  </h2>
+
+                  <p className="text-slate-300 text-sm md:text-base leading-relaxed mb-8 max-w-2xl">
+                    {t('configuratorSubtitle') || 'Zostavte si svoj domov snov presne podľa vašich predstáv. Zvoľte si účel stavby, hrúbku zateplenia, typ fasády a technológie. Cenu a špecifikáciu prepočítame transparentne v reálnom čase.'}
+                  </p>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full text-left pt-6 border-t border-white/10">
+                    <div className="flex gap-3 items-start">
+                      <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-[#C5A880] flex-shrink-0">
+                        <CheckCircle className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-sm text-white mb-1">{t('transparentPricing') || 'Jasné ceny'}</h4>
+                        <p className="text-xs text-slate-400">{t('transparentPricingDesc') || 'Každá možnosť má presne vyčíslenú cenu bez skrytých poplatkov.'}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-3 items-start">
+                      <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-blue-400 flex-shrink-0">
+                        <Zap className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-sm text-white mb-1">{t('a0Compliance') || 'A0 Štandard'}</h4>
+                        <p className="text-xs text-slate-400">{t('a0ComplianceDesc') || 'Konfigurátor vás sám navedie na výbavu spĺňajúcu stavebné normy A0.'}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-3 items-start">
+                      <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-emerald-400 flex-shrink-0">
+                        <Hammer className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-sm text-white mb-1">{t('customOptions') || 'Široká voľba'}</h4>
+                        <p className="text-xs text-slate-400">{t('customOptionsDesc') || 'Od farby okien cez typy fasády až po kľúčové inštalácie a základy.'}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
             {/* Konfigurátor pre Prosto House PH-001 */}
             {isProstoHouse && dom.prosto_house_kod === "PH-001" && (
               <KonfiguratorPH001 dom={dom} isAdmin={isAdmin} />
