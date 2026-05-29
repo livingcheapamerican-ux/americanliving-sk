@@ -1219,5 +1219,14 @@ export default {
   "summaryFoundationSlabShort": "tábla",
   "summaryInPriceShort": "árban",
   "ticabPremiumStandardTitle": "Prémium faház alapáron",
-  "ticabPremiumStandardDesc": "A Ticab House házakat standardként prémium faházként kínálják, minőségi fafelülettel a homlokzaton és a belső térben. Ez a luxus fa standard már az alapárban benne van. Csak a standard változtatásaiért kell felárat fizetnie (pl. ha fát szeretne gipszkartonra cserélni)."
+  "ticabPremiumStandardDesc": "A Ticab House házakat standardként prémium faházként kínálják, minőségi fafelülettel a homlokzaton és a belső térben. Ez a luxus fa standard már az alapárban benne van. Csak a standard változtatásaiért kell felárat fizetnie (pl. ha fát szeretne gipszkartonra cserélni).",
+  "interactiveConfigurator": "Interaktív konfigurátor",
+  "configuratorTitle": "Személyre szabhatja {name} házát",
+  "configuratorSubtitle": "Építse fel álmai otthonát pontosan az Ön elképzelései szerint. Válassza ki az épület célját, a szigetelés vastagságát, a homlokzat típusát és a technológiákat. Az árat és a specifikációt átláthatóan, valós időben számoljuk ki.",
+  "transparentPricing": "Világos árak",
+  "transparentPricingDesc": "Minden opció pontosan kiszámított árral rendelkezik, rejtett költségek nélkül.",
+  "a0Compliance": "A0 szabvány",
+  "a0ComplianceDesc": "A konfigurátor elvezeti Önt az A0-s építési szabványoknak megfelelő berendezésekhez.",
+  "customOptions": "Széles választék",
+  "customOptionsDesc": "Ablakszínektől a homlokzati típusokon át a kulcsfontosságú gépészetig és alapozásig."
 };

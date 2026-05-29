@@ -1382,5 +1382,14 @@ export default {
   "summaryFoundationSlabShort": "doska",
   "summaryInPriceShort": "v cene",
   "ticabPremiumStandardTitle": "Prémiový drevodom v základnej cene",
-  "ticabPremiumStandardDesc": "Domy Ticab House sú štandardne dodávané ako prémiové drevodomy s kvalitným dreveným obkladom fasády aj interiéru. Tento luxusný drevený štandard je už zahrnutý v základnej cene. Priplácate si výlučne iba za zmeny štandardu (napr. ak chcete vymeniť drevo za sadrokartón)."
+  "ticabPremiumStandardDesc": "Domy Ticab House sú štandardne dodávané ako prémiové drevodomy s kvalitným dreveným obkladom fasády aj interiéru. Tento luxusný drevený štandard je už zahrnutý v základnej cene. Priplácate si výlučne iba za zmeny štandardu (napr. ak chcete vymeniť drevo za sadrokartón).",
+  "interactiveConfigurator": "Interaktívny konfigurátor",
+  "configuratorTitle": "Prispôsobte si {name}",
+  "configuratorSubtitle": "Zostavte si svoj domov snov presne podľa vašich predstáv. Zvoľte si účel stavby, hrúbku zateplenia, typ fasády a technológie. Cenu a špecifikáciu prepočítame transparentne v reálnom čase.",
+  "transparentPricing": "Jasné ceny",
+  "transparentPricingDesc": "Každá možnosť má presne vyčíslenú cenu bez skrytých poplatkov.",
+  "a0Compliance": "A0 Štandard",
+  "a0ComplianceDesc": "Konfigurátor vás sám navedie na výbavu spĺňajúcu stavebné normy A0.",
+  "customOptions": "Široká voľba",
+  "customOptionsDesc": "Od farby okien cez typy fasády až po kľúčové inštalácie a základy."
 };

@@ -1191,5 +1191,14 @@ export default {
   "summaryFoundationSlabShort": "ploča",
   "summaryInPriceShort": "u cijeni",
   "ticabPremiumStandardTitle": "Premium drvena kuća po osnovnoj cijeni",
-  "ticabPremiumStandardDesc": "Kuće Ticab House standardno se isporučuju kao premium drvene kuće s kvalitetnom drvenom oblogom fasade i interijera. Ovaj luksuzni drveni standard već je uključen u osnovnu cijenu. Doplatu plaćate isključivo za promjene standarda (npr. ako želite zamijeniti drvo s gipsanom pločom)."
+  "ticabPremiumStandardDesc": "Kuće Ticab House standardno se isporučuju kao premium drvene kuće s kvalitetnom drvenom oblogom fasade i interijera. Ovaj luksuzni drveni standard već je uključen u osnovnu cijenu. Doplatu plaćate isključivo za promjene standarda (npr. ako želite zamijeniti drvo s gipsanom pločom).",
+  "interactiveConfigurator": "Interaktivni konfigurator",
+  "configuratorTitle": "Prilagodite svoj {name}",
+  "configuratorSubtitle": "Izgradite svoj dom iz snova baš po svojoj mjeri. Odaberite namjenu objekta, debljinu izolacije, tip fasade i tehnologije. Cijenu i specifikaciju obračunavamo transparentno u stvarnom vremenu.",
+  "transparentPricing": "Jasne cijene",
+  "transparentPricingDesc": "Svaka opcija ima precizno obračunatu cijenu bez skrivenih troškova.",
+  "a0Compliance": "A0 Standard",
+  "a0ComplianceDesc": "Konfigurator će vas sam voditi do opreme koja ispunjava građevinske standarde A0.",
+  "customOptions": "Širok izbor",
+  "customOptionsDesc": "Od boje prozora preko tipova fasade do ključnih instalacija i temelja."
 };

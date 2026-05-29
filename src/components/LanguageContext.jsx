@@ -117,8 +117,14 @@ export function LanguageProvider({ children }) {
     };
   }, [language]);
 
-  const t = (key) => {
-    return activeTranslations[language]?.[key] || activeTranslations['sk']?.[key] || key;
+  const t = (key, params = {}) => {
+    let text = activeTranslations[language]?.[key] || activeTranslations['sk']?.[key] || key;
+    if (typeof text === 'string') {
+      Object.keys(params).forEach(pKey => {
+        text = text.replace(new RegExp(`{${pKey}}`, 'g'), params[pKey]);
+      });
+    }
+    return text;
   };
 
   return (

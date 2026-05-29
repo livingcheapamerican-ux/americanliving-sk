@@ -1265,5 +1265,14 @@ export default {
   "summaryFoundationSlabShort": "dalle",
   "summaryInPriceShort": "dans le prix",
   "ticabPremiumStandardTitle": "Maison en bois premium au prix de base",
-  "ticabPremiumStandardDesc": "Les maisons Ticab House sont livrées en standard comme maisons en bois premium avec un revêtement en bois de qualité pour la façade et l'intérieur. Ce standard de bois luxueux est déjà inclus dans le prix de base. Vous ne payez que pour les modifications de standard (par exemple, si vous souhaitez échanger le bois contre du placoplâtre)."
+  "ticabPremiumStandardDesc": "Les maisons Ticab House sont livrées en standard comme maisons en bois premium avec un revêtement en bois de qualité pour la façade et l'intérieur. Ce standard de bois luxueux est déjà inclus dans le prix de base. Vous ne payez que pour les modifications de standard (par exemple, si vous souhaitez échanger le bois contre du placoplâtre).",
+  "interactiveConfigurator": "Configurateur interactif",
+  "configuratorTitle": "Personnalisez votre {name}",
+  "configuratorSubtitle": "Construisez la maison de vos rêves exactement comme vous le souhaitez. Choisissez l'usage du bâtiment, l'épaisseur de l'isolation, le type de façade et les technologies. Nous calculons le prix et les spécifications de manière transparente en temps réel.",
+  "transparentPricing": "Prix transparents",
+  "transparentPricingDesc": "Chaque option a un prix calculé avec précision, sans frais cachés.",
+  "a0Compliance": "Norme A0",
+  "a0ComplianceDesc": "Le configurateur vous guidera vers les équipements répondant aux normes de construction A0.",
+  "customOptions": "Large choix",
+  "customOptionsDesc": "De la couleur des fenêtres aux types de façades, en passant par les installations clés et les fondations."
 };

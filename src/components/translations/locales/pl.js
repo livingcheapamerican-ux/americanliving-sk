@@ -1192,5 +1192,14 @@ export default {
   "summaryFoundationSlabShort": "płyta",
   "summaryInPriceShort": "w cenie",
   "ticabPremiumStandardTitle": "Drewniany dom premium w cenie podstawowej",
-  "ticabPremiumStandardDesc": "Domy Ticab House są standardowo dostarczane jako drewniane domy premium z wysokiej jakości drewnianym obłożeniem zarówno elewacji, jak i wnętrza. Ten luksusowy drewniany standard jest już wliczony w cenę podstawową. Płacisz tylko za zmiany w standardzie (np. jeśli chcesz wymienić drewno na płytę karton-gips)."
+  "ticabPremiumStandardDesc": "Domy Ticab House są standardowo dostarczane jako drewniane domy premium z wysokiej jakości drewnianym obłożeniem zarówno elewacji, jak i wnętrza. Ten luksusowy drewniany standard jest już wliczony w cenę podstawową. Płacisz tylko za zmiany w standardzie (np. jeśli chcesz wymienić drewno na płytę karton-gips).",
+  "interactiveConfigurator": "Interaktywny konfigurator",
+  "configuratorTitle": "Dostosuj swój {name}",
+  "configuratorSubtitle": "Zbuduj swój wymarzony dom dokładnie według swoich upodobań. Wybierz przeznaczenie budynku, grubość izolacji, typ elewacji i technologie. Cenę i specyfikację obliczamy w przejrzysty sposób w czasie rzeczywistym.",
+  "transparentPricing": "Jasne ceny",
+  "transparentPricingDesc": "Każda opcja ma precyzyjnie skalkulowaną cenę bez ukrytych opłat.",
+  "a0Compliance": "Standard A0",
+  "a0ComplianceDesc": "Konfigurator sam poprowadzi Cię do wyposażenia spełniającego normy budowlane A0.",
+  "customOptions": "Szeroki wybór",
+  "customOptionsDesc": "Od koloru okien przez typy elewacji po kluczowe instalacje i fundamenty."
 };

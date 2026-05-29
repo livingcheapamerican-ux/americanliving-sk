@@ -1266,5 +1266,14 @@ export default {
   "summaryFoundationSlabShort": "Platte",
   "summaryInPriceShort": "im Preis",
   "ticabPremiumStandardTitle": "Premium-Holzhaus zum Standardpreis",
-  "ticabPremiumStandardDesc": "Die Häuser von Ticab House werden standardmäßig als Premium-Holzhäuser mit hochwertiger Holzverkleidung für Fassade und Innenraum geliefert. Dieser luxuriöse Holzstandard ist bereits im Standardpreis enthalten. Sie zahlen ausschließlich für Änderungen am Standard (z. B. wenn Sie Holz gegen Gipskarton austauschen möchten)."
+  "ticabPremiumStandardDesc": "Die Häuser von Ticab House werden standardmäßig als Premium-Holzhäuser mit hochwertiger Holzverkleidung für Fassade und Innenraum geliefert. Dieser luxuriöse Holzstandard ist bereits im Standardpreis enthalten. Sie zahlen ausschließlich für Änderungen am Standard (z. B. wenn Sie Holz gegen Gipskarton austauschen möchten).",
+  "interactiveConfigurator": "Interaktiver Konfigurator",
+  "configuratorTitle": "Personalisieren Sie Ihr {name}",
+  "configuratorSubtitle": "Bauen Sie Ihr Traumhaus genau nach Ihren Wünschen. Wählen Sie den Zweck des Gebäudes, die Dämmstärke, den Fassadentyp und die Technologien. Wir berechnen den Preis und die Spezifikationen transparent in Echtzeit.",
+  "transparentPricing": "Transparente Preise",
+  "transparentPricingDesc": "Jede Option hat einen genau kalkulierten Preis ohne versteckte Gebühren.",
+  "a0Compliance": "A0 Standard",
+  "a0ComplianceDesc": "Der Konfigurator führt Sie zu Ausstattungen, die den Baustandards A0 entsprechen.",
+  "customOptions": "Breite Auswahl",
+  "customOptionsDesc": "Von der Fensterfarbe über Fassadentypen bis hin zu Schlüsselinstallationen und Fundamenten."
 };

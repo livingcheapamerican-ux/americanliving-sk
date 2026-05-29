@@ -1227,5 +1227,14 @@ export default {
   "summaryFoundationSlabShort": "board",
   "summaryInPriceShort": "included",
   "ticabPremiumStandardTitle": "Premium wooden house at base price",
-  "ticabPremiumStandardDesc": "Ticab House homes are standardly delivered as premium wooden houses with high-quality wooden cladding for both the façade and interior. This luxurious wooden standard is already included in the base price. You only pay extra for changes to the standard (e.g., if you want to replace wood with drywall)."
+  "ticabPremiumStandardDesc": "Ticab House homes are standardly delivered as premium wooden houses with high-quality wooden cladding for both the façade and interior. This luxurious wooden standard is already included in the base price. You only pay extra for changes to the standard (e.g., if you want to replace wood with drywall).",
+  "interactiveConfigurator": "Interactive Configurator",
+  "configuratorTitle": "Customize your {name}",
+  "configuratorSubtitle": "Build your dream home exactly to your liking. Choose the purpose of the building, insulation thickness, facade type and technologies. We calculate the price and specification transparently in real time.",
+  "transparentPricing": "Transparent pricing",
+  "transparentPricingDesc": "Each option has a precisely calculated price with no hidden fees.",
+  "a0Compliance": "A0 Standard",
+  "a0ComplianceDesc": "The configurator will guide you to equipment that meets building standards A0.",
+  "customOptions": "Wide choice",
+  "customOptionsDesc": "From window color through facade types to key installations and foundations."
 };

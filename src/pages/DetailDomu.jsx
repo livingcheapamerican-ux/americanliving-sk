@@ -835,15 +835,15 @@ export default function DetailDomu() {
                 <div className="relative z-10 flex flex-col items-center text-center max-w-3xl mx-auto">
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#C5A880]/10 border border-[#C5A880]/20 text-[#C5A880] text-xs font-bold uppercase tracking-widest mb-6 animate-pulse">
                     <Settings className="w-4 h-4 animate-[spin_8s_linear_infinite]" />
-                    {t('interactiveConfigurator') || 'Interaktívny konfigurátor'}
+                    {t('interactiveConfigurator')}
                   </div>
 
                   <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4 bg-gradient-to-r from-white via-slate-200 to-[#C5A880] bg-clip-text text-transparent">
-                    {t('configuratorTitle') || `Prispôsobte si ${dom.nazov}`}
+                    {t('configuratorTitle', { name: dom.nazov })}
                   </h2>
 
                   <p className="text-slate-300 text-sm md:text-base leading-relaxed mb-8 max-w-2xl">
-                    {t('configuratorSubtitle') || 'Zostavte si svoj domov snov presne podľa vašich predstáv. Zvoľte si účel stavby, hrúbku zateplenia, typ fasády a technológie. Cenu a špecifikáciu prepočítame transparentne v reálnom čase.'}
+                    {t('configuratorSubtitle')}
                   </p>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full text-left pt-6 border-t border-white/10">
@@ -852,8 +852,8 @@ export default function DetailDomu() {
                         <CheckCircle className="w-5 h-5" />
                       </div>
                       <div>
-                        <h4 className="font-bold text-sm text-white mb-1">{t('transparentPricing') || 'Jasné ceny'}</h4>
-                        <p className="text-xs text-slate-400">{t('transparentPricingDesc') || 'Každá možnosť má presne vyčíslenú cenu bez skrytých poplatkov.'}</p>
+                        <h4 className="font-bold text-sm text-white mb-1">{t('transparentPricing')}</h4>
+                        <p className="text-xs text-slate-400">{t('transparentPricingDesc')}</p>
                       </div>
                     </div>
 
@@ -862,8 +862,8 @@ export default function DetailDomu() {
                         <Zap className="w-5 h-5" />
                       </div>
                       <div>
-                        <h4 className="font-bold text-sm text-white mb-1">{t('a0Compliance') || 'A0 Štandard'}</h4>
-                        <p className="text-xs text-slate-400">{t('a0ComplianceDesc') || 'Konfigurátor vás sám navedie na výbavu spĺňajúcu stavebné normy A0.'}</p>
+                        <h4 className="font-bold text-sm text-white mb-1">{t('a0Compliance')}</h4>
+                        <p className="text-xs text-slate-400">{t('a0ComplianceDesc')}</p>
                       </div>
                     </div>
 
@@ -872,8 +872,8 @@ export default function DetailDomu() {
                         <Hammer className="w-5 h-5" />
                       </div>
                       <div>
-                        <h4 className="font-bold text-sm text-white mb-1">{t('customOptions') || 'Široká voľba'}</h4>
-                        <p className="text-xs text-slate-400">{t('customOptionsDesc') || 'Od farby okien cez typy fasády až po kľúčové inštalácie a základy.'}</p>
+                        <h4 className="font-bold text-sm text-white mb-1">{t('customOptions')}</h4>
+                        <p className="text-xs text-slate-400">{t('customOptionsDesc')}</p>
                       </div>
                     </div>
                   </div>
