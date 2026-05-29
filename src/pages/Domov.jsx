@@ -406,14 +406,54 @@ export default function Domov() {
   const { data: domy = [] } = useQuery({
     queryKey: ['domy-popularne'],
     queryFn: async () => {
-      const all = await base44.entities.Dom.filter({ verejny: true }, 'poradie', 40);
-      // Sort by popular first, then by base price descending (most lucrative houses in the foreground)
-      const sorted = [...all].sort((a, b) => {
-        if (a.popularny && !b.popularny) return -1;
-        if (!a.popularny && b.popularny) return 1;
-        return (b.zakladna_cena || 0) - (a.zakladna_cena || 0);
+      const all = await base44.entities.Dom.filter({ verejny: true }, 'poradie', 100);
+      
+      const prosto = [];
+      const ticab = [];
+      
+      all.forEach(d => {
+        const m = (d.vyrobca || "").toLowerCase();
+        if (m.includes("ticab")) {
+          ticab.push(d);
+        } else {
+          prosto.push(d);
+        }
       });
-      return sorted.slice(0, 6);
+      
+      const sortByPopularAndPrice = (list) => {
+        return [...list].sort((a, b) => {
+          if (a.popularny && !b.popularny) return -1;
+          if (!a.popularny && b.popularny) return 1;
+          return (b.zakladna_cena || 0) - (a.zakladna_cena || 0);
+        });
+      };
+      
+      const sortedProsto = sortByPopularAndPrice(prosto);
+      const sortedTicab = sortByPopularAndPrice(ticab);
+      
+      const result = [];
+      const targetSizePerGroup = 3;
+      
+      for (let i = 0; i < targetSizePerGroup; i++) {
+        if (i < sortedTicab.length) result.push(sortedTicab[i]);
+        if (i < sortedProsto.length) result.push(sortedProsto[i]);
+      }
+      
+      // Pad to 6 total if one of the manufacturers has fewer than 3 public houses
+      if (result.length < 6) {
+        let remainingTicabIndex = targetSizePerGroup;
+        let remainingProstoIndex = targetSizePerGroup;
+        while (result.length < 6 && (remainingTicabIndex < sortedTicab.length || remainingProstoIndex < sortedProsto.length)) {
+          if (remainingTicabIndex < sortedTicab.length) {
+            result.push(sortedTicab[remainingTicabIndex++]);
+          }
+          if (result.length < 6 && remainingProstoIndex < sortedProsto.length) {
+            result.push(sortedProsto[remainingProstoIndex++]);
+          }
+        }
+      }
+      
+      return result;
     },
   });
 
