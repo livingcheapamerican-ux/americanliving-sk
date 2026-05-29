@@ -28,10 +28,10 @@ const ConfiguratorRow = ({
   const { t } = useLanguage();
   
   return (
-    <div className="flex flex-col lg:flex-row lg:items-center justify-between p-5 md:p-6 rounded-3xl border border-slate-200/60 dark:border-white/5 bg-white/40 dark:bg-white/[0.01] hover:border-slate-300 dark:hover:border-white/10 transition-all duration-300 gap-6 backdrop-blur-md">
+    <div className="flex flex-col xl:flex-row xl:items-center justify-between p-5 md:p-6 rounded-3xl border border-slate-200/60 dark:border-white/5 bg-white/40 dark:bg-white/[0.01] hover:border-slate-350 dark:hover:border-white/10 transition-all duration-300 gap-6 backdrop-blur-md">
       
       {/* ĽAVÁ STRANA: Nadpis, Popis a ukážka */}
-      <div className="flex items-start gap-4 flex-1 min-w-0">
+      <div className="flex items-start gap-4 flex-1 min-w-0 xl:min-w-[280px]">
         {Icon && (
           <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center flex-shrink-0 bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400">
             <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -62,7 +62,7 @@ const ConfiguratorRow = ({
       </div>
 
       {/* PRAVÁ STRANA: Horizontálny prepínač (Segmented pill selector) */}
-      <div className="flex-shrink-0 w-full lg:w-auto">
+      <div className="flex-shrink-0 w-full xl:w-auto">
         <div className="flex flex-col sm:flex-row gap-2 bg-slate-100/80 dark:bg-slate-900/60 p-1.5 rounded-2xl border border-slate-200/50 dark:border-white/5 w-full sm:w-fit overflow-x-auto sm:overflow-visible no-scrollbar">
           {options.map((opt) => {
             const isSelected = selectedValue === opt.value;
