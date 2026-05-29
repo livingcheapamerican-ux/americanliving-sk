@@ -1051,7 +1051,7 @@ export default {
   "ticabPortfolioItem3Desc": "Minimalizm i mobilność. Komfort bez zbędnych rzeczy na 19 m².",
   "ticabPortfolioItem4Title": "Biznes Projekty",
   "ticabPortfolioItem4Desc": "Modułowe biura, kawiarnie oraz komercyjne SPA i sauny.",
-  "prostoHeroDesc": "V dnešnej dynamickej dobe, keď čas a energetická efektívnosť zohrávajú kľúčovú úlohu, prinášame inovatívne riešenia bývania priamo od renomovaného výrobcu. Garantujeme kvalitu, výhodnú cenu bez navýšenia a plnú kompatibilitu so slovenskou legislatívou.",
+  "prostoHeroDesc": "W dzisiejszych dynamicznych czasach, gdy czas i efektywność energetyczna odgrywają kluczową rolę, oferujemy innowacyjne rozwiązania mieszkaniowe prosto od renomowanego producenta. Gwarantujemy jakość, korzystną cenę bez podwyżki i pełną kompatybilność z polskim prawodawstwem.",
   "prostoBenefit1Title": "Szybkość Budowy",
   "prostoBenefit1Desc": "Montaż surowego budynku trwa średnio tylko 3 do 4 tygodni dzięki prefabrykacji.",
   "prostoBenefit2Title": "Sprawdzone Materiały",
