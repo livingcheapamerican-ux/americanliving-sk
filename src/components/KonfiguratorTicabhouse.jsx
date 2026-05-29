@@ -60,9 +60,9 @@ const ConfiguratorRow = ({
         </div>
       </div>
 
-      {/* DOLNÁ STRANA: Horizontálny prepínač (Segmented pill selector) - na celú šírku */}
+      {/* DOLNÁ STRANA: Prepínač (Segmented pill selector) - na celú šírku s vertikálnym vnútorným rozložením tlačidiel pre texty a lepším kontrastom */}
       <div className="w-full mt-2">
-        <div className="flex flex-col sm:flex-row gap-2 bg-slate-100/80 dark:bg-slate-900/60 p-1.5 rounded-2xl border border-slate-200/50 dark:border-white/5 w-full overflow-x-auto sm:overflow-visible no-scrollbar">
+        <div className="flex flex-col sm:flex-row gap-2 bg-slate-150/90 dark:bg-slate-950/60 p-1.5 rounded-2xl border border-slate-200/50 dark:border-white/5 w-full overflow-x-auto sm:overflow-visible no-scrollbar">
           {options.map((opt) => {
             const isSelected = selectedValue === opt.value;
             const isStandard = opt.price === 0;
@@ -71,10 +71,10 @@ const ConfiguratorRow = ({
               <button
                 key={opt.value}
                 onClick={() => onChange(opt.value)}
-                className={`relative flex flex-col sm:flex-row items-center justify-center px-4 py-3 sm:py-2.5 rounded-xl text-center text-xs font-bold transition-all duration-300 whitespace-nowrap gap-1.5 sm:gap-2 flex-1 cursor-pointer border ${
+                className={`relative flex flex-col items-center justify-center p-3 rounded-xl text-center transition-all duration-300 gap-1.5 flex-1 min-w-[120px] cursor-pointer border ${
                   isSelected
                     ? 'bg-white dark:bg-slate-800 text-[#C5A880] dark:text-[#C5A880] border-slate-200 dark:border-slate-700 shadow-md scale-[1.01]'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border-transparent hover:bg-white/30 dark:hover:bg-white/5'
+                    : 'bg-transparent text-slate-800 dark:text-slate-200 hover:text-slate-950 dark:hover:text-white border-transparent hover:bg-white/40 dark:hover:bg-white/5'
                 }`}
               >
                 {/* A0 badge in option */}
@@ -82,18 +82,18 @@ const ConfiguratorRow = ({
                   <span className={`inline-flex items-center text-[9px] px-1.5 py-0.5 rounded-md font-bold uppercase tracking-wider ${
                     isSelected 
                       ? 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20 animate-pulse' 
-                      : 'bg-slate-200 dark:bg-slate-800/80 text-slate-500 dark:text-slate-400'
+                      : 'bg-slate-200 dark:bg-slate-850 text-slate-500 dark:text-slate-400'
                   }`}>
                     ★ A0
                   </span>
                 )}
                 
-                <span className="text-xs tracking-wide">{opt.label}</span>
+                <span className="text-xs font-bold leading-tight tracking-wide break-words w-full">{opt.label}</span>
                 
                 {/* Admin Mode Price Edit */}
                 {isAdmin && onPriceChange && opt.priceKey ? (
                   <div 
-                    className="flex items-center gap-0.5 bg-slate-950/80 border border-red-500/30 rounded px-1 py-0.5 font-mono text-[10px]"
+                    className="flex items-center gap-0.5 bg-slate-950/80 border border-red-500/30 rounded px-1 py-0.5 font-mono text-[10px] mt-1"
                     onClick={e => e.stopPropagation()}
                   >
                     <span>€</span>
@@ -105,11 +105,11 @@ const ConfiguratorRow = ({
                     />
                   </div>
                 ) : (
-                  <span className={`text-[10px] font-black tracking-wider ${
+                  <span className={`text-[10px] font-black tracking-wider mt-0.5 ${
                     isSelected 
                       ? 'text-[#C5A880]' 
                       : isStandard 
-                        ? 'text-emerald-600 dark:text-emerald-400' 
+                        ? 'text-emerald-600 dark:text-emerald-400 font-bold' 
                         : 'text-slate-500 dark:text-slate-400'
                   }`}>
                     {isStandard ? (t('includedInPriceShort') || 'V cene') : `+${opt.price.toLocaleString()} €`}
