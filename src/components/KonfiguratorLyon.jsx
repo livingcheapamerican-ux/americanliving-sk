@@ -8,11 +8,123 @@ import { Badge } from "@/components/ui/badge";
 import { 
   Sparkles, Home, Send, CheckCircle, Lock, Eye, EyeOff,
   CheckSquare, Check, X, Thermometer, Zap, Layout, Hammer, 
-  Paintbrush, DoorOpen, Wrench, Layers, Droplet, Flame
+  Paintbrush, DoorOpen, Wrench, Layers, Droplet, Flame,
+  ChevronLeft, ChevronRight, Wind
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
-// ── Glassmorphism Komponenty ──────────────────────────────────────────────
+// ── Glassmorphism Tabuľkový Riadkový Selektor (ConfiguratorRow) ──────────────────────────────────────────────
+const ConfiguratorRow = ({ 
+  label, 
+  description, 
+  options, 
+  selectedValue, 
+  onChange, 
+  isAdmin, 
+  onPriceChange, 
+  onShowGallery, 
+  icon: Icon 
+}) => {
+  const { t } = useLanguage();
+  
+  return (
+    <div className="flex flex-col lg:flex-row lg:items-center justify-between p-5 md:p-6 rounded-3xl border border-slate-200/60 dark:border-white/5 bg-white/40 dark:bg-white/[0.01] hover:border-slate-300 dark:hover:border-white/10 transition-all duration-300 gap-6 backdrop-blur-md">
+      
+      {/* ĽAVÁ STRANA: Nadpis, Popis a ukážka */}
+      <div className="flex items-start gap-4 flex-1 min-w-0">
+        {Icon && (
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center flex-shrink-0 bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400">
+            <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
+          </div>
+        )}
+        <div className="flex-1 min-w-0">
+          <h4 className="font-black text-slate-900 dark:text-white text-base sm:text-lg mb-1 leading-snug">
+            {label}
+          </h4>
+          {description && (
+            <p className="text-slate-550 dark:text-slate-405 text-xs sm:text-sm leading-relaxed max-w-xl">
+              {description}
+            </p>
+          )}
+          {onShowGallery && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onShowGallery();
+              }}
+              className="mt-2 text-[11px] sm:text-xs font-bold text-[#C5A880] hover:text-[#bfa177] flex items-center gap-1.5 bg-[#C5A880]/10 hover:bg-[#C5A880]/15 px-2.5 py-1.5 rounded-lg border border-[#C5A880]/20 transition-all w-fit cursor-pointer"
+            >
+              <Eye className="w-3.5 h-3.5" />
+              <span>Pozrieť ukážku</span>
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* PRAVÁ STRANA: Horizontálny prepínač (Segmented pill selector) */}
+      <div className="flex-shrink-0 w-full lg:w-auto">
+        <div className="flex flex-col sm:flex-row gap-2 bg-slate-100/80 dark:bg-slate-900/60 p-1.5 rounded-2xl border border-slate-200/50 dark:border-white/5 w-full sm:w-fit overflow-x-auto sm:overflow-visible no-scrollbar">
+          {options.map((opt) => {
+            const isSelected = selectedValue === opt.value;
+            const isStandard = opt.price === 0;
+            
+            return (
+              <button
+                key={opt.value}
+                onClick={() => onChange(opt.value)}
+                className={`relative flex flex-col sm:flex-row items-center justify-center px-4 py-3 sm:py-2.5 rounded-xl text-center text-xs font-bold transition-all duration-300 whitespace-nowrap gap-1.5 sm:gap-2 flex-1 sm:flex-initial cursor-pointer border ${
+                  isSelected
+                    ? 'bg-white dark:bg-slate-800 text-[#C5A880] dark:text-[#C5A880] border-slate-200 dark:border-slate-700 shadow-md scale-[1.01]'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border-transparent hover:bg-white/30 dark:hover:bg-white/5'
+                }`}
+              >
+                {/* A0 badge in option */}
+                {opt.isA0 && (
+                  <span className={`inline-flex items-center text-[9px] px-1.5 py-0.5 rounded-md font-bold uppercase tracking-wider ${
+                    isSelected 
+                      ? 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20 animate-pulse' 
+                      : 'bg-slate-200 dark:bg-slate-800/80 text-slate-500 dark:text-slate-400'
+                  }`}>
+                    ★ A0
+                  </span>
+                )}
+                
+                <span className="text-xs tracking-wide">{opt.label}</span>
+                
+                {/* Admin Mode Price Edit */}
+                {isAdmin && onPriceChange && opt.priceKey ? (
+                  <div 
+                    className="flex items-center gap-0.5 bg-slate-950/80 border border-red-500/30 rounded px-1 py-0.5 font-mono text-[10px]"
+                    onClick={e => e.stopPropagation()}
+                  >
+                    <span>€</span>
+                    <input 
+                      type="number" 
+                      value={opt.price} 
+                      onChange={e => onPriceChange(opt.priceKey, Number(e.target.value))} 
+                      className="w-12 text-[10px] font-bold text-red-400 bg-transparent outline-none text-center" 
+                    />
+                  </div>
+                ) : (
+                  <span className={`text-[10px] font-black tracking-wider ${
+                    isSelected 
+                      ? 'text-[#C5A880]' 
+                      : isStandard 
+                        ? 'text-emerald-600 dark:text-emerald-400' 
+                        : 'text-slate-500 dark:text-slate-400'
+                  }`}>
+                    {isStandard ? (t('includedInPriceShort') || 'V cene') : `+${opt.price.toLocaleString()} €`}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmin, onPriceChange, icon: Icon }) => {
   const { t } = useLanguage();
   const isStandard = price === 0;
@@ -21,26 +133,25 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
     onClick={onClick} 
     className={`relative flex flex-col p-5 rounded-3xl border-2 transition-all duration-500 w-full text-left active:scale-[0.98] gap-2 overflow-hidden group backdrop-blur-md ${
       selected 
-        ? 'border-red-500 bg-red-500/10 dark:bg-gradient-to-br dark:from-red-500/10 dark:to-red-900/10 shadow-[0_0_30px_rgba(239,68,68,0.2)] scale-[1.02]' 
+        ? 'border-[#C5A880] bg-[#C5A880]/5 dark:bg-[#C5A880]/10 shadow-[0_0_25px_rgba(197,168,128,0.15)] scale-[1.02]' 
         : isStandard 
-          ? 'border-emerald-500/30 bg-emerald-500/5 hover:border-emerald-500/50 hover:bg-emerald-500/10' 
+          ? 'border-emerald-500/20 bg-emerald-500/5 hover:border-emerald-500/40 hover:bg-emerald-500/10' 
           : isA0 
-            ? 'border-blue-500/20 dark:border-blue-500/60 bg-blue-50/50 dark:bg-blue-500/10 hover:border-blue-400 hover:bg-blue-500/20 shadow-[0_0_20px_rgba(59,130,246,0.15)] dark:shadow-[0_0_20px_rgba(59,130,246,0.25)]' 
-            : 'border-slate-200 dark:border-white/5 bg-white dark:bg-white/[0.02] hover:border-slate-350 dark:hover:border-white/20 hover:bg-slate-50 dark:hover:bg-white/[0.05]'
+            ? 'border-blue-500/20 dark:border-blue-500/40 bg-blue-500/5 hover:border-blue-400 hover:bg-blue-500/10 shadow-[0_0_15px_rgba(59,130,246,0.05)]' 
+            : 'border-slate-200/80 dark:border-white/5 bg-white/40 dark:bg-white/[0.01] hover:border-slate-350 dark:hover:border-white/20 hover:bg-slate-50/80 dark:hover:bg-white/[0.04]'
     }`}
   >
-    {selected && <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-orange-500 opacity-80" />}
+    {selected && <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#C5A880] to-amber-500 opacity-80" />}
     {isA0 && !selected && <div className="absolute top-0 left-0 w-full h-1 bg-blue-500 opacity-60 animate-pulse" />}
     
-    {/* Horná časť: Ikona, Názov a Checkbox */}
     <div className="flex items-start justify-between gap-4 w-full relative z-10">
       <div className="flex items-start gap-3 flex-1 min-w-0">
         {Icon && (
           <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all duration-500 ${
             selected 
-              ? 'bg-gradient-to-br from-red-500 to-red-700 text-white shadow-xl shadow-red-500/30 rotate-3' 
+              ? 'bg-gradient-to-br from-[#C5A880] to-[#bfa177] text-white shadow-xl shadow-[#C5A880]/30 rotate-3' 
               : isA0 
-                ? 'bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 group-hover:scale-110 shadow-lg shadow-blue-500/10 dark:shadow-blue-500/20' 
+                ? 'bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 group-hover:scale-110 shadow-lg shadow-blue-500/10' 
                 : 'bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 group-hover:scale-110'
           }`}>
             <Icon className={`w-6 h-6 sm:w-7 sm:h-7 transition-transform duration-500 ${selected || isA0 ? 'scale-110' : 'scale-100'}`} />
@@ -49,13 +160,13 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
         <div className="flex-1 mt-1">
           <div className="flex flex-col mb-1.5">
             {isA0 && (
-              <span className="mb-2 inline-flex items-center self-start bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-500/40 text-[10px] sm:text-[11px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider shadow-[0_0_15px_rgba(59,130,246,0.15)] dark:shadow-[0_0_15px_rgba(59,130,246,0.3)]">
-                ⚠️ {t('a0Required') || 'Povinné pre Rodinný dom (A0)'}
+              <span className="mb-2 inline-flex items-center self-start bg-amber-500/10 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-500/20 text-[10px] sm:text-[11px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                ★ {t('a0Required') || 'Povinné pre rodinný dom A0'}
               </span>
             )}
             <span className={`font-black text-base sm:text-lg transition-colors duration-300 ${
               selected 
-                ? 'text-red-955 dark:text-white' 
+                ? 'text-[#C5A880] dark:text-[#C5A880]' 
                 : isA0 
                   ? 'text-blue-900 dark:text-blue-100' 
                   : 'text-slate-800 dark:text-slate-200'
@@ -67,16 +178,15 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
       
       <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all duration-500 mt-1 ${
         selected 
-          ? 'border-red-500 bg-red-500 scale-110 shadow-lg shadow-red-500/40' 
+          ? 'border-[#C5A880] bg-[#C5A880] scale-110 shadow-lg shadow-[#C5A880]/40' 
           : isA0 
-            ? 'border-blue-400/50 bg-blue-50 dark:bg-blue-955/50 shadow-[0_0_10px_rgba(59,130,246,0.2)]' 
-            : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950/50'
+            ? 'border-blue-400/50 bg-blue-50 dark:bg-blue-900/50 shadow-[0_0_10px_rgba(59,130,246,0.2)]' 
+            : 'border-slate-350 dark:border-slate-700 bg-white dark:bg-slate-950/50'
       }`}>
         {selected && <Check className="w-3 h-3 sm:w-4 sm:h-4 text-white" />}
       </div>
     </div>
     
-    {/* Spodná časť: Cena */}
     <div className={`w-full flex justify-end relative z-10 pt-2 mt-2 border-t ${
       isA0 && !selected ? 'border-blue-500/20' : 'border-slate-200 dark:border-white/5'
     }`}>
@@ -89,18 +199,18 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
         <div className="text-right flex flex-col items-end justify-center">
           <span className={`block font-black transition-colors duration-300 ${
             selected 
-              ? 'text-base text-red-600 dark:text-red-400' 
+              ? 'text-base text-[#C5A880] dark:text-[#C5A880]' 
               : isStandard 
                 ? 'text-sm text-emerald-600 dark:text-emerald-400' 
                 : isA0 
                   ? 'text-base text-blue-600 dark:text-blue-300' 
-                  : 'text-base text-slate-600 dark:text-slate-400'
+                  : 'text-base text-slate-655 dark:text-slate-400'
           }`}>
             {isStandard ? (t('includedInPriceShort') || 'Základný štandard') : `+${price.toLocaleString()} €`}
           </span>
           {isStandard && (
             <span className={`block text-[10px] uppercase font-bold tracking-wider mt-0.5 ${
-              selected ? 'text-red-500/80' : 'text-emerald-650/80 dark:text-emerald-500/80'
+              selected ? 'text-[#C5A880]/80' : 'text-emerald-650/80 dark:text-emerald-500/80'
             }`}>
               ({t('noSurcharge') || 'Bez príplatku'})
             </span>
@@ -120,23 +230,23 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
     onClick={!disabled && !locked ? onChange : undefined} 
     className={`flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-2xl border-2 transition-all duration-500 w-full active:scale-[0.98] group overflow-hidden relative gap-4 ${
       locked 
-        ? 'border-blue-500/30 bg-blue-50/50 dark:bg-blue-500/10 cursor-not-allowed shadow-[0_0_20px_rgba(59,130,246,0.15)] dark:shadow-[0_0_20px_rgba(59,130,246,0.25)] backdrop-blur-md' 
+        ? 'border-blue-500/20 bg-blue-500/5 cursor-not-allowed shadow-[0_0_15px_rgba(59,130,246,0.05)] backdrop-blur-md' 
         : checked 
-          ? 'border-red-500 bg-red-500/5 dark:bg-gradient-to-r dark:from-red-500/10 dark:to-transparent shadow-[0_0_20px_rgba(239,68,68,0.1)] scale-[1.01] backdrop-blur-md' 
+          ? 'border-[#C5A880] bg-[#C5A880]/5 dark:bg-gradient-to-r dark:from-[#C5A880]/10 dark:to-transparent shadow-[0_0_20px_rgba(197,168,128,0.12)] scale-[1.01] backdrop-blur-md' 
           : disabled 
             ? 'border-slate-200 dark:border-white/5 bg-slate-100/50 dark:bg-slate-900/50 opacity-60 cursor-not-allowed' 
-            : 'border-slate-200 dark:border-white/5 bg-white dark:bg-white/[0.02] hover:border-slate-350 dark:hover:border-white/20 hover:bg-slate-50 dark:hover:bg-white/[0.05] backdrop-blur-sm'
+            : 'border-slate-200/80 dark:border-white/5 bg-white/40 dark:bg-white/[0.01] hover:border-slate-350 dark:hover:border-white/20 hover:bg-slate-50/80 dark:hover:bg-white/[0.04] backdrop-blur-sm'
     }`}
   >
-    {checked && !locked && <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500" />}
+    {checked && !locked && <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#C5A880]" />}
     {locked && <div className="absolute top-0 left-0 w-full h-1 bg-blue-500 opacity-60 animate-pulse" />}
     
     <div className="flex items-start sm:items-center gap-4 w-full relative z-10">
       <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors duration-500 ${
         locked 
-          ? 'bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 shadow-lg shadow-blue-500/10 dark:shadow-blue-500/20' 
+          ? 'bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 shadow-lg shadow-blue-500/10 shadow-blue-500/20' 
           : checked 
-            ? 'bg-gradient-to-br from-red-500 to-red-600 text-white shadow-lg shadow-red-500/20' 
+            ? 'bg-gradient-to-br from-[#C5A880] to-[#bfa177] text-white shadow-lg shadow-[#C5A880]/20' 
             : 'bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 group-hover:scale-110 transition-transform duration-300'
       }`}>
         {Icon ? <Icon className={`w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-500 ${checked || locked ? 'scale-110' : 'scale-100'}`} /> : (locked ? <Lock className="w-4 h-4 sm:w-5 sm:h-5" /> : <CheckSquare className="w-4 h-4 sm:w-5 sm:h-5" />)}
@@ -144,28 +254,28 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
       <div className="text-left flex-1 pr-4">
         <div className="flex flex-col mb-1.5">
           {locked && (
-            <span className="mb-2 inline-flex items-center self-start bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-500/40 text-[10px] sm:text-[11px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider shadow-[0_0_15px_rgba(59,130,246,0.15)] dark:shadow-[0_0_15px_rgba(59,130,246,0.3)]">
-              ⚠️ {t('a0Required') || 'Povinné pre Rodinný dom (A0)'}
+            <span className="mb-2 inline-flex items-center self-start bg-amber-500/10 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-500/20 text-[10px] sm:text-[11px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+              ★ {t('a0Required') || 'Povinné pre rodinný dom A0'}
             </span>
           )}
           <span className={`font-bold text-base sm:text-lg block transition-colors duration-300 ${
             locked 
               ? 'text-blue-900 dark:text-blue-100' 
               : checked 
-                ? 'text-red-955 dark:text-white' 
+                ? 'text-[#C5A880] dark:text-[#C5A880]' 
                 : 'text-slate-800 dark:text-slate-200'
           }`}>{label}</span>
         </div>
-        {description && <p className="text-xs sm:text-sm text-slate-655 dark:text-slate-400 leading-relaxed">{description}</p>}
+        {description && <p className="text-xs sm:text-sm text-slate-655 dark:text-slate-405 leading-relaxed">{description}</p>}
       </div>
       
       {/* Checkbox na mobile zobrazený hore vedľa nadpisu, na desktope skrytý */}
       <div className={`sm:hidden w-6 h-6 mt-1 rounded border-2 flex items-center justify-center transition-all duration-300 flex-shrink-0 ${
         locked 
-          ? 'border-blue-400/50 bg-blue-50 dark:bg-blue-950/50 shadow-[0_0_10px_rgba(59,130,246,0.2)]' 
+          ? 'border-blue-400/50 bg-blue-50 dark:bg-blue-955/50 shadow-[0_0_10px_rgba(59,130,246,0.2)]' 
           : checked 
-            ? 'border-red-500 bg-red-500 scale-110' 
-            : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950/50'
+            ? 'border-[#C5A880] bg-[#C5A880] scale-110' 
+            : 'border-slate-350 dark:border-slate-700 bg-white dark:bg-slate-950/50'
       }`}>
         {locked ? <Lock className="w-4 h-4 text-white" /> : checked && <Check className="w-4 h-4 text-white" />}
       </div>
@@ -188,17 +298,10 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
                 ? 'text-base text-blue-600 dark:text-blue-300' 
                 : price === 0 
                   ? 'text-sm text-emerald-600 dark:text-emerald-400' 
-                  : 'text-base text-slate-600 dark:text-slate-400'
+                  : 'text-base text-slate-655 dark:text-slate-400'
             }`}>
-              {price === 0 ? (t('includedInPriceShort') || 'Základný štandard') : `+${price.toLocaleString()} €`}
+              {price === 0 ? (t('includedInPriceShort') || 'Bez príplatku') : `+${price.toLocaleString()} €`}
             </span>
-            {price === 0 && (
-              <span className={`block text-[10px] uppercase font-bold tracking-wider mt-0.5 ${
-                locked ? 'text-emerald-650/80 dark:text-emerald-500/80' : 'text-emerald-655/80 dark:text-emerald-500/80'
-              }`}>
-                ({t('noSurcharge') || 'Bez príplatku'})
-              </span>
-            )}
           </div>
         )}
       </div>
@@ -206,10 +309,10 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
       {/* Checkbox na desktope zobrazený vpravo od ceny */}
       <div className={`hidden sm:flex w-6 h-6 rounded border-2 items-center justify-center transition-all duration-300 flex-shrink-0 ${
         locked 
-          ? 'border-blue-400/50 bg-blue-50 dark:bg-blue-950/50 shadow-[0_0_10px_rgba(59,130,246,0.2)]' 
+          ? 'border-blue-400/50 bg-blue-50 dark:bg-blue-955/50 shadow-[0_0_10px_rgba(59,130,246,0.2)]' 
           : checked 
-            ? 'border-red-500 bg-red-500 scale-110' 
-            : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950/50'
+            ? 'border-[#C5A880] bg-[#C5A880] scale-110 shadow-lg shadow-[#C5A880]/40' 
+            : 'border-slate-350 dark:border-slate-700 bg-white dark:bg-slate-950/50'
       }`}>
         {locked ? <Lock className="w-4 h-4 text-white" /> : checked && <Check className="w-4 h-4 text-white" />}
       </div>
@@ -220,7 +323,7 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
 
 const CounterRow = ({ label, price, value, onChange, isAdmin, onPriceChange, icon: Icon }) => (
   <div className="flex items-center justify-between p-4 rounded-2xl border-2 border-slate-200 dark:border-white/5 bg-white dark:bg-white/[0.02] backdrop-blur-sm transition-all duration-500 hover:border-slate-300 dark:hover:border-white/20 group relative overflow-hidden">
-    {value > 0 && <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500" />}
+    {value > 0 && <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#C5A880]" />}
     <div className="flex items-center gap-4 relative z-10">
       {Icon && (
         <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors duration-500 ${
@@ -231,7 +334,7 @@ const CounterRow = ({ label, price, value, onChange, isAdmin, onPriceChange, ico
       )}
       <div>
         <div className={`font-bold text-lg transition-colors duration-300 ${
-          value > 0 ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400'
+          value > 0 ? 'text-slate-900 dark:text-white' : 'text-slate-550 dark:text-slate-400'
         }`}>{label}</div>
         {isAdmin && onPriceChange ? (
           <div className="flex items-center gap-1 mt-1">
@@ -239,7 +342,7 @@ const CounterRow = ({ label, price, value, onChange, isAdmin, onPriceChange, ico
             <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-16 text-sm font-bold text-red-400 bg-slate-950 outline-none border border-red-500/30 rounded px-1 py-0.5" />
           </div>
         ) : (
-          <div className="text-sm text-red-655 dark:text-red-400 font-bold mt-1">{price} € / ks</div>
+          <div className="text-sm text-slate-655 dark:text-slate-400 font-bold mt-1">{price} € / ks</div>
         )}
       </div>
     </div>
@@ -255,7 +358,7 @@ const CounterRow = ({ label, price, value, onChange, isAdmin, onPriceChange, ico
       }`}>{value}</span>
       <button 
         onClick={() => onChange(value + 1)} 
-        className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 flex items-center justify-center font-bold active:scale-90 transition-all shadow-[0_0_15px_rgba(239,68,68,0.4)]"
+        className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#9E2A2B] to-[#802021] text-white hover:opacity-90 flex items-center justify-center font-bold active:scale-90 transition-all shadow-[0_0_15px_rgba(158,42,43,0.3)]"
       >
         +
       </button>
@@ -265,16 +368,16 @@ const CounterRow = ({ label, price, value, onChange, isAdmin, onPriceChange, ico
 
 const SectionLabel = ({ label, color = 'gray' }) => {
   const colorMap = {
-    'gray': 'text-slate-600 dark:text-slate-400',
-    'orange': 'text-orange-700 dark:text-orange-400',
+    'gray': 'text-slate-650 dark:text-slate-400',
+    'orange': 'text-[#9E2A2B] dark:text-[#C5A880]',
     'teal': 'text-teal-700 dark:text-teal-400',
     'amber': 'text-amber-700 dark:text-amber-400',
     'blue': 'text-blue-700 dark:text-blue-400',
     'purple': 'text-purple-700 dark:text-purple-400',
-    'red': 'text-red-750 dark:text-red-400',
+    'red': 'text-[#9E2A2B] dark:text-[#C5A880]',
     'emerald': 'text-emerald-700 dark:text-emerald-400',
     'green': 'text-green-700 dark:text-green-400',
-    'yellow': 'text-yellow-750 dark:text-yellow-400'
+    'yellow': 'text-[#9E2A2B] dark:text-[#C5A880]'
   };
   return (
     <div className={`text-sm font-black uppercase tracking-widest ${colorMap[color] || 'text-slate-600 dark:text-slate-400'} mb-4 mt-10 first:mt-0 flex items-center gap-2`}>
@@ -286,21 +389,22 @@ const SectionLabel = ({ label, color = 'gray' }) => {
 
 const BigSectionHeader = ({ title, description, icon: Icon, stepIdx, totalSteps }) => (
   <div className="mb-8 border-b border-slate-200 dark:border-white/10 pb-6">
-    <div className="lg:hidden text-red-500 font-bold uppercase tracking-widest text-xs mb-4 flex items-center gap-2">
-      <span className="w-8 h-[2px] bg-red-500"></span>
+    <div className="lg:hidden text-[#9E2A2B] dark:text-[#C5A880] font-bold uppercase tracking-widest text-xs mb-4 flex items-center gap-2">
+      <span className="w-8 h-[2px] bg-current"></span>
       Krok {stepIdx + 1} z {totalSteps}
     </div>
     <div className="flex items-start gap-4">
-      <div className="w-12 h-12 lg:w-14 lg:h-14 flex-shrink-0 bg-red-500/10 border border-red-500/30 rounded-2xl flex items-center justify-center shadow-[0_0_15px_rgba(239,68,68,0.2)]">
-        <Icon className="w-6 h-6 lg:w-7 lg:h-7 text-red-500" />
+      <div className="w-12 h-12 lg:w-14 lg:h-14 flex-shrink-0 bg-[#C5A880]/10 border border-[#C5A880]/30 rounded-2xl flex items-center justify-center shadow-[0_0_15px_rgba(197,168,128,0.15)]">
+        <Icon className="w-6 h-6 lg:w-7 lg:h-7 text-[#9E2A2B] dark:text-[#C5A880]" />
       </div>
       <div>
         <h2 className="text-2xl lg:text-3xl font-black text-slate-900 dark:text-white tracking-tight mb-2">{title}</h2>
-        {description && <p className="text-slate-600 dark:text-slate-400 text-sm lg:text-base leading-relaxed">{description}</p>}
+        {description && <p className="text-slate-600 dark:text-slate-350 text-sm lg:text-base leading-relaxed">{description}</p>}
       </div>
     </div>
   </div>
 );
+
 const ContactModal = ({ isOpen, onClose, onSubmit, isSubmitting, t }) => {
   if (!isOpen) return null;
   return (
@@ -785,10 +889,169 @@ export default function KonfiguratorLyon(props = {}) {
   const [montaz, setMontaz] = useState(props.montaz || false);
   const [doprava, setDoprava] = useState(props.doprava || false);
   
-  // Dodatočné služby
   const [predajNehnutelnosti, setPredajNehnutelnosti] = useState(props.predajNehnutelnosti || false);
   const [chcemPozemok, setChcemPozemok] = useState(props.chcemPozemok || false);
   const [financneSluzby, setFinancneSluzby] = useState(props.financneSluzby || false);
+
+  const [activeLightbox, setActiveLightbox] = useState(null);
+
+  const handleShowOptionGallery = (type) => {
+    if (!props.dom?.galerie?.length) {
+      alert("Galéria nie je pre tento dom k dispozícii.");
+      return;
+    }
+    const matchingGallery = props.dom.galerie.find(g => g.typ === type);
+    if (matchingGallery?.fotky?.length) {
+      setActiveLightbox({ images: matchingGallery.fotky, index: 0 });
+    } else {
+      const allPhotos = props.dom.galerie.flatMap(g => g.fotky || []);
+      if (allPhotos.length) {
+        setActiveLightbox({ images: allPhotos, index: 0 });
+      } else {
+        alert("Tento typ úpravy nemá priradené samostatné fotografie.");
+      }
+    }
+  };
+
+  const handleUcelChange = (val) => {
+    setUcel(val);
+    if (val === 'chata') {
+      setKolaudacia("bez_a0");
+      setIzolaciaStien("150mm"); setIzolaciaPodlahy("150mm"); setIzolaciaStropu("150mm");
+      setTepelneCerpadlo("nie"); setRekuperacia("nie"); setPripravaNaRekuperaciu(false);
+      setPodlahovoKurenie(false); setPripravaNaKrb(false); setOchranaKachle(false); setKlimatizacia(false);
+      setFasada("drevo_smrek"); setStrecha("korugovan_plech"); setOdkvapy("nie");
+      setOkna("biele"); setVchodoveDvere("plastove"); setObkladStien("smrek_8cm");
+      setPodlaha("laminat"); setInterieroveDvere("kridlove"); setElektro("eu");
+      setBleskozvod(false); setPrepat(false); setPripravaNaSolarnePanely(false);
+      setSprchovyKut("standard"); setVana(false); setBateria("standard");
+      setSkrinka(false); setStropKupelna("drevo"); setInziniering(false);
+      setProjektACertifikacia(false); setRevizia(false); setZaklady("bez");
+      setMontaz(false); setDoprava(false);
+    } else if (val === 'rodinny') {
+      setKolaudacia("s_a0");
+      setIzolaciaStien("250mm"); setIzolaciaPodlahy("200mm"); setIzolaciaStropu("200mm");
+      setTepelneCerpadlo("ano"); setPripravaNaRekuperaciu(true); setRekuperacia("ano");
+      setInziniering(true); setProjektACertifikacia(true); setRevizia(true);
+      setBleskozvod(true); setPrepat(true); setElektro("ge"); setKlimatizacia(true);
+    }
+  };
+
+  const ucelOptions = useMemo(() => [
+    {
+      label: getTranslatedText('ucel_rekreacna', 'nazov') || t('recreationalBuilding') || 'Rekreačná stavba',
+      value: 'chata',
+      price: 0,
+      description: getTranslatedText('ucel_rekreacna', 'podnadpis') || t('economicChoice')
+    },
+    {
+      label: getTranslatedText('ucel_rodinny', 'nazov') || t('familyHouseA0') || 'Rodinný dom A0',
+      value: 'rodinny',
+      price: 0,
+      isA0: true,
+      description: getTranslatedText('ucel_rodinny', 'dlhy_popis') || t('familyHouseA0Desc')
+    }
+  ], [konfigTexts, language]);
+
+  const izolaciaStienOptions = useMemo(() => [
+    { label: getTranslatedText('izolacia_stien_150', 'nazov') || t('walls150mm') || 'Steny 150mm', value: '150mm', price: 0, description: getTranslatedText('izolacia_stien_150', 'podnadpis') },
+    { label: getTranslatedText('izolacia_stien_200', 'nazov') || t('walls200mm') || 'Steny 200mm', value: '200mm', price: CENY.izolacia_stien_200mm, description: getTranslatedText('izolacia_stien_200', 'podnadpis') },
+    { label: getTranslatedText('izolacia_stien_250', 'nazov') || t('walls250mm') || 'Steny 250mm', value: '250mm', price: CENY.izolacia_stien_250mm, isA0: true, description: getTranslatedText('izolacia_stien_250', 'podnadpis') }
+  ], [konfigTexts, language, CENY.izolacia_stien_200mm, CENY.izolacia_stien_250mm]);
+
+  const izolaciaPodlahyOptions = useMemo(() => [
+    { label: getTranslatedText('izolacia_podlahy_150', 'nazov') || t('floor150mm') || 'Podlaha 150mm', value: '150mm', price: 0 },
+    { label: getTranslatedText('izolacia_podlahy_200', 'nazov') || t('floor200mm') || 'Podlaha 200mm', value: '200mm', price: CENY.izolacia_podlahy_200mm, isA0: true }
+  ], [konfigTexts, language, CENY.izolacia_podlahy_200mm]);
+
+  const izolaciaStropuOptions = useMemo(() => [
+    { label: getTranslatedText('izolacia_stropu_150', 'nazov') || t('ceiling150mm') || 'Strop 150mm', value: '150mm', price: 0 },
+    { label: getTranslatedText('izolacia_stropu_200', 'nazov') || t('ceiling200mm') || 'Strop 200mm', value: '200mm', price: CENY.izolacia_stropu_200mm, isA0: true }
+  ], [konfigTexts, language, CENY.izolacia_stropu_200mm]);
+
+  const tepelneCerpadloOptions = useMemo(() => [
+    { label: getTranslatedText('tepelne_cerpadlo_nie', 'nazov') || t('heatingPreparation') || 'Príprava na vykurovanie', value: 'nie', price: 0 },
+    { label: getTranslatedText('tepelne_cerpadlo_ano', 'nazov') || t('heatPump') || 'Tepelné čerpadlo', value: 'ano', price: CENY.tepelne_cerpadlo, isA0: true }
+  ], [konfigTexts, language, CENY.tepelne_cerpadlo]);
+
+  const rekuperaciaOptions = useMemo(() => [
+    { label: getTranslatedText('rekuperacia_nie', 'nazov') || t('withoutRecuperation') || 'Bez rekuperácie', value: 'nie', price: 0 },
+    { label: getTranslatedText('pripravaNaRekuperaciu', 'nazov') || 'Príprava na rekuperáciu', value: 'priprava', price: CENY.pripravaNaRekuperaciu, isA0: true },
+    { label: getTranslatedText('rekuperacia_ano', 'nazov') || t('recuperation') || 'Rekuperácia', value: 'ano', price: CENY.rekuperacia, isA0: true }
+  ], [konfigTexts, language, CENY.pripravaNaRekuperaciu, CENY.rekuperacia]);
+
+  const fasadaOptions = useMemo(() => [
+    { label: getTranslatedText('fasada_drevo_smrek', 'nazov') || t('spruceWood') || 'Severský smrek', value: 'drevo_smrek', price: 0 },
+    { label: getTranslatedText('fasada_omietka', 'nazov') || t('scratchedPlaster') || 'Šúchaná omietka', value: 'omietka', price: CENY.fasada_omietka },
+    { label: getTranslatedText('fasada_smrekovec', 'nazov') || t('larch') || 'Sibírsky smrekovec', value: 'smrekovec', price: CENY.fasada_smrekovec },
+    { label: getTranslatedText('fasada_falcovane', 'nazov') || t('foldedPanels') || 'Falcovaný plech', value: 'falcovane', price: CENY.fasada_falcovane },
+    { label: getTranslatedText('fasada_thermowood', 'nazov') || 'Thermowood', value: 'thermowood', price: CENY.fasada_thermowood }
+  ], [konfigTexts, language, CENY.fasada_omietka, CENY.fasada_smrekovec, CENY.fasada_falcovane, CENY.fasada_thermowood]);
+
+  const strechaOptions = useMemo(() => [
+    { label: getTranslatedText('strecha_korugovan', 'nazov') || t('corrugatedMetal') || 'Korugovaný plech', value: 'korugovan_plech', price: 0 },
+    { label: getTranslatedText('strecha_falcovane', 'nazov') || t('foldedPanels') || 'Falcovaný plech', value: 'falcovane', price: CENY.strecha_falcovane }
+  ], [konfigTexts, language, CENY.strecha_falcovane]);
+
+  const odkvapyOptions = useMemo(() => [
+    { label: getTranslatedText('odkvapy_nie', 'nazov') || t('withoutGutters') || 'Bez odkvapov', value: 'nie', price: 0 },
+    { label: getTranslatedText('odkvapy_ano', 'nazov') || t('gutters') || 'S odkvapmi', value: 'ano', price: CENY.odkvapy }
+  ], [konfigTexts, language, CENY.odkvapy]);
+
+  const oknaOptions = useMemo(() => [
+    { label: getTranslatedText('okna_biele', 'nazov') || t('white') || 'Biele', value: 'biele', price: 0 },
+    { label: getTranslatedText('okna_antracit', 'nazov') || t('anthracite') || 'Antracit', value: 'antracit', price: 0 },
+    { label: getTranslatedText('okna_hnede', 'nazov') || t('brown') || 'Hnedé', value: 'hnede', price: 0 }
+  ], [konfigTexts, language]);
+
+  const vchodoveDvereOptions = useMemo(() => [
+    { label: getTranslatedText('dvere_plastove', 'nazov') || t('metalPlasticDoors') || 'Plastovo-kovové', value: 'plastove', price: 0 },
+    { label: getTranslatedText('dvere_kovove', 'nazov') || t('metalDoors') || 'Kovové', value: 'kovove', price: CENY.dvere_kovove }
+  ], [konfigTexts, language, CENY.dvere_kovove]);
+
+  const obkladStienOptions = useMemo(() => [
+    { label: getTranslatedText('obklad_smrek_8cm', 'nazov') || t('spruceWall8cm') || 'Smrek 8cm', value: 'smrek_8cm', price: 0 },
+    { label: getTranslatedText('obklad_smrek_bez_uzlov', 'nazov') || t('spruceWallNoKnots') || 'Smrek bez uzlov', value: 'smrek_bez_uzlov', price: CENY.obklad_smrek_bez_uzlov },
+    { label: getTranslatedText('obklad_sadrokarton', 'nazov') || t('drywallWallpaperPaint') || 'Sadrokartón / tapeta / maľba', value: 'sadrokarton_tapeta', price: CENY.obklad_sadrokarton_tapeta },
+    { label: getTranslatedText('obklad_osb', 'nazov') || t('osbLaminatePanel') || 'OSB panel', value: 'osb_panel', price: CENY.obklad_osb_panel }
+  ], [konfigTexts, language, CENY.obklad_smrek_bez_uzlov, CENY.obklad_sadrokarton_tapeta, CENY.obklad_osb_panel]);
+
+  const podlahaOptions = useMemo(() => [
+    { label: getTranslatedText('podlaha_laminat', 'nazov') || t('laminate') || 'Laminát', value: 'laminat', price: 0 }
+  ], [konfigTexts, language]);
+
+  const interieroveDvereOptions = useMemo(() => [
+    { label: getTranslatedText('dvere_kridlove', 'nazov') || t('hingedDoors') || 'Krídlové', value: 'kridlove', price: 0 },
+    { label: getTranslatedText('dvere_posuvne', 'nazov') || t('slidingDoors') || 'Posuvné', value: 'posuvne', price: CENY.dvere_posuvne }
+  ], [konfigTexts, language, CENY.dvere_posuvne]);
+
+  const elektroOptions = useMemo(() => [
+    { label: getTranslatedText('elektro_eu', 'nazov') || t('euStandard') || 'EU štandard', value: 'eu', price: 0 },
+    { label: getTranslatedText('elektro_cz', 'nazov') || t('czSkStandard') || 'CZ/SK štandard', value: 'cz', price: CENY.elektro_cz },
+    { label: getTranslatedText('elektro_ge', 'nazov') || t('geStandard') || 'Nemecký štandard (A0)', value: 'ge', price: CENY.elektro_ge, isA0: true }
+  ], [konfigTexts, language, CENY.elektro_cz, CENY.elektro_ge]);
+
+  const sprchovyKutOptions = useMemo(() => [
+    { label: getTranslatedText('sprcha_standard', 'nazov') || t('shower') || 'Štandardný sprchový kút', value: 'standard', price: 0 },
+    { label: getTranslatedText('sprcha_radaway', 'nazov') || t('showerRadawayTile') || 'Radaway', value: 'radaway', price: CENY.sprchovyKut }
+  ], [konfigTexts, language, CENY.sprchovyKut]);
+
+  const bateriaOptions = useMemo(() => [
+    { label: getTranslatedText('bateria_standard', 'nazov') || t('faucetStandard') || 'Štandardná batéria', value: 'standard', price: 0 },
+    { label: getTranslatedText('bateria_grohe', 'nazov') || 'Grohe', value: 'grohe', price: CENY.bateria }
+  ], [konfigTexts, language, CENY.bateria]);
+
+  const stropKupelnaOptions = useMemo(() => [
+    { label: getTranslatedText('strop_drevo', 'nazov') || t('ceilingWoodPattern') || 'Drevený obklad', value: 'drevo', price: 0 },
+    { label: getTranslatedText('strop_sadrokarton', 'nazov') || t('drywallWallpaperPaint') || 'Sadrokartón', value: 'sadrokarton', price: CENY.strop_kupelna_sadrokarton }
+  ], [konfigTexts, language, CENY.strop_kupelna_sadrokarton]);
+
+  const zakladyOptions = useMemo(() => [
+    { label: getTranslatedText('zaklady_bez', 'nazov') || t('noFoundations') || 'Bez základov', value: 'bez', price: 0 },
+    { label: getTranslatedText('zaklady_vruty', 'nazov') || t('groundScrews') || 'Zemné skrutky', value: 'vruty', price: CENY.zaklady_vruty },
+    { label: getTranslatedText('zaklady_patky', 'nazov') || t('concretePads') || 'Betónové pätky', value: 'patky', price: CENY.zaklady_patky },
+    { label: getTranslatedText('zaklady_pasove', 'nazov') || t('stripFoundations') || 'Pásové základy', value: 'pasove', price: CENY.zaklady_pasove }
+  ], [konfigTexts, language, CENY.zaklady_vruty, CENY.zaklady_patky, CENY.zaklady_pasove]);
 
   // Synchronizovať state s props ak sa props zmenia
   React.useEffect(() => {
@@ -1070,7 +1333,7 @@ export default function KonfiguratorLyon(props = {}) {
             >
               <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-500 ${
                 activeSection === idx 
-                  ? 'bg-red-500 text-white shadow-[0_0_15px_rgba(239,68,68,0.4)] scale-110' 
+                  ? 'bg-[#C5A880] text-white shadow-[0_0_15px_rgba(197,168,128,0.4)] scale-110' 
                   : activeSection > idx
                     ? 'bg-slate-800 text-slate-400'
                     : 'bg-slate-900 border border-white/5 text-slate-600'
@@ -1093,245 +1356,351 @@ export default function KonfiguratorLyon(props = {}) {
         {/* 0. Účel stavby */}
         <section id="section-0" className="scroll-mt-32">
           <BigSectionHeader title={getTranslatedText('sekcia_ucel', 'nazov') || t('purposeOfBuilding') || 'Účel stavby'} icon={Home} stepIdx={0} totalSteps={13} />
-          <div className="grid sm:grid-cols-2 gap-4">
-            <OptionCard 
-              label={getTranslatedText('ucel_rekreacna', 'nazov') || t('recreationalBuilding')}
-              description={getTranslatedText('ucel_rekreacna', 'podnadpis') || t('economicChoice')}
-              selected={ucel === "chata"}
-              onClick={() => {
-                setUcel("chata");
-                setKolaudacia("bez_a0");
-                setIzolaciaStien("150mm"); setIzolaciaPodlahy("150mm"); setIzolaciaStropu("150mm");
-                setTepelneCerpadlo("nie"); setRekuperacia("nie"); setPripravaNaRekuperaciu(false);
-                setPodlahovoKurenie(false); setPripravaNaKrb(false); setOchranaKachle(false); setKlimatizacia(false);
-                setFasada("drevo_smrek"); setStrecha("korugovan_plech"); setOdkvapy("nie");
-                setOkna("biele"); setVchodoveDvere("plastove"); setObkladStien("smrek_8cm");
-                setPodlaha("laminat"); setInterieroveDvere("kridlove"); setElektro("eu");
-                setBleskozvod(false); setPrepat(false); setPripravaNaSolarnePanely(false);
-                setSprchovyKut("standard"); setVana(false); setBateria("standard");
-                setSkrinka(false); setStropKupelna("drevo"); setInziniering(false);
-                setProjektACertifikacia(false); setRevizia(false); setZaklady("bez");
-                setMontaz(false); setDoprava(false);
-              }}
-              price={0}
-              icon={Home}
-            />
-            <OptionCard 
-              label={getTranslatedText('ucel_rodinny', 'nazov') || t('familyHouseA0')}
-              description={getTranslatedText('ucel_rodinny', 'dlhy_popis') || t('familyHouseA0Desc')}
-              selected={ucel === "rodinny"}
-              isA0={true}
-              onClick={() => {
-                setUcel("rodinny"); setKolaudacia("s_a0");
-                setIzolaciaStien("250mm"); setIzolaciaPodlahy("200mm"); setIzolaciaStropu("200mm");
-                setTepelneCerpadlo("ano"); setPripravaNaRekuperaciu(true); setRekuperacia("ano");
-                setInziniering(true); setProjektACertifikacia(true); setRevizia(true);
-                setBleskozvod(true); setPrepat(true); setElektro("ge"); setKlimatizacia(true);
-              }}
-              price={0}
-              icon={Zap}
-            />
-          </div>
+          <ConfiguratorRow
+            label={t('purposeOfBuilding') || 'Účel stavby'}
+            description={t('purposeOfBuildingDesc') || 'Zvoľte, či plánujete stavbu využívať ako rodinný dom na trvalé bývanie (vyžaduje normu A0) alebo ako rekreačnú chatu.'}
+            selectedValue={ucel}
+            onChange={handleUcelChange}
+            options={ucelOptions}
+            icon={Home}
+          />
         </section>
 
         {/* 1. Izolácia */}
-        <section id="section-1" className="scroll-mt-32">
+        <section id="section-1" className="scroll-mt-32 border-b border-slate-200 dark:border-white/10 pb-8 space-y-4">
           <BigSectionHeader title={getTranslatedText('sekcia_izolacia', 'nazov') || t('insulationSection') || 'Izolácia'} icon={Thermometer} stepIdx={1} totalSteps={13} />
           
-          <SectionLabel label={getTranslatedText('izolacia_stien', 'nazov') || t('wallInsulation') || 'Izolácia stien'} color="red" />
-          <div className="grid sm:grid-cols-2 gap-4 mb-8">
-            <OptionCard label={getTranslatedText('izolacia_stien_150', 'nazov') || t('walls150mm') || 'Steny 150mm'} description={getTranslatedText('izolacia_stien_150', 'podnadpis')} selected={izolaciaStien === "150mm"} onClick={() => setIzolaciaStien("150mm")} price={0} />
-            <OptionCard label={getTranslatedText('izolacia_stien_200', 'nazov') || t('walls200mm') || 'Steny 200mm'} description={getTranslatedText('izolacia_stien_200', 'podnadpis')} selected={izolaciaStien === "200mm"} onClick={() => setIzolaciaStien("200mm")} price={CENY.izolacia_stien_200mm} />
-            <OptionCard label={getTranslatedText('izolacia_stien_250', 'nazov') || t('walls250mm') || 'Steny 250mm'} description={getTranslatedText('izolacia_stien_250', 'podnadpis')} selected={izolaciaStien === "250mm"} onClick={() => setIzolaciaStien("250mm")} price={CENY.izolacia_stien_250mm} isA0={true} />
-          </div>
+          <ConfiguratorRow
+            label={getTranslatedText('izolacia_stien', 'nazov') || t('wallInsulation') || 'Izolácia stien'}
+            description={getTranslatedText('izolacia_stien_desc') || 'Hrúbka minerálnej izolácie v obvodových stenách domu.'}
+            selectedValue={izolaciaStien}
+            onChange={setIzolaciaStien}
+            options={izolaciaStienOptions}
+            icon={Thermometer}
+          />
 
-          <SectionLabel label={getTranslatedText('izolacia_podlahy', 'nazov') || t('floorInsulation') || 'Izolácia podlahy'} color="red" />
-          <div className="grid sm:grid-cols-2 gap-4 mb-8">
-            <OptionCard label={getTranslatedText('izolacia_podlahy_150', 'nazov') || t('floor150mm') || 'Podlaha 150mm'} selected={izolaciaPodlahy === "150mm"} onClick={() => setIzolaciaPodlahy("150mm")} price={0} />
-            <OptionCard label={getTranslatedText('izolacia_podlahy_200', 'nazov') || t('floor200mm') || 'Podlaha 200mm'} selected={izolaciaPodlahy === "200mm"} onClick={() => setIzolaciaPodlahy("200mm")} price={CENY.izolacia_podlahy_200mm} isA0={true} />
-          </div>
+          <ConfiguratorRow
+            label={getTranslatedText('izolacia_podlahy', 'nazov') || t('floorInsulation') || 'Izolácia podlahy'}
+            description={getTranslatedText('izolacia_podlahy_desc') || 'Hrúbka minerálnej izolácie v podlahe domu.'}
+            selectedValue={izolaciaPodlahy}
+            onChange={setIzolaciaPodlahy}
+            options={izolaciaPodlahyOptions}
+            icon={Thermometer}
+          />
 
-          <SectionLabel label={getTranslatedText('izolacia_stropu', 'nazov') || t('ceilingInsulation') || 'Izolácia stropu'} color="red" />
-          <div className="grid sm:grid-cols-2 gap-4">
-            <OptionCard label={getTranslatedText('izolacia_stropu_150', 'nazov') || t('ceiling150mm') || 'Strop 150mm'} selected={izolaciaStropu === "150mm"} onClick={() => setIzolaciaStropu("150mm")} price={0} />
-            <OptionCard label={getTranslatedText('izolacia_stropu_200', 'nazov') || t('ceiling200mm') || 'Strop 200mm'} selected={izolaciaStropu === "200mm"} onClick={() => setIzolaciaStropu("200mm")} price={CENY.izolacia_stropu_200mm} isA0={true} />
-          </div>
+          <ConfiguratorRow
+            label={getTranslatedText('izolacia_stropu', 'nazov') || t('ceilingInsulation') || 'Izolácia stropu'}
+            description={getTranslatedText('izolacia_stropu_desc') || 'Hrúbka minerálnej izolácie v strope domu.'}
+            selectedValue={izolaciaStropu}
+            onChange={setIzolaciaStropu}
+            options={izolaciaStropuOptions}
+            icon={Thermometer}
+          />
         </section>
 
         {/* 2. Vykurovanie */}
-        <section id="section-2" className="scroll-mt-32">
+        <section id="section-2" className="scroll-mt-32 border-b border-slate-200 dark:border-white/10 pb-8 space-y-4">
           <BigSectionHeader title={getTranslatedText('sekcia_vykurovanie', 'nazov') || t('heatingSection') || 'Vykurovanie'} icon={Flame} stepIdx={2} totalSteps={13} />
           
-          <SectionLabel label={getTranslatedText('tepelne_cerpadlo', 'nazov') || t('heating') || 'Tepelné čerpadlo'} color="orange" />
-          <div className="grid sm:grid-cols-2 gap-4 mb-8">
-            <OptionCard label={getTranslatedText('tepelne_cerpadlo_nie', 'nazov') || t('heatingPreparation')} selected={tepelneCerpadlo === "nie"} onClick={() => setTepelneCerpadlo("nie")} price={0} />
-            <OptionCard label={getTranslatedText('tepelne_cerpadlo_ano', 'nazov') || t('heatPump')} selected={tepelneCerpadlo === "ano"} onClick={() => setTepelneCerpadlo("ano")} price={CENY.tepelne_cerpadlo} isA0={true} />
-          </div>
+          <ConfiguratorRow
+            label={getTranslatedText('tepelne_cerpadlo', 'nazov') || t('heating') || 'Tepelné čerpadlo'}
+            description={getTranslatedText('tepelne_cerpadlo_desc') || 'Klimatizácia vzduch-vzduch s funkciou kúrenia pre celoročné temperovanie.'}
+            selectedValue={tepelneCerpadlo}
+            onChange={setTepelneCerpadlo}
+            options={tepelneCerpadloOptions}
+            icon={Flame}
+          />
 
-          <SectionLabel label={getTranslatedText('rekuperacia', 'nazov') || t('ventilation') || 'Rekuperácia'} color="orange" />
-          <div className="grid sm:grid-cols-2 gap-4 mb-8">
-            <OptionCard label={getTranslatedText('rekuperacia_nie', 'nazov') || t('withoutRecuperation')} selected={rekuperacia === "nie" && !pripravaNaRekuperaciu} onClick={() => {setRekuperacia("nie"); setPripravaNaRekuperaciu(false);}} price={0} />
-            <OptionCard label={getTranslatedText('pripravaNaRekuperaciu', 'nazov') || 'Príprava na rekuperáciu'} selected={pripravaNaRekuperaciu} onClick={() => {setPripravaNaRekuperaciu(true); setRekuperacia("nie");}} price={CENY.pripravaNaRekuperaciu} isA0={true} />
-            <OptionCard label={getTranslatedText('rekuperacia_ano', 'nazov') || t('recuperation')} selected={rekuperacia === "ano"} onClick={() => {setRekuperacia("ano"); setPripravaNaRekuperaciu(false);}} price={CENY.rekuperacia} isA0={true} />
-          </div>
+          <ConfiguratorRow
+            label={getTranslatedText('rekuperacia', 'nazov') || t('ventilation') || 'Rekuperácia'}
+            description={getTranslatedText('rekuperacia_desc') || 'Lokálna rekuperácia pre nepretržitý prísun čerstvého vzduchu a zníženie tepelných strát.'}
+            selectedValue={rekuperacia === "ano" ? "ano" : (pripravaNaRekuperaciu ? "priprava" : "nie")}
+            onChange={(val) => {
+              if (val === 'nie') { setRekuperacia("nie"); setPripravaNaRekuperaciu(false); }
+              else if (val === 'priprava') { setPripravaNaRekuperaciu(true); setRekuperacia("nie"); }
+              else if (val === 'ano') { setRekuperacia("ano"); setPripravaNaRekuperaciu(false); }
+            }}
+            options={rekuperaciaOptions}
+            icon={Flame}
+          />
 
           <SectionLabel label={getTranslatedText('vykurovanie_doplnky', 'nazov') || t('heatingExtras') || 'Doplnky'} color="orange" />
           <div className="space-y-4">
-            <AddonRow label={getTranslatedText('podlahove_kurenie', 'nazov') || t('floorHeating')} checked={podlahovoKurenie} onChange={() => setPodlahovoKurenie(!podlahovoKurenie)} price={CENY.podlahove_kurenie} />
-            <AddonRow label={getTranslatedText('pripravaKrb', 'nazov') || t('fireplacePrep')} checked={pripravaNaKrb} onChange={() => setPripravaNaKrb(!pripravaNaKrb)} price={CENY.pripravaKrb} />
-            <AddonRow label={getTranslatedText('ochranaKachle', 'nazov') || t('stoveProtection')} checked={ochranaKachle} onChange={() => setOchranaKachle(!ochranaKachle)} price={CENY.ochranaKachle} />
-            <AddonRow label={getTranslatedText('klimatizacia', 'nazov') || 'Príprava na klimatizáciu'} checked={klimatizacia} onChange={() => setKlimatizacia(!klimatizacia)} price={CENY.klimatizacia} locked={ucel === "rodinny"} t={t} />
+            <AddonRow icon={Flame} label={getTranslatedText('podlahove_kurenie', 'nazov') || t('floorHeating')} checked={podlahovoKurenie} onChange={() => setPodlahovoKurenie(!podlahovoKurenie)} price={CENY.podlahove_kurenie} />
+            <AddonRow icon={Flame} label={getTranslatedText('pripravaKrb', 'nazov') || t('fireplacePrep')} checked={pripravaNaKrb} onChange={() => setPripravaNaKrb(!pripravaNaKrb)} price={CENY.pripravaKrb} />
+            <AddonRow icon={Flame} label={getTranslatedText('ochranaKachle', 'nazov') || t('stoveProtection')} checked={ochranaKachle} onChange={() => setOchranaKachle(!ochranaKachle)} price={CENY.ochranaKachle} />
+            <AddonRow icon={Wind} label={getTranslatedText('klimatizacia', 'nazov') || 'Príprava na klimatizáciu'} checked={klimatizacia} onChange={() => setKlimatizacia(!klimatizacia)} price={CENY.klimatizacia} locked={ucel === "rodinny"} t={t} />
           </div>
         </section>
 
         {/* 3. Fasáda */}
-        <section id="section-3" className="scroll-mt-32">
+        <section id="section-3" className="scroll-mt-32 border-b border-slate-200 dark:border-white/10 pb-8 space-y-4">
           <BigSectionHeader title={getTranslatedText('sekcia_fasada', 'nazov') || t('facadeSection') || 'Fasáda'} icon={Paintbrush} stepIdx={3} totalSteps={13} />
-          <div className="grid sm:grid-cols-2 gap-4">
-            <OptionCard label={getTranslatedText('fasada_drevo_smrek', 'nazov') || t('spruceWood')} selected={fasada === "drevo_smrek"} onClick={() => setFasada("drevo_smrek")} price={0} />
-            <OptionCard label={getTranslatedText('fasada_omietka', 'nazov') || t('scratchedPlaster')} selected={fasada === "omietka"} onClick={() => setFasada("omietka")} price={CENY.fasada_omietka} />
-            <OptionCard label={getTranslatedText('fasada_smrekovec', 'nazov') || t('larch')} selected={fasada === "smrekovec"} onClick={() => setFasada("smrekovec")} price={CENY.fasada_smrekovec} />
-            <OptionCard label={getTranslatedText('fasada_falcovane', 'nazov') || t('foldedPanels')} selected={fasada === "falcovane"} onClick={() => setFasada("falcovane")} price={CENY.fasada_falcovane} />
-            <OptionCard label={getTranslatedText('fasada_thermowood', 'nazov') || 'Thermowood'} selected={fasada === "thermowood"} onClick={() => setFasada("thermowood")} price={CENY.fasada_thermowood} />
-          </div>
+          <ConfiguratorRow
+            label={getTranslatedText('sekcia_fasada', 'nazov') || t('facadeSection') || 'Fasádny obklad'}
+            description={getTranslatedText('fasada_desc') || 'Zvoľte si vonkajší obklad a povrchovú úpravu fasády.'}
+            selectedValue={fasada}
+            onChange={setFasada}
+            options={fasadaOptions}
+            onShowGallery={() => handleShowOptionGallery('fasada')}
+            icon={Paintbrush}
+          />
         </section>
 
         {/* 4. Strecha */}
-        <section id="section-4" className="scroll-mt-32">
+        <section id="section-4" className="scroll-mt-32 border-b border-slate-200 dark:border-white/10 pb-8 space-y-4">
           <BigSectionHeader title={getTranslatedText('sekcia_strecha', 'nazov') || t('roofSection') || 'Strecha'} icon={Home} stepIdx={4} totalSteps={13} />
-          <SectionLabel label={getTranslatedText('stresna_krytina', 'nazov') || t('roofCoveringType') || 'Strešná krytina'} color="purple" />
-          <div className="grid sm:grid-cols-2 gap-4 mb-8">
-            <OptionCard label={getTranslatedText('strecha_korugovan', 'nazov') || t('corrugatedMetal')} selected={strecha === "korugovan_plech"} onClick={() => setStrecha("korugovan_plech")} price={0} />
-            <OptionCard label={getTranslatedText('strecha_falcovane', 'nazov') || t('foldedPanels')} selected={strecha === "falcovane"} onClick={() => setStrecha("falcovane")} price={CENY.strecha_falcovane} />
-          </div>
-          <SectionLabel label={getTranslatedText('odkvapy', 'nazov') || t('gutters') || 'Odkvapy'} color="purple" />
-          <div className="grid sm:grid-cols-2 gap-4">
-            <OptionCard label={getTranslatedText('odkvapy_nie', 'nazov') || t('withoutGutters')} selected={odkvapy === "nie"} onClick={() => setOdkvapy("nie")} price={0} />
-            <OptionCard label={getTranslatedText('odkvapy_ano', 'nazov') || t('gutters')} selected={odkvapy === "ano"} onClick={() => setOdkvapy("ano")} price={CENY.odkvapy} />
-          </div>
+          
+          <ConfiguratorRow
+            label={getTranslatedText('stresna_krytina', 'nazov') || t('roofCoveringType') || 'Strešná krytina'}
+            description={getTranslatedText('strecha_desc') || 'Zvoľte typ krytiny pre strechu Vášho domu.'}
+            selectedValue={strecha}
+            onChange={setStrecha}
+            options={strechaOptions}
+            icon={Home}
+          />
+
+          <ConfiguratorRow
+            label={getTranslatedText('odkvapy', 'nazov') || t('gutters') || 'Odkvapy'}
+            description={getTranslatedText('odkvapy_desc') || 'Závesné odkvapové žľaby a zvody pre správny odvod vody.'}
+            selectedValue={odkvapy}
+            onChange={setOdkvapy}
+            options={odkvapyOptions}
+            icon={Home}
+          />
         </section>
 
         {/* 5. Okná a dvere */}
-        <section id="section-5" className="scroll-mt-32">
+        <section id="section-5" className="scroll-mt-32 border-b border-slate-200 dark:border-white/10 pb-8 space-y-4">
           <BigSectionHeader title={getTranslatedText('sekcia_okna_dvere', 'nazov') || t('windowsDoorsSection') || 'Okná a dvere'} icon={DoorOpen} stepIdx={5} totalSteps={13} />
-          <SectionLabel label={getTranslatedText('okna_farba', 'nazov') || t('windowColor') || 'Farba okien 3-sklo'} color="blue" />
-          <div className="grid sm:grid-cols-3 gap-4 mb-8">
-            <OptionCard label={getTranslatedText('okna_biele', 'nazov') || t('white')} selected={okna === "biele"} onClick={() => setOkna("biele")} price={0} />
-            <OptionCard label={getTranslatedText('okna_antracit', 'nazov') || t('anthracite')} selected={okna === "antracit"} onClick={() => setOkna("antracit")} price={0} />
-            <OptionCard label={getTranslatedText('okna_hnede', 'nazov') || t('brown')} selected={okna === "hnede"} onClick={() => setOkna("hnede")} price={0} />
-          </div>
-          <SectionLabel label={getTranslatedText('vchodove_dvere', 'nazov') || t('entryDoors') || 'Vchodové dvere'} color="blue" />
-          <div className="grid sm:grid-cols-2 gap-4">
-            <OptionCard label={getTranslatedText('dvere_plastove', 'nazov') || t('metalPlasticDoors')} selected={vchodoveDvere === "plastove"} onClick={() => setVchodoveDvere("plastove")} price={0} />
-            <OptionCard label={getTranslatedText('dvere_kovove', 'nazov') || t('metalDoors')} selected={vchodoveDvere === "kovove"} onClick={() => setVchodoveDvere("kovove")} price={CENY.dvere_kovove} />
-          </div>
+          
+          <ConfiguratorRow
+            label={getTranslatedText('okna_farba', 'nazov') || t('windowColor') || 'Farba okien 3-sklo'}
+            description={getTranslatedText('okna_desc') || 'Profilové plastové okná s izolačným trojsklom.'}
+            selectedValue={okna}
+            onChange={setOkna}
+            options={oknaOptions}
+            icon={DoorOpen}
+          />
+
+          <ConfiguratorRow
+            label={getTranslatedText('vchodove_dvere', 'nazov') || t('entryDoors') || 'Vchodové dvere'}
+            description={getTranslatedText('vchodove_dvere_desc') || 'Bezpečné vonkajšie vchodové dvere.'}
+            selectedValue={vchodoveDvere}
+            onChange={setVchodoveDvere}
+            options={vchodoveDvereOptions}
+            icon={DoorOpen}
+          />
         </section>
 
         {/* 6. Interiér */}
-        <section id="section-6" className="scroll-mt-32">
+        <section id="section-6" className="scroll-mt-32 border-b border-slate-200 dark:border-white/10 pb-8 space-y-4">
           <BigSectionHeader title={getTranslatedText('sekcia_interier', 'nazov') || t('interiorSection') || 'Interiér'} icon={Layout} stepIdx={6} totalSteps={13} />
-          <SectionLabel label={getTranslatedText('obklad_stien', 'nazov') || t('wallCladding') || 'Obklad stien'} color="amber" />
-          <div className="grid sm:grid-cols-2 gap-4 mb-8">
-            <OptionCard label={getTranslatedText('obklad_smrek_8cm', 'nazov') || t('spruceWall8cm')} selected={obkladStien === "smrek_8cm"} onClick={() => setObkladStien("smrek_8cm")} price={0} />
-            <OptionCard label={getTranslatedText('obklad_smrek_bez_uzlov', 'nazov') || t('spruceWallNoKnots')} selected={obkladStien === "smrek_bez_uzlov"} onClick={() => setObkladStien("smrek_bez_uzlov")} price={CENY.obklad_smrek_bez_uzlov} />
-            <OptionCard label={getTranslatedText('obklad_sadrokarton', 'nazov') || t('drywallWallpaperPaint')} selected={obkladStien === "sadrokarton_tapeta"} onClick={() => setObkladStien("sadrokarton_tapeta")} price={CENY.obklad_sadrokarton_tapeta} />
-            <OptionCard label={getTranslatedText('obklad_osb', 'nazov') || t('osbLaminatePanel')} selected={obkladStien === "osb_panel"} onClick={() => setObkladStien("osb_panel")} price={CENY.obklad_osb_panel} />
-          </div>
-          <SectionLabel label={getTranslatedText('podlaha', 'nazov') || t('floorType') || 'Podlaha'} color="amber" />
-          <div className="grid sm:grid-cols-2 gap-4 mb-8">
-            <OptionCard label={getTranslatedText('podlaha_laminat', 'nazov') || t('laminate')} selected={podlaha === "laminat"} onClick={() => setPodlaha("laminat")} price={0} />
-          </div>
-          <SectionLabel label={getTranslatedText('interierove_dvere', 'nazov') || t('interiorDoorsType') || 'Interiérové dvere'} color="amber" />
-          <div className="grid sm:grid-cols-2 gap-4">
-            <OptionCard label={getTranslatedText('dvere_kridlove', 'nazov') || t('hingedDoors')} selected={interieroveDvere === "kridlove"} onClick={() => setInterieroveDvere("kridlove")} price={0} />
-            <OptionCard label={getTranslatedText('dvere_posuvne', 'nazov') || t('slidingDoors')} selected={interieroveDvere === "posuvne"} onClick={() => setInterieroveDvere("posuvne")} price={CENY.dvere_posuvne} />
-          </div>
+          
+          <ConfiguratorRow
+            label={getTranslatedText('obklad_stien', 'nazov') || t('wallCladding') || 'Obklad stien'}
+            description={getTranslatedText('obklad_stien_desc') || 'Vnútorný obklad stien a stropov v obytných miestnostiach.'}
+            selectedValue={obkladStien}
+            onChange={setObkladStien}
+            options={obkladStienOptions}
+            onShowGallery={() => handleShowOptionGallery('interier')}
+            icon={Layout}
+          />
+
+          <ConfiguratorRow
+            label={getTranslatedText('podlaha', 'nazov') || t('floorType') || 'Podlaha'}
+            description={getTranslatedText('podlaha_desc') || 'Kvalitná laminátová podlaha v celom dome.'}
+            selectedValue={podlaha}
+            onChange={setPodlaha}
+            options={podlahaOptions}
+            onShowGallery={() => handleShowOptionGallery('podlaha')}
+            icon={Layout}
+          />
+
+          <ConfiguratorRow
+            label={getTranslatedText('interierove_dvere', 'nazov') || t('interiorDoorsType') || 'Interiérové dvere'}
+            description={getTranslatedText('interierove_dvere_desc') || 'Vnútorné dvere a zárubne do izieb.'}
+            selectedValue={interieroveDvere}
+            onChange={setInterieroveDvere}
+            options={interieroveDvereOptions}
+            icon={Layout}
+          />
         </section>
 
         {/* 7. Elektro */}
-        <section id="section-7" className="scroll-mt-32">
+        <section id="section-7" className="scroll-mt-32 border-b border-slate-200 dark:border-white/10 pb-8 space-y-4">
           <BigSectionHeader title={getTranslatedText('sekcia_elektro', 'nazov') || t('electricalSection') || 'Elektroinštalácia'} icon={Zap} stepIdx={7} totalSteps={13} />
-          <SectionLabel label={getTranslatedText('elektro_typ', 'nazov') || t('installationType') || 'Typ inštalácie'} color="yellow" />
-          <div className="grid sm:grid-cols-3 gap-4 mb-8">
-            <OptionCard label={getTranslatedText('elektro_eu', 'nazov') || t('euStandard')} selected={elektro === "eu"} onClick={() => setElektro("eu")} price={0} />
-            <OptionCard label={getTranslatedText('elektro_cz', 'nazov') || t('czSkStandard')} selected={elektro === "cz"} onClick={() => setElektro("cz")} price={CENY.elektro_cz} />
-            <OptionCard label={getTranslatedText('elektro_ge', 'nazov') || t('geStandard')} selected={elektro === "ge"} onClick={() => setElektro("ge")} price={CENY.elektro_ge} isA0={true} />
-          </div>
+          
+          <ConfiguratorRow
+            label={getTranslatedText('elektro_typ', 'nazov') || t('installationType') || 'Typ inštalácie'}
+            description={getTranslatedText('elektro_desc') || 'Zásuvky, vypínače, rozvádzač a vnútorné rozvody.'}
+            selectedValue={elektro}
+            onChange={setElektro}
+            options={elektroOptions}
+            icon={Zap}
+          />
+
           <SectionLabel label="Doplnky" color="yellow" />
           <div className="space-y-4">
-            <AddonRow label={getTranslatedText('bleskozvod', 'nazov') || t('lightningRod')} checked={bleskozvod} onChange={() => setBleskozvod(!bleskozvod)} price={CENY.bleskozvod} locked={ucel === "rodinny"} t={t} />
-            <AddonRow label={getTranslatedText('prepat', 'nazov') || t('surgeProtection')} checked={prepat} onChange={() => setPrepat(!prepat)} price={CENY.prepat} locked={ucel === "rodinny"} t={t} />
-            <AddonRow label={getTranslatedText('pripravaNaSolarnePanely', 'nazov') || 'Príprava na solárne panely'} checked={pripravaNaSolarnePanely} onChange={() => setPripravaNaSolarnePanely(!pripravaNaSolarnePanely)} price={CENY.pripravaNaSolarnePanely} />
+            <AddonRow icon={Zap} label={getTranslatedText('bleskozvod', 'nazov') || t('lightningRod')} checked={bleskozvod} onChange={() => setBleskozvod(!bleskozvod)} price={CENY.bleskozvod} locked={ucel === "rodinny"} t={t} />
+            <AddonRow icon={Zap} label={getTranslatedText('prepat', 'nazov') || t('surgeProtection')} checked={prepat} onChange={() => setPrepat(!prepat)} price={CENY.prepat} locked={ucel === "rodinny"} t={t} />
+            <AddonRow icon={Zap} label={getTranslatedText('pripravaNaSolarnePanely', 'nazov') || 'Príprava na solárne panely'} checked={pripravaNaSolarnePanely} onChange={() => setPripravaNaSolarnePanely(!pripravaNaSolarnePanely)} price={CENY.pripravaNaSolarnePanely} />
           </div>
         </section>
 
         {/* 8. Kúpeľňa */}
-        <section id="section-8" className="scroll-mt-32">
+        <section id="section-8" className="scroll-mt-32 border-b border-slate-200 dark:border-white/10 pb-8 space-y-4">
           <BigSectionHeader title={getTranslatedText('sekcia_kupelna', 'nazov') || t('bathroomSection') || 'Kúpeľňa'} icon={Droplet} stepIdx={8} totalSteps={13} />
-          <SectionLabel label={getTranslatedText('sprchovyKut', 'nazov') || t('showerCabin') || 'Sprchový kút'} color="teal" />
-          <div className="grid sm:grid-cols-2 gap-4 mb-8">
-            <OptionCard label={getTranslatedText('sprcha_standard', 'nazov') || t('shower')} selected={sprchovyKut === "standard"} onClick={() => setSprchovyKut("standard")} price={0} />
-            <OptionCard label={getTranslatedText('sprcha_radaway', 'nazov') || t('showerRadawayTile')} selected={sprchovyKut === "radaway"} onClick={() => setSprchovyKut("radaway")} price={CENY.sprchovyKut} />
-          </div>
-          <SectionLabel label={getTranslatedText('bateria', 'nazov') || t('faucet') || 'Batéria'} color="teal" />
-          <div className="grid sm:grid-cols-2 gap-4 mb-8">
-            <OptionCard label={getTranslatedText('bateria_standard', 'nazov') || t('faucetStandard')} selected={bateria === "standard"} onClick={() => setBateria("standard")} price={0} />
-            <OptionCard label={getTranslatedText('bateria_grohe', 'nazov') || 'Grohe'} selected={bateria === "grohe"} onClick={() => setBateria("grohe")} price={CENY.bateria} />
-          </div>
-          <SectionLabel label={getTranslatedText('strop_kupelna', 'nazov') || t('bathroomCeiling') || 'Strop'} color="teal" />
-          <div className="grid sm:grid-cols-2 gap-4 mb-8">
-            <OptionCard label={getTranslatedText('strop_drevo', 'nazov') || t('ceilingWoodPattern')} selected={stropKupelna === "drevo"} onClick={() => setStropKupelna("drevo")} price={0} />
-            <OptionCard label={getTranslatedText('strop_sadrokarton', 'nazov') || t('drywallWallpaperPaint')} selected={stropKupelna === "sadrokarton"} onClick={() => setStropKupelna("sadrokarton")} price={CENY.strop_kupelna_sadrokarton} />
-          </div>
+          
+          <ConfiguratorRow
+            label={getTranslatedText('sprchovyKut', 'nazov') || t('showerCabin') || 'Sprchový kút'}
+            description={getTranslatedText('sprchovyKut_desc') || 'Zariadenie a obklad sprchovacieho kúta.'}
+            selectedValue={sprchovyKut}
+            onChange={setSprchovyKut}
+            options={sprchovyKutOptions}
+            onShowGallery={() => handleShowOptionGallery('kupelna')}
+            icon={Droplet}
+          />
+
+          <ConfiguratorRow
+            label={getTranslatedText('bateria', 'nazov') || t('faucet') || 'Batéria'}
+            description={getTranslatedText('bateria_desc') || 'Vodovodná batéria a armatúry v kúpeľni.'}
+            selectedValue={bateria}
+            onChange={setBateria}
+            options={bateriaOptions}
+            icon={Droplet}
+          />
+
+          <ConfiguratorRow
+            label={getTranslatedText('strop_kupelna', 'nazov') || t('bathroomCeiling') || 'Strop'}
+            description={getTranslatedText('strop_kupelna_desc') || 'Materiál stropného podhľadu v kúpeľni.'}
+            selectedValue={stropKupelna}
+            onChange={setStropKupelna}
+            options={stropKupelnaOptions}
+            icon={Droplet}
+          />
+
           <SectionLabel label="Doplnky" color="teal" />
           <div className="space-y-4">
-            <AddonRow label={getTranslatedText('vana', 'nazov') || t('bathtub')} checked={vana} onChange={() => setVana(!vana)} price={CENY.vana} />
-            <AddonRow label={getTranslatedText('skrinka', 'nazov') || t('cabinet')} checked={skrinka} onChange={() => setSkrinka(!skrinka)} price={CENY.skrinka} />
+            <AddonRow icon={Droplet} label={getTranslatedText('vana', 'nazov') || t('bathtub')} checked={vana} onChange={() => setVana(!vana)} price={CENY.vana} />
+            <AddonRow icon={Layout} label={getTranslatedText('skrinka', 'nazov') || t('cabinet')} checked={skrinka} onChange={() => setSkrinka(!skrinka)} price={CENY.skrinka} />
           </div>
         </section>
 
         {/* 9. Základy */}
-        <section id="section-9" className="scroll-mt-32">
+        <section id="section-9" className="scroll-mt-32 border-b border-slate-200 dark:border-white/10 pb-8 space-y-4">
           <BigSectionHeader title={getTranslatedText('sekcia_zaklady', 'nazov') || t('foundationsSection') || 'Základy'} icon={Wrench} stepIdx={9} totalSteps={13} />
-          <div className="grid sm:grid-cols-2 gap-4">
-            <OptionCard label={getTranslatedText('zaklady_bez', 'nazov') || t('noFoundations')} selected={zaklady === "bez"} onClick={() => setZaklady("bez")} price={0} />
-            <OptionCard label={getTranslatedText('zaklady_vruty', 'nazov') || t('groundScrews')} selected={zaklady === "vruty"} onClick={() => setZaklady("vruty")} price={CENY.zaklady_vruty} />
-            <OptionCard label={getTranslatedText('zaklady_patky', 'nazov') || t('concretePads')} selected={zaklady === "patky"} onClick={() => setZaklady("patky")} price={CENY.zaklady_patky} />
-            <OptionCard label={getTranslatedText('zaklady_pasove', 'nazov') || t('stripFoundations')} selected={zaklady === "pasove"} onClick={() => setZaklady("pasove")} price={CENY.zaklady_pasove} />
-          </div>
+          <ConfiguratorRow
+            label={getTranslatedText('sekcia_zaklady', 'nazov') || t('foundationsSection') || 'Základy'}
+            description={getTranslatedText('zaklady_desc') || 'Zvoľte typ základu a uloženia domu na pozemku.'}
+            selectedValue={zaklady}
+            onChange={setZaklady}
+            options={zakladyOptions}
+            icon={Wrench}
+          />
         </section>
 
         {/* 10. Inžiniering */}
-        <section id="section-10" className="scroll-mt-32">
+        <section id="section-10" className="scroll-mt-32 border-b border-slate-200 dark:border-white/10 pb-8 space-y-4">
           <BigSectionHeader title={getTranslatedText('sekcia_inziniering', 'nazov') || t('engineeringDocsSection') || 'Inžiniering a dokumentácia'} icon={Layers} stepIdx={10} totalSteps={13} />
           <div className="space-y-4">
-            <AddonRow label={getTranslatedText('inziniering', 'nazov') || t('engineering')} checked={inziniering} onChange={() => setInziniering(!inziniering)} price={CENY.inziniering} locked={ucel === "rodinny"} t={t} />
-            <AddonRow label={getTranslatedText('projekt_certifikacia', 'nazov') || t('projectCertShort')} checked={projektACertifikacia} onChange={() => setProjektACertifikacia(!projektACertifikacia)} price={CENY.projektACertifikacia} locked={ucel === "rodinny"} t={t} />
-            <AddonRow label={getTranslatedText('revizia', 'nazov') || t('revisionDocsShort')} checked={revizia} onChange={() => setRevizia(!revizia)} price={CENY.revizia} locked={ucel === "rodinny"} t={t} />
+            <AddonRow icon={Layers} label={getTranslatedText('inziniering', 'nazov') || t('engineering')} checked={inziniering} onChange={() => setInziniering(!inziniering)} price={CENY.inziniering} locked={ucel === "rodinny"} t={t} />
+            <AddonRow icon={Layers} label={getTranslatedText('projekt_certifikacia', 'nazov') || t('projectCertShort')} checked={projektACertifikacia} onChange={() => setProjektACertifikacia(!projektACertifikacia)} price={CENY.projektACertifikacia} locked={ucel === "rodinny"} t={t} />
+            <AddonRow icon={CheckCircle} label={getTranslatedText('revizia', 'nazov') || t('revisionDocsShort')} checked={revizia} onChange={() => setRevizia(!revizia)} price={CENY.revizia} locked={ucel === "rodinny"} t={t} />
           </div>
         </section>
 
         {/* 11. Realizácia */}
-        <section id="section-11" className="scroll-mt-32">
+        <section id="section-11" className="scroll-mt-32 border-b border-slate-200 dark:border-white/10 pb-8 space-y-4">
           <BigSectionHeader title={getTranslatedText('sekcia_realizacia', 'nazov') || t('realizationSection') || 'Realizácia'} icon={Hammer} stepIdx={11} totalSteps={13} />
           <div className="space-y-4">
-            <AddonRow label={getTranslatedText('montaz', 'nazov') || t('houseAssembly')} checked={montaz} onChange={() => setMontaz(!montaz)} price={CENY.montaz} />
-            <AddonRow label={getTranslatedText('doprava', 'nazov') || t('transportTile')} checked={doprava} onChange={() => setDoprava(!doprava)} price={CENY.doprava} />
+            <AddonRow icon={Hammer} label={getTranslatedText('montaz', 'nazov') || t('houseAssembly')} checked={montaz} onChange={() => setMontaz(!montaz)} price={CENY.montaz} />
+            <AddonRow icon={Hammer} label={getTranslatedText('doprava', 'nazov') || t('transportTile')} checked={doprava} onChange={() => setDoprava(!doprava)} price={CENY.doprava} />
           </div>
         </section>
 
         {/* 12. Služby k nákupu */}
-        <section id="section-12" className="scroll-mt-32">
+        <section id="section-12" className="scroll-mt-32 border-b border-slate-200 dark:border-white/10 pb-8 space-y-4">
           <BigSectionHeader title={getTranslatedText('sekcia_sluzby', 'nazov') || t('additionalServices') || 'Dodatočné služby'} description={getTranslatedText('sekcia_sluzby', 'podnadpis') || 'Vyberte si doplnkové služby (voliteľné):'} icon={Sparkles} stepIdx={12} totalSteps={13} />
           <div className="space-y-4">
-            <AddonRow label={getTranslatedText('sluzba_predaj', 'nazov') || 'Predaj predošlej nehnuteľnosti'} description={getTranslatedText('sluzba_predaj', 'dlhy_popis') || 'Budú sa Vám venovať naši najlepší odborníci v realitách.'} checked={predajNehnutelnosti} onChange={() => setPredajNehnutelnosti(!predajNehnutelnosti)} price={0} />
-            <AddonRow label={getTranslatedText('sluzba_pozemok', 'nazov') || 'Chcem pozemok pod svoj dom'} description={getTranslatedText('sluzba_pozemok', 'dlhy_popis') || 'Pomôžeme Vám nájsť ideálny pozemok.'} checked={chcemPozemok} onChange={() => setChcemPozemok(!chcemPozemok)} price={0} />
-            <AddonRow label={getTranslatedText('sluzba_finance', 'nazov') || 'Finančné služby - úvery/poistky'} description={getTranslatedText('sluzba_finance', 'dlhy_popis') || 'Budú sa Vám venovať naši najlepší finančníci.'} checked={financneSluzby} onChange={() => setFinancneSluzby(!financneSluzby)} price={0} />
+            <AddonRow icon={Sparkles} label={getTranslatedText('sluzba_predaj', 'nazov') || 'Predaj predošlej nehnuteľnosti'} description={getTranslatedText('sluzba_predaj', 'dlhy_popis') || 'Budú sa Vám venovať naši najlepší odborníci v realitách.'} checked={predajNehnutelnosti} onChange={() => setPredajNehnutelnosti(!predajNehnutelnosti)} price={0} />
+            <AddonRow icon={Sparkles} label={getTranslatedText('sluzba_pozemok', 'nazov') || 'Chcem pozemok pod svoj dom'} description={getTranslatedText('sluzba_pozemok', 'dlhy_popis') || 'Pomôžeme Vám nájsť ideálny pozemok.'} checked={chcemPozemok} onChange={() => setChcemPozemok(!chcemPozemok)} price={0} />
+            <AddonRow icon={Sparkles} label={getTranslatedText('sluzba_finance', 'nazov') || 'Finančné služby - úvery/poistky'} description={getTranslatedText('sluzba_finance', 'dlhy_popis') || 'Budú sa Vám venovať naši najlepší finančníci.'} checked={financneSluzby} onChange={() => setFinancneSluzby(!financneSluzby)} price={0} />
           </div>
         </section>
 
       </div>
-      
+
+      {/* Lightbox pre ukážky možností */}
+      <AnimatePresence>
+        {activeLightbox && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/90 z-[100] flex items-center justify-center p-4"
+            onClick={() => setActiveLightbox(null)}
+          >
+            <div 
+              className="relative max-w-4xl w-full max-h-[85vh] flex flex-col items-center justify-center animate-in zoom-in-95 duration-200"
+              onClick={e => e.stopPropagation()}
+            >
+              {/* Close button */}
+              <button 
+                onClick={() => setActiveLightbox(null)}
+                className="absolute -top-12 right-0 p-2 text-white hover:text-gray-300 transition-colors cursor-pointer"
+              >
+                <X className="w-8 h-8" />
+              </button>
+
+              {/* Main Image */}
+              <div className="relative w-full flex items-center justify-center">
+                {activeLightbox.images.length > 1 && (
+                  <button 
+                    onClick={() => {
+                      setActiveLightbox(prev => {
+                        const newIdx = prev.index === 0 ? prev.images.length - 1 : prev.index - 1;
+                        return { ...prev, index: newIdx };
+                      });
+                    }}
+                    className="absolute left-2 md:-left-16 p-3 rounded-full bg-black/50 hover:bg-black/80 text-white transition-all cursor-pointer z-10 animate-in fade-in"
+                  >
+                    <ChevronLeft className="w-6 h-6" />
+                  </button>
+                )}
+
+                <img 
+                  src={activeLightbox.images[activeLightbox.index]} 
+                  alt="Ukážka možnosti" 
+                  className="max-w-full max-h-[70vh] rounded-2xl object-contain shadow-2xl"
+                />
+
+                {activeLightbox.images.length > 1 && (
+                  <button 
+                    onClick={() => {
+                      setActiveLightbox(prev => {
+                        const newIdx = prev.index === prev.images.length - 1 ? 0 : prev.index + 1;
+                        return { ...prev, index: newIdx };
+                      });
+                    }}
+                    className="absolute right-2 md:-right-16 p-3 rounded-full bg-black/50 hover:bg-black/80 text-white transition-all cursor-pointer z-10 animate-in fade-in"
+                  >
+                    <ChevronRight className="w-6 h-6" />
+                  </button>
+                )}
+              </div>
+
+              {/* Counter / Caption */}
+              {activeLightbox.images.length > 1 && (
+                <div className="mt-4 text-white/80 text-sm font-medium">
+                  {activeLightbox.index + 1} z {activeLightbox.images.length}
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 }
