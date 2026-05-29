@@ -163,7 +163,14 @@ export const prostoHouseTranslations = {
     "configuratorLabel": "Konfigurátor",
     "includedInPrice": "V cene",
     "sendQuoteForAmount": "Odoslať cenovú ponuku na sumu {amount} €",
-    "viewShowcase": "Pozrieť ukážku"
+    "viewShowcase": "Pozrieť ukážku",
+    "foundationsDesc": "Spôsob osadenia modulu na pozemok. V prípade klasických základov sa prispôsobíme typu terénu.",
+    "shellAssemblyDesc": "Zvoľte, či si montáž zabezpečíte svojpomocne alebo profesionálne od nás.",
+    "insulationTypeDesc": "Hrúbka minerálnej izolácie v obvodových stenách domu pre energetický certifikát.",
+    "facadeDesc": "Vyberte si štýl vonkajšieho obkladu a fasády.",
+    "interiorFinishDesc": "Zvoľte finálny vzhľad stien v interiéri Vášho domu.",
+    "houseExtensionDesc": "Možnosť predĺženia modulu pre získanie väčšieho obytného priestoru.",
+    "windowModification": "Úprava okien"
   },
   "en": {
     "selectProjectType": "Click on the building type to start the configurator",
@@ -329,7 +336,14 @@ export const prostoHouseTranslations = {
     "configuratorLabel": "Configurator",
     "includedInPrice": "Included",
     "sendQuoteForAmount": "Send price quote for the amount of {amount} €",
-    "viewShowcase": "View showcase"
+    "viewShowcase": "View showcase",
+    "foundationsDesc": "Method of placing the module on the land. In the case of classic foundations, we will adapt to the type of terrain.",
+    "shellAssemblyDesc": "Choose whether you will assemble it yourself or professionally by us.",
+    "insulationTypeDesc": "Thickness of mineral insulation in the outer walls of the house for the energy certificate.",
+    "facadeDesc": "Choose the style of the exterior cladding and facade.",
+    "interiorFinishDesc": "Choose the final look of the walls in the interior of your house.",
+    "houseExtensionDesc": "Option to extend the module to get more living space.",
+    "windowModification": "Window modification"
   },
   "de": {
     "selectProjectType": "Klicken Sie auf den Gebäudetyp, um den Konfigurator zu starten",
@@ -495,7 +509,14 @@ export const prostoHouseTranslations = {
     "configuratorLabel": "Konfigurator",
     "includedInPrice": "Im Preis",
     "sendQuoteForAmount": "Preisangebot über den Betrag von {amount} € senden",
-    "viewShowcase": "Vorschau anzeigen"
+    "viewShowcase": "Vorschau anzeigen",
+    "foundationsDesc": "Methode der Platzierung des Moduls auf dem Grundstück. Bei klassischen Fundamenten passen wir uns dem Gelände an.",
+    "shellAssemblyDesc": "Wählen Sie, ob Sie die Montage selbst oder professionell durch uns durchführen lassen.",
+    "insulationTypeDesc": "Stärke der Mineralwolle-Dämmung in den Außenwänden des Hauses für den Energieausweis.",
+    "facadeDesc": "Wählen Sie den Stil der Außenverkleidung und Fassade.",
+    "interiorFinishDesc": "Wählen Sie das endgültige Aussehen der Wände im Innenbereich Ihres Hauses.",
+    "houseExtensionDesc": "Option zur Verlängerung des Moduls für mehr Wohnraum.",
+    "windowModification": "Fensteränderung"
   },
   "fr": {
     "selectProjectType": "Cliquez sur le type de bâtiment pour démarrer le configurateur",
@@ -661,7 +682,14 @@ export const prostoHouseTranslations = {
     "configuratorLabel": "Configurateur",
     "includedInPrice": "Inclus",
     "sendQuoteForAmount": "Envoyer le devis d'un montant de {amount} €",
-    "viewShowcase": "Voir la démonstration"
+    "viewShowcase": "Voir la démonstration",
+    "foundationsDesc": "Méthode de placement du module sur le terrain. Dans le cas de fondations classiques, nous nous adapterons au type de terrain.",
+    "shellAssemblyDesc": "Choisissez si vous effectuez le montage vous-même ou professionnellement par nos soins.",
+    "insulationTypeDesc": "Épaisseur de l'isolation minérale dans les murs extérieurs de la maison pour le certificat énergétique.",
+    "facadeDesc": "Choisissez le style du bardage extérieur et de la façade.",
+    "interiorFinishDesc": "Choisissez l'aspect final des murs à l'intérieur de votre maison.",
+    "houseExtensionDesc": "Option d'extension du module pour obtenir plus d'espace de vie.",
+    "windowModification": "Modification de fenêtre"
   },
   "hu": {
     "selectProjectType": "Kattintson az épülettípusra a konfigurátor indításához",
@@ -827,7 +855,14 @@ export const prostoHouseTranslations = {
     "configuratorLabel": "Konfigurátor",
     "includedInPrice": "Az árban",
     "sendQuoteForAmount": "Árajánlat küldése {amount} € értékben",
-    "viewShowcase": "Bemutató megtekintése"
+    "viewShowcase": "Bemutató megtekintése",
+    "foundationsDesc": "A modul elhelyezésének módja a telken. Klasszikus alapozás esetén a terep típusához igazodunk.",
+    "shellAssemblyDesc": "Válassza ki, hogy a szerelést saját maga végzi, vagy szakemberre bízza.",
+    "insulationTypeDesc": "Az ásványi szigetelés vastagsága a ház külső falaiban az energetikai tanúsítványhoz.",
+    "facadeDesc": "Válassza ki a külső burkolat és homlokzat stílusát.",
+    "interiorFinishDesc": "Válassza ki a falak végső megjelenését a ház belsejében.",
+    "houseExtensionDesc": "A modul meghosszabbításának lehetősége több lakótér érdekében.",
+    "windowModification": "Ablak módosítása"
   },
   "pl": {
     "selectProjectType": "Kliknij na typ budynku, aby uruchomić konfigurator",
@@ -993,7 +1028,14 @@ export const prostoHouseTranslations = {
     "configuratorLabel": "Konfigurator",
     "includedInPrice": "W cenie",
     "sendQuoteForAmount": "Wyślij ofertę cenową na kwotę {amount} €",
-    "viewShowcase": "Zobacz pokaz"
+    "viewShowcase": "Zobacz pokaz",
+    "foundationsDesc": "Sposób posadowienia modułu na działce. W przypadku klasycznych fundamentów dostosujemy się do rodzaju terenu.",
+    "shellAssemblyDesc": "Wybierz, czy montaż wykonasz samodzielnie, czy zlecicie go profesjonalnie nam.",
+    "insulationTypeDesc": "Grubość izolacji mineralnej w ścianach zewnętrznych domu do certyfikatu energetycznego.",
+    "facadeDesc": "Wybierz styl okładziny zewnętrznej i elewacji.",
+    "interiorFinishDesc": "Wybierz ostateczny wygląd ścian wewnątrz swojego domu.",
+    "houseExtensionDesc": "Opcja przedłużenia modułu w celu uzyskania większej przestrzeni życiowej.",
+    "windowModification": "Modyfikacja okna"
   },
   "uk": {
     "selectProjectType": "Натисніть на тип будівлі, щоб запустити конфігуратор",
@@ -1159,7 +1201,14 @@ export const prostoHouseTranslations = {
     "configuratorLabel": "Конфігуратор",
     "includedInPrice": "У ціні",
     "sendQuoteForAmount": "Надіслати цінову пропозицію на суму {amount} €",
-    "viewShowcase": "Переглянути демонстрацію"
+    "viewShowcase": "Переглянути демонстрацію",
+    "foundationsDesc": "Спосіб встановлення модуля на ділянку. У разі класичного фундаменту ми підлаштуємося під тип рельєфу.",
+    "shellAssemblyDesc": "Виберіть, чи ви виконаєте монтаж самостійно, чи довірите його професіоналам від нас.",
+    "insulationTypeDesc": "Товщина мінеральної ізоляції в зовнішніх стінах будинку для енергетичного сертифіката.",
+    "facadeDesc": "Виберіть стиль зовнішньої обшивки та фасаду.",
+    "interiorFinishDesc": "Виберіть фінальний вигляд стін усередині вашого будинку.",
+    "houseExtensionDesc": "Можливість подовження модуля для отримання більшого житлового простору.",
+    "windowModification": "Модифікація вікна"
   },
   "sr": {
     "selectProjectType": "Кликните на тип зграде да покренете конфигуратор",
@@ -1325,7 +1374,14 @@ export const prostoHouseTranslations = {
     "configuratorLabel": "Конфигуратор",
     "includedInPrice": "У цени",
     "sendQuoteForAmount": "Пошаљите понуду у износу од {amount} €",
-    "viewShowcase": "Погледај приказ"
+    "viewShowcase": "Погледај приказ",
+    "foundationsDesc": "Начин постављања модула на плац. У случају класичних темеља, прилагодићемо се типу терена.",
+    "shellAssemblyDesc": "Изаберите да ли ћете монтажу извршити сами or професионално од нас.",
+    "insulationTypeDesc": "Дебљина минералне изолације у спољашњим зидовима куће за енергетски пасош.",
+    "facadeDesc": "Изаберите стил спољашњег облагања и фасаде.",
+    "interiorFinishDesc": "Изаберите коначни изглед зидова у унутрашњости ваше куће.",
+    "houseExtensionDesc": "Опција продужења модула за добијање већег стамбеног простора.",
+    "windowModification": "Модификација прозора"
   },
   "hr": {
     "selectProjectType": "Kliknite na tip zgrade za pokretanje konfiguratora",
@@ -1491,7 +1547,14 @@ export const prostoHouseTranslations = {
     "configuratorLabel": "Konfigurator",
     "includedInPrice": "U cijeni",
     "sendQuoteForAmount": "Pošaljite ponudu u iznosu od {amount} €",
-    "viewShowcase": "Pogledaj prikaz"
+    "viewShowcase": "Pogledaj prikaz",
+    "foundationsDesc": "Način postavljanja modula na parcelu. U slučaju klasičnih temelja, prilagodit ćemo se tipu terena.",
+    "shellAssemblyDesc": "Odaberite hoćete li montažu izvršiti sami ili profesionalno od nas.",
+    "insulationTypeDesc": "Debljina mineralne izolacije u vanjskim zidovima kuće za energetski certifikat.",
+    "facadeDesc": "Odaberite stil vanjskog oblaganja i fasade.",
+    "interiorFinishDesc": "Odaberite konačni izgled zidova u unutrašnjosti vaše kuće.",
+    "houseExtensionDesc": "Opcija produženja modula za dobivanje većeg stambenog prostora.",
+    "windowModification": "Modifikacija prozora"
   },
   "el": {
     "selectProjectType": "Κάντε κλικ στον τύπο κτιρίου για να ξεκινήσετε τον διαμορφωτή",
@@ -1657,6 +1720,13 @@ export const prostoHouseTranslations = {
     "configuratorLabel": "Διαμορφωτής",
     "includedInPrice": "Συμπεριλαμβάνεται",
     "sendQuoteForAmount": "Αποστολή προσφοράς για το ποσό των {amount} €",
-    "viewShowcase": "Προβολή δείγματος"
+    "viewShowcase": "Προβολή δείγματος",
+    "foundationsDesc": "Μέθοδος τοποθέτησης της μονάδας στο οικόπεδο. Σε περίπτωση κλασικών θεμελίων, θα προσαρμοστούμε στον τύπο του εδάφους.",
+    "shellAssemblyDesc": "Επιλέξτε εάν θα κάνετε τη συναρμολόγηση μόνοι σας ή επαγγελματικά από εμάς.",
+    "insulationTypeDesc": "Πάχος της ορυκτής μόνωσης στους εξωτερικούς τοίχους του σπιтиού για το ενεργειακό πιστοποιητικό.",
+    "facadeDesc": "Επιλέξτε το στυλ της εξωτερικής επένδυσης και της πρόσοψης.",
+    "interiorFinishDesc": "Επιλέξτε την τελική εμφάνιση των τοίχων στο εσωτερικό του σπιτιού σας.",
+    "houseExtensionDesc": "Επιλογή επέκτασης της μονάδας για περισσότερο χώρο διαβίωσης.",
+    "windowModification": "Τροποποίηση παραθύρου"
   }
 };
