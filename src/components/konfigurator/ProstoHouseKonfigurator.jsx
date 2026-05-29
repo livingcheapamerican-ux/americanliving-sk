@@ -257,8 +257,8 @@ const ContactModal = ({ isOpen, onClose, onSubmit, isSubmitting, t }) => {
 // ── Hlavný Komponent (ScrollSpy Dashboard) ────────────────────────────────────────────────
 
 export default function ProstoHouseKonfigurator({ house, houseCode, dom: domProp }) {
-  const { language } = useLanguage();
-  const t = (key) => prostoHouseTranslations[language]?.[key] || prostoHouseTranslations['sk']?.[key] || key;
+  const { language, t: globalT } = useLanguage();
+  const t = (key) => prostoHouseTranslations[language]?.[key] || prostoHouseTranslations['sk']?.[key] || globalT(key) || key;
 
   const urlParams = new URLSearchParams(window.location.search);
   const domIdFromUrl = urlParams.get('id');
@@ -643,15 +643,15 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
             
             {/* SEKCIA 1: Účel stavby */}
             <div id="section-0" className="scroll-mt-28">
-              <BigSectionHeader title="Základné rozhodnutie" description="Na aký účel plánujete dom využívať? Toto rozhodnutie nám pomôže automaticky predvybrať technológie potrebné pre stavebné povolenie." icon={Home} stepIdx={0} totalSteps={6} />
+              <BigSectionHeader title={t('sectionBasicDecision')} description={t('sectionBasicDecisionDesc')} icon={Home} stepIdx={0} totalSteps={6} />
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <OptionCard 
-                  icon={Sun} label={t('recreationalBuilding')} description="Chata, víkendový dom. Nevyžaduje energetický certifikát A0." 
+                  icon={Sun} label={t('recreationalBuilding')} description={t('recreationalBuildingDesc') || "Chata, víkendový dom. Nevyžaduje energetický certifikát A0."} 
                   price={0} selected={typStavby === 'rekreacna'} onClick={() => setTypStavby('rekreacna')} 
                 />
                 <OptionCard 
-                  icon={Home} label={t('familyHouseA0')} description="Trvalé bývanie. Splnený zákonný štandard (zateplenie, čerpadlo, rekuperácia)." 
+                  icon={Home} label={t('familyHouseA0')} description={t('familyHouseA0Desc') || "Trvalé bývanie. Splnený zákonný štandard (zateplenie, čerpadlo, rekuperácia)."} 
                   price={0} selected={typStavby === 'rodinny_dom'} onClick={() => setTypStavby('rodinny_dom')} isA0={true}
                 />
               </div>
@@ -662,7 +662,7 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
 
             {/* SEKCIA 2: Konštrukcia a Základy */}
             <div id="section-1" className="scroll-mt-28">
-              <BigSectionHeader title="Hrubá stavba a Konštrukcia" description="Vyberte si spôsob dodania a typ založenia stavby." icon={Hammer} stepIdx={1} totalSteps={6} />
+              <BigSectionHeader title={t('sectionStructure')} description={t('sectionStructureDesc')} icon={Hammer} stepIdx={1} totalSteps={6} />
               <div className="space-y-6">
                 {hasExtension && (
                   <div>
@@ -698,7 +698,7 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
 
             {/* SEKCIA 3: Okná a Dvere */}
             <div id="section-2" className="scroll-mt-28">
-              <BigSectionHeader title="Okná a Vstupné dvere" description="Prispôsobte si presklenie a bezpečnosť vášho nového domu." icon={DoorOpen} stepIdx={2} totalSteps={6} />
+              <BigSectionHeader title={t('sectionWindowsDoors')} description={t('sectionWindowsDoorsDesc')} icon={DoorOpen} stepIdx={2} totalSteps={6} />
               <div className="space-y-6">
                 <div>
                   <SectionLabel label={t('entryDoors')} color="red" />
@@ -724,7 +724,7 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
                   </div>
                 </div>
                 <div>
-                  <SectionLabel label="Úprava okien" color="purple" />
+                  <SectionLabel label={t('windowModification') || "Úprava okien"} color="purple" />
                   <div className="space-y-3">
                     <AddonRow icon={Paintbrush} label={t('windowLamination')} price={getPrice('addon', 'windowLamination', house.addons.windowLamination)} checked={windowLamination} onChange={() => setWindowLamination(!windowLamination)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'windowLamination', p)} t={t} />
                     <AddonRow icon={SunDim} label={t('tintedGlass')} price={getPrice('addon', 'windowTint', house.addons.windowTint)} checked={windowTint} onChange={() => setWindowTint(!windowTint)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'windowTint', p)} t={t} />
@@ -735,7 +735,7 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
 
             {/* SEKCIA 4: Zateplenie a Fasáda */}
             <div id="section-3" className="scroll-mt-28">
-              <BigSectionHeader title="Zateplenie a Fasáda" description="Izolácia je kľúčová. Pre trvalé bývanie (A0) odporúčame hrubšie zateplenie." icon={Thermometer} stepIdx={3} totalSteps={6} />
+              <BigSectionHeader title={t('sectionInsulationFacade')} description={t('sectionInsulationFacadeDesc')} icon={Thermometer} stepIdx={3} totalSteps={6} />
               <div className="space-y-6">
                 <div>
                   <SectionLabel label={t('insulationType')} color="blue" />
@@ -771,7 +771,7 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
 
             {/* SEKCIA 5: Interiér a Siete */}
             <div id="section-4" className="scroll-mt-28">
-              <BigSectionHeader title="Interiér a Siete" description="Vyberte si stupeň dokončenia interiéru a rozvody technológií." icon={Layout} stepIdx={4} totalSteps={6} />
+              <BigSectionHeader title={t('sectionInteriorNets')} description={t('sectionInteriorNetsDesc')} icon={Layout} stepIdx={4} totalSteps={6} />
               <div className="space-y-6">
                 <div>
                   <SectionLabel label={t('interiorFinish')} color="emerald" />
@@ -797,7 +797,7 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
                   </div>
                 </div>
                 <div>
-                  <SectionLabel label="Podlahy a Interiérové Dvere" color="amber" />
+                  <SectionLabel label={t('floorsAndDoors') || "Podlahy a Interiérové Dvere"} color="amber" />
                   <div className="space-y-3">
                     <CounterRow icon={DoorOpen} label={t('interiorDoorsCount')} price={getPrice('addon', 'interiorDoor', house.addons.interiorDoor)} value={interiorDoorsCount} onChange={setInteriorDoorsCount} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'interiorDoor', p)} />
                     <AddonRow icon={Layers} label={t('laminateFloors')} price={getPrice('addon', 'laminateFloors', house.addons.laminateFloors)} checked={laminateFloors} onChange={() => setLaminateFloors(!laminateFloors)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'laminateFloors', p)} t={t} />
@@ -825,7 +825,7 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
 
             {/* SEKCIA 6: Služby a Dokumentácia */}
             <div id="section-5" className="scroll-mt-28">
-              <BigSectionHeader title="Súhrn a Služby" description="Vyberte doplnkové služby pre bezstarostnú realizáciu a skontrolujte zhrnutie." icon={CheckCircle} stepIdx={5} totalSteps={6} />
+              <BigSectionHeader title={t('sectionSummaryServices')} description={t('sectionSummaryServicesDesc')} icon={CheckCircle} stepIdx={5} totalSteps={6} />
               
               <div className="bg-white dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 p-6 lg:p-8 rounded-3xl backdrop-blur-md mb-12 shadow-sm dark:shadow-none">
                 <SectionLabel label={t('documentation')} color="gray" />
@@ -844,7 +844,7 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
                 </div>
                 
                 <div className="pt-8 border-t border-slate-200 dark:border-white/10">
-                  <h3 className="text-xl font-black text-slate-900 dark:text-white mb-6">Finálne zhrnutie konfigurácie</h3>
+                  <h3 className="text-xl font-black text-slate-900 dark:text-white mb-6">{t('finalConfigurationSummary') || t('configurationSummary')}</h3>
                   <ProstoHouseSummary
                     house={house} t={t} isA0Compliant={isA0Compliant} totalPrice={totalPrice} onSendQuote={() => setModalOpen(true)}
                     mountingIdx={mountingIdx} extensionIdx={extensionIdx} insulationIdx={insulationIdx} foundationIdx={foundationIdx}
@@ -872,7 +872,7 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
               {/* Galéria na záver */}
               {effectiveDom && (
                 <div className="mb-12">
-                  <BigSectionHeader title="Fotogaléria a Pôdorysy" description="Prezrite si vizualizácie k vašej vybranej konfigurácii." icon={Eye} />
+                  <BigSectionHeader title={t('sectionGalleryPlans')} description={t('sectionGalleryPlansDesc')} icon={Eye} />
                   <div className="bg-white dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 p-6 rounded-3xl backdrop-blur-md shadow-sm dark:shadow-none">
                     <KonfiguratorGaleria dom={effectiveDom} facadeIdx={facadeIdx} interiorIdx={interiorIdx} />
                   </div>

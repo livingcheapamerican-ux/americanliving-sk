@@ -4,8 +4,10 @@ import { Calculator, Send, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
+import { useLanguage } from "./LanguageContext";
 
 export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyrobca, buttonText, hidePrice, mobileOnly, onToggleSummary, isSummaryOpen }) {
+  const { t } = useLanguage();
   const [showContactModal, setShowContactModal] = useState(false);
   const [formData, setFormData] = useState({ meno: "", email: "", telefon: "", obec: "", poznamka: "" });
   const [sending, setSending] = useState(false);
@@ -18,7 +20,7 @@ export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyro
 
   const handleSendQuote = async () => {
     if (!formData.email || !formData.meno || !formData.telefon || !formData.obec) {
-      toast.error('Vyplňte všetky povinné polia');
+      toast.error(t('fillRequiredFields'));
       return;
     }
 
@@ -28,7 +30,7 @@ export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyro
       
       if (!onSendQuote) {
         console.error('FloatingPrice - onSendQuote callback neexistuje!');
-        toast.error('Chyba konfigurácie. Skúste to prosím znova.');
+        toast.error(t('configError'));
         return;
       }
 
@@ -46,17 +48,17 @@ export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyro
       const result = response?.data || response;
       
       if (result?.success || result?.id) {
-        toast.success('✓ Cenová ponuka odoslaná na váš email');
+        toast.success(t('quoteSentSuccess'));
         setFormData({ meno: "", email: "", telefon: "", obec: "", poznamka: "" });
         setShowContactModal(false);
       } else {
         console.error('FloatingPrice - neúspešná odpoveď:', { response, result });
-        const errorMsg = result?.error || result?.message || 'Neznáma chyba';
-        toast.error(`Chyba: ${errorMsg}`);
+        const errorMsg = result?.error || result?.message || t('unknownError');
+        toast.error(`${t('error') || 'Chyba'}: ${errorMsg}`);
       }
     } catch (error) {
       console.error('FloatingPrice - chyba pri odosielaní:', error);
-      toast.error(`Chyba: ${error.message || 'Neznáma chyba'}`);
+      toast.error(`${t('error') || 'Chyba'}: ${error.message || t('unknownError')}`);
     } finally {
       setSending(false);
     }
@@ -79,7 +81,7 @@ export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyro
               <>
                 <div className="flex flex-col text-left cursor-pointer select-none" onClick={onToggleSummary}>
                   <div className="flex items-center gap-1">
-                    <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">Zhrnutie konfigurácie</span>
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">{t('configurationSummary')}</span>
                     <motion.div animate={{ rotate: isSummaryOpen ? 180 : 0 }}>
                       <ChevronUp className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                     </motion.div>
@@ -94,14 +96,14 @@ export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyro
                     variant="outline"
                     className="border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-350 font-bold px-3 rounded-xl h-10 text-xs shadow-sm hover:bg-slate-100"
                   >
-                    Zhrnutie
+                    {t('summary')}
                   </Button>
                   <Button 
                     onClick={() => setShowContactModal(true)}
                     className="bg-gradient-to-r from-[#9E2A2B] to-[#802021] hover:from-[#802021] hover:to-[#611617] text-white font-bold px-4 rounded-xl shadow-lg shadow-primary/20 h-10 text-xs border-0"
                   >
                     <Send className="w-3.5 h-3.5 mr-1.5" />
-                    {buttonText || 'Mám záujem'}
+                    {buttonText || t('interested')}
                   </Button>
                 </div>
               </>
@@ -113,7 +115,7 @@ export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyro
                       <Calculator className="w-4 h-4" />
                     </div>
                     <div>
-                      <p className="text-[9px] text-white/90 leading-none">Celková cena</p>
+                      <p className="text-[9px] text-white/90 leading-none">{t('totalPrice')}</p>
                       <p className="text-sm font-bold leading-tight">
                         {price.toLocaleString('sk-SK')} €
                       </p>
@@ -125,7 +127,7 @@ export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyro
                   className="w-full bg-white/20 hover:bg-white/30 text-white font-bold border-t border-white/30 rounded-none rounded-b-xl py-2 h-auto text-xs"
                 >
                   <Send className="w-3 h-3 mr-1.5" />
-                  {buttonText || 'Pošli ponuku'}
+                  {buttonText || t('sendQuote')}
                 </Button>
               </div>
             )}
@@ -137,7 +139,7 @@ export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyro
             className={`${mobileOnly ? 'block md:hidden' : 'w-full'} bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold shadow-xl text-xs h-9 px-4 rounded-xl`}
           >
             <Send className="w-3 h-3 mr-1.5" />
-            {buttonText || 'Pošli ponuku'}
+            {buttonText || t('sendQuote')}
           </Button>
         )}
       </AnimatePresence>
@@ -161,37 +163,37 @@ export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyro
               onClick={(e) => e.stopPropagation()}
             >
               <div className="sticky top-0 bg-gradient-to-r from-green-600 to-emerald-600 text-white p-4 rounded-t-2xl md:rounded-t-2xl z-10">
-                <h3 className="text-lg font-bold">Pošlite mi cenovú ponuku</h3>
+                <h3 className="text-lg font-bold">{t('sendQuoteTitle')}</h3>
                 <p className="text-xs text-white/90 mt-1">{dom?.nazov} - {price.toLocaleString('sk-SK')} €</p>
               </div>
 
               <div className="p-4 space-y-3">
                 <div>
-                  <label className="block text-xs font-semibold text-muted-foreground mb-1">Meno a priezvisko *</label>
+                  <label className="block text-xs font-semibold text-muted-foreground mb-1">{t('nameSurnameRequired')}</label>
                   <input
                     type="text"
                     required
                     value={formData.meno}
                     onChange={(e) => setFormData({ ...formData, meno: e.target.value })}
-                    placeholder="Ján Novák"
+                    placeholder={t('placeholderName')}
                     className="w-full px-3 py-2 border border-border bg-background text-foreground placeholder:text-muted-foreground rounded-lg text-sm"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-muted-foreground mb-1">Email *</label>
+                  <label className="block text-xs font-semibold text-muted-foreground mb-1">{t('emailRequired')}</label>
                   <input
                     type="email"
                     required
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    placeholder="jan.novak@email.sk"
+                    placeholder="email@example.com"
                     className="w-full px-3 py-2 border border-border bg-background text-foreground placeholder:text-muted-foreground rounded-lg text-sm"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-muted-foreground mb-1">Telefón *</label>
+                  <label className="block text-xs font-semibold text-muted-foreground mb-1">{t('phoneRequired')}</label>
                   <input
                     type="tel"
                     required
@@ -203,23 +205,23 @@ export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyro
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-muted-foreground mb-1">Obec / Mesto *</label>
+                  <label className="block text-xs font-semibold text-muted-foreground mb-1">{t('cityRequired')}</label>
                   <input
                     type="text"
                     required
                     value={formData.obec}
                     onChange={(e) => setFormData({ ...formData, obec: e.target.value })}
-                    placeholder="Bratislava, Košice..."
+                    placeholder={t('placeholderCity')}
                     className="w-full px-3 py-2 border border-border bg-background text-foreground placeholder:text-muted-foreground rounded-lg text-sm"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-muted-foreground mb-1">Poznámka (voliteľné)</label>
+                  <label className="block text-xs font-semibold text-muted-foreground mb-1">{t('noteOptional')}</label>
                   <textarea
                     value={formData.poznamka}
                     onChange={(e) => setFormData({ ...formData, poznamka: e.target.value })}
-                    placeholder="Vaše otázky alebo poznámky..."
+                    placeholder={t('placeholderNote')}
                     rows={3}
                     className="w-full px-3 py-2 border border-border bg-background text-foreground placeholder:text-muted-foreground rounded-lg text-sm resize-none"
                   />
@@ -232,7 +234,7 @@ export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyro
                     onClick={() => setShowContactModal(false)}
                     className="flex-1"
                   >
-                    Zrušiť
+                    {t('cancel')}
                   </Button>
                   <Button
                     type="button"
@@ -241,7 +243,7 @@ export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyro
                     className="flex-1 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold"
                   >
                     <Send className="w-4 h-4 mr-2" />
-                    {sending ? 'Odosiela sa...' : 'Poslať'}
+                    {sending ? t('sending') : t('send')}
                   </Button>
                 </div>
               </div>

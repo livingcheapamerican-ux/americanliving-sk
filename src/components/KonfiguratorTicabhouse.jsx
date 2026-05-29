@@ -636,129 +636,129 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
   const renderGroupedSummary = () => {
     const categories = [
       {
-        title: "1. Konštrukcia & Izolácia",
+        title: t('summaryCategoryConstruction') || "1. Konštrukcia & Izolácia",
         items: [
-          { label: "Účel stavby", value: ucel === "chata" ? "Rekreačná chata" : "Rodinný dom (A0)", isStandard: false },
+          { label: t('summaryPurposeOfBuilding') || "Účel stavby", value: ucel === "chata" ? (t('summaryRecreationalCottage') || "Rekreačná chata") : (t('summaryFamilyHouse') || "Rodinný dom (A0)"), isStandard: false },
           { 
-            label: "Izolácia stien", 
-            value: izolaciaStien === "150mm" ? "150 mm" : `${izolaciaStien}`, 
+            label: t('summaryWallInsulation') || "Izolácia stien", 
+            value: izolaciaStien === "150mm" ? `150 mm (${t('summaryBase') || "Základ"})` : `${izolaciaStien}`, 
             price: izolaciaStien === "150mm" ? 0 : (CENY[`izolacia_stien_${izolaciaStien}`] || 0),
             isStandard: izolaciaStien === "150mm"
           },
           { 
-            label: "Izolácia podlahy", 
-            value: izolaciaPodlahy === "150mm" ? "150 mm" : `${izolaciaPodlahy}`, 
+            label: t('summaryFloorInsulation') || "Izolácia podlahy", 
+            value: izolaciaPodlahy === "150mm" ? `150 mm (${t('summaryBase') || "Základ"})` : `${izolaciaPodlahy}`, 
             price: izolaciaPodlahy === "150mm" ? 0 : (CENY[`izolacia_podlahy_${izolaciaPodlahy}`] || 0),
             isStandard: izolaciaPodlahy === "150mm"
           },
           { 
-            label: "Izolácia stropu", 
-            value: izolaciaStropu === "150mm" ? "150 mm" : `${izolaciaStropu}`, 
+            label: t('summaryCeilingInsulation') || "Izolácia stropu", 
+            value: izolaciaStropu === "150mm" ? `150 mm (${t('summaryBase') || "Základ"})` : `${izolaciaStropu}`, 
             price: izolaciaStropu === "150mm" ? 0 : (CENY[`izolacia_stropu_${izolaciaStropu}`] || 0),
             isStandard: izolaciaStropu === "150mm"
           },
           { 
-            label: "Základy", 
-            value: zaklady === "bez" ? "Bez základov" :
-                   zaklady === "vruty" ? "Zemné skrutky" :
-                   zaklady === "patky" ? "Betónové pätky" : "Pásové základy", 
+            label: t('summaryFoundations') || "Základy", 
+            value: zaklady === "bez" ? (t('summaryNoFoundations') || "Bez základov") :
+                   zaklady === "vruty" ? (t('summaryGroundScrews') || "Zemné skrutky") :
+                   zaklady === "patky" ? (t('summaryConcreteFootings') || "Betónové pätky") : (t('summaryStripFoundations') || "Pásové základy"), 
             price: zaklady === "bez" ? 0 : (CENY[`zaklady_${zaklady}`] || 0),
             isStandard: zaklady === "bez"
           },
         ]
       },
       {
-        title: "2. Exteriér & Fasáda",
+        title: t('summaryCategoryExterior') || "2. Exteriér & Fasáda",
         items: [
           { 
-            label: "Fasáda", 
-            value: fasada === "drevo_smrek" ? "Severský smrek" : 
-                   fasada === "omietka" ? "Šúchaná omietka" :
-                   fasada === "smrekovec" ? "Sibírsky smrekovec" :
-                   fasada === "falcovane" ? "Falcovaný plech" : "Thermowood", 
+            label: t('summaryFacade') || "Fasáda", 
+            value: fasada === "drevo_smrek" ? (t('summarySpruce') || "Severský smrek") : 
+                   fasada === "omietka" ? (t('summaryPlaster') || "Šúchaná omietka") :
+                   fasada === "smrekovec" ? (t('summaryLarch') || "Sibírsky smrekovec") :
+                   fasada === "falcovane" ? (t('summaryFoldedPanels') || "Falcovaný plech") : (t('summaryThermowood') || "Thermowood"), 
             price: fasada === "drevo_smrek" ? 0 : (CENY[`fasada_${fasada}`] || 0),
             isStandard: fasada === "drevo_smrek"
           },
           { 
-            label: "Strešná krytina", 
-            value: strecha === "korugovan_plech" ? "Korugovaný plech" : "Falcovaný plech", 
+            label: t('summaryRoof') || "Strešná krytina", 
+            value: strecha === "korugovan_plech" ? (t('summaryCorrugatedSheet') || "Korugovaný plech") : (t('summaryFoldedPanels') || "Falcovaný plech"), 
             price: strecha === "korugovan_plech" ? 0 : (CENY.strecha_falcovane || 0),
             isStandard: strecha === "korugovan_plech"
           },
           { 
-            label: "Odkvapy", 
-            value: odkvapy === "ano" ? "Áno" : "Nie", 
+            label: t('summaryGutters') || "Odkvapy", 
+            value: odkvapy === "ano" ? (t('summaryYes') || "Áno") : (t('summaryNo') || "Nie"), 
             price: odkvapy === "ano" ? (CENY.odkvapy || 0) : 0,
             isStandard: odkvapy !== "ano",
             hideIfStandard: true,
             active: odkvapy === "ano"
           },
           { 
-            label: "Farba okien", 
-            value: okna === "biele" ? "Biele" : okna === "antracit" ? "Antracit" : "Hnedé", 
+            label: t('summaryWindowColor') || "Farba okien", 
+            value: okna === "biele" ? (t('summaryWhite') || "Biele") : okna === "antracit" ? (t('summaryAntracit') || "Antracit") : (t('summaryBrown') || "Hnedé"), 
             price: 0,
             isStandard: true
           },
           { 
-            label: "Vchodové dvere", 
-            value: vchodoveDvere === "plastove" ? "Plastovo-kovové" : "Kovové", 
+            label: t('summaryEntranceDoor') || "Vchodové dvere", 
+            value: vchodoveDvere === "plastove" ? (t('summaryPlasticMetal') || "Plastovo-kovové") : (t('summaryMetal') || "Kovové"), 
             price: vchodoveDvere === "plastove" ? 0 : (CENY.dvere_kovove || 0),
             isStandard: vchodoveDvere === "plastove"
           },
         ]
       },
       {
-        title: "3. Interiér & Kúpeľňa",
+        title: t('summaryCategoryInterior') || "3. Interiér & Kúpeľňa",
         items: [
           { 
-            label: "Obklad stien", 
-            value: obkladStien === "smrek_8cm" ? "Smrek 8cm" :
-                   obkladStien === "smrek_bez_uzlov" ? "Smrek bez uzlov" :
-                   obkladStien === "sadrokarton_tapeta" ? "Sadrokartón/Tapeta" : "OSB panel", 
+            label: t('summaryWallCladding') || "Obklad stien", 
+            value: obkladStien === "smrek_8cm" ? (t('summarySpruce8cm') || "Smrek 8cm") :
+                   obkladStien === "smrek_bez_uzlov" ? (t('summarySpruceNoKnots') || "Smrek bez uzlov") :
+                   obkladStien === "sadrokarton_tapeta" ? (t('summaryPlasterboardWallpaper') || "Sadrokartón/Tapeta") : (t('summaryOsbPanel') || "OSB panel"), 
             price: obkladStien === "smrek_8cm" ? 0 : (CENY[`obklad_${obkladStien}`] || 0),
             isStandard: obkladStien === "smrek_8cm"
           },
           { 
-            label: "Podlaha", 
-            value: "Laminát", 
+            label: t('summaryFloor') || "Podlaha", 
+            value: t('summaryLaminate') || "Laminát", 
             price: 0,
             isStandard: true
           },
           { 
-            label: "Interiérové dvere", 
-            value: interieroveDvere === "kridlove" ? "Krídlové" : "Posuvné", 
+            label: t('summaryInteriorDoor') || "Interiérové dvere", 
+            value: interieroveDvere === "kridlove" ? (t('summaryHinged') || "Krídlové") : (t('summarySliding') || "Posuvné"), 
             price: interieroveDvere === "kridlove" ? 0 : (CENY.dvere_posuvne || 0),
             isStandard: interieroveDvere === "kridlove"
           },
           { 
-            label: "Sprchový kút", 
-            value: sprchovyKut === "standard" ? "Štandard" : "Radaway", 
+            label: t('summaryShower') || "Sprchový kút", 
+            value: sprchovyKut === "standard" ? (t('summaryStandard') || "Štandard") : "Radaway", 
             price: sprchovyKut === "standard" ? 0 : (CENY.sprchovyKut || 0),
             isStandard: sprchovyKut === "standard"
           },
           { 
-            label: "Kúpeľňová batéria", 
-            value: bateria === "standard" ? "Štandard" : "Grohe", 
+            label: t('summaryBathroomFaucet') || "Kúpeľňová batéria", 
+            value: bateria === "standard" ? (t('summaryStandard') || "Štandard") : "Grohe", 
             price: bateria === "standard" ? 0 : (CENY.bateria || 0),
             isStandard: bateria === "standard"
           },
           { 
-            label: "Strop v kúpeľni", 
-            value: stropKupelna === "drevo" ? "Drevený obklad" : "Sadrokartón", 
+            label: t('summaryBathroomCeiling') || "Strop v kúpeľni", 
+            value: stropKupelna === "drevo" ? (t('summaryWoodCladding') || "Drevený obklad") : (t('summaryPlasterboard') || "Sadrokartón"), 
             price: 0,
             isStandard: true
           },
           { 
-            label: "Vaňa", 
-            value: "Áno", 
+            label: t('summaryBath') || "Vaňa", 
+            value: t('summaryYes') || "Áno", 
             price: CENY.vana || 0, 
             isStandard: false, 
             hideIfStandard: true,
             active: vana
           },
           { 
-            label: "Skrinka s umývadlom", 
-            value: "Áno", 
+            label: t('summaryCabinetSink') || "Skrinka s umývadlom", 
+            value: t('summaryYes') || "Áno", 
             price: CENY.skrinka || 0, 
             isStandard: false, 
             hideIfStandard: true,
@@ -767,26 +767,26 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
         ]
       },
       {
-        title: "4. Technológie & Služby",
+        title: t('summaryCategoryTech') || "4. Technológie & Služby",
         items: [
-          { label: "Tepelné čerpadlo", value: "Áno", price: CENY.tepelne_cerpadlo || 0, isStandard: false, active: tepelneCerpadlo === "ano", hideIfStandard: true },
-          { label: "Príprava na rekuperáciu", value: "Áno", price: CENY.pripravaNaRekuperaciu || 0, isStandard: false, active: pripravaNaRekuperaciu, hideIfStandard: true },
-          { label: "Rekuperácia", value: "Áno", price: CENY.rekuperacia || 0, isStandard: false, active: rekuperacia === "ano", hideIfStandard: true },
-          { label: "Podlahové kúrenie", value: "Áno", price: CENY.podlahove_kurenie || 0, isStandard: false, active: podlahovoKurenie, hideIfStandard: true },
-          { label: "Klimatizácia", value: "Áno", price: CENY.klimatizacia || 0, isStandard: false, active: klimatizacia, hideIfStandard: true },
-          { label: "Príprava na krb", value: "Áno", price: CENY.pripravaKrb || 0, isStandard: false, active: pripravaNaKrb, hideIfStandard: true },
-          { label: "Ochrana (Kachle)", value: "Áno", price: CENY.ochranaKachle || 0, isStandard: false, active: ochranaKachle, hideIfStandard: true },
-          { label: "Bleskozvod", value: "Áno", price: CENY.bleskozvod || 0, isStandard: false, active: bleskozvod, hideIfStandard: true },
-          { label: "Prepäťová ochrana", value: "Áno", price: CENY.prepat || 0, isStandard: false, active: prepat, hideIfStandard: true },
-          { label: "Príprava na solárne panely", value: "Áno", price: CENY.pripravaNaSolarnePanely || 0, isStandard: false, active: pripravaNaSolarnePanely, hideIfStandard: true },
-          { label: "Inžiniering", value: "Áno", price: CENY.inziniering || 0, isStandard: false, active: inziniering, hideIfStandard: true },
-          { label: "Projekt a certifikácia", value: "Áno", price: CENY.projektACertifikacia || 0, isStandard: false, active: projektACertifikacia, hideIfStandard: true },
-          { label: "Revízia", value: "Áno", price: CENY.revizia || 0, isStandard: false, active: revizia, hideIfStandard: true },
-          { label: "Montáž domu", value: "Áno", price: CENY.montaz || 0, isStandard: false, active: montaz, hideIfStandard: true },
-          { label: "Doprava", value: "Áno", price: CENY.doprava || 0, isStandard: false, active: doprava && dopravaViditelna, hideIfStandard: true, condition: dopravaViditelna },
-          { label: "Predaj nehnuteľnosti", value: "Áno", price: 0, isStandard: true, active: predajNehnutelnosti, hideIfStandard: true },
-          { label: "Chcem pozemok", value: "Áno", price: 0, isStandard: true, active: hladamPozemok, hideIfStandard: true },
-          { label: "Finančné služby", value: "Áno", price: 0, isStandard: true, active: financneSluzby, hideIfStandard: true },
+          { label: t('summaryHeatPump') || "Tepelné čerpadlo", value: t('summaryYes') || "Áno", price: CENY.tepelne_cerpadlo || 0, isStandard: false, active: tepelneCerpadlo === "ano", hideIfStandard: true },
+          { label: t('summaryRecuperationPrep') || "Príprava na rekuperáciu", value: t('summaryYes') || "Áno", price: CENY.pripravaNaRekuperaciu || 0, isStandard: false, active: pripravaNaRekuperaciu, hideIfStandard: true },
+          { label: t('summaryRecuperation') || "Rekuperácia", value: t('summaryYes') || "Áno", price: CENY.rekuperacia || 0, isStandard: false, active: rekuperacia === "ano", hideIfStandard: true },
+          { label: t('summaryFloorHeating') || "Podlahové kúrenie", value: t('summaryYes') || "Áno", price: CENY.podlahove_kurenie || 0, isStandard: false, active: podlahovoKurenie, hideIfStandard: true },
+          { label: t('summaryAirConditioning') || "Klimatizácia", value: t('summaryYes') || "Áno", price: CENY.klimatizacia || 0, isStandard: false, active: klimatizacia, hideIfStandard: true },
+          { label: t('summaryFireplacePrep') || "Príprava na krb", value: t('summaryYes') || "Áno", price: CENY.pripravaKrb || 0, isStandard: false, active: pripravaNaKrb, hideIfStandard: true },
+          { label: t('summaryStoveProtection') || "Ochrana (Kachle)", value: t('summaryYes') || "Áno", price: CENY.ochranaKachle || 0, isStandard: false, active: ochranaKachle, hideIfStandard: true },
+          { label: t('summaryLightningConductor') || "Bleskozvod", value: t('summaryYes') || "Áno", price: CENY.bleskozvod || 0, isStandard: false, active: bleskozvod, hideIfStandard: true },
+          { label: t('summarySurgeProtection') || "Prepäťová ochrana", value: t('summaryYes') || "Áno", price: CENY.prepat || 0, isStandard: false, active: prepat, hideIfStandard: true },
+          { label: t('summarySolarPrep') || "Príprava na solárne panely", value: t('summaryYes') || "Áno", price: CENY.pripravaNaSolarnePanely || 0, isStandard: false, active: pripravaNaSolarnePanely, hideIfStandard: true },
+          { label: t('summaryEngineering') || "Inžiniering", value: t('summaryYes') || "Áno", price: CENY.inziniering || 0, isStandard: false, active: inziniering, hideIfStandard: true },
+          { label: t('summaryProjectCert') || "Projekt a certifikácia", value: t('summaryYes') || "Áno", price: CENY.projektACertifikacia || 0, isStandard: false, active: projektACertifikacia, hideIfStandard: true },
+          { label: t('summaryRevision') || "Revízia", value: t('summaryYes') || "Áno", price: CENY.revizia || 0, isStandard: false, active: revizia, hideIfStandard: true },
+          { label: t('summaryAssembly') || "Montáž domu", value: t('summaryYes') || "Áno", price: CENY.montaz || 0, isStandard: false, active: montaz, hideIfStandard: true },
+          { label: t('summaryTransport') || "Doprava", value: t('summaryYes') || "Áno", price: CENY.doprava || 0, isStandard: false, active: doprava && dopravaViditelna, hideIfStandard: true, condition: dopravaViditelna },
+          { label: t('summaryPropertySale') || "Predaj nehnuteľnosti", value: t('summaryYes') || "Áno", price: 0, isStandard: true, active: predajNehnutelnosti, hideIfStandard: true },
+          { label: t('summaryWantLand') || "Chcem pozemok", value: t('summaryYes') || "Áno", price: 0, isStandard: true, active: hladamPozemok, hideIfStandard: true },
+          { label: t('summaryFinance') || "Finančné služby", value: t('summaryYes') || "Áno", price: 0, isStandard: true, active: financneSluzby, hideIfStandard: true },
         ]
       }
     ];
@@ -822,7 +822,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
                       )}
                       {item.isStandard && (
                         <span className="text-[9px] text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.2 rounded-md">
-                          V cene
+                          {t('summaryInPrice') || "V cene"}
                         </span>
                       )}
                     </div>
@@ -844,9 +844,9 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
           <CheckCircle className="w-6 h-6" />
         </div>
         <div>
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">Prémiový drevodom v základnej cene</h3>
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">{t('ticabPremiumStandardTitle') || 'Prémiový drevodom v základnej cene'}</h3>
           <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-            Domy Ticab House sú štandardne dodávané ako prémiové drevodomy s kvalitným dreveným obkladom fasády aj interiéru. Tento luxusný drevený štandard je už zahrnutý v základnej cene. Priplácate si výlučne iba za zmeny štandardu (napr. ak chcete vymeniť drevo za sadrokartón).
+            {t('ticabPremiumStandardDesc') || 'Domy Ticab House sú štandardne dodávané ako prémiové drevodomy s kvalitným dreveným obkladom fasády aj interiéru. Tento luxusný drevený štandard je už zahrnutý v základnej cene. Priplácate si výlučne iba za zmeny štandardu (napr. ak chcete vymeniť drevo za sadrokartón).'}
           </p>
         </div>
       </div>
@@ -1138,11 +1138,11 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
         {/* PRAVÝ STĹPEC - Sticky Účtenka */}
         <aside className="hidden lg:block w-[35%] flex-shrink-0 sticky top-24 h-[calc(100vh-8rem)] overflow-y-auto custom-scrollbar z-40">
           <div className="bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-3xl p-6 shadow-2xl flex flex-col h-full">
-            <h3 className="text-lg font-black text-slate-900 dark:text-white mb-4 border-b border-slate-100 dark:border-white/5 pb-4">Zhrnutie konfigurácie</h3>
+            <h3 className="text-lg font-black text-slate-900 dark:text-white mb-4 border-b border-slate-100 dark:border-white/5 pb-4">{t('configurationSummary')}</h3>
             
             <div className="flex-1 overflow-y-auto pr-2 space-y-4 mb-6">
               <div className="flex justify-between text-slate-500 dark:text-slate-400 pb-2 border-b border-slate-100 dark:border-white/5 text-sm">
-                <span>Základná cena domu</span>
+                <span>{t('baseHousePrice')}</span>
                 <span className="font-bold text-slate-900 dark:text-white">{dom?.zakladna_cena?.toLocaleString('sk-SK')} €</span>
               </div>
               
@@ -1151,7 +1151,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
 
             <div className="mt-auto border-t border-slate-100 dark:border-white/5 pt-4">
               <div className="flex items-center justify-between mb-4">
-                <span className="text-slate-500 dark:text-slate-400 font-medium">Celková cena s DPH</span>
+                <span className="text-slate-500 dark:text-slate-400 font-medium">{t('totalPriceVAT')}</span>
                 <span className="text-2xl font-black text-slate-900 dark:text-white">{totalPrice.toLocaleString('sk-SK')} €</span>
               </div>
               <button 
@@ -1159,7 +1159,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
                 className="w-full bg-gradient-to-r from-[#9E2A2B] to-[#802021] hover:from-[#802021] hover:to-[#611617] text-white font-bold rounded-xl py-3.5 shadow-lg active:scale-98 transition-all flex items-center justify-center gap-2"
               >
                 <Send className="w-4 h-4" />
-                Poslať ponuku
+                {t('sendQuote')}
               </button>
             </div>
           </div>
@@ -1193,7 +1193,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
               
               {/* Header */}
               <div className="px-6 pb-4 border-b border-slate-100 dark:border-white/5 flex justify-between items-center flex-shrink-0">
-                <h3 className="text-lg font-black text-slate-900 dark:text-white">Zhrnutie konfigurácie</h3>
+                <h3 className="text-lg font-black text-slate-900 dark:text-white">{t('configurationSummary')}</h3>
                 <button onClick={() => setIsMobileSummaryOpen(false)} className="p-1 rounded-full bg-slate-100 dark:bg-white/5 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">
                   <X className="w-5 h-5" />
                 </button>
@@ -1202,7 +1202,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
               {/* Body (Grouped Summary) */}
               <div className="flex-1 overflow-y-auto px-6 py-4 space-y-6 custom-scrollbar">
                 <div className="flex justify-between text-slate-500 dark:text-slate-400 pb-2 border-b border-slate-100 dark:border-white/5 text-sm">
-                  <span>Základná cena domu</span>
+                  <span>{t('baseHousePrice')}</span>
                   <span className="font-bold text-slate-900 dark:text-white">{dom?.zakladna_cena?.toLocaleString('sk-SK')} €</span>
                 </div>
                 {renderGroupedSummary()}
@@ -1211,7 +1211,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
               {/* Footer */}
               <div className="p-6 border-t border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-slate-950/40 flex flex-col gap-4 flex-shrink-0 pb-8">
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-500 dark:text-slate-400 font-medium">Celková cena s DPH</span>
+                  <span className="text-slate-500 dark:text-slate-400 font-medium">{t('totalPriceVAT')}</span>
                   <span className="text-2xl font-black text-slate-900 dark:text-white">{totalPrice.toLocaleString('sk-SK')} €</span>
                 </div>
                 <button 
@@ -1224,7 +1224,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
                   className="w-full bg-gradient-to-r from-[#9E2A2B] to-[#802021] text-white font-bold rounded-2xl py-4 shadow-lg active:scale-95 transition-all text-center flex items-center justify-center gap-2"
                 >
                   <Send className="w-5 h-5" />
-                  Mám záujem o ponuku
+                  {t('interestedInOffer')}
                 </button>
               </div>
             </motion.div>

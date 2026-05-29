@@ -438,119 +438,119 @@ export function LyonSummaryPanel({
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('wallInsulation') || 'Izolácia stien'}</span>
             <span className="font-semibold text-white">
-              {izolaciaStien === "150mm" ? `150 mm (${t?.('baseConfig') || 'Základ'})` : `${izolaciaStien}${getFormatCena('izolacia_stien_' + izolaciaStien)}`}
+              {izolaciaStien === "150mm" ? `150 mm (${t?.('summaryBase') || 'Základ'})` : `${izolaciaStien}${getFormatCena('izolacia_stien_' + izolaciaStien)}`}
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('floorInsulation') || 'Izolácia podlahy'}</span>
             <span className="font-semibold text-white">
-              {izolaciaPodlahy === "150mm" ? `150 mm (${t?.('baseConfig') || 'Základ'})` : `${izolaciaPodlahy}${getFormatCena('izolacia_podlahy_' + izolaciaPodlahy)}`}
+              {izolaciaPodlahy === "150mm" ? `150 mm (${t?.('summaryBase') || 'Základ'})` : `${izolaciaPodlahy}${getFormatCena('izolacia_podlahy_' + izolaciaPodlahy)}`}
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('ceilingInsulation') || 'Izolácia stropu'}</span>
             <span className="font-semibold text-white">
-              {izolaciaStropu === "150mm" ? `150 mm (${t?.('baseConfig') || 'Základ'})` : `${izolaciaStropu}${getFormatCena('izolacia_stropu_' + izolaciaStropu)}`}
+              {izolaciaStropu === "150mm" ? `150 mm (${t?.('summaryBase') || 'Základ'})` : `${izolaciaStropu}${getFormatCena('izolacia_stropu_' + izolaciaStropu)}`}
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('facadeSection') || 'Fasáda'}</span>
             <span className="font-semibold text-white">
-              {fasada === "drevo_smrek" ? `Severský smrek (${t?.('baseConfig') || 'Základ'})` :
-               fasada === "omietka" ? `Omietka${getFormatCena('fasada_omietka')}` : 
-               fasada === "smrekovec" ? `Červený smrekovec${getFormatCena('fasada_smrekovec')}` :
-               fasada === "falcovane" ? `Falcovaný plech${getFormatCena('fasada_falcovane')}` :
-               `Thermowood${getFormatCena('fasada_thermowood')}`}
+              {fasada === "drevo_smrek" ? `${t?.('summarySpruce') || 'Severský smrek'} (${t?.('summaryBase') || 'Základ'})` :
+               fasada === "omietka" ? `${t?.('summaryPlaster') || 'Šúchaná omietka'}${getFormatCena('fasada_omietka')}` : 
+               fasada === "smrekovec" ? `${t?.('summaryLarch') || 'Sibírsky smrekovec'}${getFormatCena('fasada_smrekovec')}` :
+               fasada === "falcovane" ? `${t?.('summaryFoldedPanels') || 'Falcovaný plech'}${getFormatCena('fasada_falcovane')}` :
+               `${t?.('summaryThermowood') || 'Thermowood'}${getFormatCena('fasada_thermowood')}`}
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('roofSection') || 'Strešná krytina'}</span>
             <span className="font-semibold text-white">
-              {strecha === "korugovan_plech" ? `Korugovaný plech (${t?.('baseConfig') || 'Základ'})` : `Falcovaný plech${getFormatCena('strecha_falcovane')}`}
+              {strecha === "korugovan_plech" ? `${t?.('summaryCorrugatedSheet') || 'Korugovaný plech'} (${t?.('summaryBase') || 'Základ'})` : `${t?.('summaryFoldedPanels') || 'Falcovaný plech'}${getFormatCena('strecha_falcovane')}`}
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('windows') || 'Farba okien'}</span>
             <span className="font-semibold text-white">
-              {okna === "biele" ? `Biele (${t?.('baseConfig') || 'Základ'})` : 
-               okna === "antracit" ? `Antracit (${t?.('baseConfig') || 'Základ'})` : 
-               `Hnedé (${t?.('baseConfig') || 'Základ'})`}
+              {okna === "biele" ? `${t?.('summaryWhite') || 'Biele'} (${t?.('summaryBase') || 'Základ'})` : 
+               okna === "antracit" ? `${t?.('summaryAntracit') || 'Antracit'} (${t?.('summaryBase') || 'Základ'})` : 
+               `${t?.('summaryBrown') || 'Hnedé'} (${t?.('summaryBase') || 'Základ'})`}
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('vchodoveDvere') || 'Vchodové dvere'}</span>
             <span className="font-semibold text-white">
-              {vchodoveDvere === "plastove" ? `Plastovo-kovové (${t?.('baseConfig') || 'Základ'})` : `Kovové${getFormatCena('dvere_kovove')}`}
+              {vchodoveDvere === "plastove" ? `${t?.('summaryPlasticMetal') || 'Plastovo-kovové'} (${t?.('summaryBase') || 'Základ'})` : `${t?.('summaryMetal') || 'Kovové'}${getFormatCena('dvere_kovove')}`}
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('wallCladding') || 'Obklad stien'}</span>
             <span className="font-semibold text-white">
-              {obkladStien === "smrek_8cm" ? `Smrek 8cm (${t?.('baseConfig') || 'Základ'})` :
-               obkladStien === "smrek_bez_uzlov" ? `Smrek bez uzlov (${t?.('baseConfig') || 'Základ'})` :
-               obkladStien === "sadrokarton_tapeta" ? `Sadrokartón/Tapeta${getFormatCena('obklad_sadrokarton_tapeta')}` : 
-               `OSB panel${getFormatCena('obklad_osb_panel')}`}
+              {obkladStien === "smrek_8cm" ? `${t?.('summarySpruce8cm') || 'Smrek 8cm'} (${t?.('summaryBase') || 'Základ'})` :
+               obkladStien === "smrek_bez_uzlov" ? `${t?.('summarySpruceNoKnots') || 'Smrek bez uzlov'} (${t?.('summaryBase') || 'Základ'})` :
+               obkladStien === "sadrokarton_tapeta" ? `${t?.('summaryPlasterboardWallpaper') || 'Sadrokartón/Tapeta'}${getFormatCena('obklad_sadrokarton_tapeta')}` : 
+               `${t?.('summaryOsbPanel') || 'OSB panel'}${getFormatCena('obklad_osb_panel')}`}
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('floorType') || 'Podlaha'}</span>
             <span className="font-semibold text-white">
-              Laminát ({t?.('baseConfig') || 'Základ'})
+              {t?.('summaryLaminate') || 'Laminát'} ({t?.('summaryBase') || 'Základ'})
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('interiorDoorsType') || 'Interiérové dvere'}</span>
             <span className="font-semibold text-white">
-              {interieroveDvere === "kridlove" ? `Krídlové (${t?.('baseConfig') || 'Základ'})` : `Posuvné${getFormatCena('dvere_posuvne')}`}
+              {interieroveDvere === "kridlove" ? `${t?.('summaryHinged') || 'Krídlové'} (${t?.('summaryBase') || 'Základ'})` : `${t?.('summarySliding') || 'Posuvné'}${getFormatCena('dvere_posuvne')}`}
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('electricalSection') || 'Elektroinštalácia'}</span>
             <span className="font-semibold text-white">
-              {elektro === "eu" ? `EU štandard (${t?.('baseConfig') || 'Základ'})` :
-               elektro === "cz" ? `CZ/SK štandard${getFormatCena('elektro_cz')}` : 
-               `Nemecký štandard (A0)${getFormatCena('elektro_ge')}`}
+              {elektro === "eu" ? `${t?.('euStandard') || 'EU štandard'} (${t?.('summaryBase') || 'Základ'})` :
+               elektro === "cz" ? `${t?.('czSkStandard') || 'CZ/SK štandard'}${getFormatCena('elektro_cz')}` : 
+               `${t?.('geStandard') || 'Nemecký štandard (A0)'}${getFormatCena('elektro_ge')}`}
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('showerCabin') || 'Sprchový kút'}</span>
             <span className="font-semibold text-white">
-              {sprchovyKut === "standard" ? `Štandard (${t?.('baseConfig') || 'Základ'})` : `Radaway${getFormatCena('sprchovyKut')}`}
+              {sprchovyKut === "standard" ? `${t?.('summaryStandard') || 'Štandard'} (${t?.('summaryBase') || 'Základ'})` : `Radaway${getFormatCena('sprchovyKut')}`}
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('faucet') || 'Kúpeľňová batéria'}</span>
             <span className="font-semibold text-white">
-              {bateria === "standard" ? `Štandard (${t?.('baseConfig') || 'Základ'})` : `Grohe${getFormatCena('bateria')}`}
+              {bateria === "standard" ? `${t?.('summaryStandard') || 'Štandard'} (${t?.('summaryBase') || 'Základ'})` : `Grohe${getFormatCena('bateria')}`}
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('bathroomCeiling') || 'Strop v kúpeľni'}</span>
             <span className="font-semibold text-white">
-              {stropKupelna === "drevo" ? `Drevený obklad (${t?.('baseConfig') || 'Základ'})` : `Sadrokartón (${t?.('baseConfig') || 'Základ'})`}
+              {stropKupelna === "drevo" ? `${t?.('summaryWoodCladding') || 'Drevený obklad'} (${t?.('summaryBase') || 'Základ'})` : `${t?.('summaryPlasterboard') || 'Sadrokartón'} (${t?.('summaryBase') || 'Základ'})`}
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('foundationsSection') || 'Základy'}</span>
             <span className="font-semibold text-white">
-              {zaklady === "bez" ? `Bez základov (${t?.('baseConfig') || 'Základ'})` :
-               zaklady === "vruty" ? `Zemné skrutky${getFormatCena('zaklady_vruty')}` : 
-               zaklady === "patky" ? `Betónové pätky${getFormatCena('zaklady_patky')}` : 
-               `Pásové základy${getFormatCena('zaklady_pasove')}`}
+              {zaklady === "bez" ? `${t?.('summaryNoFoundations') || 'Bez základov'} (${t?.('summaryBase') || 'Základ'})` :
+               zaklady === "vruty" ? `${t?.('summaryGroundScrews') || 'Zemné skrutky'}${getFormatCena('zaklady_vruty')}` : 
+               zaklady === "patky" ? `${t?.('summaryConcreteFootings') || 'Betónové pätky'}${getFormatCena('zaklady_patky')}` : 
+               `${t?.('summaryStripFoundations') || 'Pásové základy'}${getFormatCena('zaklady_pasove')}`}
             </span>
           </div>
         </div>
@@ -564,119 +564,119 @@ export function LyonSummaryPanel({
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('heatPump') || 'Tepelné čerpadlo'}</span>
             <span className="font-semibold text-white">
-              {tepelneCerpadlo === "ano" ? `áno${getFormatCena('tepelne_cerpadlo')}` : "nie"}
+              {tepelneCerpadlo === "ano" ? `${t?.('summaryYesLower') || 'áno'}${getFormatCena('tepelne_cerpadlo')}` : (t?.('summaryNoLower') || "nie")}
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('recuperationPrep') || 'Príprava na rekuperáciu'}</span>
             <span className="font-semibold text-white">
-              {pripravaNaRekuperaciu ? `áno${getFormatCena('pripravaNaRekuperaciu')}` : "nie"}
+              {pripravaNaRekuperaciu ? `${t?.('summaryYesLower') || 'áno'}${getFormatCena('pripravaNaRekuperaciu')}` : (t?.('summaryNoLower') || "nie")}
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('recuperation') || 'Rekuperácia'}</span>
             <span className="font-semibold text-white">
-              {rekuperacia === "ano" ? `áno${getFormatCena('rekuperacia')}` : "nie"}
+              {rekuperacia === "ano" ? `${t?.('summaryYesLower') || 'áno'}${getFormatCena('rekuperacia')}` : (t?.('summaryNoLower') || "nie")}
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('floorHeating') || 'Podlahové kúrenie'}</span>
             <span className="font-semibold text-white">
-              {podlahovoKurenie ? `áno${getFormatCena('podlahove_kurenie')}` : "nie"}
+              {podlahovoKurenie ? `${t?.('summaryYesLower') || 'áno'}${getFormatCena('podlahove_kurenie')}` : (t?.('summaryNoLower') || "nie")}
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('airConditioningPrep') || 'Príprava na klimatizáciu'}</span>
             <span className="font-semibold text-white">
-              {klimatizacia ? `áno${getFormatCena('klimatizacia')}` : "nie"}
+              {klimatizacia ? `${t?.('summaryYesLower') || 'áno'}${getFormatCena('klimatizacia')}` : (t?.('summaryNoLower') || "nie")}
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('fireplacePrep') || 'Príprava na krb'}</span>
             <span className="font-semibold text-white">
-              {pripravaNaKrb ? `áno${getFormatCena('pripravaKrb')}` : "nie"}
+              {pripravaNaKrb ? `${t?.('summaryYesLower') || 'áno'}${getFormatCena('pripravaKrb')}` : (t?.('summaryNoLower') || "nie")}
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('stoveProtection') || 'Ochrana (Kachle)'}</span>
             <span className="font-semibold text-white">
-              {ochranaKachle ? `áno${getFormatCena('ochranaKachle')}` : "nie"}
+              {ochranaKachle ? `${t?.('summaryYesLower') || 'áno'}${getFormatCena('ochranaKachle')}` : (t?.('summaryNoLower') || "nie")}
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('gutters') || 'Odkvapy'}</span>
             <span className="font-semibold text-white">
-              {odkvapy === "ano" ? `áno${getFormatCena('odkvapy')}` : "nie"}
+              {odkvapy === "ano" ? `${t?.('summaryYesLower') || 'áno'}${getFormatCena('odkvapy')}` : (t?.('summaryNoLower') || "nie")}
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('lightningRod') || 'Bleskozvod'}</span>
             <span className="font-semibold text-white">
-              {bleskozvod ? `áno${getFormatCena('bleskozvod')}` : "nie"}
+              {bleskozvod ? `${t?.('summaryYesLower') || 'áno'}${getFormatCena('bleskozvod')}` : (t?.('summaryNoLower') || "nie")}
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('surgeProtection') || 'Prepäťová ochrana'}</span>
             <span className="font-semibold text-white">
-              {prepat ? `áno${getFormatCena('prepat')}` : "nie"}
+              {prepat ? `${t?.('summaryYesLower') || 'áno'}${getFormatCena('prepat')}` : (t?.('summaryNoLower') || "nie")}
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('solarPanelsPrep') || 'Príprava na solárne panely'}</span>
             <span className="font-semibold text-white">
-              {pripravaNaSolarnePanely ? `áno${getFormatCena('pripravaNaSolarnePanely')}` : "nie"}
+              {pripravaNaSolarnePanely ? `${t?.('summaryYesLower') || 'áno'}${getFormatCena('pripravaNaSolarnePanely')}` : (t?.('summaryNoLower') || "nie")}
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('bathtub') || 'Vaňa'}</span>
             <span className="font-semibold text-white">
-              {vana ? `áno${getFormatCena('vana')}` : "nie"}
+              {vana ? `${t?.('summaryYesLower') || 'áno'}${getFormatCena('vana')}` : (t?.('summaryNoLower') || "nie")}
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('cabinet') || 'Skrinka s umývadlom'}</span>
             <span className="font-semibold text-white">
-              {skrinka ? `áno${getFormatCena('skrinka')}` : "nie"}
+              {skrinka ? `${t?.('summaryYesLower') || 'áno'}${getFormatCena('skrinka')}` : (t?.('summaryNoLower') || "nie")}
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('engineering') || 'Inžiniering'}</span>
             <span className="font-semibold text-white">
-              {inziniering ? `áno${getFormatCena('inziniering')}` : "nie"}
+              {inziniering ? `${t?.('summaryYesLower') || 'áno'}${getFormatCena('inziniering')}` : (t?.('summaryNoLower') || "nie")}
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('projectCertification') || 'Projekt a certifikácia'}</span>
             <span className="font-semibold text-white">
-              {projektACertifikacia ? `áno${getFormatCena('projektACertifikacia')}` : "nie"}
+              {projektACertifikacia ? `${t?.('summaryYesLower') || 'áno'}${getFormatCena('projektACertifikacia')}` : (t?.('summaryNoLower') || "nie")}
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('revisionDocs') || 'Revízia'}</span>
             <span className="font-semibold text-white">
-              {revizia ? `áno${getFormatCena('revizia')}` : "nie"}
+              {revizia ? `${t?.('summaryYesLower') || 'áno'}${getFormatCena('revizia')}` : (t?.('summaryNoLower') || "nie")}
             </span>
           </div>
 
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('assembly') || 'Montáž domu'}</span>
             <span className="font-semibold text-white">
-              {montaz ? `áno${getFormatCena('montaz')}` : "nie"}
+              {montaz ? `${t?.('summaryYesLower') || 'áno'}${getFormatCena('montaz')}` : (t?.('summaryNoLower') || "nie")}
             </span>
           </div>
 
@@ -684,7 +684,7 @@ export function LyonSummaryPanel({
             <div className="flex justify-between text-xs text-slate-350">
               <span>{t?.('transport') || 'Doprava'}</span>
               <span className="font-semibold text-white">
-                {doprava ? `áno${getFormatCena('doprava')}` : "nie"}
+                {doprava ? `${t?.('summaryYesLower') || 'áno'}${getFormatCena('doprava')}` : (t?.('summaryNoLower') || "nie")}
               </span>
             </div>
           )}
@@ -692,19 +692,19 @@ export function LyonSummaryPanel({
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('sellPreviousProperty') || 'Predaj predošlej nehnuteľnosti'}</span>
             <span className="font-semibold text-white">
-              {predajNehnutelnosti ? "áno" : "nie"}
+              {predajNehnutelnosti ? (t?.('summaryYesLower') || "áno") : (t?.('summaryNoLower') || "nie")}
             </span>
           </div>
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('wantLandForHouse') || 'Chcem pozemok pod svoj dom'}</span>
             <span className="font-semibold text-white">
-              {hladamPozemok ? "áno" : "nie"}
+              {hladamPozemok ? (t?.('summaryYesLower') || "áno") : (t?.('summaryNoLower') || "nie")}
             </span>
           </div>
           <div className="flex justify-between text-xs text-slate-350">
             <span>{t?.('financialServicesLoans') || 'Finančné služby'}</span>
             <span className="font-semibold text-white">
-              {financneSluzby ? "áno" : "nie"}
+              {financneSluzby ? (t?.('summaryYesLower') || "áno") : (t?.('summaryNoLower') || "nie")}
             </span>
           </div>
         </div>

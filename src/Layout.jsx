@@ -178,19 +178,19 @@ function LayoutContent({ children }) {
     { name: t('home'), path: createPageUrl("Domov"), icon: Home },
     { name: t('dotacia'), path: createPageUrl("DotaciaAmericana"), icon: Gift },
     ...(isAdmin ? [{ name: '💰 ' + t('adminPriceList'), path: createPageUrl("AdminCennik"), icon: Grid3x3 }] : []),
-    ...(isAdmin ? [{ name: '🗺️ Grantová kampaň', path: createPageUrl("GrantovaKampan"), icon: MapPinned }] : []),
+    ...(isAdmin ? [{ name: '🗺️ ' + t('grantCampaign'), path: createPageUrl("GrantovaKampan"), icon: MapPinned }] : []),
     { name: t('catalog'), path: createPageUrl("Katalog"), icon: Grid3x3 },
     { name: t('aiRecommendations'), path: createPageUrl("OdporucanieDomov"), icon: Sparkles },
     { name: t('about'), path: createPageUrl("ONas"), icon: Info },
     { name: t('blog'), path: createPageUrl("Blog"), icon: BlogIcon },
     { name: t('contact'), path: createPageUrl("Kontakt"), icon: Phone },
     // Moje Konto – zatiaľ len pre adminov
-    ...(isAdmin || user?.super_admin ? [{ name: '👤 Moje Konto', path: '/MojeKonto', icon: Users, isMyAccount: true }] : []),
+    ...(isAdmin || user?.super_admin ? [{ name: '👤 ' + t('myAccount'), path: '/MojeKonto', icon: Users, isMyAccount: true }] : []),
   ];
 
   const adminNavItems = isAdmin ? [
     { name: '📊 ' + t('adminMarketing'), path: createPageUrl("Marketing"), icon: Activity },
-    { name: '💳 Kredity', path: createPageUrl("AdminIntegrationLogs"), icon: Activity, blink: true }
+    { name: '💳 ' + t('credits'), path: createPageUrl("AdminIntegrationLogs"), icon: Activity, blink: true }
   ] : [];
   const isSuperAdmin = user?.super_admin === true;
 
