@@ -28,10 +28,10 @@ const ConfiguratorRow = ({
   const { t } = useLanguage();
   
   return (
-    <div className="flex flex-col xl:flex-row xl:items-center justify-between p-5 md:p-6 rounded-3xl border border-slate-200/60 dark:border-white/5 bg-white/40 dark:bg-white/[0.01] hover:border-slate-350 dark:hover:border-white/10 transition-all duration-300 gap-6 backdrop-blur-md">
+    <div className="flex flex-col p-5 md:p-6 rounded-3xl border border-slate-200/60 dark:border-white/5 bg-white/40 dark:bg-white/[0.01] hover:border-slate-350 dark:hover:border-white/10 transition-all duration-300 gap-4 backdrop-blur-md w-full">
       
-      {/* ĽAVÁ STRANA: Nadpis, Popis a ukážka */}
-      <div className="flex items-start gap-4 flex-1 min-w-0 xl:min-w-[280px]">
+      {/* HORNÁ STRANA: Nadpis, Popis a ukážka */}
+      <div className="flex items-start gap-4 w-full min-w-0">
         {Icon && (
           <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center flex-shrink-0 bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400">
             <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -42,7 +42,7 @@ const ConfiguratorRow = ({
             {label}
           </h4>
           {description && (
-            <p className="text-slate-550 dark:text-slate-405 text-xs sm:text-sm leading-relaxed max-w-xl">
+            <p className="text-slate-550 dark:text-slate-405 text-xs sm:text-sm leading-relaxed max-w-2xl">
               {description}
             </p>
           )}
@@ -61,9 +61,9 @@ const ConfiguratorRow = ({
         </div>
       </div>
 
-      {/* PRAVÁ STRANA: Horizontálny prepínač (Segmented pill selector) */}
-      <div className="flex-shrink-0 w-full xl:w-auto">
-        <div className="flex flex-col sm:flex-row gap-2 bg-slate-100/80 dark:bg-slate-900/60 p-1.5 rounded-2xl border border-slate-200/50 dark:border-white/5 w-full sm:w-fit overflow-x-auto sm:overflow-visible no-scrollbar">
+      {/* DOLNÁ STRANA: Horizontálny prepínač (Segmented pill selector) - na celú šírku */}
+      <div className="w-full mt-2">
+        <div className="flex flex-col sm:flex-row gap-2 bg-slate-100/80 dark:bg-slate-900/60 p-1.5 rounded-2xl border border-slate-200/50 dark:border-white/5 w-full overflow-x-auto sm:overflow-visible no-scrollbar">
           {options.map((opt) => {
             const isSelected = selectedValue === opt.value;
             const isStandard = opt.price === 0;
@@ -72,7 +72,7 @@ const ConfiguratorRow = ({
               <button
                 key={opt.value}
                 onClick={() => onChange(opt.value)}
-                className={`relative flex flex-col sm:flex-row items-center justify-center px-4 py-3 sm:py-2.5 rounded-xl text-center text-xs font-bold transition-all duration-300 whitespace-nowrap gap-1.5 sm:gap-2 flex-1 sm:flex-initial cursor-pointer border ${
+                className={`relative flex flex-col sm:flex-row items-center justify-center px-4 py-3 sm:py-2.5 rounded-xl text-center text-xs font-bold transition-all duration-300 whitespace-nowrap gap-1.5 sm:gap-2 flex-1 cursor-pointer border ${
                   isSelected
                     ? 'bg-white dark:bg-slate-800 text-[#C5A880] dark:text-[#C5A880] border-slate-200 dark:border-slate-700 shadow-md scale-[1.01]'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border-transparent hover:bg-white/30 dark:hover:bg-white/5'
