@@ -41,7 +41,7 @@ const getManufacturerBadge = (manufacturer) => {
     );
   } else {
     return (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-950/70 dark:bg-slate-900/80 border border-slate-700 text-[10px] font-black uppercase tracking-wider text-slate-205 dark:text-slate-300 shadow-sm backdrop-blur-sm">
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-950/70 dark:bg-slate-900/80 border border-slate-700 text-[10px] font-black uppercase tracking-wider text-slate-300 dark:text-slate-300 shadow-sm backdrop-blur-sm">
         <span className="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
         Prosto House
       </span>

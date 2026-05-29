@@ -28,7 +28,7 @@ const ConfiguratorRow = ({
   icon: Icon 
 }) => {
   return (
-    <div className="flex flex-col p-5 md:p-6 rounded-3xl border border-slate-200/60 dark:border-white/5 bg-white/40 dark:bg-white/[0.01] hover:border-slate-355 dark:hover:border-white/10 transition-all duration-300 gap-4 backdrop-blur-md w-full">
+    <div className="flex flex-col p-5 md:p-6 rounded-3xl border border-slate-200/60 dark:border-white/5 bg-white/40 dark:bg-white/[0.01] hover:border-slate-300 dark:hover:border-white/10 transition-all duration-300 gap-4 backdrop-blur-md w-full">
       
       {/* HORNÁ STRANA: Nadpis, Popis a ukážka */}
       <div className="flex items-start gap-4 w-full min-w-0">
@@ -44,7 +44,7 @@ const ConfiguratorRow = ({
             </h4>
           </div>
           {description && (
-            <p className="text-slate-550 dark:text-slate-405 text-xs sm:text-sm leading-relaxed max-w-2xl">
+            <p className="text-slate-550 dark:text-slate-400 text-xs sm:text-sm leading-relaxed max-w-2xl">
               {description}
             </p>
           )}
@@ -65,7 +65,7 @@ const ConfiguratorRow = ({
 
       {/* DOLNÁ STRANA: Prepínač (Segmented pill selector) - na celú šírku s vertikálnym vnútorným rozložením tlačidiel pre texty a lepším kontrastom */}
       <div className="w-full mt-2">
-        <div className="flex flex-col sm:flex-row flex-wrap gap-2 bg-slate-150/90 dark:bg-slate-950/60 p-1.5 rounded-2xl border border-slate-200/50 dark:border-white/5 w-full">
+        <div className="flex flex-col sm:flex-row flex-wrap gap-2 bg-slate-100/90 dark:bg-slate-950/60 p-1.5 rounded-2xl border border-slate-200/50 dark:border-white/5 w-full">
           {options.map((opt) => {
             const isSelected = selectedValue === opt.value;
             const isStandard = opt.price === 0;
@@ -76,7 +76,7 @@ const ConfiguratorRow = ({
                 onClick={() => onChange(opt.value)}
                 className={`relative flex flex-col items-center justify-center p-3 rounded-xl text-center transition-all duration-300 gap-1.5 flex-1 min-w-[120px] cursor-pointer border ${
                   isSelected
-                    ? 'bg-white dark:bg-slate-800 text-red-650 dark:text-red-405 border-slate-200 dark:border-slate-700 shadow-md scale-[1.01]'
+                    ? 'bg-white dark:bg-slate-800 text-red-600 dark:text-red-400 border-slate-200 dark:border-slate-700 shadow-md scale-[1.01]'
                     : 'bg-transparent text-slate-800 dark:text-slate-200 hover:text-slate-950 dark:hover:text-white border-transparent hover:bg-white/40 dark:hover:bg-white/5'
                 }`}
               >
@@ -85,7 +85,7 @@ const ConfiguratorRow = ({
                   <span className={`inline-flex items-center text-[9px] px-1.5 py-0.5 rounded-md font-bold uppercase tracking-wider ${
                     isSelected 
                       ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20' 
-                      : 'bg-slate-200 dark:bg-slate-850 text-slate-500 dark:text-slate-400'
+                      : 'bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
                   }`}>
                     ★ A0
                   </span>
@@ -94,7 +94,7 @@ const ConfiguratorRow = ({
                 <span className="text-xs font-bold leading-tight tracking-wide break-words w-full">{opt.label}</span>
                 
                 {/* Admin Mode Price Edit */}
-                {isAdmin && onPriceChange && opt.priceKey !== undefined ? (
+                {isAdmin && onPriceChange && opt.priceKey !== undefined && opt.priceKey !== 0 ? (
                   <div 
                     className="flex items-center gap-0.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded px-1 py-0.5 font-mono text-[10px] mt-1 shadow-sm text-slate-800 dark:text-white"
                     onClick={e => e.stopPropagation()}
@@ -110,7 +110,7 @@ const ConfiguratorRow = ({
                 ) : (
                   <span className={`text-[10px] font-black tracking-wider mt-0.5 ${
                     isSelected 
-                      ? 'text-red-650 dark:text-red-405' 
+                      ? 'text-red-600 dark:text-red-400' 
                       : isStandard 
                         ? 'text-emerald-600 dark:text-emerald-400 font-bold' 
                         : 'text-slate-500 dark:text-slate-400'
@@ -137,7 +137,7 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
         ? 'border-red-500 bg-red-500/10 dark:bg-gradient-to-br dark:from-red-500/10 dark:to-red-900/10 shadow-[0_0_30px_rgba(239,68,68,0.2)] scale-[1.02]' 
         : isStandard 
           ? 'border-emerald-500/30 bg-emerald-500/5 hover:border-emerald-500/55 hover:bg-emerald-500/10' 
-          : 'border-slate-200 dark:border-white/5 bg-white dark:bg-white/[0.02] hover:border-slate-350 dark:hover:border-white/20 hover:bg-slate-50 dark:hover:bg-white/[0.05]'
+          : 'border-slate-200 dark:border-white/5 bg-white dark:bg-white/[0.02] hover:border-slate-300 dark:hover:border-white/20 hover:bg-slate-50 dark:hover:bg-white/[0.05]'
     }`}
   >
     {selected && <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-orange-500 opacity-80" />}
@@ -184,7 +184,7 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
         {isAdmin && onPriceChange ? (
           <div className="flex items-center gap-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded px-2 py-1 mt-1 shadow-sm text-slate-800 dark:text-white" onClick={e => e.stopPropagation()}>
             <span className="text-xs text-slate-400 dark:text-slate-500">€</span>
-            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-20 text-sm font-bold text-slate-805 dark:text-white bg-transparent outline-none focus:ring-1 focus:ring-red-500 rounded" />
+            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-20 text-sm font-bold text-slate-800 dark:text-white bg-transparent outline-none focus:ring-1 focus:ring-red-500 rounded" />
           </div>
         ) : (
           <span className={`text-sm sm:text-base font-black whitespace-nowrap transition-colors duration-300 ${
@@ -213,18 +213,18 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
         : checked 
           ? 'border-red-500 bg-red-500/5 dark:bg-gradient-to-r dark:from-red-500/10 dark:to-transparent shadow-[0_0_20px_rgba(239,68,68,0.1)] scale-[1.01] backdrop-blur-md' 
           : disabled 
-            ? 'border-slate-205 dark:border-white/5 bg-slate-100/50 dark:bg-slate-900/50 opacity-60 cursor-not-allowed' 
-            : 'border-slate-200/60 dark:border-white/5 bg-white/40 dark:bg-white/[0.01] hover:border-slate-350 dark:hover:border-white/20 hover:bg-slate-50 dark:hover:bg-white/[0.04] backdrop-blur-sm'
+            ? 'border-slate-200 dark:border-white/5 bg-slate-100/50 dark:bg-slate-900/50 opacity-60 cursor-not-allowed' 
+            : 'border-slate-200/60 dark:border-white/5 bg-white/40 dark:bg-white/[0.01] hover:border-slate-300 dark:hover:border-white/20 hover:bg-slate-50 dark:hover:bg-white/[0.04] backdrop-blur-sm'
     }`}
   >
     {checked && !locked && <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500" />}
     
-    <div className="flex items-start sm:items-center gap-4 w-full relative z-10">
+    <div className="flex items-start sm:items-center gap-4 flex-1 min-w-0 relative z-10">
       <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors duration-300 ${
         locked 
           ? 'bg-emerald-500/20 text-emerald-400 shadow-lg shadow-emerald-500/10' 
           : checked 
-            ? 'bg-gradient-to-br from-red-500 to-red-650 text-white shadow-lg shadow-red-500/20' 
+            ? 'bg-gradient-to-br from-red-500 to-red-700 text-white shadow-lg shadow-red-500/20' 
             : 'bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 group-hover:scale-110'
       }`}>
         {Icon ? <Icon className={`w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-300 ${checked || locked ? 'scale-110' : 'scale-100'}`} /> : (locked ? <Lock className="w-4 h-4 sm:w-5 sm:h-5" /> : <CheckSquare className="w-4 h-4 sm:w-5 sm:h-5" />)}
@@ -233,7 +233,7 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
       <div className="text-left flex-1 pr-4">
         <div className="flex flex-col mb-1.5">
           {locked && (
-            <span className="mb-2 inline-flex items-center self-start bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-805 dark:text-emerald-305 border border-emerald-500/20 text-[10px] sm:text-[11px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+            <span className="mb-2 inline-flex items-center self-start bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-500/20 text-[10px] sm:text-[11px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
               ★ {t ? t('requiredForA0') : 'Vyžadované pre A0'}
             </span>
           )}
@@ -241,20 +241,20 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
             locked 
               ? 'text-emerald-600 dark:text-emerald-400' 
               : checked 
-                ? 'text-red-755 dark:text-white' 
-                : 'text-slate-800 dark:text-slate-205'
+                ? 'text-red-500 dark:text-white' 
+                : 'text-slate-800 dark:text-slate-200'
           }`}>{label}</span>
         </div>
-        {description && <p className="text-xs sm:text-sm text-slate-650 dark:text-slate-405 leading-relaxed">{description}</p>}
+        {description && <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{description}</p>}
       </div>
       
       {/* Checkbox na mobile zobrazený hore vedľa nadpisu, na desktope skrytý */}
-      <div className={`sm:hidden w-6 h-6 mt-1 rounded border-2 flex items-center justify-center transition-all duration-300 flex-shrink-0 ${
+      <div className={`sm:hidden w-6 h-6 mt-1 rounded border-2 flex items-center justify-center transition-all duration-305 flex-shrink-0 ${
         locked 
           ? 'border-emerald-400/50 bg-emerald-50 dark:bg-emerald-900/50 shadow-[0_0_10px_rgba(16,185,129,0.2)]' 
           : checked 
             ? 'border-red-500 bg-red-500 scale-110' 
-            : 'border-slate-355 dark:border-slate-700 bg-white dark:bg-slate-950/50'
+            : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950/50'
       }`}>
         {locked ? <Lock className="w-4 h-4 text-white" /> : checked && <Check className="w-4 h-4 text-white" />}
       </div>
@@ -263,21 +263,21 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
     {/* Cena presunutá na samostatný riadok na mobile, na desktope vpravo */}
     <div className={`flex items-center justify-end w-full sm:w-auto pt-3 sm:pt-0 border-t ${
       locked ? 'border-emerald-500/20' : 'border-slate-200 dark:border-white/5'
-    } sm:border-0 relative z-10 gap-4`}>
+    } sm:border-0 relative z-10 gap-4 flex-shrink-0`}>
       <div className="flex-shrink-0 text-right">
         {isAdmin && onPriceChange ? (
-          <div className="flex items-center gap-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded px-2 py-1 shadow-sm text-slate-855 dark:text-white" onClick={e => e.stopPropagation()}>
+          <div className="flex items-center gap-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded px-2 py-1 shadow-sm text-slate-800 dark:text-white" onClick={e => e.stopPropagation()}>
             <span className="text-xs text-slate-400 dark:text-slate-500">€</span>
-            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-20 text-sm font-bold text-slate-855 dark:text-white bg-transparent outline-none focus:ring-1 focus:ring-red-500 rounded" />
+            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-20 text-sm font-bold text-slate-800 dark:text-white bg-transparent outline-none focus:ring-1 focus:ring-red-500 rounded" />
           </div>
         ) : (
           <div className="text-right flex flex-col items-end justify-center">
             <span className={`block font-black transition-colors duration-300 ${
               locked 
-                ? 'text-base text-emerald-600 dark:text-emerald-305' 
+                ? 'text-base text-emerald-600 dark:text-emerald-300' 
                 : price === 0 
                   ? 'text-sm text-emerald-600 dark:text-emerald-400' 
-                  : 'text-base text-slate-655 dark:text-slate-405'
+                  : 'text-base text-slate-600 dark:text-slate-400'
             }`}>
               {price === 0 ? (priceZeroLabel !== undefined ? priceZeroLabel : 'V cene') : `+${price.toLocaleString()} €`}
             </span>
@@ -286,12 +286,12 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
       </div>
       
       {/* Checkbox na desktope zobrazený vpravo od ceny */}
-      <div className={`hidden sm:flex w-6 h-6 rounded border-2 items-center justify-center transition-all duration-300 flex-shrink-0 ${
+      <div className={`hidden sm:flex w-6 h-6 rounded border-2 items-center justify-center transition-all duration-305 flex-shrink-0 ${
         locked 
           ? 'border-emerald-400/50 bg-emerald-50 dark:bg-emerald-900/50 shadow-[0_0_10px_rgba(16,185,129,0.2)]' 
           : checked 
             ? 'border-red-500 bg-red-500 scale-110' 
-            : 'border-slate-350 dark:border-slate-700 bg-white dark:bg-slate-950/50'
+            : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950/50'
       }`}>
         {locked ? <Lock className="w-4 h-4 text-white" /> : checked && <Check className="w-4 h-4 text-white" />}
       </div>
@@ -300,13 +300,13 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
 );
 
 const CounterRow = ({ label, price, value, onChange, isAdmin, onPriceChange, icon: Icon }) => (
-  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-3xl border border-slate-205/60 dark:border-white/5 bg-white/40 dark:bg-white/[0.01] hover:border-slate-350 dark:hover:border-white/10 transition-all duration-300 gap-4 backdrop-blur-md w-full relative overflow-hidden">
+  <div className="flex items-center justify-between p-4 rounded-3xl border border-slate-200 dark:border-white/5 bg-white/40 dark:bg-white/[0.01] hover:border-slate-300 dark:hover:border-white/10 transition-all duration-300 gap-4 backdrop-blur-md w-full relative overflow-hidden">
     {value > 0 && <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500" />}
     
-    <div className="flex items-start sm:items-center gap-4 relative z-10 flex-1 min-w-0">
+    <div className="flex items-center gap-4 relative z-10 flex-1 min-w-0">
       {Icon && (
         <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center flex-shrink-0 transition-colors duration-300 ${
-          value > 0 ? 'bg-slate-800 dark:bg-white/10 text-white' : 'bg-slate-100 dark:bg-white/5 text-slate-550 dark:text-slate-400'
+          value > 0 ? 'bg-slate-800 dark:bg-white/10 text-white' : 'bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400'
         }`}>
           <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
         </div>
@@ -316,17 +316,17 @@ const CounterRow = ({ label, price, value, onChange, isAdmin, onPriceChange, ico
           value > 0 ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400'
         }`}>{label}</h4>
         {isAdmin && onPriceChange ? (
-          <div className="flex items-center gap-1 mt-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded px-1.5 py-0.5 shadow-sm text-slate-850 dark:text-white">
+          <div className="flex items-center gap-1 mt-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded px-1.5 py-0.5 shadow-sm text-slate-800 dark:text-white">
             <span className="text-xs text-slate-400 dark:text-slate-500">€</span>
-            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-16 text-xs sm:text-sm font-bold text-slate-850 dark:text-white bg-transparent outline-none focus:ring-1 focus:ring-red-500 rounded text-center" />
+            <input type="number" value={price} onChange={e => onPriceChange(Number(e.target.value))} className="w-16 text-xs sm:text-sm font-bold text-slate-800 dark:text-white bg-transparent outline-none focus:ring-1 focus:ring-red-500 rounded text-center" />
           </div>
         ) : (
-          <div className="text-xs sm:text-sm text-red-655 dark:text-red-400 font-bold mt-1">{price.toLocaleString()} € / ks</div>
+          <div className="text-xs sm:text-sm text-red-600 dark:text-red-400 font-bold mt-1">{price.toLocaleString()} € / ks</div>
         )}
       </div>
     </div>
     
-    <div className="flex items-center gap-4 relative z-10 w-full sm:w-auto justify-end">
+    <div className="flex items-center gap-4 relative z-10 flex-shrink-0">
       <button 
         type="button"
         onClick={() => onChange(Math.max(0, value - 1))} 
@@ -358,7 +358,7 @@ const SectionLabel = ({ label, color = 'gray' }) => {
     'red': 'text-red-700 dark:text-red-400',
     'emerald': 'text-emerald-700 dark:text-emerald-400',
     'green': 'text-green-700 dark:text-green-400',
-    'yellow': 'text-yellow-750 dark:text-yellow-400'
+    'yellow': 'text-yellow-600 dark:text-yellow-400'
   };
   return (
     <div className={`text-sm font-black uppercase tracking-widest ${colorMap[color] || 'text-slate-600 dark:text-slate-400'} mb-4 mt-10 first:mt-0 flex items-center gap-2`}>
@@ -752,7 +752,7 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
                             ? 'text-slate-900 dark:text-white text-lg' 
                             : isPassed 
                               ? 'text-slate-700 dark:text-slate-300 text-base' 
-                              : 'text-slate-400 dark:text-slate-550 text-base'
+                              : 'text-slate-400 dark:text-slate-500 text-base'
                         }`}>
                           {step.title}
                         </div>
