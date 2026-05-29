@@ -11,10 +11,135 @@ import {
   FileText, Hammer, Key, Phone, Building2, ChevronRight, Building, Landmark, TrendingUp, Settings, LogIn, Gift, Star, Users,
   MessageCircle, Send, Sparkles
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import HeroSettingsManager from "../components/admin/HeroSettingsManager";
 import { useLanguage } from "../components/LanguageContext";
 import ServiceDetailModal from "../components/ServiceDetailModal";
+
+const sliderT = {
+  sk: { viz: "Vizualizácia", real: "Realizácia" },
+  en: { viz: "Visualization", real: "Realization" },
+  de: { viz: "Visualisierung", real: "Realität" },
+  fr: { viz: "Visualisation", real: "Réalisation" },
+  hu: { viz: "Vizualizáció", real: "Valóság" },
+  pl: { viz: "Wizualizacja", real: "Realizacja" },
+  uk: { viz: "Візуалізація", real: "Реальність" },
+  sr: { viz: "Визуелизација", real: "Реализација" },
+  hr: { viz: "Vizualizacija", real: "Realizacija" },
+  el: { viz: "Τρισδιάστατο", real: "Πραγματικότητα" }
+};
+
+const getManufacturerBadge = (manufacturer) => {
+  const name = manufacturer || "";
+  const isTicab = name.toLowerCase().includes("ticab");
+  if (isTicab) {
+    return (
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#C5A880]/15 dark:bg-[#C5A880]/10 border border-[#C5A880]/30 text-[10px] font-black uppercase tracking-wider text-[#C5A880] dark:text-[#E2C799] shadow-sm backdrop-blur-sm">
+        <span className="w-1.5 h-1.5 rounded-full bg-[#C5A880] animate-pulse"></span>
+        Ticab House
+      </span>
+    );
+  } else {
+    return (
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-950/70 dark:bg-slate-900/80 border border-slate-700 text-[10px] font-black uppercase tracking-wider text-slate-205 dark:text-slate-300 shadow-sm backdrop-blur-sm">
+        <span className="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+        Prosto House
+      </span>
+    );
+  }
+};
+
+function ImageComparisonSlider({ beforeImage, afterImage, language }) {
+  const [sliderPosition, setSliderPosition] = useState(50);
+  const [isDragging, setIsDragging] = useState(false);
+  const containerRef = React.useRef(null);
+  const trans = sliderT[language] || sliderT.sk;
+
+  useEffect(() => {
+    const handleMoveEvent = (clientX) => {
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const x = clientX - rect.left;
+      const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
+      setSliderPosition(percentage);
+    };
+
+    const handleMouseMove = (e) => {
+      if (!isDragging) return;
+      handleMoveEvent(e.clientX);
+    };
+
+    const handleTouchMove = (e) => {
+      if (!isDragging) return;
+      if (e.touches.length > 0) {
+        handleMoveEvent(e.touches[0].clientX);
+      }
+    };
+
+    const handleMouseUp = () => setIsDragging(false);
+
+    if (isDragging) {
+      window.addEventListener("mousemove", handleMouseMove);
+      window.addEventListener("touchmove", handleTouchMove);
+      window.addEventListener("mouseup", handleMouseUp);
+      window.addEventListener("touchend", handleMouseUp);
+    }
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener("touchend", handleMouseUp);
+    };
+  }, [isDragging]);
+
+  return (
+    <div 
+      ref={containerRef}
+      className="relative w-full h-full select-none overflow-hidden rounded-2xl border border-slate-200 dark:border-white/5 cursor-ew-resize shadow-lg"
+      onMouseDown={(e) => {
+        e.preventDefault();
+        setIsDragging(true);
+      }}
+      onTouchStart={() => setIsDragging(true)}
+    >
+      <img 
+        src={beforeImage} 
+        alt="Visualization" 
+        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+      />
+      <div className="absolute top-4 left-4 bg-slate-950/80 backdrop-blur-md text-white text-[10px] font-black px-3.5 py-1.5 rounded-full border border-white/10 z-10 pointer-events-none uppercase tracking-wider">
+        {trans.viz}
+      </div>
+
+      <div 
+        className="absolute inset-0 overflow-hidden pointer-events-none"
+        style={{ clipPath: `polygon(0 0, ${sliderPosition}% 0, ${sliderPosition}% 100%, 0 100%)` }}
+      >
+        <img 
+          src={afterImage} 
+          alt="Realization" 
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+        />
+      </div>
+      <div className="absolute top-4 right-4 bg-emerald-600/95 backdrop-blur-md text-white text-[10px] font-black px-3.5 py-1.5 rounded-full border border-white/10 z-10 pointer-events-none uppercase tracking-wider">
+        {trans.real}
+      </div>
+
+      <div 
+        className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize z-20 flex items-center justify-center pointer-events-none"
+        style={{ left: `${sliderPosition}%`, transform: 'translateX(-50%)' }}
+      >
+        <div className="w-8 h-8 rounded-full bg-white dark:bg-slate-900 border border-[#C5A880] text-slate-800 dark:text-white flex items-center justify-center shadow-lg transition-transform hover:scale-110">
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M8 9l-4 3 4 3m8-6l4 3-4 3" />
+          </svg>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 
 // Dotacia verify banner translations
 const dotaciaVerifyT = {
@@ -124,6 +249,52 @@ const localShowcaseT = {
     socialApproval: "Last stamp and handover of keys.",
     socialApprovalDesc: "Final stretch. We prepare all tests, certificates, maps, and documents needed for final occupancy approval.",
     verifikaciaText: "Visualization / Realization"
+  }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.12
+    }
+  }
+};
+
+const staggerItem = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 70,
+      damping: 15
+    }
+  }
+};
+
+const headlineContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08
+    }
+  }
+};
+
+const headlineWord = {
+  hidden: { opacity: 0, y: 15 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 120,
+      damping: 14
+    }
   }
 };
 
@@ -369,6 +540,23 @@ export default function Domov() {
     const fallback = staticGalleries[activeShowcaseHouseId] || staticGalleries["6916ec94c11aacdd15248f07"];
     return activeShowcaseTab === "exterier" ? fallback.exterier : fallback.interier;
   }, [activeShowcaseHouseId, activeShowcaseTab, premiumHouses]);
+
+  const activeShowcaseHouseManufacturer = useMemo(() => {
+    const dbHouse = verejneDomy.find(d => d.id === activeShowcaseHouseId);
+    if (dbHouse?.vyrobca) return dbHouse.vyrobca;
+    if (activeShowcaseHouseId === "6916ec94c11aacdd15248f07") return "Ticab house";
+    return "Prosto House";
+  }, [activeShowcaseHouseId, verejneDomy]);
+
+  const visualizationImg = "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/25e2796ce_Londonexteriermurovka1.jpeg";
+  const realizationImg = "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/9e0922961_Londonexteriermurovka1.jpeg";
+
+  const displayImages = useMemo(() => {
+    if (activeShowcaseHouseId === "6916ec94c11aacdd15248f07" && activeShowcaseTab === "exterier") {
+      return showcaseImages.filter(img => img !== visualizationImg && img !== realizationImg);
+    }
+    return showcaseImages;
+  }, [showcaseImages, activeShowcaseHouseId, activeShowcaseTab]);
 
   const { data: user } = useQuery({
     queryKey: ['current-user'],
@@ -705,15 +893,24 @@ export default function Domov() {
 
               {/* Main Headline */}
               <motion.h1 
-                initial={{ opacity: 0, y: 25 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
+                variants={headlineContainer}
+                initial="hidden"
+                animate="visible"
                 className="text-3xl sm:text-5xl md:text-6xl font-black text-slate-900 dark:text-white mb-6 leading-[1.1] tracking-tight"
                 style={{ textShadow: '2px 2px 10px rgba(0,0,0,0.05)' }}
               >
-                {t('heroTitleFirst')}{" "}
+                {(t('heroTitleFirst')?.split(" ") || []).map((word, idx) => (
+                  <motion.span key={`first-${idx}`} variants={headlineWord} className="inline-block mr-2">
+                    {word}
+                  </motion.span>
+                ))}
+                {" "}
                 <span className="bg-gradient-to-r from-[#C5A880] via-[#E2C799] to-[#C5A880] bg-clip-text text-transparent block sm:inline">
-                  {t('heroTitleSecond')}
+                  {(t('heroTitleSecond')?.split(" ") || []).map((word, idx) => (
+                    <motion.span key={`second-${idx}`} variants={headlineWord} className="inline-block mr-2">
+                      {word}
+                    </motion.span>
+                  ))}
                 </span>
               </motion.h1>
 
@@ -801,14 +998,25 @@ export default function Domov() {
               >
                 {/* Lookbook main image wrapper */}
                 <div className="aspect-[4/3] rounded-2xl overflow-hidden relative border border-slate-250 dark:border-white/5 bg-slate-950">
-                  <img 
-                    key={`${selectedHouseId}-${selectedFacade}`}
-                    src={selectedFacadeImage} 
-                    alt={currentHouseData.name}
-                    className="w-full h-full object-cover transition-all duration-700" 
-                    loading="eager"
-                  />
+                  <AnimatePresence>
+                    <motion.img 
+                      key={`${selectedHouseId}-${selectedFacade}`}
+                      src={selectedFacadeImage} 
+                      alt={currentHouseData.name}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.4 }}
+                      className="absolute inset-0 w-full h-full object-cover" 
+                      loading="eager"
+                    />
+                  </AnimatePresence>
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
+                  
+                  {/* Floating Brand Badge */}
+                  <div className="absolute top-4 right-4 z-20">
+                    {getManufacturerBadge(currentHouseData.manufacturer)}
+                  </div>
                   
                   {/* Floating stats tag 1 (top-left) - Dynamic delivery time based on manufacturer */}
                   <motion.div 
@@ -833,7 +1041,7 @@ export default function Domov() {
                   <motion.div 
                     animate={{ y: [0, 5, 0] }}
                     transition={{ duration: 4, delay: 2, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute bottom-4 right-4 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border border-slate-200 dark:border-white/15 rounded-xl px-3.5 py-2 flex items-center gap-2 shadow-[0_8px_32px_rgba(0,0,0,0.15)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)] z-20 transition-colors duration-300"
+                    className="absolute bottom-4 right-4 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border border-slate-250 dark:border-white/15 rounded-xl px-3.5 py-2 flex items-center gap-2 shadow-[0_8px_32px_rgba(0,0,0,0.15)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)] z-20 transition-colors duration-300"
                   >
                     <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center border border-emerald-500/35">
                       <Star className="w-4 h-4 text-emerald-400 animate-pulse" />
@@ -850,9 +1058,13 @@ export default function Domov() {
                   <div className="flex items-center justify-between mb-4">
                     <div>
                       <h3 className="text-base sm:text-xl font-bold text-slate-800 dark:text-white leading-tight">{currentHouseData.name}</h3>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 font-medium">
-                        {currentHouseData.rooms} {t('roomsLabel')} • {t('manufacturer')}: {currentHouseData.manufacturer} • <strong className="text-slate-800 dark:text-white">{t('from')} {currentHouseData.price.toLocaleString()} €</strong>
-                      </p>
+                      <div className="text-xs text-slate-500 dark:text-slate-400 mt-1.5 font-medium flex items-center gap-1.5 flex-wrap">
+                        <span>{currentHouseData.rooms} {t('roomsLabel')}</span>
+                        <span>•</span>
+                        {getManufacturerBadge(currentHouseData.manufacturer)}
+                        <span>•</span>
+                        <span><strong className="text-slate-800 dark:text-white">{t('from')} {currentHouseData.price.toLocaleString()} €</strong></span>
+                      </div>
                     </div>
                     <Link to={`${createPageUrl("DetailDomu")}?id=${currentHouseData.id}`}>
                       <Button variant="ghost" size="sm" className="text-xs text-[#C5A880] hover:text-[#C5A880]/80 p-0 hover:bg-transparent flex items-center gap-1 font-black transition-colors duration-300">
@@ -898,13 +1110,17 @@ export default function Domov() {
       {/* Trust Grid: Tri hlavné záruky a predajné argumenty */}
       <section className="py-8 sm:py-12 bg-slate-50 dark:bg-[#07070a] relative border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          <motion.div 
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto"
+          >
             
             {/* Stĺpec 1: Súkromný Grant */}
             <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              variants={staggerItem}
               className="bg-gradient-to-br from-white to-slate-50/50 dark:from-slate-900/60 dark:to-slate-950/60 border border-slate-200 dark:border-emerald-500/20 hover:border-emerald-500/40 rounded-2xl p-6 transition-all duration-300 relative overflow-hidden group shadow-md dark:shadow-lg"
             >
               <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-2xl group-hover:bg-emerald-500/10 transition-all pointer-events-none" />
@@ -925,10 +1141,7 @@ export default function Domov() {
 
             {/* Stĺpec 2: 100% Financovanie */}
             <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
+              variants={staggerItem}
               className="bg-gradient-to-br from-white to-slate-50/50 dark:from-slate-900/60 dark:to-slate-950/60 border border-slate-200 dark:border-[#C5A880]/20 hover:border-[#C5A880]/40 rounded-2xl p-6 transition-all duration-300 relative overflow-hidden group shadow-md dark:shadow-lg"
             >
               <div className="absolute top-0 right-0 w-24 h-24 bg-[#C5A880]/5 rounded-full blur-2xl group-hover:bg-[#C5A880]/10 transition-all pointer-events-none" />
@@ -956,10 +1169,7 @@ export default function Domov() {
 
             {/* Stĺpec 3: Garancia Výstavby */}
             <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
+              variants={staggerItem}
               className="bg-gradient-to-br from-white to-slate-50/50 dark:from-slate-900/60 dark:to-slate-950/60 border border-slate-200 dark:border-red-500/20 hover:border-[#C5A880]/50 dark:hover:border-red-500/40 rounded-2xl p-6 transition-all duration-300 relative overflow-hidden group shadow-md dark:shadow-lg"
             >
               <div className="absolute top-0 right-0 w-24 h-24 bg-[#C5A880]/5 dark:bg-red-500/5 rounded-full blur-2xl group-hover:bg-[#C5A880]/10 dark:group-hover:bg-red-500/10 transition-all pointer-events-none" />
@@ -978,7 +1188,7 @@ export default function Domov() {
               </Link>
             </motion.div>
 
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -1223,7 +1433,27 @@ export default function Domov() {
               layout
               className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
             >
-              {showcaseImages.map((img, index) => (
+              {/* Special Before/After interactive slider for London 144 (exterior only) */}
+              {activeShowcaseHouseId === "6916ec94c11aacdd15248f07" && activeShowcaseTab === "exterier" && (
+                <motion.div
+                  layout
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5 }}
+                  className="aspect-[4/3] sm:aspect-auto sm:col-span-2 sm:row-span-2 rounded-2xl overflow-hidden relative shadow-lg"
+                >
+                  <ImageComparisonSlider 
+                    beforeImage={visualizationImg} 
+                    afterImage={realizationImg} 
+                    language={language}
+                  />
+                  <div className="absolute bottom-4 left-4 z-20 pointer-events-none">
+                    {getManufacturerBadge("Ticab house")}
+                  </div>
+                </motion.div>
+              )}
+
+              {displayImages.map((img, index) => (
                 <motion.div
                   key={img}
                   layout
@@ -1233,6 +1463,9 @@ export default function Domov() {
                   onClick={() => setLightboxImage(img)}
                   className="aspect-[4/3] rounded-2xl overflow-hidden relative border border-slate-200 dark:border-white/5 bg-slate-100 dark:bg-slate-900 cursor-pointer group shadow-md dark:shadow-xl hover:-translate-y-1 transition-all duration-300"
                 >
+                  <div className="absolute top-3 left-3 z-10 pointer-events-none">
+                    {getManufacturerBadge(activeShowcaseHouseManufacturer)}
+                  </div>
                   <img
                     src={img}
                     alt={t('photoDetail')}
@@ -1605,7 +1838,13 @@ export default function Domov() {
             </div>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 max-w-6xl mx-auto mb-4 sm:mb-10">
+          <motion.div 
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 max-w-6xl mx-auto mb-4 sm:mb-10"
+          >
             {sluzby.map((sluzba, index) => {
               const getBentoClasses = (idx) => {
                 if (idx === 0) return "md:col-span-2";
@@ -1618,10 +1857,7 @@ export default function Domov() {
               return (
                 <motion.div 
                   key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  variants={staggerItem}
                   onClick={() => {
                     setSelectedService(sluzba);
                     setServiceModalOpen(true);
@@ -1653,7 +1889,7 @@ export default function Domov() {
                 </motion.div>
               );
             })}
-          </div>
+          </motion.div>
 
           <div className="text-center">
             <p className="text-sm sm:text-xl text-slate-650 dark:text-slate-400 mb-4 sm:mb-6 transition-colors duration-300">
@@ -1801,7 +2037,9 @@ export default function Domov() {
                       </div>
                       <div className="p-3 sm:p-5 flex-1 flex flex-col justify-between">
                         <div>
-                          <div className="text-[10px] sm:text-xs text-slate-500 mb-1 sm:mb-2 font-bold uppercase tracking-widest truncate">{dom.vyrobca}</div>
+                          <div className="mb-2">
+                            {getManufacturerBadge(dom.vyrobca)}
+                          </div>
                           <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white mb-2 sm:mb-3 group-hover:text-primary transition-colors line-clamp-2 leading-tight">
                             {dom.nazov}
                           </h3>
@@ -1864,15 +2102,25 @@ export default function Domov() {
             <h2 className="text-sm sm:text-2xl font-bold text-slate-900 dark:text-white transition-colors duration-300">{t('implementationProcess')}</h2>
           </div>
 
-          <div className="max-w-7xl mx-auto flex flex-wrap justify-center gap-1 sm:gap-2">
+          <motion.div 
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            className="max-w-7xl mx-auto flex flex-wrap justify-center gap-1 sm:gap-2"
+          >
             {proces.map((krok, index) => (
-              <div key={index} className="flex items-center gap-0.5 sm:gap-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-full px-3 py-1.5 sm:px-5 sm:py-2.5 shadow-sm transition-colors duration-300">
+              <motion.div 
+                key={index} 
+                variants={staggerItem}
+                className="flex items-center gap-0.5 sm:gap-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-full px-3 py-1.5 sm:px-5 sm:py-2.5 shadow-sm transition-colors duration-300"
+              >
                 <span className="text-[7px] sm:text-xs font-bold text-primary dark:text-[#C5A880]">{krok.cislo}</span>
                 <krok.icon className="w-2.5 h-2.5 sm:w-4.5 sm:h-4.5 text-primary dark:text-[#C5A880]" />
                 <span className="text-[7px] sm:text-xs font-medium text-slate-700 dark:text-slate-350">{krok.nazov}</span>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
