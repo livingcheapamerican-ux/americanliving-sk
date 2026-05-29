@@ -9,7 +9,7 @@ import {
   Home, Check, Send, X, Thermometer, Zap, Layout, Hammer, 
   CheckCircle, Eye, EyeOff, Lock, ChevronDown, ChevronUp, 
   Paintbrush, DoorOpen, Wrench, Layers, Droplet, Flame, CheckSquare, Sparkles,
-  ChevronLeft, ChevronRight
+  ChevronLeft, ChevronRight, Wind
 } from "lucide-react";
 
 // ── Glassmorphism Tabuľkový Riadkový Selektor (ConfiguratorRow) ──────────────────────────────────────────────
