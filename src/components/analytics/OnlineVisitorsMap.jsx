@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from "react-leaflet";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { X, Globe, Clock, Users, Calendar, Monitor, Smartphone, Tablet } from "lucide-react";
 import { format } from "date-fns";
@@ -275,96 +274,86 @@ export default function OnlineVisitorsMap({ sessions, onClose }) {
               <p className="text-xs text-slate-400 font-semibold mt-0.5">Celkovo zmapovaných {counts.today} relácií za dnes • {sidebarItems.length} vyhovuje filtru</p>
             </div>
           </div>
-          <Button variant="ghost" size="icon" onClick={onClose} className="text-slate-400 hover:text-white hover:bg-slate-800/80 rounded-xl">
+          <button onClick={onClose} className="p-2 text-slate-400 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all flex items-center justify-center cursor-pointer border border-transparent">
             <X className="w-5 h-5" />
-          </Button>
+          </button>
         </div>
 
         {/* Filters and Search Bar */}
         <div className="p-4 border-b border-slate-800 bg-slate-900/50 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-2 flex-wrap">
-            <Button
-              size="sm"
-              variant={timeFilter === "online" ? "default" : "outline"}
+            <button
               onClick={() => {
                 setTimeFilter("online");
                 setSelectedLocation(null);
               }}
-              className={`rounded-xl text-xs font-bold transition-all px-3.5 h-8.5 ${
+              className={`rounded-xl text-xs font-bold transition-all px-3.5 h-8.5 flex items-center justify-center cursor-pointer border ${
                 timeFilter === "online" 
                   ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-900/30 border-transparent" 
-                  : "border-slate-800 text-slate-350 hover:bg-slate-800/60 hover:text-white"
+                  : "bg-slate-950/40 border-slate-800 text-slate-300 hover:bg-slate-800/60 hover:text-white"
               }`}
             >
               <span className="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-ping shrink-0" />
               Online teraz ({counts.online})
-            </Button>
+            </button>
             
-            <Button
-              size="sm"
-              variant={timeFilter === "today" ? "default" : "outline"}
+            <button
               onClick={() => {
                 setTimeFilter("today");
                 setSelectedLocation(null);
               }}
-              className={`rounded-xl text-xs font-bold transition-all px-3.5 h-8.5 ${
+              className={`rounded-xl text-xs font-bold transition-all px-3.5 h-8.5 flex items-center justify-center cursor-pointer border ${
                 timeFilter === "today" 
-                  ? "bg-indigo-650 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-900/30 border-transparent" 
-                  : "border-slate-800 text-slate-350 hover:bg-slate-800/60 hover:text-white"
+                  ? "bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-900/30 border-transparent" 
+                  : "bg-slate-950/40 border-slate-800 text-slate-300 hover:bg-slate-800/60 hover:text-white"
               }`}
             >
               <Calendar className="w-4 h-4 mr-1.5 shrink-0" />
               Dnes ({counts.today})
-            </Button>
+            </button>
             
-            <Button
-              size="sm"
-              variant={timeFilter === "week" ? "default" : "outline"}
+            <button
               onClick={() => {
                 setTimeFilter("week");
                 setSelectedLocation(null);
               }}
-              className={`rounded-xl text-xs font-bold transition-all px-3.5 h-8.5 ${
+              className={`rounded-xl text-xs font-bold transition-all px-3.5 h-8.5 flex items-center justify-center cursor-pointer border ${
                 timeFilter === "week" 
-                  ? "bg-indigo-650 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-900/30 border-transparent" 
-                  : "border-slate-800 text-slate-350 hover:bg-slate-800/60 hover:text-white"
+                  ? "bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-900/30 border-transparent" 
+                  : "bg-slate-950/40 border-slate-800 text-slate-300 hover:bg-slate-800/60 hover:text-white"
               }`}
             >
               Tento týždeň ({counts.week})
-            </Button>
+            </button>
             
-            <Button
-              size="sm"
-              variant={timeFilter === "month" ? "default" : "outline"}
+            <button
               onClick={() => {
                 setTimeFilter("month");
                 setSelectedLocation(null);
               }}
-              className={`rounded-xl text-xs font-bold transition-all px-3.5 h-8.5 ${
+              className={`rounded-xl text-xs font-bold transition-all px-3.5 h-8.5 flex items-center justify-center cursor-pointer border ${
                 timeFilter === "month" 
-                  ? "bg-indigo-650 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-900/30 border-transparent" 
-                  : "border-slate-800 text-slate-350 hover:bg-slate-800/60 hover:text-white"
+                  ? "bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-900/30 border-transparent" 
+                  : "bg-slate-950/40 border-slate-800 text-slate-300 hover:bg-slate-800/60 hover:text-white"
               }`}
             >
               Tento mesiac ({counts.month})
-            </Button>
+            </button>
 
-            <Button
-              size="sm"
-              variant={timeFilter === "range" ? "default" : "outline"}
+            <button
               onClick={() => {
                 setTimeFilter("range");
                 setSelectedLocation(null);
               }}
-              className={`rounded-xl text-xs font-bold transition-all px-3.5 h-8.5 ${
+              className={`rounded-xl text-xs font-bold transition-all px-3.5 h-8.5 flex items-center justify-center cursor-pointer border ${
                 timeFilter === "range" 
-                  ? "bg-indigo-650 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-900/30 border-transparent" 
-                  : "border-slate-800 text-slate-350 hover:bg-slate-800/60 hover:text-white"
+                  ? "bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-900/30 border-transparent" 
+                  : "bg-slate-950/40 border-slate-800 text-slate-300 hover:bg-slate-800/60 hover:text-white"
               }`}
             >
               <Calendar className="w-4 h-4 mr-1.5 shrink-0" />
               Rozsah dátumov
-            </Button>
+            </button>
             
             {timeFilter === "range" && (
               <div className="flex items-center gap-2 ml-1 animate-in slide-in-from-left duration-250">
