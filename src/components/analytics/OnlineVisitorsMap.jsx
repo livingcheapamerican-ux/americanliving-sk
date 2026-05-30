@@ -85,6 +85,10 @@ export default function OnlineVisitorsMap({ sessions, onClose }) {
   const [dateTo, setDateTo] = useState(format(new Date(), 'yyyy-MM-dd'));
   const [selectedLocation, setSelectedLocation] = useState(null);
 
+  const handleItemClick = (item) => {
+    setSelectedLocation(item);
+  };
+
   const getDeviceIcon = (deviceType) => {
     switch(deviceType) {
       case 'mobile': return <Smartphone className="w-3.5 h-3.5 text-pink-400" />;
@@ -394,7 +398,7 @@ export default function OnlineVisitorsMap({ sessions, onClose }) {
         <div className="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
           
           {/* List Sidebar */}
-          <div className="w-full lg:w-85 border-b lg:border-b-0 lg:border-r border-slate-800 bg-slate-950/30 flex flex-col h-56 lg:h-auto overflow-hidden">
+          <div className="w-full lg:w-[320px] border-b lg:border-b-0 lg:border-r border-slate-800 bg-slate-950/30 flex flex-col h-56 lg:h-auto overflow-hidden">
             <div className="p-3.5 border-b border-slate-800 bg-slate-900/30 flex items-center justify-between">
               <span className="text-xs font-black text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
                 <Users className={`w-4 h-4 shrink-0 ${timeFilter === "online" ? "text-emerald-500 animate-pulse" : "text-indigo-400"}`} />
