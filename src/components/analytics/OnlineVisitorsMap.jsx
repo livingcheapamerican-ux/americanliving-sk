@@ -16,6 +16,45 @@ const isSessionOnline = (session) => {
   return diffMs < 5 * 60 * 1000;
 };
 
+// Helper na priradenie kontinentu podľa kódu krajiny v slovenskom jazyku
+const getContinentName = (countryCode) => {
+  if (!countryCode) return "";
+  const code = countryCode.toUpperCase();
+  if (['US', 'CA', 'MX', 'PR', 'GL'].includes(code)) return "Severná Amerika";
+  if (['BR', 'AR', 'CL', 'CO', 'PE', 'VE', 'EC', 'BO', 'PY', 'UY', 'GF', 'GY', 'SR'].includes(code)) return "Južná Amerika";
+  if (['AU', 'NZ', 'FJ', 'PG', 'SB', 'VU', 'NC'].includes(code)) return "Austrália a Oceánia";
+  if (['CN', 'JP', 'IN', 'KR', 'TW', 'TH', 'VN', 'SG', 'MY', 'ID', 'PH', 'PK', 'BD', 'IR', 'IQ', 'IL', 'TR', 'SA', 'AE', 'KZ', 'UZ', 'KP', 'HK', 'MO', 'LK', 'NP', 'MM', 'KH', 'LA', 'MN', 'GE', 'AM', 'AZ'].includes(code)) return "Ázia";
+  if (['ZA', 'EG', 'NG', 'KE', 'MA', 'DZ', 'TN', 'EE', 'GH', 'ET', 'TZ', 'UG', 'AO', 'MZ', 'CI', 'SN', 'CM', 'ZW'].includes(code)) return "Afrika";
+  return "Európa";
+};
+
+// Pomocný komponent na prepočítanie a uchytenie veľkosti mapy po zobrazení modalu
+function MapResizer() {
+  const map = useMap();
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      map.invalidateSize();
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [map]);
+  return null;
+}
+
+// Pomocný komponent na priblíženie mapy na zvolenú lokáciu
+function FlyToMarker({ activeLocation }) {
+  const map = useMap();
+  useEffect(() => {
+    if (activeLocation && activeLocation.latitude && activeLocation.longitude) {
+      map.flyTo([activeLocation.latitude, activeLocation.longitude], 12, {
+        animate: true,
+        duration: 1.5
+      });
+    }
+  }, [activeLocation, map]);
+  return null;
+}
+
+// Pomocný komponent na automatické ohraničenie všetkých bodov na mape pri prvom načítaní
 function AutoFitBounds({ locations }) {
   const map = useMap();
   const hasAutoFittedRef = React.useRef(false);
@@ -32,12 +71,12 @@ function AutoFitBounds({ locations }) {
 }
 
 export default function OnlineVisitorsMap({ sessions, onClose }) {
-  const [timeFilter, setTimeFilter] = useState("online"); // Nastavíme predvolene na online pre lepší WOW efekt
-  const [customDate, setCustomDate] = useState(format(new Date(), 'yyyy-MM-dd'));
+  const [timeFilter, setTimeFilter] = useState("online");
   const [dateFrom, setDateFrom] = useState(format(new Date(), 'yyyy-MM-dd'));
   const [dateTo, setDateTo] = useState(format(new Date(), 'yyyy-MM-dd'));
+  const [selectedLocation, setSelectedLocation] = useState(null);
 
-  // Dynamicky načítame Leaflet CSS z CDN pre zabezpečenie zobrazenia mapy bez chýb bundlovania
+  // Dynamicky načítame Leaflet CSS z CDN pre zabezpečenie zobrazenia mapy
   useEffect(() => {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
@@ -50,12 +89,39 @@ export default function OnlineVisitorsMap({ sessions, onClose }) {
 
   const getDeviceIcon = (deviceType) => {
     switch(deviceType) {
-      case 'mobile': return <Smartphone className="w-3 h-3" />;
-      case 'tablet': return <Tablet className="w-3 h-3" />;
-      default: return <Monitor className="w-3 h-3" />;
+      case 'mobile': return <Smartphone className="w-3.5 h-3.5 text-pink-400" />;
+      case 'tablet': return <Tablet className="w-3.5 h-3.5 text-cyan-400" />;
+      default: return <Monitor className="w-3.5 h-3.5 text-indigo-400" />;
     }
   };
 
+  // Pre-kalkulované počty pre filtračné tlačidlá z CELÉHO zoznamu geolokalizovaných relácií
+  const counts = useMemo(() => {
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+    let online = 0;
+    let today = 0;
+    let week = 0;
+    let month = 0;
+
+    sessions.forEach(s => {
+      if (s.location_info?.latitude && s.location_info?.longitude) {
+        if (isSessionOnline(s)) online++;
+        
+        const sessionDate = new Date(s.start_time);
+        if (sessionDate >= todayStart) today++;
+        if (sessionDate >= weekAgo) week++;
+        if (sessionDate >= monthAgo) month++;
+      }
+    });
+
+    return { online, today, week, month };
+  }, [sessions]);
+
+  // Filtrovanie relácií na základe zvoleného filtra
   const filteredSessions = useMemo(() => {
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -76,11 +142,6 @@ export default function OnlineVisitorsMap({ sessions, onClose }) {
         const toDate = new Date(dateTo);
         toDate.setHours(23, 59, 59, 999);
         return sessionDate >= fromDate && sessionDate <= toDate;
-      } else if (timeFilter === "custom") {
-        const selectedDate = new Date(customDate);
-        const nextDay = new Date(selectedDate);
-        nextDay.setDate(nextDay.getDate() + 1);
-        return sessionDate >= selectedDate && sessionDate < nextDay;
       } else if (timeFilter === "week") {
         const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
         return sessionDate >= weekAgo;
@@ -90,34 +151,33 @@ export default function OnlineVisitorsMap({ sessions, onClose }) {
       }
       return true;
     });
-  }, [sessions, timeFilter, customDate, dateFrom, dateTo]);
+  }, [sessions, timeFilter, dateFrom, dateTo]);
 
+  // Vytvorenie zoznamu unikátnych bodov pre mapu
   const locations = useMemo(() => {
     const cityGroups = {};
     
-    filteredSessions
-      .filter(s => s.location_info?.latitude && s.location_info?.longitude)
-      .forEach(s => {
-        const cityKey = `${s.location_info.city}_${s.location_info.country}`;
-        if (!cityGroups[cityKey]) {
-          cityGroups[cityKey] = {
-            latitude: s.location_info.latitude,
-            longitude: s.location_info.longitude,
-            city: s.location_info.city,
-            country: s.location_info.country,
-            sessions: []
-          };
-        }
-        cityGroups[cityKey].sessions.push({
-          user: s.user_name || 'Anonymous',
-          email: s.user_email,
-          device: s.device_info?.device_type,
-          browser: s.device_info?.browser,
-          isActive: isSessionOnline(s),
-          timestamp: s.start_time,
-          duration: s.duration_seconds
-        });
+    filteredSessions.forEach(s => {
+      const cityKey = `${s.location_info.city}_${s.location_info.country}`;
+      if (!cityGroups[cityKey]) {
+        cityGroups[cityKey] = {
+          latitude: s.location_info.latitude,
+          longitude: s.location_info.longitude,
+          city: s.location_info.city,
+          country: s.location_info.country,
+          sessions: []
+        };
+      }
+      cityGroups[cityKey].sessions.push({
+        user: s.user_name || 'Anonymous',
+        email: s.user_email,
+        device: s.device_info?.device_type,
+        browser: s.device_info?.browser,
+        isActive: isSessionOnline(s),
+        timestamp: s.start_time,
+        duration: s.duration_seconds
       });
+    });
 
     const result = [];
     Object.values(cityGroups).forEach(group => {
@@ -125,6 +185,7 @@ export default function OnlineVisitorsMap({ sessions, onClose }) {
       const baseLng = group.longitude;
       
       group.sessions.forEach((session, idx) => {
+        // Pridáme drobný offset pre prípad, že na rovnakej lokácii je viacero relácií
         const offsetLat = (Math.random() - 0.5) * 0.005;
         const offsetLng = (Math.random() - 0.5) * 0.005;
         
@@ -147,230 +208,398 @@ export default function OnlineVisitorsMap({ sessions, onClose }) {
     return result;
   }, [filteredSessions]);
 
-  const stats = {
-    total: filteredSessions.length,
-    online: filteredSessions.filter(s => isSessionOnline(s)).length,
-    desktop: filteredSessions.filter(s => s.device_info?.device_type === 'desktop').length,
-    mobile: filteredSessions.filter(s => s.device_info?.device_type === 'mobile').length,
-    tablet: filteredSessions.filter(s => s.device_info?.device_type === 'tablet').length
+  // Bočný panel - zoznam relácií prislúchajúcich filtru
+  const sidebarItems = useMemo(() => {
+    return filteredSessions.map((s, idx) => ({
+      id: s.id || idx,
+      user: s.user_name || 'Anonymný návštevník',
+      email: s.user_email,
+      city: s.location_info?.city || 'Neznáme mesto',
+      country: s.location_info?.country || 'Slovensko',
+      countryCode: s.location_info?.country_code || 'SK',
+      continent: getContinentName(s.location_info?.country_code),
+      latitude: s.location_info?.latitude,
+      longitude: s.location_info?.longitude,
+      device: s.device_info?.device_type || 'desktop',
+      browser: s.device_info?.browser || 'Chrome',
+      isActive: isSessionOnline(s),
+      timestamp: s.start_time,
+      duration: s.duration_seconds,
+      currentPage: s.current_page || '/'
+    }));
+  }, [filteredSessions]);
+
+  // Štatistiky pre vybraný filter
+  const deviceStats = useMemo(() => {
+    let desktop = 0;
+    let mobile = 0;
+    let tablet = 0;
+    filteredSessions.forEach(s => {
+      const type = s.device_info?.device_type;
+      if (type === 'mobile') mobile++;
+      else if (type === 'tablet') tablet++;
+      else desktop++;
+    });
+    return { desktop, mobile, tablet };
+  }, [filteredSessions]);
+
+  // Určenie nadpisu bočného panela podľa filtra
+  const getSidebarTitle = () => {
+    switch (timeFilter) {
+      case "online": return `Aktívni na webe (${counts.online})`;
+      case "today": return `Dnešné návštevy (${filteredSessions.length})`;
+      case "week": return `Tento týždeň (${filteredSessions.length})`;
+      case "month": return `Tento mesiac (${filteredSessions.length})`;
+      case "range": return `Vybrané obdobie (${filteredSessions.length})`;
+      default: return `Zoznam návštev (${filteredSessions.length})`;
+    }
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-7xl h-[90vh] flex flex-col overflow-hidden">
+    <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 sm:p-6 md:p-8 animate-in fade-in duration-300">
+      <Card className="w-full max-w-7xl h-[88vh] bg-slate-900 border border-slate-800 text-slate-100 rounded-3xl shadow-2xl flex flex-col overflow-hidden backdrop-blur-xl">
+        
         {/* Header */}
-        <div className="bg-gradient-to-r from-red-700 to-red-800 text-white p-4 flex items-center justify-between">
+        <div className="bg-gradient-to-r from-slate-950 via-slate-900 to-indigo-950 text-white p-4.5 flex items-center justify-between border-b border-slate-800">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-white/20 rounded-lg">
-              <Globe className="w-6 h-6" />
+            <div className="p-2 bg-indigo-500/10 rounded-xl border border-indigo-500/20 text-indigo-400">
+              <Globe className="w-6 h-6 animate-spin-slow" />
             </div>
             <div>
-              <h2 className="text-xl font-bold">Mapa návštevníkov</h2>
-              <p className="text-sm text-white/80">{locations.length} lokácií</p>
+              <h2 className="text-lg font-black tracking-tight flex items-center gap-2">
+                Mapa návštevníkov
+                <Badge className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] py-0.5 px-2 font-bold animate-pulse">
+                  {counts.online} ONLINE
+                </Badge>
+              </h2>
+              <p className="text-xs text-slate-400 font-semibold mt-0.5">Celkovo zmapovaných {counts.today} relácií za dnes • {sidebarItems.length} vyhovuje filtru</p>
             </div>
           </div>
-          <Button variant="ghost" size="icon" onClick={onClose} className="text-white hover:bg-white/20">
+          <Button variant="ghost" size="icon" onClick={onClose} className="text-slate-400 hover:text-white hover:bg-slate-800/80 rounded-xl">
             <X className="w-5 h-5" />
           </Button>
         </div>
 
-        {/* Time Filters */}
-        <div className="p-4 border-b bg-gray-50">
+        {/* Filters and Search Bar */}
+        <div className="p-4 border-b border-slate-800 bg-slate-900/50 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-2 flex-wrap">
             <Button
               size="sm"
               variant={timeFilter === "online" ? "default" : "outline"}
-              onClick={() => setTimeFilter("online")}
-              className={timeFilter === "online" ? "bg-green-600 hover:bg-green-700" : ""}
+              onClick={() => {
+                setTimeFilter("online");
+                setSelectedLocation(null);
+              }}
+              className={`rounded-xl text-xs font-bold transition-all px-3.5 h-8.5 ${
+                timeFilter === "online" 
+                  ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-900/30 border-transparent" 
+                  : "border-slate-800 text-slate-350 hover:bg-slate-800/60 hover:text-white"
+              }`}
             >
-              <Users className="w-4 h-4 mr-2" />
-              Online teraz ({stats.online})
+              <span className="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-ping shrink-0" />
+              Online teraz ({counts.online})
             </Button>
+            
             <Button
               size="sm"
               variant={timeFilter === "today" ? "default" : "outline"}
-              onClick={() => setTimeFilter("today")}
+              onClick={() => {
+                setTimeFilter("today");
+                setSelectedLocation(null);
+              }}
+              className={`rounded-xl text-xs font-bold transition-all px-3.5 h-8.5 ${
+                timeFilter === "today" 
+                  ? "bg-indigo-650 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-900/30 border-transparent" 
+                  : "border-slate-800 text-slate-350 hover:bg-slate-800/60 hover:text-white"
+              }`}
             >
-              <Calendar className="w-4 h-4 mr-2" />
-              Dnes ({stats.total})
+              <Calendar className="w-4 h-4 mr-1.5 shrink-0" />
+              Dnes ({counts.today})
             </Button>
+            
             <Button
               size="sm"
               variant={timeFilter === "week" ? "default" : "outline"}
-              onClick={() => setTimeFilter("week")}
+              onClick={() => {
+                setTimeFilter("week");
+                setSelectedLocation(null);
+              }}
+              className={`rounded-xl text-xs font-bold transition-all px-3.5 h-8.5 ${
+                timeFilter === "week" 
+                  ? "bg-indigo-650 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-900/30 border-transparent" 
+                  : "border-slate-800 text-slate-350 hover:bg-slate-800/60 hover:text-white"
+              }`}
             >
-              Tento týždeň
+              Tento týždeň ({counts.week})
             </Button>
+            
             <Button
               size="sm"
               variant={timeFilter === "month" ? "default" : "outline"}
-              onClick={() => setTimeFilter("month")}
+              onClick={() => {
+                setTimeFilter("month");
+                setSelectedLocation(null);
+              }}
+              className={`rounded-xl text-xs font-bold transition-all px-3.5 h-8.5 ${
+                timeFilter === "month" 
+                  ? "bg-indigo-650 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-900/30 border-transparent" 
+                  : "border-slate-800 text-slate-350 hover:bg-slate-800/60 hover:text-white"
+              }`}
             >
-              Tento mesiac
+              Tento mesiac ({counts.month})
             </Button>
+
             <Button
               size="sm"
               variant={timeFilter === "range" ? "default" : "outline"}
-              onClick={() => setTimeFilter("range")}
-              className={timeFilter === "range" ? "bg-indigo-600 hover:bg-indigo-700" : ""}
+              onClick={() => {
+                setTimeFilter("range");
+                setSelectedLocation(null);
+              }}
+              className={`rounded-xl text-xs font-bold transition-all px-3.5 h-8.5 ${
+                timeFilter === "range" 
+                  ? "bg-indigo-650 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-900/30 border-transparent" 
+                  : "border-slate-800 text-slate-350 hover:bg-slate-800/60 hover:text-white"
+              }`}
             >
-              <Calendar className="w-4 h-4 mr-2" />
+              <Calendar className="w-4 h-4 mr-1.5 shrink-0" />
               Rozsah dátumov
             </Button>
+            
             {timeFilter === "range" && (
-              <>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-600">Od:</span>
-                  <input
-                    type="date"
-                    value={dateFrom}
-                    onChange={(e) => setDateFrom(e.target.value)}
-                    className="px-3 py-1 border rounded-md text-sm"
-                  />
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-600">Do:</span>
-                  <input
-                    type="date"
-                    value={dateTo}
-                    onChange={(e) => setDateTo(e.target.value)}
-                    className="px-3 py-1 border rounded-md text-sm"
-                  />
-                </div>
-              </>
+              <div className="flex items-center gap-2 ml-1 animate-in slide-in-from-left duration-250">
+                <input
+                  type="date"
+                  value={dateFrom}
+                  onChange={(e) => setDateFrom(e.target.value)}
+                  className="px-2.5 py-1 bg-slate-950 border border-slate-800 rounded-lg text-xs font-semibold text-slate-200 outline-none focus:border-indigo-500"
+                />
+                <span className="text-[10px] text-slate-500 font-bold uppercase">do</span>
+                <input
+                  type="date"
+                  value={dateTo}
+                  onChange={(e) => setDateTo(e.target.value)}
+                  className="px-2.5 py-1 bg-slate-950 border border-slate-800 rounded-lg text-xs font-semibold text-slate-200 outline-none focus:border-indigo-500"
+                />
+              </div>
             )}
           </div>
 
-          {/* Device Stats */}
-          <div className="flex items-center gap-3 mt-3">
-            <Badge className="bg-blue-100 text-blue-800">
-              <Monitor className="w-3 h-3 mr-1" />
-              Desktop: {stats.desktop}
+          {/* Device Badges */}
+          <div className="flex items-center gap-2 flex-wrap text-[10px] font-bold">
+            <Badge className="bg-indigo-950/60 text-indigo-300 border border-indigo-900/40 rounded-lg px-2 py-0.8 flex items-center gap-1">
+              <Monitor className="w-3 h-3 text-indigo-400" />
+              Desktop: {deviceStats.desktop}
             </Badge>
-            <Badge className="bg-purple-100 text-purple-800">
-              <Smartphone className="w-3 h-3 mr-1" />
-              Mobil: {stats.mobile}
+            <Badge className="bg-pink-950/60 text-pink-300 border border-pink-900/40 rounded-lg px-2 py-0.8 flex items-center gap-1">
+              <Smartphone className="w-3 h-3 text-pink-400" />
+              Mobil: {deviceStats.mobile}
             </Badge>
-            <Badge className="bg-teal-100 text-teal-800">
-              <Tablet className="w-3 h-3 mr-1" />
-              Tablet: {stats.tablet}
+            <Badge className="bg-cyan-950/60 text-cyan-300 border border-cyan-900/40 rounded-lg px-2 py-0.8 flex items-center gap-1">
+              <Tablet className="w-3 h-3 text-cyan-400" />
+              Tablet: {deviceStats.tablet}
             </Badge>
           </div>
         </div>
 
-        {/* Map & Live Sidebar */}
+        {/* Map & Live Sidebar Container */}
         <div className="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
-          {/* Live Sidebar */}
-          <div className="w-full lg:w-80 border-b lg:border-b-0 lg:border-r bg-white flex flex-col h-48 lg:h-auto overflow-hidden">
-            <div className="p-3 border-b bg-gray-50 flex items-center justify-between">
-              <span className="text-xs font-bold text-gray-700 uppercase tracking-wider flex items-center gap-1.5">
-                <Users className="w-4 h-4 text-green-600 animate-pulse" />
-                Aktívni na webe ({stats.online})
+          
+          {/* List Sidebar */}
+          <div className="w-full lg:w-85 border-b lg:border-b-0 lg:border-r border-slate-800 bg-slate-950/30 flex flex-col h-56 lg:h-auto overflow-hidden">
+            <div className="p-3.5 border-b border-slate-800 bg-slate-900/30 flex items-center justify-between">
+              <span className="text-xs font-black text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                <Users className={`w-4 h-4 shrink-0 ${timeFilter === "online" ? "text-emerald-500 animate-pulse" : "text-indigo-400"}`} />
+                {getSidebarTitle()}
               </span>
             </div>
-            <div className="flex-1 overflow-y-auto divide-y divide-gray-100">
-              {sessions.filter(s => isSessionOnline(s)).length === 0 ? (
-                <div className="p-4 text-center text-xs text-gray-500">Žiadni aktívni návštevníci online</div>
+            
+            <div className="flex-1 overflow-y-auto divide-y divide-slate-800/60 p-2 space-y-2">
+              {sidebarItems.length === 0 ? (
+                <div className="p-8 text-center text-xs text-slate-500 font-semibold italic">Žiadne relácie nevyhovujú filtru</div>
               ) : (
-                sessions.filter(s => isSessionOnline(s)).map((s, idx) => (
-                  <div key={idx} className="p-3 hover:bg-gray-50 transition-colors space-y-1 text-xs">
-                    <div className="flex items-center justify-between">
-                      <span className="font-semibold text-gray-900 truncate max-w-[180px]">
-                        {s.user_name || s.user_email || 'Anonymný návštevník'}
-                      </span>
-                      <Badge className="bg-green-100 text-green-800 text-[10px] scale-90">LIVE</Badge>
-                    </div>
-                    {s.location_info && (
-                      <div className="text-[11px] text-gray-650 flex items-center gap-1 font-medium">
-                        <Globe className="w-3 h-3 text-gray-400" />
-                        {s.location_info.city || 'Neznáme mesto'}, {s.location_info.country_code || 'SK'}
+                sidebarItems.map((item) => {
+                  const isSelected = selectedLocation && selectedLocation.id === item.id;
+                  return (
+                    <div 
+                      key={item.id} 
+                      onClick={() => handleItemClick(item)}
+                      className={`p-3 hover:bg-slate-800/50 hover:border-slate-700/50 transition-all border rounded-xl cursor-pointer space-y-1.5 text-xs ${
+                        isSelected 
+                          ? 'bg-indigo-950/40 border-indigo-500/70 shadow-md shadow-indigo-950/20' 
+                          : 'bg-slate-900/30 border-slate-800/80'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-extrabold text-slate-200 truncate max-w-[170px]">
+                          {item.user}
+                        </span>
+                        <div className="flex items-center gap-1 shrink-0">
+                          {getDeviceIcon(item.device)}
+                          {item.isActive ? (
+                            <Badge className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[9px] py-0 scale-90">LIVE</Badge>
+                          ) : (
+                            <Badge className="bg-slate-800 text-slate-400 border border-slate-700 text-[9px] py-0 scale-90">OFFLINE</Badge>
+                          )}
+                        </div>
                       </div>
-                    )}
-                    <div className="text-[11px] text-indigo-700 bg-indigo-50/50 px-2 py-0.5 rounded truncate font-mono mt-1">
-                      {s.current_page || '/'}
+                      
+                      <div className="text-[11px] text-slate-400 flex items-center gap-1 font-semibold">
+                        <Globe className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
+                        <span className="truncate">{item.city}, {item.countryCode} ({item.continent})</span>
+                      </div>
+                      
+                      <div className="flex justify-between items-center text-[10px] text-slate-500 font-bold pt-1 border-t border-slate-800/50">
+                        <span className="truncate max-w-[160px] font-mono text-indigo-400 bg-indigo-950/20 px-1 py-0.2 rounded">{item.currentPage}</span>
+                        <span>{format(new Date(item.timestamp), 'HH:mm:ss', { locale: sk })}</span>
+                      </div>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
           </div>
 
-          {/* Map Container */}
+          {/* Leaflet Map */}
           <div className="flex-1 h-full relative">
             {locations.length > 0 ? (
               <MapContainer
                 center={[48.7164, 19.6990]}
                 zoom={6}
-                className="h-full w-full"
+                className="h-full w-full z-10"
               >
                 <TileLayer
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 />
+                
+                <MapResizer />
                 <AutoFitBounds locations={locations} />
+                <FlyToMarker activeLocation={selectedLocation} />
+
                 {locations.map((loc, idx) => (
                   <CircleMarker
                     key={idx}
                     center={[loc.latitude, loc.longitude]}
-                    radius={loc.isActive ? 10 : 6}
-                    fillColor={loc.isActive ? "#22c55e" : "#3b82f6"}
-                    color={loc.isActive ? "#16a34a" : "#2563eb"}
+                    radius={loc.isActive ? 11 : 7}
+                    fillColor={loc.isActive ? "#10b981" : "#4f46e5"}
+                    color={loc.isActive ? "#34d399" : "#818cf8"}
                     weight={2}
-                    opacity={0.8}
-                    fillOpacity={0.6}
+                    opacity={0.9}
+                    fillOpacity={0.65}
                   >
                     <Popup>
-                      <div className="text-xs space-y-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <h4 className="font-bold text-sm">{loc.user}</h4>
-                          {loc.isActive && (
-                            <Badge className="bg-green-600 text-white text-xs">🟢 Online</Badge>
+                      <div className="text-xs space-y-1.5 text-slate-800 min-w-[160px]">
+                        <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-1.5 mb-1.5">
+                          <h4 className="font-extrabold text-sm text-slate-900 truncate max-w-[110px]">{loc.user}</h4>
+                          {loc.isActive ? (
+                            <Badge className="bg-emerald-600 text-white text-[9px] py-0 px-1 font-bold">Online</Badge>
+                          ) : (
+                            <Badge className="bg-slate-200 text-slate-650 border border-slate-300 text-[9px] py-0 px-1 font-bold">Offline</Badge>
                           )}
                         </div>
-                        <p className="text-gray-600">{loc.email}</p>
-                        <div className="flex items-center gap-1 text-gray-700">
-                          <Globe className="w-3 h-3" />
-                          {loc.city}, {loc.country}
+                        
+                        {loc.email && <p className="text-slate-500 text-[10px] truncate select-all">{loc.email}</p>}
+                        
+                        <div className="flex items-center gap-1.5 text-slate-700 font-semibold">
+                          <Globe className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
+                          <span>{loc.city}, {loc.country} ({getContinentName(loc.country)})</span>
                         </div>
-                        <div className="flex items-center gap-1 text-gray-700">
+                        
+                        <div className="flex items-center gap-1.5 text-slate-700 capitalize">
                           {getDeviceIcon(loc.device)}
-                          {loc.device} - {loc.browser}
+                          <span className="font-medium text-[10px]">{loc.device} • {loc.browser}</span>
                         </div>
-                        <div className="flex items-center gap-1 text-gray-700">
-                          <Clock className="w-3 h-3" />
-                          {format(new Date(loc.timestamp), 'dd.MM.yyyy HH:mm', { locale: sk })}
+                        
+                        <div className="flex items-center gap-1.5 text-slate-600 text-[10px] font-bold">
+                          <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                          <span>{format(new Date(loc.timestamp), 'dd.MM.yyyy HH:mm', { locale: sk })}</span>
                         </div>
+                        
                         {loc.duration > 0 && (
-                          <p className="text-gray-600">
+                          <div className="text-[10px] text-indigo-650 font-bold bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-100">
                             Trvanie: {Math.floor(loc.duration / 60)}m {loc.duration % 60}s
-                          </p>
+                          </div>
                         )}
                       </div>
                     </Popup>
                   </CircleMarker>
                 ))}
+
+                {/* Zvýraznený marker pre položku zvolenú z bočného panela */}
+                {selectedLocation && (
+                  <CircleMarker
+                    center={[selectedLocation.latitude, selectedLocation.longitude]}
+                    radius={14}
+                    fillColor="#ec4899"
+                    color="#f43f5e"
+                    weight={2.5}
+                    opacity={0.95}
+                    fillOpacity={0.35}
+                    className="animate-pulse"
+                  >
+                    <Popup position={[selectedLocation.latitude, selectedLocation.longitude]}>
+                      <div className="text-xs space-y-1.5 text-slate-800 min-w-[170px]">
+                        <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-1.5 mb-1.5">
+                          <h4 className="font-extrabold text-sm text-indigo-850 truncate max-w-[110px]">{selectedLocation.user}</h4>
+                          {selectedLocation.isActive ? (
+                            <Badge className="bg-emerald-600 text-white text-[9px] py-0 px-1 font-bold">Online</Badge>
+                          ) : (
+                            <Badge className="bg-slate-200 text-slate-650 border border-slate-300 text-[9px] py-0 px-1 font-bold">Offline</Badge>
+                          )}
+                        </div>
+                        
+                        {selectedLocation.email && <p className="text-slate-500 text-[10px] truncate select-all">{selectedLocation.email}</p>}
+                        
+                        <div className="flex items-center gap-1.5 text-slate-700 font-bold">
+                          <Globe className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
+                          <span>{selectedLocation.city}, {selectedLocation.country} ({selectedLocation.continent})</span>
+                        </div>
+                        
+                        <div className="flex items-center gap-1.5 text-slate-700 font-semibold">
+                          {getDeviceIcon(selectedLocation.device)}
+                          <span>{selectedLocation.device} • {selectedLocation.browser}</span>
+                        </div>
+
+                        <div className="text-[10px] text-slate-600">
+                          Aktuálna stránka: <span className="font-mono text-[9px] bg-slate-100 px-1 py-0.5 rounded text-indigo-600">{selectedLocation.currentPage}</span>
+                        </div>
+                        
+                        <div className="flex items-center gap-1.5 text-slate-500 text-[10px]">
+                          <Clock className="w-3.5 h-3.5 shrink-0" />
+                          <span>{format(new Date(selectedLocation.timestamp), 'dd.MM.yyyy HH:mm:ss', { locale: sk })}</span>
+                        </div>
+                      </div>
+                    </Popup>
+                  </CircleMarker>
+                )}
               </MapContainer>
             ) : (
-              <div className="flex items-center justify-center h-full bg-gray-100">
-                <div className="text-center">
-                  <Globe className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-600">Žiadne lokácie pre zvolený filter</p>
+              <div className="flex items-center justify-center h-full bg-slate-950/20 text-slate-400">
+                <div className="text-center space-y-3">
+                  <Globe className="w-16 h-16 text-slate-600 mx-auto mb-2 animate-pulse" />
+                  <h3 className="text-sm font-black text-slate-300">Žiadne lokalizované návštevy</h3>
+                  <p className="text-xs text-slate-500 max-w-xs mx-auto">V tomto časovom období neboli zaznamenané žiadne relácie s informáciou o GPS súradniciach.</p>
                 </div>
               </div>
             )}
           </div>
         </div>
 
-        {/* Legend */}
-        <div className="p-4 border-t bg-gray-50">
+        {/* Legend / Legend bar */}
+        <div className="p-4 border-t border-slate-800 bg-slate-950/40 text-xs">
           <div className="flex items-center justify-center gap-6">
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-green-500 border-2 border-green-600"></div>
-              <span className="text-xs text-gray-700">Online teraz</span>
+              <span className="w-3 h-3 rounded-full bg-emerald-500 border border-emerald-300 inline-block shadow-sm shadow-emerald-500/30" />
+              <span className="text-slate-400 font-semibold">Online návštevník</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-blue-500 border-2 border-blue-600"></div>
-              <span className="text-xs text-gray-700">Offline session</span>
+              <span className="w-3 h-3 rounded-full bg-indigo-600 border border-indigo-400 inline-block shadow-sm shadow-indigo-600/30" />
+              <span className="text-slate-400 font-semibold">Offline návštevník (Staršia relácia)</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-3 h-3 rounded-full bg-pink-500 border border-pink-300 inline-block shadow-sm shadow-pink-500/30" />
+              <span className="text-slate-400 font-semibold">Vybraný z bočného panela</span>
             </div>
           </div>
         </div>

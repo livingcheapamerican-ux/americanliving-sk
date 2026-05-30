@@ -44,6 +44,25 @@ const isSessionOnline = (session) => {
   return diffMs < 5 * 60 * 1000;
 };
 
+// Helper na priradenie kontinentu podľa kódu krajiny v slovenskom jazyku
+const getContinentName = (countryCode) => {
+  if (!countryCode) return "";
+  const code = countryCode.toUpperCase();
+  
+  // Severná Amerika
+  if (['US', 'CA', 'MX', 'PR', 'GL'].includes(code)) return "Severná Amerika";
+  // Južná Amerika
+  if (['BR', 'AR', 'CL', 'CO', 'PE', 'VE', 'EC', 'BO', 'PY', 'UY', 'GF', 'GY', 'SR'].includes(code)) return "Južná Amerika";
+  // Austrália a Oceánia
+  if (['AU', 'NZ', 'FJ', 'PG', 'SB', 'VU', 'NC'].includes(code)) return "Austrália a Oceánia";
+  // Ázia
+  if (['CN', 'JP', 'IN', 'KR', 'TW', 'TH', 'VN', 'SG', 'MY', 'ID', 'PH', 'PK', 'BD', 'IR', 'IQ', 'IL', 'TR', 'SA', 'AE', 'KZ', 'UZ', 'KP', 'HK', 'MO', 'LK', 'NP', 'MM', 'KH', 'LA', 'MN', 'GE', 'AM', 'AZ'].includes(code)) return "Ázia";
+  // Afrika
+  if (['ZA', 'EG', 'NG', 'KE', 'MA', 'DZ', 'TN', 'EE', 'GH', 'ET', 'TZ', 'UG', 'AO', 'MZ', 'CI', 'SN', 'CM', 'ZW'].includes(code)) return "Afrika";
+  
+  return "Európa";
+};
+
 // Pomocná funkcia na vykreslenie Web Vital skóre
 const renderWebVital = (name, value, unit, thresholds) => {
   if (value === undefined || value === null || value === 0) {
@@ -1385,7 +1404,12 @@ export default function AdminAnalyzaSessions() {
                         <div className={`flex items-center justify-between text-[10px] font-bold mt-2 pt-2 border-t border-dashed ${
                           isSelected ? 'border-indigo-500/50 text-indigo-150' : 'border-slate-200 text-slate-450'
                         }`}>
-                          <span className="truncate">{visitor.commonLocation || 'Slovensko'}</span>
+                          <span className="truncate flex items-center gap-1">
+                            <Globe className={`w-3.5 h-3.5 shrink-0 ${isSelected ? 'text-indigo-200' : 'text-indigo-500'}`} />
+                            {visitor.commonLocation ? (
+                              `${visitor.commonLocation} (${getContinentName(visitor.commonLocation.split(',')[1]?.trim())})`
+                            ) : 'Slovensko (Európa)'}
+                          </span>
                           <span>{safeFormat(visitor.lastVisit, 'dd.MM HH:mm', { locale: sk })}</span>
                         </div>
                       </div>
@@ -1488,6 +1512,12 @@ export default function AdminAnalyzaSessions() {
                                         <span className="flex items-center gap-1"><TrendingUp className="w-3.5 h-3.5 text-slate-400" />{formatDuration(session.duration_seconds)}</span>
                                         <span className="flex items-center gap-1"><Eye className="w-3.5 h-3.5 text-slate-400" />{session.pages_visited?.length || 0} strán</span>
                                         <span className="flex items-center gap-1"><MousePointer className="w-3.5 h-3.5 text-slate-400" />{session.clicks?.length || 0} klikov</span>
+                                        <span className="flex items-center gap-1 text-emerald-700 bg-emerald-55/70 px-1.5 py-0.2 rounded border border-emerald-150">
+                                          <Globe className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                                          {session.location_info ? (
+                                            `${session.location_info.city || 'Neznáme Mesto'}, ${session.location_info.country_code || 'SK'} (${getContinentName(session.location_info.country_code)})`
+                                          ) : 'Slovensko (Európa)'}
+                                        </span>
                                       </div>
                                     </div>
                                     <Button variant="ghost" size="sm" className="p-1 h-auto">
@@ -1556,7 +1586,7 @@ export default function AdminAnalyzaSessions() {
 
                           {session.user_email && <p className="text-xs font-bold text-indigo-650 mb-1">{session.user_email}</p>}
                           
-                          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3.5 text-[10px] text-slate-655 font-bold mt-2">
+                          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3.5 text-[10px] text-slate-655 font-bold mt-2">
                             <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5 text-slate-400" />{safeFormat(session.start_time, 'dd.MM.yyyy HH:mm', { locale: sk })}</span>
                             <span className="flex items-center gap-1"><TrendingUp className="w-3.5 h-3.5 text-slate-400" />{formatDuration(session.duration_seconds)}</span>
                             <span className="flex items-center gap-1"><Eye className="w-3.5 h-3.5 text-slate-400" />{session.pages_visited?.length || 0} strán</span>
@@ -1564,6 +1594,12 @@ export default function AdminAnalyzaSessions() {
                             <span className="flex items-center gap-1 capitalize">
                               {getDeviceIcon(session.device_info?.device_type)}
                               {session.device_info?.device_type || 'desktop'}
+                            </span>
+                            <span className="flex items-center gap-1 text-emerald-700 bg-emerald-55/70 px-1.5 py-0.2 rounded border border-emerald-150">
+                              <Globe className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                              {session.location_info ? (
+                                `${session.location_info.city || 'Neznáme Mesto'}, ${session.location_info.country_code || 'SK'} (${getContinentName(session.location_info.country_code)})`
+                              ) : 'Slovensko (Európa)'}
                             </span>
                           </div>
                         </div>
