@@ -1230,5 +1230,13 @@ export default {
   "customOptions": "Széles választék",
   "customOptionsDesc": "Ablakszínektől a homlokzati típusokon át a kulcsfontosságú gépészetig és alapozásig.",
   "viewShowcase": "Bemutató megtekintése",
-  "consultWithKexo": "Konzultáljon Kexóval"
+  "consultWithKexo": "Konzultáljon Kexóval",
+  "phAssembly": "A holoház szerelési költsége",
+  "phExtraInsulation": "További szigetelés",
+  "phLoftUpgrade": "Tetőtér átalakítása",
+  "phExtraZateplenie": "Extra szigetelés",
+  "phPhotovoltaic": "Fotovoltaikus rendszer",
+  "phHlinikoveOkna": "Alumínium ablakok",
+  "phKompozitnePanely": "Kompozit panelek",
+  "sewage": "Csatornázás"
 };

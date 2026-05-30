@@ -1238,5 +1238,13 @@ export default {
   "customOptions": "Wide choice",
   "customOptionsDesc": "From window color through facade types to key installations and foundations.",
   "viewShowcase": "View showcase",
-  "consultWithKexo": "Consult with Kexo"
+  "consultWithKexo": "Consult with Kexo",
+  "phAssembly": "Price of the assembly of a shell house",
+  "phExtraInsulation": "Additional insulation",
+  "phLoftUpgrade": "Attic conversion",
+  "phExtraZateplenie": "Extra insulation",
+  "phPhotovoltaic": "Photovoltaic system",
+  "phHlinikoveOkna": "Aluminum windows",
+  "phKompozitnePanely": "Composite panels",
+  "sewage": "Sewage"
 };

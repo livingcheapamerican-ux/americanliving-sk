@@ -1277,5 +1277,13 @@ export default {
   "customOptions": "Breite Auswahl",
   "customOptionsDesc": "Von der Fensterfarbe über Fassadentypen bis hin zu Schlüsselinstallationen und Fundamenten.",
   "viewShowcase": "Vorschau anzeigen",
-  "consultWithKexo": "Mit Kexo besprechen"
+  "consultWithKexo": "Mit Kexo besprechen",
+  "phAssembly": "Preis der Montage des Rohbaus",
+  "phExtraInsulation": "Zusätzliche Isolierung",
+  "phLoftUpgrade": "Dachgeschossausbau",
+  "phExtraZateplenie": "Zusätzliche Dämmung",
+  "phPhotovoltaic": "Photovoltaiksystem",
+  "phHlinikoveOkna": "Aluminiumfenster",
+  "phKompozitnePanely": "Verbundpaneele",
+  "sewage": "Kanalisation"
 };

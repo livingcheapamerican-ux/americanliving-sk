@@ -1205,5 +1205,13 @@ export default {
   "customOptions": "Ευρεία επιλογή",
   "customOptionsDesc": "Από το χρώμα των παραθύρων και τους τύπους πρόσοψης μέχρι τις βασικές εγκαταστάσεις και τα θεμέλια.",
   "viewShowcase": "Προβολή δείγματος",
-  "consultWithKexo": "Συμβουλευτείτε τον Kexo"
+  "consultWithKexo": "Συμβουλευτείτε τον Kexo",
+  "phAssembly": "Τιμή εγκατάστασης holodom",
+  "phExtraInsulation": "Πρόσθετη μόνωση",
+  "phLoftUpgrade": "Διαμόρφωση σοφίτας",
+  "phExtraZateplenie": "Επιπλέον Θερμομόνωση",
+  "phPhotovoltaic": "Φωτοβολταϊκό σύστημα",
+  "phHlinikoveOkna": "Αλουμινένια παράθυρα",
+  "phKompozitnePanely": "Σύνθετες πάνελς",
+  "sewage": "Αποχέτευση"
 };

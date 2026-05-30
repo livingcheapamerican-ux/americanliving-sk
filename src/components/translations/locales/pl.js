@@ -1203,5 +1203,13 @@ export default {
   "customOptions": "Szeroki wybór",
   "customOptionsDesc": "Od koloru okien przez typy elewacji po kluczowe instalacje i fundamenty.",
   "viewShowcase": "Zobacz pokaz",
-  "consultWithKexo": "Skonsultuj się z Kexo"
+  "consultWithKexo": "Skonsultuj się z Kexo",
+  "phAssembly": "Cena montażu domu w stanie surowym",
+  "phExtraInsulation": "Dodatkowa izolacja",
+  "phLoftUpgrade": "Adaptacja poddasza",
+  "phExtraZateplenie": "Dodatkowa izolacja",
+  "phPhotovoltaic": "System fotowoltaiczny",
+  "phHlinikoveOkna": "Okna aluminiowe",
+  "phKompozitnePanely": "Panele kompozytowe",
+  "sewage": "Kanalizacja"
 };

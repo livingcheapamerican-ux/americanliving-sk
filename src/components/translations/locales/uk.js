@@ -1230,5 +1230,13 @@ export default {
   "customOptions": "Широкий вибір",
   "customOptionsDesc": "Від кольору вікон через типи фасадів до ключових комунікацій та фундаменту.",
   "viewShowcase": "Переглянути демонстрацію",
-  "consultWithKexo": "Проконсультуватися з Кексо"
+  "consultWithKexo": "Проконсультуватися з Кексо",
+  "phAssembly": "Ціна монтажу холодного дому",
+  "phExtraInsulation": "Додаткова ізоляція",
+  "phLoftUpgrade": "Облаштування мансарди",
+  "phExtraZateplenie": "Додаткова теплоізоляція",
+  "phPhotovoltaic": "Фотovoltaїчна система",
+  "phHlinikoveOkna": "Алюмінієві вікна",
+  "phKompozitnePanely": "Композитні панелі",
+  "sewage": "Каналізація"
 };

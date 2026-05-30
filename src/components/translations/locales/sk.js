@@ -1393,5 +1393,13 @@ export default {
   "customOptions": "Široká voľba",
   "customOptionsDesc": "Od farby okien cez typy fasády až po kľúčové inštalácie a základy.",
   "viewShowcase": "Pozrieť ukážku",
-  "consultWithKexo": "Konzultovať s Kexom"
+  "consultWithKexo": "Konzultovať s Kexom",
+  "phAssembly": "Cena montáže holodomu",
+  "phExtraInsulation": "Dodatočná izolácia",
+  "phLoftUpgrade": "Úprava podkrovia",
+  "phExtraZateplenie": "Extra zateplenie",
+  "phPhotovoltaic": "Fotovoltaický systém",
+  "phHlinikoveOkna": "Hliníkové okná",
+  "phKompozitnePanely": "Kompozitné panely",
+  "sewage": "Kanalizácia"
 };

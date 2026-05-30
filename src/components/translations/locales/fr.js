@@ -1276,5 +1276,13 @@ export default {
   "customOptions": "Large choix",
   "customOptionsDesc": "De la couleur des fenêtres aux types de façades, en passant par les installations clés et les fondations.",
   "viewShowcase": "Voir la démonstration",
-  "consultWithKexo": "Consulter Kexo"
+  "consultWithKexo": "Consulter Kexo",
+  "phAssembly": "Prix de montage de la maison passive",
+  "phExtraInsulation": "Isolation supplémentaire",
+  "phLoftUpgrade": "Aménagement des combles",
+  "phExtraZateplenie": "Isolation supplémentaire",
+  "phPhotovoltaic": "Système photovoltaïque",
+  "phHlinikoveOkna": "Fenêtres en aluminium",
+  "phKompozitnePanely": "Panneaux composites",
+  "sewage": "Assainissement"
 };

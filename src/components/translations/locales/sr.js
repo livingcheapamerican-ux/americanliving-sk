@@ -1281,5 +1281,13 @@ export default {
   "customOptions": "Широк избор",
   "customOptionsDesc": "Од боје прозора преко типова фасаде до кључних инсталација и темеља.",
   "viewShowcase": "Погледај приказ",
-  "consultWithKexo": "Консултујте се са Кексом"
+  "consultWithKexo": "Консултујте се са Кексом",
+  "phAssembly": "Cena montaže holodoma",
+  "phExtraInsulation": "Dodatna izolacija",
+  "phLoftUpgrade": "Uređenje potkrovlja",
+  "phExtraZateplenie": "Dodatna termoizolacija",
+  "phPhotovoltaic": "Fotovoltački sistem",
+  "phHlinikoveOkna": "Aluminijumski prozori",
+  "phKompozitnePanely": "Kompozitni paneli",
+  "sewage": "Kanalizacija"
 };
