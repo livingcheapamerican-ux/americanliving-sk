@@ -214,9 +214,8 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
   );
 };
 
-const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = false, isAdmin, onPriceChange, description, t: propT, icon: Icon, priceZeroLabel }) => {
-  const { t: contextT } = useLanguage();
-  const t = propT || contextT;
+const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = false, isAdmin, onPriceChange, description, icon: Icon, priceZeroLabel }) => {
+  const { t } = useLanguage();
   return (
   <button 
     onClick={!disabled && !locked ? onChange : undefined} 
@@ -1114,7 +1113,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
             <AddonRow icon={Flame} label={getTranslatedText('podlahove_kurenie', 'nazov') || t('floorHeating')} checked={podlahovoKurenie} onChange={() => setPodlahovoKurenie(!podlahovoKurenie)} price={CENY.podlahove_kurenie} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('podlahove_kurenie', p)} />
             <AddonRow icon={Flame} label={getTranslatedText('pripravaKrb', 'nazov') || t('fireplacePrep')} checked={pripravaNaKrb} onChange={() => setPripravaNaKrb(!pripravaNaKrb)} price={CENY.pripravaKrb} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('pripravaKrb', p)} />
             <AddonRow icon={Flame} label={getTranslatedText('ochranaKachle', 'nazov') || t('stoveProtection')} checked={ochranaKachle} onChange={() => setOchranaKachle(!ochranaKachle)} price={CENY.ochranaKachle} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('ochranaKachle', p)} />
-            <AddonRow icon={Wind} label={getTranslatedText('klimatizacia', 'nazov') || 'Príprava na klimatizáciu'} checked={klimatizacia} onChange={() => setKlimatizacia(!klimatizacia)} price={CENY.klimatizacia} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('klimatizacia', p)} locked={ucel === "rodinny"} t={t} />
+            <AddonRow icon={Wind} label={getTranslatedText('klimatizacia', 'nazov') || 'Príprava na klimatizáciu'} checked={klimatizacia} onChange={() => setKlimatizacia(!klimatizacia)} price={CENY.klimatizacia} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('klimatizacia', p)} locked={ucel === "rodinny"} />
           </div>
         </section>
 
@@ -1276,8 +1275,8 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
 
           <div className="pt-4 border-t border-slate-100 dark:border-white/5 space-y-3">
             <h5 className="font-bold text-xs uppercase tracking-wider text-slate-400 mb-2">Elektroinštalačné doplnky</h5>
-            <AddonRow icon={Zap} label={getTranslatedText('bleskozvod', 'nazov') || t('lightningRod')} checked={bleskozvod} onChange={() => setBleskozvod(!bleskozvod)} price={CENY.bleskozvod} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('bleskozvod', p)} locked={ucel === "rodinny"} t={t} />
-            <AddonRow icon={Zap} label={getTranslatedText('prepat', 'nazov') || t('surgeProtection')} checked={prepat} onChange={() => setPrepat(!prepat)} price={CENY.prepat} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('prepat', p)} locked={ucel === "rodinny"} t={t} />
+            <AddonRow icon={Zap} label={getTranslatedText('bleskozvod', 'nazov') || t('lightningRod')} checked={bleskozvod} onChange={() => setBleskozvod(!bleskozvod)} price={CENY.bleskozvod} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('bleskozvod', p)} locked={ucel === "rodinny"} />
+            <AddonRow icon={Zap} label={getTranslatedText('prepat', 'nazov') || t('surgeProtection')} checked={prepat} onChange={() => setPrepat(!prepat)} price={CENY.prepat} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('prepat', p)} locked={ucel === "rodinny"} />
             <AddonRow icon={Zap} label={getTranslatedText('pripravaNaSolarnePanely', 'nazov') || 'Príprava na solárne panely'} checked={pripravaNaSolarnePanely} onChange={() => setPripravaNaSolarnePanely(!pripravaNaSolarnePanely)} price={CENY.pripravaNaSolarnePanely} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('pripravaNaSolarnePanely', p)} />
           </div>
         </section>
@@ -1360,9 +1359,9 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
         <section id="section-10" className="scroll-mt-32 border-b border-slate-200 dark:border-white/10 pb-8 space-y-4">
           <BigSectionHeader title={getTranslatedText('sekcia_inziniering', 'nazov') || t('engineeringDocsSection') || 'Inžiniering a dokumentácia'} icon={Layers} stepIdx={10} totalSteps={13} />
           <div className="space-y-3">
-            <AddonRow icon={Layers} label={getTranslatedText('inziniering', 'nazov') || t('engineering')} checked={inziniering} onChange={() => setInziniering(!inziniering)} price={CENY.inziniering} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('inziniering', p)} locked={ucel === "rodinny"} t={t} />
-            <AddonRow icon={Layers} label={getTranslatedText('projekt_certifikacia', 'nazov') || t('projectCertShort')} checked={projektACertifikacia} onChange={() => setProjektACertifikacia(!projektACertifikacia)} price={CENY.projektACertifikacia} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('projektACertifikacia', p)} locked={ucel === "rodinny"} t={t} />
-            <AddonRow icon={CheckCircle} label={getTranslatedText('revizia', 'nazov') || t('revisionDocsShort')} checked={revizia} onChange={() => setRevizia(!revizia)} price={CENY.revizia} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('revizia', p)} locked={ucel === "rodinny"} t={t} />
+            <AddonRow icon={Layers} label={getTranslatedText('inziniering', 'nazov') || t('engineering')} checked={inziniering} onChange={() => setInziniering(!inziniering)} price={CENY.inziniering} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('inziniering', p)} locked={ucel === "rodinny"} />
+            <AddonRow icon={Layers} label={getTranslatedText('projekt_certifikacia', 'nazov') || t('projectCertShort')} checked={projektACertifikacia} onChange={() => setProjektACertifikacia(!projektACertifikacia)} price={CENY.projektACertifikacia} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('projektACertifikacia', p)} locked={ucel === "rodinny"} />
+            <AddonRow icon={CheckCircle} label={getTranslatedText('revizia', 'nazov') || t('revisionDocsShort')} checked={revizia} onChange={() => setRevizia(!revizia)} price={CENY.revizia} isAdmin={isAdmin} onPriceChange={p => handlePriceChange('revizia', p)} locked={ucel === "rodinny"} />
           </div>
         </section>
 
