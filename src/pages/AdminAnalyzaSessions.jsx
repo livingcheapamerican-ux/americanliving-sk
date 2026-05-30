@@ -211,7 +211,7 @@ function ClickMapModal({ session, onClose }) {
               Click Map Overlay (Simulácia kliknutí)
             </h3>
             <p className="text-[10px] text-slate-400 font-bold">
-              Session ID: {session.session_id.substring(0, 8)} | Visitor ID: {session.visitor_id ? session.visitor_id.substring(0, 8) : 'N/A'}
+              Session ID: {session.session_id ? session.session_id.substring(0, 8) : (session.id ? String(session.id).substring(0, 8) : 'N/A')} | Visitor ID: {session.visitor_id ? session.visitor_id.substring(0, 8) : 'N/A'}
             </p>
           </div>
           <button 
@@ -494,7 +494,7 @@ export default function AdminAnalyzaSessions() {
       // Secondary: user_email
       // Tertiary: location_info.ip
       // Quaternary: fallback to session_id
-      const visitorKey = session.visitor_id || session.user_email || session.location_info?.ip || session.session_id;
+      const visitorKey = session.visitor_id || session.user_email || session.location_info?.ip || session.session_id || session.id;
       
       if (!groups[visitorKey]) {
         let displayName = session.user_name || session.user_email;
@@ -502,9 +502,9 @@ export default function AdminAnalyzaSessions() {
           if (session.location_info?.ip) {
             displayName = `IP: ${session.location_info.ip}`;
           } else if (session.visitor_id) {
-            displayName = `Návštevník (ID: ${session.visitor_id.substring(0, 8)})`;
+            displayName = `Návštevník (ID: ${String(session.visitor_id).substring(0, 8)})`;
           } else {
-            displayName = `Anonym (ID: ${session.session_id.substring(0, 8)})`;
+            displayName = `Anonym (ID: ${session.session_id ? String(session.session_id).substring(0, 8) : (session.id ? String(session.id).substring(0, 8) : 'N/A')})`;
           }
         }
 
