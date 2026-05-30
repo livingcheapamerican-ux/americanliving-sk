@@ -1238,5 +1238,6 @@ export default {
   "phPhotovoltaic": "Фотovoltaїчна система",
   "phHlinikoveOkna": "Алюмінієві вікна",
   "phKompozitnePanely": "Композитні панелі",
-  "sewage": "Каналізація"
+  "sewage": "Каналізація",
+  "houseStructure": "Конструкція будинку"
 };

@@ -1213,5 +1213,6 @@ export default {
   "phPhotovoltaic": "Φωτοβολταϊκό σύστημα",
   "phHlinikoveOkna": "Αλουμινένια παράθυρα",
   "phKompozitnePanely": "Σύνθετες πάνελς",
-  "sewage": "Αποχέτευση"
+  "sewage": "Αποχέτευση",
+  "houseStructure": "Κατασκευή σπιτιού"
 };

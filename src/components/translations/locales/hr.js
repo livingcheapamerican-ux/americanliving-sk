@@ -1210,5 +1210,6 @@ export default {
   "phPhotovoltaic": "Fotovoltački sustav",
   "phHlinikoveOkna": "Aluminijumski prozori",
   "phKompozitnePanely": "Kompozitne ploče",
-  "sewage": "Kanalizacija"
+  "sewage": "Kanalizacija",
+  "houseStructure": "Konstrukcija kuće"
 };

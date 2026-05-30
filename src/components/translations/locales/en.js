@@ -1246,5 +1246,6 @@ export default {
   "phPhotovoltaic": "Photovoltaic system",
   "phHlinikoveOkna": "Aluminum windows",
   "phKompozitnePanely": "Composite panels",
-  "sewage": "Sewage"
+  "sewage": "Sewage",
+  "houseStructure": "House construction"
 };

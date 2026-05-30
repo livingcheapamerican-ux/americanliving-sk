@@ -1238,5 +1238,6 @@ export default {
   "phPhotovoltaic": "Fotovoltaikus rendszer",
   "phHlinikoveOkna": "Alumínium ablakok",
   "phKompozitnePanely": "Kompozit panelek",
-  "sewage": "Csatornázás"
+  "sewage": "Csatornázás",
+  "houseStructure": "Házszerkezet"
 };

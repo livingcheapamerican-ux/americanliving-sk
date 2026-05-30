@@ -1401,5 +1401,6 @@ export default {
   "phPhotovoltaic": "Fotovoltaický systém",
   "phHlinikoveOkna": "Hliníkové okná",
   "phKompozitnePanely": "Kompozitné panely",
-  "sewage": "Kanalizácia"
+  "sewage": "Kanalizácia",
+  "houseStructure": "Konštrukcia domu"
 };

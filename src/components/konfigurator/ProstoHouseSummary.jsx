@@ -63,17 +63,16 @@ export default function ProstoHouseSummary({
       <div className="p-5 space-y-1 text-sm border-b border-slate-200 dark:border-white/10">
         {/* Základná cena */}
         <div className="flex justify-between py-2 border-b border-slate-200 dark:border-white/10 mb-3">
-          <span className="text-slate-750 dark:text-slate-300 font-semibold">{house.name}</span>
+          <span className="text-slate-750 dark:text-slate-300 font-semibold">
+            {t('houseStructure') || "Konštrukcia domu"} ({house.name})
+          </span>
           <span className="font-bold text-slate-900 dark:text-white">{house.basePrice.toLocaleString()} €</span>
         </div>
 
         {/* Hrubá stavba */}
-        <SummaryRow 
-          label={t('assemblyItem')} 
-          price={getPrice('mounting', mountingIdx, house.options.mounting[mountingIdx].price)} 
-          info={house.options.mounting[mountingIdx].label} 
-          alwaysShow 
-        />
+        {mountingIdx > 0 && (
+          <SummaryRow label={t('assemblyItem')} price={getPrice('mounting', mountingIdx, house.options.mounting[mountingIdx].price)} />
+        )}
         {hasExtension && extensionIdx > 0 && (
           <SummaryRow label={t('extensionItem')} price={getPrice('extension', extensionIdx, house.options.extension[extensionIdx].price)} info={house.options.extension[extensionIdx].label} />
         )}
@@ -83,12 +82,9 @@ export default function ProstoHouseSummary({
           info={house.options.insulation[insulationIdx].label}
           alwaysShow
         />
-        <SummaryRow 
-          label={t('foundationsItem')} 
-          price={getPrice('foundation', foundationIdx, house.options.foundation[foundationIdx].price)} 
-          info={house.options.foundation[foundationIdx].label} 
-          alwaysShow 
-        />
+        {foundationIdx > 0 && (
+          <SummaryRow label={t('foundationsItem')} price={getPrice('foundation', foundationIdx, house.options.foundation[foundationIdx].price)} info={house.options.foundation[foundationIdx].label} />
+        )}
         <SummaryRow label={t('facadeItem')} price={getPrice('facade', facadeIdx, house.options.facade[facadeIdx].price)} info={house.options.facade[facadeIdx].label} alwaysShow />
         <SummaryRow label={t('doorsItem')} price={getPrice('doors', doorsIdx, house.options.doors[doorsIdx].price)} info={house.options.doors[doorsIdx].label} alwaysShow />
 
