@@ -1068,7 +1068,7 @@ export default function AdminAnalyzaSessions() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 p-4 sm:p-6">
+    <div className="min-h-screen bg-gray-50 text-gray-900 p-4 sm:p-6 pt-24 sm:pt-28">
       <div className="max-w-7xl mx-auto">
         {/* Header Block */}
         <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
