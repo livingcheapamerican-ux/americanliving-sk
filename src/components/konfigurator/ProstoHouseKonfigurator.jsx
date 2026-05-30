@@ -9,6 +9,7 @@ import {
 import { useLanguage } from '../LanguageContext';
 import { prostoHouseTranslations } from '../translations/ProstoHouseTranslations';
 import ProstoHousePriceSaver from '../ProstoHousePriceSaver';
+import { motion, AnimatePresence } from 'framer-motion';
 import ProstoHouseSummary from './ProstoHouseSummary';
 import SaveQuoteButton from '../SaveQuoteButton';
 import A0StatusHint from './A0StatusHint';
@@ -485,6 +486,7 @@ export default function ProstoHouseKonfigurator({ house, houseCode, dom: domProp
   const [modalOpen, setModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeLightbox, setActiveLightbox] = useState(null);
+  const [isMobileSummaryOpen, setIsMobileSummaryOpen] = useState(false);
 
   const handleShowOptionGallery = (type) => {
     if (!effectiveDom?.galerie?.length) {
@@ -1092,12 +1094,114 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
         </div>
       </div>
 
+      {/* Mobilný Bottom Sheet pre Zhrnutie */}
+      <AnimatePresence>
+        {isMobileSummaryOpen && (
+          <>
+            {/* Backdrop blur */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileSummaryOpen(false)}
+              className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+            />
+            {/* Sheet content */}
+            <motion.div 
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 250 }}
+              className="lg:hidden fixed bottom-0 left-0 right-0 max-h-[85vh] bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-white/10 rounded-t-3xl shadow-2xl z-50 flex flex-col pointer-events-auto"
+            >
+              {/* Handle bar */}
+              <div className="w-full flex justify-center py-3 flex-shrink-0 cursor-pointer" onClick={() => setIsMobileSummaryOpen(false)}>
+                <div className="w-12 h-1.5 bg-slate-300 dark:bg-slate-700 rounded-full" />
+              </div>
+              
+              {/* Header */}
+              <div className="px-6 pb-4 border-b border-slate-100 dark:border-white/5 flex justify-between items-center flex-shrink-0">
+                <h3 className="text-lg font-black text-slate-900 dark:text-white">{t('configurationSummary')}</h3>
+                <button onClick={() => setIsMobileSummaryOpen(false)} className="p-1 rounded-full bg-slate-100 dark:bg-white/5 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              
+              {/* Body */}
+              <div className="flex-1 overflow-y-auto px-6 py-4 space-y-6 custom-scrollbar">
+                <ProstoHouseSummary
+                  house={house}
+                  t={t}
+                  isA0Compliant={isA0Compliant}
+                  totalPrice={totalPrice}
+                  onSendQuote={() => {
+                    setIsMobileSummaryOpen(false);
+                    setModalOpen(true);
+                  }}
+                  mountingIdx={mountingIdx}
+                  extensionIdx={extensionIdx}
+                  insulationIdx={insulationIdx}
+                  foundationIdx={foundationIdx}
+                  interiorIdx={interiorIdx}
+                  doorsIdx={doorsIdx}
+                  facadeIdx={facadeIdx}
+                  electricity={electricity}
+                  water={water}
+                  sanita={sanita}
+                  boiler={boiler}
+                  heatPump={heatPump}
+                  recuperation={recuperation}
+                  windowLamination={windowLamination}
+                  windowTint={windowTint}
+                  roofWindows={roofWindows}
+                  fixWindows={fixWindows}
+                  tiltWindowsBig={tiltWindowsBig}
+                  tiltWindowsSmall={tiltWindowsSmall}
+                  interiorDoorsCount={interiorDoorsCount}
+                  laminateFloors={laminateFloors}
+                  floorHeating={floorHeating}
+                  networks={networks}
+                  engineering={engineering}
+                  projectant={projectant}
+                  revision={revision}
+                  getPrice={getPrice}
+                  hideSendButton={true}
+                />
+              </div>
+              
+              {/* Footer */}
+              <div className="p-6 border-t border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-slate-950/40 flex flex-col gap-4 flex-shrink-0 pb-8">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-550 dark:text-slate-400 font-medium">{t('totalWithVAT')}</span>
+                  <span className="text-2xl font-black text-slate-900 dark:text-white">{totalPrice.toLocaleString()} €</span>
+                </div>
+                <button 
+                  onClick={() => {
+                    setIsMobileSummaryOpen(false);
+                    setModalOpen(true);
+                  }}
+                  className="w-full bg-red-600 hover:bg-red-700 text-white font-bold rounded-2xl py-4 shadow-lg active:scale-95 transition-all text-center flex items-center justify-center gap-2"
+                >
+                  <Send className="w-5 h-5" />
+                  {t('interestedInOffer') || "Mám záujem o ponuku"}
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
       {/* MOBILNÝ STICKY FOOTER (Zobrazený len na malých obrazovkách, na Desktope je skrytý kvôli sidebaru) */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-t border-slate-200 dark:border-white/10 z-40 p-4 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] dark:shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
         <div className="max-w-3xl mx-auto flex items-center justify-between gap-4">
-          <div className="flex-1 text-left">
-            <div className="text-[11px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest">{t('totalWithVAT')}</div>
-            <div className="text-2xl font-black text-slate-900 dark:text-white">{totalPrice.toLocaleString()} €</div>
+          <div className="flex-1 text-left cursor-pointer select-none" onClick={() => setIsMobileSummaryOpen(!isMobileSummaryOpen)}>
+            <div className="flex items-center gap-1">
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest">{t('configurationSummary')}</span>
+              <motion.div animate={{ rotate: isMobileSummaryOpen ? 180 : 0 }}>
+                <ChevronUp className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+              </motion.div>
+            </div>
+            <div className="text-2xl font-black text-slate-900 dark:text-white leading-tight">{totalPrice.toLocaleString()} €</div>
           </div>
           <div className="flex-shrink-0 flex items-center gap-2">
             <button 
@@ -1106,6 +1210,12 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
               title={t('consultWithKexo')}
             >
               <MessageCircle className="w-5 h-5" />
+            </button>
+            <button 
+              onClick={() => setIsMobileSummaryOpen(!isMobileSummaryOpen)}
+              className="border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-350 font-bold px-3 py-3 rounded-xl text-xs shadow-sm hover:bg-slate-100 active:scale-95 transition-all"
+            >
+              {t('summary')}
             </button>
             <button 
               onClick={() => setModalOpen(true)} 

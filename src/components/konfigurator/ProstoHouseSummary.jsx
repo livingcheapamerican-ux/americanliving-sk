@@ -41,6 +41,7 @@ export default function ProstoHouseSummary({
   revision,
   // ceny helper
   getPrice,
+  hideSendButton = false,
 }) {
   const hasExtension = house.options.extension && house.options.extension.length > 0;
 
@@ -133,13 +134,15 @@ export default function ProstoHouseSummary({
           <span className="font-bold text-slate-800 dark:text-white text-base">{t('totalWithVAT')}</span>
           <span className="text-3xl font-black text-slate-900 dark:text-white">{totalPrice.toLocaleString()} €</span>
         </div>
-        <button
-          onClick={onSendQuote}
-          className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-2 text-base shadow-md active:scale-[0.98]"
-        >
-          <Send className="w-5 h-5" />
-          {t('sendQuote')}
-        </button>
+        {!hideSendButton && (
+          <button
+            onClick={onSendQuote}
+            className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-2 text-base shadow-md active:scale-[0.98]"
+          >
+            <Send className="w-5 h-5" />
+            {t('sendQuote')}
+          </button>
+        )}
       </div>
     </div>
   );
