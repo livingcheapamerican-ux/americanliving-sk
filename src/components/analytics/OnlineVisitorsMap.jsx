@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { X, Globe, Clock, Users, Calendar, Monitor, Smartphone, Tablet } from "lucide-react";
 import { format } from "date-fns";
 import { sk } from "date-fns/locale";
+import "leaflet/dist/leaflet.css";
 
 // Helper na presné určenie online stavu (aktivita v posledných 5 minútach)
 const isSessionOnline = (session) => {
@@ -68,23 +69,21 @@ function AutoFitBounds({ locations }) {
 
   return null;
 }
-
 export default function OnlineVisitorsMap({ sessions, onClose }) {
-  const [timeFilter, setTimeFilter] = useState("online");
+  const [timeFilter, setTimeFilter] = useState(() => {
+    const hasOnline = (sessions || []).some(s => {
+      if (!s.location_info?.latitude || !s.location_info?.longitude) return false;
+      if (s.is_active === false) return false;
+      const activityTime = s.last_activity || s.start_time;
+      if (!activityTime) return false;
+      const diffMs = Date.now() - new Date(activityTime).getTime();
+      return diffMs < 5 * 60 * 1000;
+    });
+    return hasOnline ? "online" : "today";
+  });
   const [dateFrom, setDateFrom] = useState(format(new Date(), 'yyyy-MM-dd'));
   const [dateTo, setDateTo] = useState(format(new Date(), 'yyyy-MM-dd'));
   const [selectedLocation, setSelectedLocation] = useState(null);
-
-  // Dynamicky načítame Leaflet CSS z CDN pre zabezpečenie zobrazenia mapy
-  useEffect(() => {
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'https://unpkg.com/leaflet@1.7.1/dist/leaflet.css';
-    document.head.appendChild(link);
-    return () => {
-      document.head.removeChild(link);
-    };
-  }, []);
 
   const getDeviceIcon = (deviceType) => {
     switch(deviceType) {
