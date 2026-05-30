@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from "react-leaflet";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,14 +6,21 @@ import { Badge } from "@/components/ui/badge";
 import { X, Globe, Clock, Users, Calendar, Monitor, Smartphone, Tablet } from "lucide-react";
 import { format } from "date-fns";
 import { sk } from "date-fns/locale";
-import "leaflet/dist/leaflet.css";
+
+// Helper na presné určenie online stavu (aktivita v posledných 5 minútach)
+const isSessionOnline = (session) => {
+  if (!session || session.is_active === false) return false;
+  const activityTime = session.last_activity || session.start_time;
+  if (!activityTime) return false;
+  const diffMs = Date.now() - new Date(activityTime).getTime();
+  return diffMs < 5 * 60 * 1000;
+};
 
 function AutoFitBounds({ locations }) {
   const map = useMap();
   const hasAutoFittedRef = React.useRef(false);
 
   React.useEffect(() => {
-    // Auto-fit sa vykoná len raz pri prvom načítaní
     if (locations.length > 0 && !hasAutoFittedRef.current) {
       const bounds = locations.map(loc => [loc.latitude, loc.longitude]);
       map.fitBounds(bounds, { padding: [50, 50], maxZoom: 6 });
@@ -25,10 +32,21 @@ function AutoFitBounds({ locations }) {
 }
 
 export default function OnlineVisitorsMap({ sessions, onClose }) {
-  const [timeFilter, setTimeFilter] = useState("today");
+  const [timeFilter, setTimeFilter] = useState("online"); // Nastavíme predvolene na online pre lepší WOW efekt
   const [customDate, setCustomDate] = useState(format(new Date(), 'yyyy-MM-dd'));
   const [dateFrom, setDateFrom] = useState(format(new Date(), 'yyyy-MM-dd'));
   const [dateTo, setDateTo] = useState(format(new Date(), 'yyyy-MM-dd'));
+
+  // Dynamicky načítame Leaflet CSS z CDN pre zabezpečenie zobrazenia mapy bez chýb bundlovania
+  useEffect(() => {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://unpkg.com/leaflet@1.7.1/dist/leaflet.css';
+    document.head.appendChild(link);
+    return () => {
+      document.head.removeChild(link);
+    };
+  }, []);
 
   const getDeviceIcon = (deviceType) => {
     switch(deviceType) {
@@ -46,8 +64,7 @@ export default function OnlineVisitorsMap({ sessions, onClose }) {
       if (!session.location_info?.latitude || !session.location_info?.longitude) return false;
 
       if (timeFilter === "online") {
-        // Len aktívne sessions - bez časového obmedzenia
-        return session.is_active === true;
+        return isSessionOnline(session);
       }
 
       const sessionDate = new Date(session.start_time);
@@ -57,7 +74,7 @@ export default function OnlineVisitorsMap({ sessions, onClose }) {
       } else if (timeFilter === "range") {
         const fromDate = new Date(dateFrom);
         const toDate = new Date(dateTo);
-        toDate.setHours(23, 59, 59, 999); // Koniec dňa
+        toDate.setHours(23, 59, 59, 999);
         return sessionDate >= fromDate && sessionDate <= toDate;
       } else if (timeFilter === "custom") {
         const selectedDate = new Date(customDate);
@@ -76,7 +93,6 @@ export default function OnlineVisitorsMap({ sessions, onClose }) {
   }, [sessions, timeFilter, customDate, dateFrom, dateTo]);
 
   const locations = useMemo(() => {
-    // Skupina sessions podľa mesta pre presnejšie zobrazenie
     const cityGroups = {};
     
     filteredSessions
@@ -97,21 +113,18 @@ export default function OnlineVisitorsMap({ sessions, onClose }) {
           email: s.user_email,
           device: s.device_info?.device_type,
           browser: s.device_info?.browser,
-          isActive: s.is_active,
+          isActive: isSessionOnline(s),
           timestamp: s.start_time,
           duration: s.duration_seconds
         });
       });
 
-    // Rozmiestni návštevníkov z rovnakého mesta v malom okruhu
     const result = [];
     Object.values(cityGroups).forEach(group => {
       const baseLat = group.latitude;
       const baseLng = group.longitude;
       
       group.sessions.forEach((session, idx) => {
-        // Pridaj malý offset pre každú session v rovnakom meste
-        // Offset v rozmedzí ~500m
         const offsetLat = (Math.random() - 0.5) * 0.005;
         const offsetLng = (Math.random() - 0.5) * 0.005;
         
@@ -136,7 +149,7 @@ export default function OnlineVisitorsMap({ sessions, onClose }) {
 
   const stats = {
     total: filteredSessions.length,
-    online: filteredSessions.filter(s => s.is_active).length,
+    online: filteredSessions.filter(s => isSessionOnline(s)).length,
     desktop: filteredSessions.filter(s => s.device_info?.device_type === 'desktop').length,
     mobile: filteredSessions.filter(s => s.device_info?.device_type === 'mobile').length,
     tablet: filteredSessions.filter(s => s.device_info?.device_type === 'tablet').length
@@ -245,69 +258,107 @@ export default function OnlineVisitorsMap({ sessions, onClose }) {
           </div>
         </div>
 
-        {/* Map */}
-        <div className="flex-1 relative">
-          {locations.length > 0 ? (
-            <MapContainer
-              center={[48.7164, 19.6990]}
-              zoom={6}
-              className="h-full w-full"
-            >
-              <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-              />
-              <AutoFitBounds locations={locations} />
-              {locations.map((loc, idx) => (
-                <CircleMarker
-                  key={idx}
-                  center={[loc.latitude, loc.longitude]}
-                  radius={loc.isActive ? 10 : 6}
-                  fillColor={loc.isActive ? "#22c55e" : "#3b82f6"}
-                  color={loc.isActive ? "#16a34a" : "#2563eb"}
-                  weight={2}
-                  opacity={0.8}
-                  fillOpacity={0.6}
-                >
-                  <Popup>
-                    <div className="text-xs space-y-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h4 className="font-bold text-sm">{loc.user}</h4>
-                        {loc.isActive && (
-                          <Badge className="bg-green-600 text-white text-xs">🟢 Online</Badge>
+        {/* Map & Live Sidebar */}
+        <div className="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
+          {/* Live Sidebar */}
+          <div className="w-full lg:w-80 border-b lg:border-b-0 lg:border-r bg-white flex flex-col h-48 lg:h-auto overflow-hidden">
+            <div className="p-3 border-b bg-gray-50 flex items-center justify-between">
+              <span className="text-xs font-bold text-gray-700 uppercase tracking-wider flex items-center gap-1.5">
+                <Users className="w-4 h-4 text-green-600 animate-pulse" />
+                Aktívni na webe ({stats.online})
+              </span>
+            </div>
+            <div className="flex-1 overflow-y-auto divide-y divide-gray-100">
+              {sessions.filter(s => isSessionOnline(s)).length === 0 ? (
+                <div className="p-4 text-center text-xs text-gray-500">Žiadni aktívni návštevníci online</div>
+              ) : (
+                sessions.filter(s => isSessionOnline(s)).map((s, idx) => (
+                  <div key={idx} className="p-3 hover:bg-gray-50 transition-colors space-y-1 text-xs">
+                    <div className="flex items-center justify-between">
+                      <span className="font-semibold text-gray-900 truncate max-w-[180px]">
+                        {s.user_name || s.user_email || 'Anonymný návštevník'}
+                      </span>
+                      <Badge className="bg-green-100 text-green-800 text-[10px] scale-90">LIVE</Badge>
+                    </div>
+                    {s.location_info && (
+                      <div className="text-[11px] text-gray-650 flex items-center gap-1 font-medium">
+                        <Globe className="w-3 h-3 text-gray-400" />
+                        {s.location_info.city || 'Neznáme mesto'}, {s.location_info.country_code || 'SK'}
+                      </div>
+                    )}
+                    <div className="text-[11px] text-indigo-700 bg-indigo-50/50 px-2 py-0.5 rounded truncate font-mono mt-1">
+                      {s.current_page || '/'}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* Map Container */}
+          <div className="flex-1 h-full relative">
+            {locations.length > 0 ? (
+              <MapContainer
+                center={[48.7164, 19.6990]}
+                zoom={6}
+                className="h-full w-full"
+              >
+                <TileLayer
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                />
+                <AutoFitBounds locations={locations} />
+                {locations.map((loc, idx) => (
+                  <CircleMarker
+                    key={idx}
+                    center={[loc.latitude, loc.longitude]}
+                    radius={loc.isActive ? 10 : 6}
+                    fillColor={loc.isActive ? "#22c55e" : "#3b82f6"}
+                    color={loc.isActive ? "#16a34a" : "#2563eb"}
+                    weight={2}
+                    opacity={0.8}
+                    fillOpacity={0.6}
+                  >
+                    <Popup>
+                      <div className="text-xs space-y-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <h4 className="font-bold text-sm">{loc.user}</h4>
+                          {loc.isActive && (
+                            <Badge className="bg-green-600 text-white text-xs">🟢 Online</Badge>
+                          )}
+                        </div>
+                        <p className="text-gray-600">{loc.email}</p>
+                        <div className="flex items-center gap-1 text-gray-700">
+                          <Globe className="w-3 h-3" />
+                          {loc.city}, {loc.country}
+                        </div>
+                        <div className="flex items-center gap-1 text-gray-700">
+                          {getDeviceIcon(loc.device)}
+                          {loc.device} - {loc.browser}
+                        </div>
+                        <div className="flex items-center gap-1 text-gray-700">
+                          <Clock className="w-3 h-3" />
+                          {format(new Date(loc.timestamp), 'dd.MM.yyyy HH:mm', { locale: sk })}
+                        </div>
+                        {loc.duration > 0 && (
+                          <p className="text-gray-600">
+                            Trvanie: {Math.floor(loc.duration / 60)}m {loc.duration % 60}s
+                          </p>
                         )}
                       </div>
-                      <p className="text-gray-600">{loc.email}</p>
-                      <div className="flex items-center gap-1 text-gray-700">
-                        <Globe className="w-3 h-3" />
-                        {loc.city}, {loc.country}
-                      </div>
-                      <div className="flex items-center gap-1 text-gray-700">
-                        {getDeviceIcon(loc.device)}
-                        {loc.device} - {loc.browser}
-                      </div>
-                      <div className="flex items-center gap-1 text-gray-700">
-                        <Clock className="w-3 h-3" />
-                        {format(new Date(loc.timestamp), 'dd.MM.yyyy HH:mm', { locale: sk })}
-                      </div>
-                      {loc.duration > 0 && (
-                        <p className="text-gray-600">
-                          Trvanie: {Math.floor(loc.duration / 60)}m {loc.duration % 60}s
-                        </p>
-                      )}
-                    </div>
-                  </Popup>
-                </CircleMarker>
-              ))}
-            </MapContainer>
-          ) : (
-            <div className="flex items-center justify-center h-full bg-gray-100">
-              <div className="text-center">
-                <Globe className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600">Žiadne lokácie pre zvolený filter</p>
+                    </Popup>
+                  </CircleMarker>
+                ))}
+              </MapContainer>
+            ) : (
+              <div className="flex items-center justify-center h-full bg-gray-100">
+                <div className="text-center">
+                  <Globe className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-600">Žiadne lokácie pre zvolený filter</p>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         {/* Legend */}

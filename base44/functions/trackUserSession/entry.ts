@@ -1,5 +1,19 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
 
+const ADMIN_EMAILS = ['living.cheap.american@gmail.com'];
+const ADMIN_IPS = [
+  '109.230.104.122', // Admin IP
+  '2a02:c847:166:a899:f148:3f22:4df1:169', // Admin IPv6
+];
+
+function isAdminSession(data: any): boolean {
+  if (!data) return false;
+  if (data.user_email && ADMIN_EMAILS.includes(data.user_email)) return true;
+  if (data.location_info?.ip && ADMIN_IPS.includes(data.location_info.ip)) return true;
+  if (data.device_info?.ip && ADMIN_IPS.includes(data.device_info.ip)) return true;
+  return false;
+}
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -11,16 +25,16 @@ Deno.serve(async (req) => {
       // Get last 10 sessions sorted by created_date
       const sessions = await base44.asServiceRole.entities.UserSession.list('-created_date', 10);
       const now = new Date();
-      const twoHoursAgo = new Date(now - 2 * 60 * 60 * 1000);
-      const oneDayAgo = new Date(now - 24 * 60 * 60 * 1000);
-      const twoDaysAgo = new Date(now - 48 * 60 * 60 * 1000);
+      const twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000);
+      const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+      const twoDaysAgo = new Date(now.getTime() - 48 * 60 * 60 * 1000);
 
       const diagnostics = {
         total_sessions_checked: sessions.length,
         latest_session_created_at: sessions[0]?.created_date || null,
         latest_session_start_time: sessions[0]?.start_time || null,
         minutes_since_last_session: sessions[0]?.created_date 
-          ? Math.round((now - new Date(sessions[0].created_date)) / 60000) 
+          ? Math.round((now.getTime() - new Date(sessions[0].created_date).getTime()) / 60000) 
           : null,
         sessions_last_2h: sessions.filter(s => new Date(s.created_date) > twoHoursAgo).length,
         sessions_last_24h: sessions.filter(s => new Date(s.created_date) > oneDayAgo).length,
@@ -42,6 +56,18 @@ Deno.serve(async (req) => {
     }
 
     if (action === 'create') {
+      if (isAdminSession(data)) {
+        console.log('[trackUserSession] Admin session creation bypassed:', session_id);
+        return Response.json({ 
+          success: true, 
+          message: 'Admin session skipped to save credits',
+          data: {
+            session_id,
+            session_start_time: new Date().toISOString()
+          }
+        });
+      }
+
       console.log('[trackUserSession] Creating session:', session_id);
       const session = await base44.entities.UserSession.create(data);
       console.log('[trackUserSession] Session created:', session.id);
@@ -59,6 +85,15 @@ Deno.serve(async (req) => {
     if (action === 'update') {
       console.log('[trackUserSession] Updating session:', session_id);
       const existing = await base44.entities.UserSession.filter({ session_id });
+      
+      if (existing.length > 0 && (isAdminSession(data) || isAdminSession(existing[0]))) {
+        console.log('[trackUserSession] Admin session update bypassed:', session_id);
+        return Response.json({ 
+          success: true, 
+          message: 'Admin session skipped to save credits'
+        });
+      }
+
       if (existing.length === 0) {
         console.warn('[trackUserSession] Session not found:', session_id);
         return Response.json({ error: 'Session not found' }, { status: 404 });
@@ -108,6 +143,15 @@ Deno.serve(async (req) => {
     if (action === 'update_location') {
       console.log('[trackUserSession] Updating location for session:', session_id);
       const existing = await base44.entities.UserSession.filter({ session_id });
+      
+      if (existing.length > 0 && (isAdminSession(data) || isAdminSession(existing[0]))) {
+        console.log('[trackUserSession] Admin session location update bypassed:', session_id);
+        return Response.json({ 
+          success: true, 
+          message: 'Admin session skipped to save credits'
+        });
+      }
+
       if (existing.length === 0) {
         console.warn('[trackUserSession] Session not found for location update:', session_id);
         return Response.json({ error: 'Session not found' }, { status: 404 });

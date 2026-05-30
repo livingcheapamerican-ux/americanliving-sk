@@ -35,6 +35,312 @@ import { format } from "date-fns";
 import { sk } from "date-fns/locale";
 import OnlineVisitorsMap from "../components/analytics/OnlineVisitorsMap";
 
+// Helper na presné určenie online stavu (aktivita v posledných 5 minútach)
+const isSessionOnline = (session) => {
+  if (!session || session.is_active === false) return false;
+  const activityTime = session.last_activity || session.start_time;
+  if (!activityTime) return false;
+  const diffMs = Date.now() - new Date(activityTime).getTime();
+  return diffMs < 5 * 60 * 1000;
+};
+
+// Pomocná funkcia na vykreslenie Web Vital skóre
+const renderWebVital = (name, value, unit, thresholds) => {
+  if (value === undefined || value === null || value === 0) {
+    return (
+      <div className="bg-white p-2.5 rounded-lg border border-slate-205 text-center">
+        <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-0.5">{name}</p>
+        <p className="text-sm font-extrabold text-slate-400">—</p>
+      </div>
+    );
+  }
+  
+  let color = "text-green-650 bg-green-50 border-green-200";
+  let status = "Výborné";
+  if (value > thresholds.poor) {
+    color = "text-red-600 bg-red-50 border-red-200";
+    status = "Zlé";
+  } else if (value > thresholds.warning) {
+    color = "text-yellow-600 bg-yellow-50 border-yellow-200";
+    status = "Na zlepšenie";
+  }
+  
+  const displayVal = name === 'CLS' 
+    ? value.toFixed(3) 
+    : (unit === 's' ? (value / 1000).toFixed(2) + 's' : value + unit);
+
+  return (
+    <div className={`p-2.5 rounded-lg border text-center transition-all ${color}`}>
+      <p className="text-[10px] font-bold uppercase tracking-wider mb-0.5 opacity-90">{name}</p>
+      <p className="text-lg font-black">{displayVal}</p>
+      <p className="text-[9px] font-extrabold opacity-80">{status}</p>
+    </div>
+  );
+};
+
+function ClickMapModal({ session, onClose }) {
+  const [clickMapPage, setClickMapPage] = useState(session.clicks?.[0]?.page_url || "");
+  const [hoveredClick, setHoveredClick] = useState(null);
+
+  const pagesWithClicks = [...new Set((session.clicks || []).map(c => c.page_url))];
+  const filteredClicks = (session.clicks || []).filter(c => c.page_url === clickMapPage);
+
+  // Zoskupenie klikov, ktoré sú blízko seba, aby sme na nejakom mieste ukázali intenzitu (ako mini heatmap)
+  const getClickIntensity = (click, allClicks) => {
+    return allClicks.filter(c => 
+      Math.abs(c.x_percent - click.x_percent) < 3 && 
+      Math.abs(c.y_percent - click.y_percent) < 3
+    ).length;
+  };
+
+  // Pre vizualizáciu wireframu určíme sekcie podľa page_url
+  const renderWireframeSections = () => {
+    const isConfigurator = clickMapPage.toLowerCase().includes("konfigurator");
+    const isCatalog = clickMapPage.toLowerCase().includes("katalog");
+
+    if (isConfigurator) {
+      return (
+        <div className="w-full min-h-[600px] flex flex-col gap-4 p-4 text-white">
+          <div className="border border-white/10 rounded-lg p-3 bg-slate-900/50 flex items-center justify-between">
+            <div className="font-bold text-sm">🏠 Konfigurátor domu</div>
+            <div className="text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded border border-green-500/30">Cena: 61,700 €</div>
+          </div>
+          <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="md:col-span-2 border border-white/10 rounded-lg bg-slate-900/40 p-4 flex flex-col items-center justify-center min-h-[300px] relative">
+              <div className="text-slate-500 text-[10px] absolute top-2 left-2 font-bold">3D VIZUALIZÁCIA</div>
+              <div className="w-48 h-32 border-2 border-dashed border-white/20 rounded flex items-center justify-center text-slate-500 font-bold text-xs">
+                [ VIZUALIZÁCIA DOMU ]
+              </div>
+              <div className="mt-4 flex gap-2">
+                <div className="px-2 py-1 bg-white/5 border border-white/10 rounded text-[9px] text-slate-400 font-bold">Pohľad z boku</div>
+                <div className="px-2 py-1 bg-white/5 border border-white/10 rounded text-[9px] text-slate-400 font-bold">Pôdorys</div>
+              </div>
+            </div>
+            <div className="border border-white/10 rounded-lg bg-slate-900/50 p-4 flex flex-col gap-3">
+              <div className="text-slate-400 text-[10px] font-bold border-b border-white/10 pb-1">VOLITEĽNÉ POLOŽKY</div>
+              <div className="space-y-2">
+                <div className="p-2 bg-white/5 rounded border border-white/10 text-[11px] font-semibold text-slate-300">1. Konštrukcia domu (Zvolená)</div>
+                <div className="p-2 bg-white/5 rounded border border-white/10 text-[11px] font-semibold text-slate-300">2. Hrubka stien (250 mm)</div>
+                <div className="p-2 bg-white/5 rounded border border-white/10 text-[11px] font-semibold text-slate-300">3. Izolácia (Minerálna vata)</div>
+                <div className="p-2 bg-white/5 rounded border border-white/10 text-[11px] font-semibold text-slate-300">4. Príplatková strecha</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (isCatalog) {
+      return (
+        <div className="w-full min-h-[600px] flex flex-col gap-4 p-4 text-white">
+          <div className="border border-white/10 rounded-lg p-3 bg-slate-900/50 flex items-center justify-between">
+            <div className="font-bold text-sm flex items-center gap-2">🗂️ Katalóg Domov</div>
+            <div className="flex gap-2">
+              <div className="px-2 py-0.5 bg-white/10 rounded text-[10px] font-bold">Všetky</div>
+              <div className="px-2 py-0.5 bg-white/5 rounded text-[10px] font-bold text-slate-400">Rodinné</div>
+              <div className="px-2 py-0.5 bg-white/5 rounded text-[10px] font-bold text-slate-400">Mobilné</div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 flex-1">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="border border-white/10 rounded-lg bg-slate-900/40 p-3 flex flex-col gap-2">
+                <div className="h-28 bg-slate-950/60 rounded border border-white/5 flex items-center justify-center text-[9px] text-slate-600 font-bold">[ MODEL DOMU ]</div>
+                <div className="font-bold text-xs">American House Model {i}</div>
+                <div className="text-[10px] text-slate-400">Plocha: {35 * i} m²</div>
+                <div className="mt-2 flex justify-between items-center text-[10px]">
+                  <span className="font-bold text-green-400">od {(29000 * i).toLocaleString('sk-SK')} €</span>
+                  <span className="text-blue-400 font-semibold underline">Detail</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    // Default Homepage
+    return (
+      <div className="w-full min-h-[700px] flex flex-col gap-6 p-4 text-white">
+        <div className="border border-white/10 rounded-lg p-3 bg-slate-900/60 flex items-center justify-between">
+          <div className="font-black text-xs text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">AMERICAN LIVING</div>
+          <div className="flex gap-3 text-[10px] text-slate-400 font-bold">
+            <span>Katalóg</span>
+            <span>Konfigurátor</span>
+            <span>Kontakt</span>
+          </div>
+        </div>
+        
+        <div className="border border-white/10 rounded-lg bg-slate-900/40 p-8 text-center flex flex-col items-center justify-center min-h-[250px] relative">
+          <h2 className="text-sm font-black mb-2">Moderné bývanie za polovicu bežnej ceny</h2>
+          <p className="text-[10px] text-slate-400 max-w-sm mb-4">Nízkoenergetické modulárne a montované domy priamo na kľúč s dovozom po celom Slovensku.</p>
+          <div className="flex gap-2">
+            <div className="px-3 py-1.5 bg-blue-600 rounded text-[9px] font-bold shadow-lg shadow-blue-500/20">Spustiť Konfigurátor</div>
+            <div className="px-3 py-1.5 bg-white/10 border border-white/10 rounded text-[9px] font-bold">Katalóg Domov</div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-3">
+          {[1, 2, 3].map(i => (
+            <div key={i} className="border border-white/10 rounded-lg bg-slate-900/50 p-3 text-center">
+              <div className="font-bold text-[10px] mb-1">
+                {i === 1 ? "🏠 Rodinné Domy" : i === 2 ? "📦 Modulárne Domy" : "🚚 Mobilné Domy"}
+              </div>
+              <div className="text-[9px] text-slate-500 font-medium">Pozrieť ponuku</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="border border-white/10 rounded-lg bg-slate-900/30 p-4 flex justify-between items-center text-xs">
+          <div>
+            <h3 className="font-bold text-[11px]">Výhodná hypotéka na dosah</h3>
+            <p className="text-[9px] text-slate-500">Splátková kalkulačka Americana.</p>
+          </div>
+          <div className="px-3 py-1.5 bg-green-600 rounded text-[9px] font-bold">Hypo kalkulačka</div>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+      <Card className="w-full max-w-6xl h-[90vh] bg-slate-900 text-slate-100 border-white/10 flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+        <div className="p-4 border-b border-white/10 bg-slate-950 flex items-center justify-between">
+          <div>
+            <h3 className="text-md font-bold flex items-center gap-2">
+              <MousePointer className="w-4 h-4 text-indigo-400" />
+              Click Map Overlay (Simulácia kliknutí)
+            </h3>
+            <p className="text-[10px] text-slate-400 font-bold">
+              Session ID: {session.session_id.substring(0, 8)} | Visitor ID: {session.visitor_id ? session.visitor_id.substring(0, 8) : 'N/A'}
+            </p>
+          </div>
+          <button 
+            onClick={onClose} 
+            className="p-1.5 hover:bg-white/10 rounded-full transition-colors text-slate-400 hover:text-white"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <div className="p-3 border-b border-white/10 bg-slate-900/50 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] text-slate-400 font-bold">Zobraziť kliky na stránke:</span>
+            {pagesWithClicks.length === 0 ? (
+              <span className="text-[11px] text-slate-500 font-medium">Žiadne kliknutia</span>
+            ) : (
+              <select
+                value={clickMapPage}
+                onChange={(e) => setClickMapPage(e.target.value)}
+                className="px-2.5 py-1 border border-white/10 rounded text-[11px] bg-slate-950 text-white font-bold"
+              >
+                {pagesWithClicks.map(p => (
+                  <option key={p} value={p}>{p}</option>
+                ))}
+              </select>
+            )}
+          </div>
+          <div className="flex gap-4 text-[11px] font-bold text-slate-400">
+            <div>Kliknutí tu: <span className="text-indigo-400 font-black">{filteredClicks.length}</span></div>
+            <div>Kliknutí celkovo: <span className="text-indigo-400 font-black">{session.clicks?.length || 0}</span></div>
+          </div>
+        </div>
+
+        <div className="flex-1 overflow-hidden flex flex-col md:flex-row">
+          <div className="w-full md:w-80 border-r border-white/10 bg-slate-950 overflow-y-auto p-4 space-y-3">
+            <h4 className="font-bold text-[10px] text-slate-400 tracking-wider uppercase border-b border-white/10 pb-1.5">Kliknutia v poradí</h4>
+            <div className="space-y-2">
+              {filteredClicks.map((click, idx) => (
+                <div 
+                  key={idx}
+                  className={`p-2.5 rounded border text-[11px] cursor-pointer transition-all ${
+                    hoveredClick === click 
+                      ? 'border-indigo-500 bg-indigo-500/10 shadow shadow-indigo-500/20' 
+                      : 'border-white/5 bg-slate-900/50 hover:bg-slate-900 hover:border-white/10'
+                  }`}
+                  onMouseEnter={() => setHoveredClick(click)}
+                  onMouseLeave={() => setHoveredClick(null)}
+                >
+                  <div className="flex justify-between font-bold mb-1">
+                    <span className="text-indigo-400">Klip #{idx + 1}</span>
+                    <span className="text-slate-500">{format(new Date(click.timestamp), 'HH:mm:ss')}</span>
+                  </div>
+                  <div className="font-semibold text-slate-200 capitalize mb-0.5">Element: <span className="text-white font-bold">&lt;{click.element}&gt;</span></div>
+                  {click.text && <div className="text-slate-400 italic break-all mb-0.5 font-mono text-[9px]">Text: "{click.text}"</div>}
+                  {click.element_id && <div className="text-slate-500 font-mono text-[9px]">ID: #{click.element_id}</div>}
+                  <div className="text-[9px] text-indigo-300 font-bold mt-1">Súradnice: {click.x_percent}%, {click.y_percent}%</div>
+                </div>
+              ))}
+              {filteredClicks.length === 0 && (
+                <p className="text-[11px] text-slate-500 text-center py-8 font-bold">Žiadne kliknutia</p>
+              )}
+            </div>
+          </div>
+
+          <div className="flex-1 bg-slate-950 p-6 overflow-y-auto flex items-start justify-center relative">
+            <div className="w-full max-w-4xl border border-white/10 rounded-xl overflow-hidden bg-slate-900 shadow-2xl relative">
+              <div className="bg-slate-950 px-4 py-2 border-b border-white/10 flex items-center justify-between gap-4">
+                <div className="flex gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
+                </div>
+                <div className="flex-1 max-w-md bg-slate-900 border border-white/10 rounded px-3 py-1 text-[11px] text-slate-450 font-mono select-all text-center">
+                  https://american-living.sk{clickMapPage}
+                </div>
+                <div className="w-12" />
+              </div>
+
+              <div className="relative w-full bg-slate-950 bg-[radial-gradient(#ffffff05_1px,transparent_1px)] [background-size:16px_16px] overflow-hidden">
+                {renderWireframeSections()}
+
+                {filteredClicks.map((click, idx) => {
+                  const x = click.x_percent !== undefined ? click.x_percent : 50;
+                  const y = click.y_percent !== undefined ? click.y_percent : 50;
+                  const intensity = getClickIntensity(click, filteredClicks);
+                  const isHovered = hoveredClick === click;
+                  
+                  let colorClass = "bg-orange-500 shadow-orange-500/50";
+                  if (intensity > 5) colorClass = "bg-red-600 shadow-red-600/50 animate-pulse";
+                  else if (intensity > 2) colorClass = "bg-red-500 shadow-red-500/50";
+                  else if (intensity === 1) colorClass = "bg-yellow-500 shadow-yellow-500/50";
+
+                  if (isHovered) {
+                    colorClass = "bg-indigo-400 ring-4 ring-indigo-500/50 z-20 scale-150 shadow-indigo-500/60";
+                  }
+
+                  return (
+                    <div 
+                      key={idx}
+                      className="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-200 group z-10"
+                      style={{ left: `${x}%`, top: `${y}%` }}
+                      onMouseEnter={() => setHoveredClick(click)}
+                      onMouseLeave={() => setHoveredClick(null)}
+                    >
+                      <span className={`absolute inline-flex h-8 w-8 -left-3 -top-3 rounded-full opacity-35 bg-inherit animate-ping ${isHovered ? 'block' : 'hidden group-hover:block'}`} />
+                      
+                      <div className={`w-3 h-3 rounded-full border border-white/30 shadow-md ${colorClass}`}>
+                        <div className="hidden group-hover:block absolute bg-slate-950 border border-white/20 rounded px-2 py-1 text-[9px] text-white font-bold w-44 shadow-xl -translate-y-full left-1/2 -translate-x-1/2 mb-2 z-30">
+                          <p className="text-indigo-455 font-extrabold">&lt;{click.element.toUpperCase()}&gt; (Klik #{idx + 1})</p>
+                          {click.text && <p className="text-slate-200 mt-0.5 truncate italic">"{click.text}"</p>}
+                          {click.element_id && <p className="text-slate-400 font-mono text-[8px] mt-0.5">#{click.element_id}</p>}
+                          <p className="text-slate-500 font-semibold text-[8px] mt-1">{format(new Date(click.timestamp), 'dd.MM HH:mm:ss')}</p>
+                          {intensity > 1 && <p className="text-red-400 text-[8px] font-black mt-0.5">Intenzita: {intensity}x</p>}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
 export default function AdminAnalyzaSessions() {
   const [filterEmail, setFilterEmail] = useState("");
   const [filterDateFrom, setFilterDateFrom] = useState("");
@@ -47,6 +353,10 @@ export default function AdminAnalyzaSessions() {
   const [showMapModal, setShowMapModal] = useState(false);
   const [hideAdminSessions, setHideAdminSessions] = useState(true);
   const [groupByVisitor, setGroupByVisitor] = useState(false);
+
+  // States pre click map vizualizátor
+  const [clickMapSession, setClickMapSession] = useState(null);
+  const [clickMapPage, setClickMapPage] = useState("");
 
   // Admin IP adresy na vylúčenie
   const ADMIN_IPS = [
@@ -64,6 +374,14 @@ export default function AdminAnalyzaSessions() {
 
   const [sessions, setSessions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Spustiť čistenie neaktívnych relácií na pozadí pre optimalizáciu DB na mount
+  useEffect(() => {
+    if (!isAdmin) return;
+    base44.functions.invoke('cleanupInactiveSessions')
+      .then(res => console.log('🧹 DB Cleanup completed on mount:', res.data))
+      .catch(err => console.error('🧹 DB Cleanup error on mount:', err));
+  }, [isAdmin]);
 
   // Načítať počiatočné dáta
   useEffect(() => {
@@ -167,17 +485,32 @@ export default function AdminAnalyzaSessions() {
     return true;
   });
 
-  // Zoskupiť sessions podľa návštevníka (email ak prihlásený, inak IP)
+  // Zoskupiť sessions podľa návštevníka (podľa trvalého visitor_id, inak podľa emailu/IP)
   const groupedVisitors = (() => {
     const groups = {};
     
     filteredSessions.forEach(session => {
-      const visitorKey = session.user_email || session.location_info?.ip || session.session_id;
+      // Primary: visitor_id z cookies/localStorage
+      // Secondary: user_email
+      // Tertiary: location_info.ip
+      // Quaternary: fallback to session_id
+      const visitorKey = session.visitor_id || session.user_email || session.location_info?.ip || session.session_id;
       
       if (!groups[visitorKey]) {
+        let displayName = session.user_name || session.user_email;
+        if (!displayName) {
+          if (session.location_info?.ip) {
+            displayName = `IP: ${session.location_info.ip}`;
+          } else if (session.visitor_id) {
+            displayName = `Návštevník (ID: ${session.visitor_id.substring(0, 8)})`;
+          } else {
+            displayName = `Anonym (ID: ${session.session_id.substring(0, 8)})`;
+          }
+        }
+
         groups[visitorKey] = {
           visitorKey,
-          displayName: session.user_name || session.user_email || `IP: ${session.location_info?.ip || 'Unknown'}`,
+          displayName,
           email: session.user_email,
           ip: session.location_info?.ip,
           sessions: [],
@@ -210,7 +543,7 @@ export default function AdminAnalyzaSessions() {
         group.lastVisit = session.start_time;
       }
       
-      group.isReturning = group.totalSessions > 1;
+      group.isReturning = group.totalSessions > 1 || session.session_number > 1;
     });
     
     // Vypočítať priemerný engagement
@@ -230,7 +563,7 @@ export default function AdminAnalyzaSessions() {
     avgDuration: Math.round(filteredSessions.reduce((acc, s) => acc + (s.duration_seconds || 0), 0) / filteredSessions.length) || 0,
     totalClicks: filteredSessions.reduce((acc, s) => acc + (s.clicks?.length || 0), 0),
     uniqueUsers: groupedVisitors.length,
-    activeSessions: filteredSessions.filter(s => s.is_active).length,
+    activeSessions: filteredSessions.filter(s => isSessionOnline(s)).length,
     avgEngagement: Math.round(filteredSessions.reduce((acc, s) => acc + (s.engagement_score || 0), 0) / filteredSessions.length) || 0,
     conversions: filteredSessions.filter(s => s.conversions?.length > 0).length,
     returningVisitors: groupedVisitors.filter(v => v.isReturning).length
@@ -588,7 +921,7 @@ export default function AdminAnalyzaSessions() {
                         {visitor.isReturning && (
                           <Badge className="bg-teal-600 text-white text-xs">🔄 Vracajúci sa ({visitor.totalSessions}×)</Badge>
                         )}
-                        {visitor.sessions.some(s => s.is_active) && (
+                        {visitor.sessions.some(s => isSessionOnline(s)) && (
                           <Badge className="bg-green-600 text-white text-xs animate-pulse">🟢 Online teraz</Badge>
                         )}
                         {visitor.conversions > 0 && (
@@ -681,7 +1014,7 @@ export default function AdminAnalyzaSessions() {
                                   <Badge className="bg-indigo-100 text-indigo-800 text-xs">
                                     Návšteva #{sessionIdx + 1}
                                   </Badge>
-                                  {session.is_active && (
+                                  {isSessionOnline(session) && (
                                     <Badge className="bg-green-600 text-white text-xs animate-pulse">🟢 Aktívna</Badge>
                                   )}
                                   {session.engagement_score > 70 && (
@@ -797,12 +1130,56 @@ export default function AdminAnalyzaSessions() {
                           <p className="text-xs text-slate-500 mb-1 font-medium">Touch</p>
                           <p className="text-sm font-bold text-slate-950">{session.device_info?.is_touch ? '✅ Áno' : '❌ Nie'}</p>
                         </div>
-                        <div className="bg-white p-3 rounded-lg border">
-                          <p className="text-xs text-slate-500 mb-1 font-medium">Online status</p>
-                          <p className="text-sm font-bold text-slate-950">{session.device_info?.online ? '🟢 Online' : '🔴 Offline'}</p>
-                        </div>
                       </div>
                     </div>
+
+                    {/* Rýchlosť načítania & Web Vitals */}
+                    {session.performance_metrics && session.performance_metrics.recorded && (
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                          <Zap className="w-4 h-4 text-amber-500" />
+                          Rýchlosť webu (Web Vitals)
+                        </h4>
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                          {renderWebVital("TTFB", session.performance_metrics.ttfb, "ms", { warning: 800, poor: 1800 })}
+                          {renderWebVital("LCP", session.performance_metrics.lcp, "s", { warning: 2500, poor: 4000 })}
+                          {renderWebVital("FID", session.performance_metrics.fid, "ms", { warning: 100, poor: 300 })}
+                          {renderWebVital("CLS", session.performance_metrics.cls, "", { warning: 0.1, poor: 0.25 })}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Čas čítania sekcií */}
+                    {session.section_engagement && Object.keys(session.section_engagement).length > 0 && (
+                      <div className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
+                        <h4 className="font-semibold text-slate-900 mb-3 flex items-center gap-2">
+                          <Clock className="w-4 h-4 text-blue-600" />
+                          Čas strávený čítaním sekcií
+                        </h4>
+                        <div className="space-y-3">
+                          {Object.entries(session.section_engagement)
+                            .sort((a, b) => b[1] - a[1])
+                            .map(([sectionId, seconds]) => {
+                              const totalSec = Object.values(session.section_engagement).reduce((acc, s) => acc + s, 0);
+                              const percent = totalSec > 0 ? Math.round((seconds / totalSec) * 100) : 0;
+                              return (
+                                <div key={sectionId}>
+                                  <div className="flex justify-between text-xs font-semibold mb-1">
+                                    <span className="text-slate-700 capitalize">{sectionId.replace(/[-_]/g, ' ')}</span>
+                                    <span className="text-slate-900 font-bold">{formatDuration(seconds)} ({percent}%)</span>
+                                  </div>
+                                  <div className="w-full bg-slate-100 rounded-full h-1.5">
+                                    <div 
+                                      className="bg-blue-600 h-1.5 rounded-full transition-all"
+                                      style={{ width: `${percent}%` }}
+                                    />
+                                  </div>
+                                </div>
+                              );
+                            })}
+                        </div>
+                      </div>
+                    )}
 
                     {/* Location */}
                     {session.location_info && (
@@ -909,22 +1286,36 @@ export default function AdminAnalyzaSessions() {
                                 </div>
                                 <div className="text-right text-xs text-slate-500 font-medium">
                                   {safeFormat(page.timestamp, 'HH:mm:ss')}
-                                  </div>
-                                  </div>
-                                  </div>
-                                  ))}
-                                  </div>
-                                  </div>
-                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
 
-                                  {/* Clicks Timeline */}
-                                  {session.clicks && session.clicks.length > 0 && (
-                                  <div>
-                                  <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                                  <MousePointer className="w-4 h-4 text-gray-900" />
-                                  Kliknutia ({session.clicks.length})
-                                  </h4>
-                                  <div className="space-y-1 max-h-64 overflow-y-auto bg-white p-3 rounded-lg border">
+                    {/* Clicks Timeline */}
+                    {session.clicks && session.clicks.length > 0 && (
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-3 flex items-center justify-between">
+                          <span className="flex items-center gap-2">
+                            <MousePointer className="w-4 h-4 text-gray-900" />
+                            Kliknutia ({session.clicks.length})
+                          </span>
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            className="bg-indigo-50 border-indigo-200 text-indigo-700 hover:bg-indigo-100 text-xs py-1 h-7 font-bold shadow-sm"
+                            onClick={() => {
+                              setClickMapSession(session);
+                              setClickMapPage(session.clicks[0]?.page_url || "");
+                            }}
+                          >
+                            <Layers className="w-3.5 h-3.5 mr-1" />
+                            Zobraziť mapu kliknutí (Click Map)
+                          </Button>
+                        </h4>
+                        <div className="space-y-1 max-h-64 overflow-y-auto bg-white p-3 rounded-lg border">
                                   {session.clicks.map((click, idx) => (
                                   <div key={idx} className="flex items-center justify-between text-xs hover:bg-gray-50 p-2 rounded">
                                   <div className="flex items-center gap-2 flex-1">
@@ -1153,7 +1544,7 @@ export default function AdminAnalyzaSessions() {
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2 flex-wrap">
                           <h3 className="font-bold text-gray-900">{session.user_name || session.user_email || 'Anonymous'}</h3>
-                          {session.is_active && (
+                          {isSessionOnline(session) && (
                             <Badge className="bg-green-600 text-white text-xs animate-pulse">🟢 Online teraz</Badge>
                           )}
                           {session.engagement_score > 70 && (
@@ -1278,12 +1669,56 @@ export default function AdminAnalyzaSessions() {
                             <p className="text-xs text-slate-500 mb-1 font-medium">Touch</p>
                             <p className="text-sm font-bold text-slate-950">{session.device_info?.is_touch ? '✅ Áno' : '❌ Nie'}</p>
                           </div>
-                          <div className="bg-white p-3 rounded-lg border">
-                            <p className="text-xs text-slate-500 mb-1 font-medium">Online status</p>
-                            <p className="text-sm font-bold text-slate-950">{session.device_info?.online ? '🟢 Online' : '🔴 Offline'}</p>
-                          </div>
                         </div>
                       </div>
+
+                      {/* Rýchlosť načítania & Web Vitals */}
+                      {session.performance_metrics && session.performance_metrics.recorded && (
+                        <div>
+                          <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                            <Zap className="w-4 h-4 text-amber-500" />
+                            Rýchlosť webu (Web Vitals)
+                          </h4>
+                          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                            {renderWebVital("TTFB", session.performance_metrics.ttfb, "ms", { warning: 800, poor: 1800 })}
+                            {renderWebVital("LCP", session.performance_metrics.lcp, "s", { warning: 2500, poor: 4000 })}
+                            {renderWebVital("FID", session.performance_metrics.fid, "ms", { warning: 100, poor: 300 })}
+                            {renderWebVital("CLS", session.performance_metrics.cls, "", { warning: 0.1, poor: 0.25 })}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Čas čítania sekcií */}
+                      {session.section_engagement && Object.keys(session.section_engagement).length > 0 && (
+                        <div className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
+                          <h4 className="font-semibold text-slate-900 mb-3 flex items-center gap-2">
+                            <Clock className="w-4 h-4 text-blue-600" />
+                            Čas strávený čítaním sekcií
+                          </h4>
+                          <div className="space-y-3">
+                            {Object.entries(session.section_engagement)
+                              .sort((a, b) => b[1] - a[1])
+                              .map(([sectionId, seconds]) => {
+                                const totalSec = Object.values(session.section_engagement).reduce((acc, s) => acc + s, 0);
+                                const percent = totalSec > 0 ? Math.round((seconds / totalSec) * 100) : 0;
+                                return (
+                                  <div key={sectionId}>
+                                    <div className="flex justify-between text-xs font-semibold mb-1">
+                                      <span className="text-slate-700 capitalize">{sectionId.replace(/[-_]/g, ' ')}</span>
+                                      <span className="text-slate-900 font-bold">{formatDuration(seconds)} ({percent}%)</span>
+                                    </div>
+                                    <div className="w-full bg-slate-100 rounded-full h-1.5">
+                                      <div 
+                                        className="bg-blue-600 h-1.5 rounded-full transition-all"
+                                        style={{ width: `${percent}%` }}
+                                      />
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                          </div>
+                        </div>
+                      )}
 
                       {/* Location */}
                       {session.location_info && (
@@ -1323,7 +1758,7 @@ export default function AdminAnalyzaSessions() {
                               Referrer (odkiaľ prišiel)
                             </h4>
                             <p className="text-xs text-blue-900 font-medium break-all mb-1">{session.referrer}</p>
-                            <p className="text-xs text-blue-700">Doména: <span className="font-bold text-blue-900">{session.referrer_domain}</span></p>
+                            <p className="text-xs text-blue-750">Doména: <span className="font-bold text-blue-900">{session.referrer_domain}</span></p>
                           </div>
                         )}
                         
@@ -1401,9 +1836,23 @@ export default function AdminAnalyzaSessions() {
                       {/* Clicks Timeline */}
                       {session.clicks && session.clicks.length > 0 && (
                         <div>
-                          <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                            <MousePointer className="w-4 h-4 text-gray-900" />
-                            Kliknutia ({session.clicks.length})
+                          <h4 className="font-semibold text-gray-900 mb-3 flex items-center justify-between">
+                            <span className="flex items-center gap-2">
+                              <MousePointer className="w-4 h-4 text-gray-900" />
+                              Kliknutia ({session.clicks.length})
+                            </span>
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              className="bg-indigo-50 border-indigo-200 text-indigo-700 hover:bg-indigo-100 text-xs py-1 h-7 font-bold shadow-sm"
+                              onClick={() => {
+                                setClickMapSession(session);
+                                setClickMapPage(session.clicks[0]?.page_url || "");
+                              }}
+                            >
+                              <Layers className="w-3.5 h-3.5 mr-1" />
+                              Zobraziť mapu kliknutí (Click Map)
+                            </Button>
                           </h4>
                           <div className="space-y-1 max-h-64 overflow-y-auto bg-white p-3 rounded-lg border">
                             {session.clicks.map((click, idx) => (
@@ -1621,6 +2070,17 @@ export default function AdminAnalyzaSessions() {
           <OnlineVisitorsMap
             sessions={sessions}
             onClose={() => setShowMapModal(false)}
+          />
+        )}
+
+        {/* Click Map Overlay Modal */}
+        {clickMapSession && (
+          <ClickMapModal
+            session={clickMapSession}
+            onClose={() => {
+              setClickMapSession(null);
+              setClickMapPage("");
+            }}
           />
         )}
       </div>

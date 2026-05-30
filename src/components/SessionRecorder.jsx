@@ -2,6 +2,25 @@ import React, { useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "react-router-dom";
+import { appParams } from "@/lib/app-params";
+
+const getCookie = (name) => {
+  try {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  } catch (e) {}
+  return null;
+};
+
+const setCookie = (name, value, days) => {
+  try {
+    const d = new Date();
+    d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+    const expires = `expires=${d.toUTCString()}`;
+    document.cookie = `${name}=${value};${expires};path=/;SameSite=Lax`;
+  } catch (e) {}
+};
 
 const PAGE_NAMES_MAP = {
   '/': 'Domovská stránka', '/Domov': 'Domovská stránka',
@@ -83,6 +102,14 @@ export default function SessionRecorder() {
   const localStorageAvailableRef = useRef(isLocalStorageAvailable());
 
   // --- ADVANCED TRACKING REFS ---
+  const visitorIdRef = useRef(null);
+  const sessionNumberRef = useRef(1);
+  const sectionTimersRef = useRef({});
+  const sectionEngagementRef = useRef({});
+  const exitSectionRef = useRef(null);
+  const tabHiddenTimeRef = useRef(0);
+  const lastHiddenTimestampRef = useRef(null);
+
   const activeDurationSecondsRef = useRef(0);
   const lastActiveTimestampRef = useRef(Date.now());
   const idleTimeoutIdRef = useRef(null);
@@ -122,6 +149,19 @@ export default function SessionRecorder() {
   function doSave(capturedPageEntry = null) {
     if (!sessionIdRef.current) return;
     
+    // Ak sme admin, neukladáme session do databázy (ochrana kreditov a štatistík)
+    if (
+      (localStorageAvailableRef.current && localStorage.getItem('base44_is_admin') === 'true') ||
+      user?.role === 'admin' ||
+      user?.super_admin === true ||
+      user?.email === 'living.cheap.american@gmail.com'
+    ) {
+      if (localStorageAvailableRef.current && localStorage.getItem('base44_is_admin') !== 'true') {
+        localStorage.setItem('base44_is_admin', 'true');
+      }
+      return;
+    }
+    
     // Pred uložením vždy aktualizujeme aktívny čas
     updateActiveTime();
 
@@ -138,7 +178,9 @@ export default function SessionRecorder() {
     if (currentDuration < 10) tags.push('odrazeny');
     else if (currentDuration > 300) tags.push('velmi_zaujaty');
     else if (currentDuration > 60) tags.push('zaujaty');
-    if (previousSessions) tags.push('vracajuci_sa');
+    if (previousSessions || sessionNumberRef.current > 1) {
+      if (!tags.includes('vracajuci_sa')) tags.push('vracajuci_sa');
+    }
     if (formInteractionsRef.current.some(f => f.completed)) tags.push('konvertoval');
     if (configuratorInteractionsRef.current.length > 5) tags.push('pouzivatel_konfiguratora');
     if (rageClicksRef.current.length > 0) tags.push('frustrovany_rage_clicks');
@@ -154,11 +196,17 @@ export default function SessionRecorder() {
     };
 
     const updates = {
+      visitor_id: visitorIdRef.current, // NEW
+      session_number: sessionNumberRef.current, // NEW
+      section_engagement: sectionEngagementRef.current, // NEW
+      exit_page: currentPage, // NEW
+      exit_section: exitSectionRef.current, // NEW
+      tab_hidden_time_seconds: tabHiddenTimeRef.current, // NEW
       duration_seconds: currentDuration,
-      active_duration_seconds: activeDurationSecondsRef.current, // NEW
-      performance_metrics: webVitalsRef.current, // NEW
-      rage_clicks: rageClicksRef.current, // NEW
-      dead_clicks: deadClicksRef.current, // NEW
+      active_duration_seconds: activeDurationSecondsRef.current,
+      performance_metrics: webVitalsRef.current,
+      rage_clicks: rageClicksRef.current,
+      dead_clicks: deadClicksRef.current,
       mouse_movements: mouseMovementsRef.current,
       mouse_heatmap_data: mouseHeatmapRef.current,
       scroll_depth: { max_percentage: maxScroll, depths_per_page: scrollDepthRef.current },
@@ -192,13 +240,41 @@ export default function SessionRecorder() {
   function scheduleSave() {
     if (!sessionIdRef.current) return;
     if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
-    saveTimeoutRef.current = setTimeout(() => doSave(), 15000); // Rýchlejší save pre advanced
+    saveTimeoutRef.current = setTimeout(() => doSave(), 45000); // 45s pre šetrenie kreditov
   }
 
   // CORE INIT & WEB VITALS
   useEffect(() => {
+    // 1. Ak sme prihlásený admin alebo máme admin príznak v úložisku, ignorujeme SessionRecorder
+    if (
+      (localStorageAvailableRef.current && localStorage.getItem('base44_is_admin') === 'true') ||
+      user?.role === 'admin' ||
+      user?.super_admin === true ||
+      user?.email === 'living.cheap.american@gmail.com'
+    ) {
+      if (localStorageAvailableRef.current && localStorage.getItem('base44_is_admin') !== 'true') {
+        localStorage.setItem('base44_is_admin', 'true');
+      }
+      console.log('🛡️ Admin bypass active: skipping SessionRecorder initialization.');
+      return;
+    }
+
     if (sessionInitializedRef.current || sessionIdRef.current || userLoading) return;
     sessionInitializedRef.current = true;
+
+    // 2. Spracovanie Visitor ID (prioritne cookie pre medzidoménovú persistenciu, fallback localStorage)
+    let visitorId = getCookie('visitor_id');
+    if (!visitorId && localStorageAvailableRef.current) {
+      visitorId = localStorage.getItem('visitor_id');
+    }
+    if (!visitorId) {
+      visitorId = `visitor_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    }
+    visitorIdRef.current = visitorId;
+    setCookie('visitor_id', visitorId, 365); // 1 rok platnosť cookie
+    if (localStorageAvailableRef.current) {
+      localStorage.setItem('visitor_id', visitorId);
+    }
 
     const newSessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     sessionIdRef.current = newSessionId;
@@ -206,6 +282,21 @@ export default function SessionRecorder() {
     pageStartTimeRef.current = Date.now();
     lastPageRef.current = window.location.pathname + window.location.search;
     lastActiveTimestampRef.current = Date.now();
+
+    // 3. Spracovanie čísla návštevy (session_number)
+    let sessionNumber = 1;
+    if (localStorageAvailableRef.current) {
+      try {
+        const storedSessions = localStorage.getItem('visitor_sessions_list');
+        const list = JSON.parse(storedSessions || '[]');
+        if (!list.includes(newSessionId)) {
+          list.push(newSessionId);
+          localStorage.setItem('visitor_sessions_list', JSON.stringify(list.slice(-100)));
+        }
+        sessionNumber = list.length;
+      } catch (err) {}
+    }
+    sessionNumberRef.current = sessionNumber;
 
     // WEB VITALS COLLECTION
     try {
@@ -235,7 +326,7 @@ export default function SessionRecorder() {
     } catch (e) { console.warn("PerformanceObserver not supported", e); }
 
     const previousSessions = localStorageAvailableRef.current ? localStorage.getItem('user_previous_sessions') : null;
-    const isReturning = !!previousSessions;
+    const isReturning = !!previousSessions || sessionNumber > 1;
     const urlParams = new URLSearchParams(window.location.search);
     const utmParams = {
       utm_source: urlParams.get('utm_source'), utm_medium: urlParams.get('utm_medium'),
@@ -252,6 +343,8 @@ export default function SessionRecorder() {
       session_id: newSessionId,
       data: {
         session_id: newSessionId,
+        visitor_id: visitorId, // NEW
+        session_number: sessionNumber, // NEW
         user_email: user?.email || 'anonymous',
         user_name: user?.full_name || 'Anonymous',
         is_authenticated: !!user,
@@ -261,8 +354,8 @@ export default function SessionRecorder() {
         scroll_depth: {}, mouse_movements: 0, mouse_heatmap_data: [],
         form_interactions: [], configurator_interactions: [],
         dom_interactions: [], errors_encountered: [], language_changes: [],
-        rage_clicks: [], dead_clicks: [], // NEW
-        active_duration_seconds: 0, // NEW
+        rage_clicks: [], dead_clicks: [],
+        active_duration_seconds: 0,
         device_info: getDeviceInfo(),
         referrer: referrerUrl, referrer_domain: referrerDomain,
         utm_params: utmParams, conversions: [],
@@ -278,8 +371,10 @@ export default function SessionRecorder() {
       if (localStorageAvailableRef.current) {
         try {
           const allSessions = JSON.parse(previousSessions || '[]');
-          allSessions.push(newSessionId);
-          localStorage.setItem('user_previous_sessions', JSON.stringify(allSessions.slice(-10)));
+          if (!allSessions.includes(newSessionId)) {
+            allSessions.push(newSessionId);
+            localStorage.setItem('user_previous_sessions', JSON.stringify(allSessions.slice(-10)));
+          }
         } catch (err) {}
       }
 
@@ -294,19 +389,60 @@ export default function SessionRecorder() {
             data: JSON.parse(cachedLocation)
           }).catch(() => {});
         } else {
-          fetch('https://ipapi.co/json/').then(r => r.json()).then(data => {
-            if (!sessionIdRef.current) return;
-            const locationData = {
-              ip: data.ip, country: data.country_name, country_code: data.country_code,
-              region: data.region, city: data.city, timezone: data.timezone,
-              latitude: data.latitude, longitude: data.longitude
-            };
+          // Fallback sequence pre určovanie polohy
+          const fetchLocation = async () => {
+            try {
+              // 1. Pokus: ipapi.co
+              const res = await fetch('https://ipapi.co/json/');
+              if (!res.ok) throw new Error('ipapi.co zlyhal');
+              const data = await res.json();
+              if (data.error) throw new Error(data.reason || 'ipapi.co vratil chybu');
+              return {
+                ip: data.ip, country: data.country_name, country_code: data.country_code,
+                region: data.region, city: data.city, timezone: data.timezone,
+                latitude: data.latitude, longitude: data.longitude
+              };
+            } catch (err) {
+              console.warn("ipapi.co failed, trying freeipapi.com...", err);
+              try {
+                // 2. Pokus: freeipapi.com (bezplatny fallback, s HTTPS)
+                const res = await fetch('https://freeipapi.com/api/json');
+                if (!res.ok) throw new Error('freeipapi.com zlyhal');
+                const data = await res.json();
+                return {
+                  ip: data.ipAddress, country: data.countryName, country_code: data.countryCode,
+                  region: data.regionName, city: data.cityName, timezone: data.timeZone,
+                  latitude: data.latitude, longitude: data.longitude
+                };
+              } catch (err2) {
+                console.warn("freeipapi.com failed, trying ipinfo.io...", err2);
+                try {
+                  // 3. Pokus: ipinfo.io
+                  const res = await fetch('https://ipinfo.io/json');
+                  if (!res.ok) throw new Error('ipinfo.io zlyhal');
+                  const data = await res.json();
+                  const [lat, lng] = (data.loc || "0,0").split(",").map(Number);
+                  return {
+                    ip: data.ip, country: data.country, country_code: data.country,
+                    region: data.region, city: data.city, timezone: data.timezone,
+                    latitude: lat, longitude: lng
+                  };
+                } catch (err3) {
+                  console.error("All location APIs failed", err3);
+                  return null;
+                }
+              }
+            }
+          };
+
+          fetchLocation().then(locationData => {
+            if (!locationData || !sessionIdRef.current) return;
             localStorage.setItem('user_location_cache', JSON.stringify(locationData));
             localStorage.setItem('user_location_cache_time', Date.now().toString());
             base44.functions.invoke('trackUserSession', {
               action: 'update_location', session_id: sessionIdRef.current, data: locationData
             }).catch(() => {});
-          }).catch(() => {});
+          });
         }
       }
 
@@ -327,14 +463,20 @@ export default function SessionRecorder() {
       scheduleSave();
     };
     
-    // VISIBILITY API PRE ACTIVE TIME
+     // VISIBILITY API PRE ACTIVE TIME
     const handleVisibilityChange = () => {
       if (document.hidden) {
         updateActiveTime();
         isIdleRef.current = true;
+        lastHiddenTimestampRef.current = Date.now();
       } else {
         lastActiveTimestampRef.current = Date.now();
         isIdleRef.current = false;
+        if (lastHiddenTimestampRef.current) {
+          const hiddenMs = Date.now() - lastHiddenTimestampRef.current;
+          tabHiddenTimeRef.current += Math.round(hiddenMs / 1000);
+          lastHiddenTimestampRef.current = null;
+        }
       }
     };
 
@@ -372,6 +514,42 @@ export default function SessionRecorder() {
     lastPageRef.current = currentPage;
     pageStartTimeRef.current = Date.now();
 
+    // 1. Nastavenie IntersectionObserver pre čítanie sekcií
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const id = entry.target.id;
+        if (!id) return;
+        
+        if (entry.isIntersecting) {
+          // Používateľ začal vidieť sekciu
+          sectionTimersRef.current[id] = Date.now();
+        } else {
+          // Používateľ opustil sekciu
+          const startTime = sectionTimersRef.current[id];
+          if (startTime) {
+            const durationMs = Date.now() - startTime;
+            const durationSec = Math.round(durationMs / 1000);
+            if (durationSec > 0) {
+              sectionEngagementRef.current[id] = (sectionEngagementRef.current[id] || 0) + durationSec;
+              exitSectionRef.current = id;
+              scheduleSave();
+            }
+            delete sectionTimersRef.current[id];
+          }
+        }
+      });
+    }, { threshold: 0.3 }); // 30% viditeľnosti stačí
+
+    // Sledujeme elementy s ID po krátkom zdržaní (SPA načítanie)
+    const observerTimeout = setTimeout(() => {
+      const elements = document.querySelectorAll('section[id], div[id], [data-track-section]');
+      elements.forEach(el => {
+        if (el.id && !['root', 'app', 'portal', 'tailwind-indicator'].includes(el.id)) {
+          observer.observe(el);
+        }
+      });
+    }, 1500);
+
     let maxScroll = 0;
     const scrollMilestones = [25, 50, 75, 90, 100];
     const reachedMilestones = new Set();
@@ -404,19 +582,19 @@ export default function SessionRecorder() {
         timestamp: new Date().toISOString(),
         page_url: currentPage,
         x_position: e.clientX, y_position: e.clientY,
+        x_percent: Math.round((e.clientX / window.innerWidth) * 100), // Percentuálna pozícia
+        y_percent: Math.round((e.clientY / window.innerHeight) * 100), // Percentuálna pozícia
         element_id: e.target.id || '', element_class: elementClass
       };
       
       clicksRef.current.push(newClick);
 
       // --- DEAD CLICKS DETECTION ---
-      // Ak element nie je interaktivny a nespustila sa standardna reakcia
       const interactiveTags = ['A', 'BUTTON', 'INPUT', 'SELECT', 'TEXTAREA', 'LABEL', 'SUMMARY', 'VIDEO', 'AUDIO'];
       const hasInteractiveRole = e.target.getAttribute('role') === 'button' || e.target.getAttribute('role') === 'link';
       const isInteractiveParent = e.target.closest('a') || e.target.closest('button');
       
       if (!interactiveTags.includes(tag) && !hasInteractiveRole && !isInteractiveParent) {
-        // Môže ísť o dead click, zanesieme to
         deadClicksRef.current.push({
           ...newClick,
           reason: 'Non-interactive element clicked'
@@ -424,24 +602,21 @@ export default function SessionRecorder() {
       }
 
       // --- RAGE CLICKS DETECTION ---
-      // Ak existujú aspoň 2 predchádzajúce kliky z poslednej sekundy na rovnakej ploche
       recentClicksHistoryRef.current.push({ x: e.clientX, y: e.clientY, time: clickTime });
-      recentClicksHistoryRef.current = recentClicksHistoryRef.current.filter(c => clickTime - c.time < 1500); // 1.5s okno
+      recentClicksHistoryRef.current = recentClicksHistoryRef.current.filter(c => clickTime - c.time < 1500);
       
       if (recentClicksHistoryRef.current.length >= 3) {
-        // Skontroluj ci su kliky pri sebe (cca 50px radius)
         const xs = recentClicksHistoryRef.current.map(c => c.x);
         const ys = recentClicksHistoryRef.current.map(c => c.y);
         const maxDistX = Math.max(...xs) - Math.min(...xs);
         const maxDistY = Math.max(...ys) - Math.min(...ys);
         
         if (maxDistX < 50 && maxDistY < 50) {
-           // Zaznamenaj rage click
            rageClicksRef.current.push({
              element: tag, element_id: newClick.element_id, 
              page_url: currentPage, timestamp: new Date().toISOString()
            });
-           recentClicksHistoryRef.current = []; // Resetni po detekcii
+           recentClicksHistoryRef.current = [];
         }
       }
 
@@ -486,7 +661,6 @@ export default function SessionRecorder() {
             formInteractionsRef.current.push(formInteraction);
           }
           
-          // Ulož strávený čas na danom poli (ako struggle metrics)
           if (!formInteraction.fields_touched.includes(fieldName)) {
             formInteraction.fields_touched.push(fieldName);
           }
@@ -514,6 +688,18 @@ export default function SessionRecorder() {
     document.addEventListener('submit', handleFormSubmit, true);
 
     return () => {
+      clearTimeout(observerTimeout);
+      observer.disconnect();
+      // Uložíme bežiace časy pre sekcie
+      Object.entries(sectionTimersRef.current).forEach(([id, startTime]) => {
+        const diffSec = Math.round((Date.now() - startTime) / 1000);
+        if (diffSec > 0) {
+          sectionEngagementRef.current[id] = (sectionEngagementRef.current[id] || 0) + diffSec;
+          exitSectionRef.current = id;
+        }
+      });
+      sectionTimersRef.current = {};
+
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('click', handleClick);
       window.removeEventListener('mousemove', handleMouseMove);
@@ -524,9 +710,9 @@ export default function SessionRecorder() {
     };
   }, [location.pathname, location.search, user]);
 
-  // Periodic save every 30 seconds for accuracy
+  // Periodic save every 60 seconds for accuracy (šetrenie kreditov)
   useEffect(() => {
-    const interval = setInterval(() => doSave(), 30000);
+    const interval = setInterval(() => doSave(), 60000);
     return () => clearInterval(interval);
   }, []);
 
@@ -545,6 +731,17 @@ export default function SessionRecorder() {
   useEffect(() => {
     const handleBeforeUnload = () => {
       if (!sessionIdRef.current || !lastPageRef.current || !pageStartTimeRef.current) return;
+      
+      // Ak sme admin, neukladáme session do databázy (ochrana kreditov a štatistík)
+      if (
+        (localStorageAvailableRef.current && localStorage.getItem('base44_is_admin') === 'true') ||
+        user?.role === 'admin' ||
+        user?.super_admin === true ||
+        user?.email === 'living.cheap.american@gmail.com'
+      ) {
+        return;
+      }
+
       updateActiveTime(); // Final time sync
       
       const timeSpent = Math.round((Date.now() - pageStartTimeRef.current) / 1000);
@@ -566,6 +763,12 @@ export default function SessionRecorder() {
       const payload = JSON.stringify({
         action: 'update', session_id: sessionIdRef.current,
         data: {
+          visitor_id: visitorIdRef.current,
+          session_number: sessionNumberRef.current,
+          section_engagement: sectionEngagementRef.current,
+          exit_page: currentPage,
+          exit_section: exitSectionRef.current,
+          tab_hidden_time_seconds: tabHiddenTimeRef.current,
           end_time: new Date().toISOString(), is_active: false, duration_seconds: duration,
           active_duration_seconds: activeDurationSecondsRef.current,
           mouse_movements: mouseMovementsRef.current,
@@ -578,10 +781,28 @@ export default function SessionRecorder() {
           _new_page_entry: finalPageEntry
         }
       });
-      if (navigator.sendBeacon) {
-        navigator.sendBeacon('/api/trackUserSession', payload);
-      } else {
-        base44.functions.invoke('trackUserSession', JSON.parse(payload)).catch(() => {});
+
+      const url = `${appParams.serverUrl}/api/apps/public/functions/v1/trackUserSession`;
+      const headers = {
+        'Content-Type': 'application/json',
+        'X-App-Id': appParams.appId
+      };
+      if (appParams.token) {
+        headers['Authorization'] = `Bearer ${appParams.token}`;
+      }
+
+      try {
+        fetch(url, {
+          method: 'POST',
+          headers,
+          body: payload,
+          keepalive: true
+        });
+      } catch (e) {
+        // Fallback ak moderný keepalive fetch zlyhá
+        if (navigator.sendBeacon) {
+          navigator.sendBeacon('/api/trackUserSession', payload);
+        }
       }
     };
     window.addEventListener('beforeunload', handleBeforeUnload);

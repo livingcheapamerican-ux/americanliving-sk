@@ -31,38 +31,49 @@ Deno.serve(async (req) => {
         // Získaj location z IP adresy s rate limit protection
         await new Promise(resolve => setTimeout(resolve, 1500)); // 1.5s medzi každým requestom
         
-        const response = await fetch(`https://ipapi.co/${ip}/json/`);
+        let data = null;
+        let ipapiResponse = await fetch(`https://ipapi.co/${ip}/json/`);
         
-        if (response.status === 429) {
-          // Rate limit exceeded - stop processing
-          rateLimitHit = true;
-          break;
+        if (ipapiResponse.ok) {
+          const resJson = await ipapiResponse.json();
+          if (!resJson.error && resJson.latitude && resJson.longitude) {
+            data = {
+              ip: resJson.ip || ip,
+              country: resJson.country_name,
+              country_code: resJson.country_code,
+              region: resJson.region,
+              city: resJson.city,
+              timezone: resJson.timezone,
+              latitude: resJson.latitude,
+              longitude: resJson.longitude
+            };
+          }
         }
         
-        if (!response.ok) {
-          errorCount++;
-          continue;
-        }
-
-        const data = await response.json();
-
-        if (data.error) {
-          errorCount++;
-          continue;
-        }
-
-        if (data.latitude && data.longitude) {
-          await base44.asServiceRole.entities.UserSession.update(session.id, {
-            location_info: {
-              ip: data.ip,
-              country: data.country_name,
-              country_code: data.country_code,
-              region: data.region,
-              city: data.city,
-              timezone: data.timezone,
-              latitude: data.latitude,
-              longitude: data.longitude
+        // Ak ipapi.co zlyhal, skúsime freeipapi.com
+        if (!data) {
+          console.log(`[enrichLocationData] ipapi.co failed for IP ${ip}, trying freeipapi.com fallback...`);
+          const freeIpResponse = await fetch(`https://freeipapi.com/api/json/${ip}`);
+          if (freeIpResponse.ok) {
+            const fbJson = await freeIpResponse.json();
+            if (fbJson.latitude && fbJson.longitude) {
+              data = {
+                ip: fbJson.ipAddress || ip,
+                country: fbJson.countryName,
+                country_code: fbJson.countryCode,
+                region: fbJson.regionName,
+                city: fbJson.cityName,
+                timezone: fbJson.timeZone,
+                latitude: fbJson.latitude,
+                longitude: fbJson.longitude
+              };
             }
+          }
+        }
+
+        if (data && data.latitude && data.longitude) {
+          await base44.asServiceRole.entities.UserSession.update(session.id, {
+            location_info: data
           });
           updatedCount++;
         } else {
