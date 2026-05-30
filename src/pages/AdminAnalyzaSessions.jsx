@@ -358,6 +358,21 @@ export default function AdminAnalyzaSessions() {
   const [clickMapSession, setClickMapSession] = useState(null);
   const [clickMapPage, setClickMapPage] = useState("");
 
+  // States pre novú navigáciu a záložky v reláciách
+  const [showSystemTools, setShowSystemTools] = useState(false);
+  const [sessionActiveTabs, setSessionActiveTabs] = useState({});
+
+  const getSessionActiveTab = (sessionId) => {
+    return sessionActiveTabs[sessionId] || 'overview';
+  };
+
+  const setSessionActiveTab = (sessionId, tabId) => {
+    setSessionActiveTabs(prev => ({
+      ...prev,
+      [sessionId]: tabId
+    }));
+  };
+
   // Admin IP adresy na vylúčenie
   const ADMIN_IPS = [
     '109.230.104.122', // Admin IP
