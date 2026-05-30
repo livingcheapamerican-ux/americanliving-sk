@@ -68,9 +68,12 @@ export default function ProstoHouseSummary({
         </div>
 
         {/* Hrubá stavba */}
-        {mountingIdx > 0 && (
-          <SummaryRow label={t('assemblyItem')} price={getPrice('mounting', mountingIdx, house.options.mounting[mountingIdx].price)} />
-        )}
+        <SummaryRow 
+          label={t('assemblyItem')} 
+          price={getPrice('mounting', mountingIdx, house.options.mounting[mountingIdx].price)} 
+          info={house.options.mounting[mountingIdx].label} 
+          alwaysShow 
+        />
         {hasExtension && extensionIdx > 0 && (
           <SummaryRow label={t('extensionItem')} price={getPrice('extension', extensionIdx, house.options.extension[extensionIdx].price)} info={house.options.extension[extensionIdx].label} />
         )}
@@ -80,9 +83,12 @@ export default function ProstoHouseSummary({
           info={house.options.insulation[insulationIdx].label}
           alwaysShow
         />
-        {foundationIdx > 0 && (
-          <SummaryRow label={t('foundationsItem')} price={getPrice('foundation', foundationIdx, house.options.foundation[foundationIdx].price)} info={house.options.foundation[foundationIdx].label} />
-        )}
+        <SummaryRow 
+          label={t('foundationsItem')} 
+          price={getPrice('foundation', foundationIdx, house.options.foundation[foundationIdx].price)} 
+          info={house.options.foundation[foundationIdx].label} 
+          alwaysShow 
+        />
         <SummaryRow label={t('facadeItem')} price={getPrice('facade', facadeIdx, house.options.facade[facadeIdx].price)} info={house.options.facade[facadeIdx].label} alwaysShow />
         <SummaryRow label={t('doorsItem')} price={getPrice('doors', doorsIdx, house.options.doors[doorsIdx].price)} info={house.options.doors[doorsIdx].label} alwaysShow />
 
