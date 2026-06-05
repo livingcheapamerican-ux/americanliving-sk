@@ -1453,6 +1453,22 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
           </div>
         </section>
 
+        {/* Tlačidlo na odoslanie na spodku konfigurátora (najmä pre PC) */}
+        <div className="hidden lg:block border-t border-slate-200 dark:border-white/10 pt-8 mt-12">
+          <div className="max-w-md mx-auto text-center space-y-4">
+            <div className="text-slate-500 dark:text-slate-400 text-sm font-medium">
+              {t('totalPriceVAT')}: <span className="text-xl font-black text-slate-900 dark:text-white ml-2">{totalPrice.toLocaleString('sk-SK')} €</span>
+            </div>
+            <button 
+              onClick={() => window.dispatchEvent(new CustomEvent('open-contact-modal'))} 
+              className="w-full bg-gradient-to-r from-[#9E2A2B] to-[#802021] hover:from-[#802021] hover:to-[#611617] text-white font-bold rounded-xl py-4 shadow-xl active:scale-98 transition-all flex items-center justify-center gap-2 text-base shadow-[0_4px_20px_rgba(158,42,43,0.3)]"
+            >
+              <Send className="w-5 h-5" />
+              {t('sendQuote')}
+            </button>
+          </div>
+        </div>
+
       </div>
         
         {/* PRAVÝ STĹPEC - Sticky Účtenka */}
