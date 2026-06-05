@@ -46,6 +46,21 @@ Deno.serve(async (req) => {
       return parts.join(',') + ' €';
     };
 
+    const row = (isSelected: boolean, label: string, price: string) => {
+      const displayLabel = label.trim().startsWith('•') ? label.trim().substring(1).trim() : label.trim();
+      if (isSelected) {
+        return `<tr>
+          <td>• ${displayLabel}</td>
+          <td style="text-align: right;">${price}</td>
+        </tr>`;
+      } else {
+        return `<tr style="color: #9ca3af; opacity: 0.6;">
+          <td style="color: #9ca3af;">• <s>${displayLabel}</s></td>
+          <td style="text-align: right; color: #9ca3af;"><s>${price}</s></td>
+        </tr>`;
+      }
+    };
+
     // Cenník
     const CENY = {
       izolacia_stien_200mm: 1799.16,
@@ -205,7 +220,7 @@ Deno.serve(async (req) => {
     .price-table td { padding: 10px 12px; border-bottom: 1px solid #e5e7eb; font-size: 13px; }
     .price-table tr:nth-child(even) { background: #f9fafb; }
     .price-table .category { background: #f3f4f6; font-weight: bold; color: #EF4444; }
-    .price-table .strikethrough { color: #9ca3af; text-decoration: line-through; }
+    /* .strikethrough removed */
     .total-price { background: #EF4444; color: white; padding: 20px; border-radius: 8px; text-align: center; margin: 30px 0; }
     .total-price .label { font-size: 14px; opacity: 0.9; }
     .total-price .amount { font-size: 36px; font-weight: bold; margin-top: 5px; }
@@ -369,303 +384,111 @@ Deno.serve(async (req) => {
           <tbody>
             <!-- ÚČEL STAVBY -->
             <tr class="category"><td colspan="2">ÚČEL STAVBY</td></tr>
-            <tr class="${konfiguraciaData.ucel !== 'chata' ? 'strikethrough' : ''}">
-              <td>• Rekreačná stavba</td>
-              <td style="text-align: right;">v cene</td>
-            </tr>
-            <tr class="${konfiguraciaData.ucel !== 'rodinny' ? 'strikethrough' : ''}">
-              <td>• Rodinný dom A0</td>
-              <td style="text-align: right;">v cene</td>
-            </tr>
+            ${row(!(konfiguraciaData.ucel !== 'chata'), `Rekreačná stavba`, `v cene`)}
+            ${row(!(konfiguraciaData.ucel !== 'rodinny'), `Rodinný dom A0`, `v cene`)}
 
             <!-- 1. IZOLÁCIA -->
             <tr class="category"><td colspan="2">1. IZOLÁCIA</td></tr>
             <tr><td style="font-weight: 600;">Základná cena domu</td><td style="text-align: right; font-weight: 600;">${formatPrice(dom?.zakladna_cena || 0)}</td></tr>
-            <tr class="${konfiguraciaData.izolaciaStien !== '150mm' ? 'strikethrough' : ''}">
-              <td>• Izolácia stien 150mm</td>
-              <td style="text-align: right;">v cene</td>
-            </tr>
-            <tr class="${konfiguraciaData.izolaciaStien !== '200mm' ? 'strikethrough' : ''}">
-              <td>• Izolácia stien 200mm</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.izolacia_stien_200mm)}</td>
-            </tr>
-            <tr class="${konfiguraciaData.izolaciaStien !== '250mm' ? 'strikethrough' : ''}">
-              <td>• Izolácia stien 250mm</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.izolacia_stien_250mm)}</td>
-            </tr>
-            <tr class="${konfiguraciaData.izolaciaPodlahy !== '150mm' ? 'strikethrough' : ''}">
-              <td>• Izolácia podlahy 150mm</td>
-              <td style="text-align: right;">v cene</td>
-            </tr>
-            <tr class="${konfiguraciaData.izolaciaPodlahy !== '200mm' ? 'strikethrough' : ''}">
-              <td>• Izolácia podlahy 200mm</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.izolacia_podlahy_200mm)}</td>
-            </tr>
-            <tr class="${konfiguraciaData.izolaciaStropu !== '150mm' ? 'strikethrough' : ''}">
-              <td>• Izolácia stropu 150mm</td>
-              <td style="text-align: right;">v cene</td>
-            </tr>
-            <tr class="${konfiguraciaData.izolaciaStropu !== '200mm' ? 'strikethrough' : ''}">
-              <td>• Izolácia stropu 200mm</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.izolacia_stropu_200mm)}</td>
-            </tr>
+            ${row(!(konfiguraciaData.izolaciaStien !== '150mm'), `Izolácia stien 150mm`, `v cene`)}
+            ${row(!(konfiguraciaData.izolaciaStien !== '200mm'), `Izolácia stien 200mm`, `+ ${formatPrice(CENY.izolacia_stien_200mm)}`)}
+            ${row(!(konfiguraciaData.izolaciaStien !== '250mm'), `Izolácia stien 250mm`, `+ ${formatPrice(CENY.izolacia_stien_250mm)}`)}
+            ${row(!(konfiguraciaData.izolaciaPodlahy !== '150mm'), `Izolácia podlahy 150mm`, `v cene`)}
+            ${row(!(konfiguraciaData.izolaciaPodlahy !== '200mm'), `Izolácia podlahy 200mm`, `+ ${formatPrice(CENY.izolacia_podlahy_200mm)}`)}
+            ${row(!(konfiguraciaData.izolaciaStropu !== '150mm'), `Izolácia stropu 150mm`, `v cene`)}
+            ${row(!(konfiguraciaData.izolaciaStropu !== '200mm'), `Izolácia stropu 200mm`, `+ ${formatPrice(CENY.izolacia_stropu_200mm)}`)}
 
             <!-- 2. VYKUROVANIE -->
             <tr class="category"><td colspan="2">2. VYKUROVANIE</td></tr>
-            <tr class="${konfiguraciaData.tepelneCerpadlo !== 'nie' ? 'strikethrough' : ''}">
-              <td>• Príprava na vykurovanie</td>
-              <td style="text-align: right;">v cene</td>
-            </tr>
-            <tr class="${konfiguraciaData.tepelneCerpadlo !== 'ano' ? 'strikethrough' : ''}">
-              <td>• Tepelné čerpadlo</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.tepelne_cerpadlo)}</td>
-            </tr>
-            <tr class="${konfiguraciaData.rekuperacia === 'ano' || konfiguraciaData.pripravaNaRekuperaciu ? 'strikethrough' : ''}">
-              <td>• Bez rekuperácie</td>
-              <td style="text-align: right;">v cene</td>
-            </tr>
-            <tr class="${!konfiguraciaData.pripravaNaRekuperaciu ? 'strikethrough' : ''}">
-              <td>• Príprava na rekuperáciu</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.pripravaNaRekuperaciu)}</td>
-            </tr>
-            <tr class="${konfiguraciaData.rekuperacia !== 'ano' ? 'strikethrough' : ''}">
-              <td>• Rekuperácia</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.rekuperacia)}</td>
-            </tr>
-            <tr class="${!konfiguraciaData.podlahovoKurenie ? 'strikethrough' : ''}">
-              <td>• Podlahové kúrenie</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.podlahove_kurenie)}</td>
-            </tr>
-            <tr class="${!konfiguraciaData.pripravaNaKrb ? 'strikethrough' : ''}">
-              <td>• Príprava na krb</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.pripravaKrb)}</td>
-            </tr>
-            <tr class="${!konfiguraciaData.ochranaKachle ? 'strikethrough' : ''}">
-              <td>• Ochrana kachle</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.ochranaKachle)}</td>
-            </tr>
-            <tr class="${!konfiguraciaData.klimatizacia ? 'strikethrough' : ''}">
-              <td>• Príprava na klimatizáciu</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.klimatizacia)}</td>
-            </tr>
+            ${row(!(konfiguraciaData.tepelneCerpadlo !== 'nie'), `Príprava na vykurovanie`, `v cene`)}
+            ${row(!(konfiguraciaData.tepelneCerpadlo !== 'ano'), `Tepelné čerpadlo`, `+ ${formatPrice(CENY.tepelne_cerpadlo)}`)}
+            ${row(!(konfiguraciaData.rekuperacia === 'ano' || konfiguraciaData.pripravaNaRekuperaciu), `Bez rekuperácie`, `v cene`)}
+            ${row(!(!konfiguraciaData.pripravaNaRekuperaciu), `Príprava na rekuperáciu`, `+ ${formatPrice(CENY.pripravaNaRekuperaciu)}`)}
+            ${row(!(konfiguraciaData.rekuperacia !== 'ano'), `Rekuperácia`, `+ ${formatPrice(CENY.rekuperacia)}`)}
+            ${row(!(!konfiguraciaData.podlahovoKurenie), `Podlahové kúrenie`, `+ ${formatPrice(CENY.podlahove_kurenie)}`)}
+            ${row(!(!konfiguraciaData.pripravaNaKrb), `Príprava na krb`, `+ ${formatPrice(CENY.pripravaKrb)}`)}
+            ${row(!(!konfiguraciaData.ochranaKachle), `Ochrana kachle`, `+ ${formatPrice(CENY.ochranaKachle)}`)}
+            ${row(!(!konfiguraciaData.klimatizacia), `Príprava na klimatizáciu`, `+ ${formatPrice(CENY.klimatizacia)}`)}
 
             <!-- 3. FASÁDA -->
             <tr class="category"><td colspan="2">3. FASÁDA</td></tr>
-            <tr class="${konfiguraciaData.fasada !== 'drevo_smrek' ? 'strikethrough' : ''}">
-              <td>• Fasáda - drevo smrek</td>
-              <td style="text-align: right;">v cene</td>
-            </tr>
-            <tr class="${konfiguraciaData.fasada !== 'omietka' ? 'strikethrough' : ''}">
-              <td>• Fasáda - šúchaná omietka</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.fasada_omietka)}</td>
-            </tr>
-            <tr class="${konfiguraciaData.fasada !== 'smrekovec' ? 'strikethrough' : ''}">
-              <td>• Fasáda - smrekovec</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.fasada_smrekovec)}</td>
-            </tr>
-            <tr class="${konfiguraciaData.fasada !== 'falcovane' ? 'strikethrough' : ''}">
-              <td>• Fasáda - falcované panely</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.fasada_falcovane)}</td>
-            </tr>
-            <tr class="${konfiguraciaData.fasada !== 'thermowood' ? 'strikethrough' : ''}">
-              <td>• Fasáda - thermowood</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.fasada_thermowood)}</td>
-            </tr>
+            ${row(!(konfiguraciaData.fasada !== 'drevo_smrek'), `Fasáda - drevo smrek`, `v cene`)}
+            ${row(!(konfiguraciaData.fasada !== 'omietka'), `Fasáda - šúchaná omietka`, `+ ${formatPrice(CENY.fasada_omietka)}`)}
+            ${row(!(konfiguraciaData.fasada !== 'smrekovec'), `Fasáda - smrekovec`, `+ ${formatPrice(CENY.fasada_smrekovec)}`)}
+            ${row(!(konfiguraciaData.fasada !== 'falcovane'), `Fasáda - falcované panely`, `+ ${formatPrice(CENY.fasada_falcovane)}`)}
+            ${row(!(konfiguraciaData.fasada !== 'thermowood'), `Fasáda - thermowood`, `+ ${formatPrice(CENY.fasada_thermowood)}`)}
 
             <!-- 4. STRECHA -->
             <tr class="category"><td colspan="2">4. STRECHA</td></tr>
-            <tr class="${konfiguraciaData.strecha !== 'korugovan_plech' ? 'strikethrough' : ''}">
-              <td>• Strecha - korugovaný plech</td>
-              <td style="text-align: right;">v cene</td>
-            </tr>
-            <tr class="${konfiguraciaData.strecha !== 'falcovane' ? 'strikethrough' : ''}">
-              <td>• Strecha - falcované panely</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.strecha_falcovane)}</td>
-            </tr>
-            <tr class="${konfiguraciaData.odkvapy !== 'nie' ? 'strikethrough' : ''}">
-              <td>• Bez odkvapov</td>
-              <td style="text-align: right;">v cene</td>
-            </tr>
-            <tr class="${konfiguraciaData.odkvapy !== 'ano' ? 'strikethrough' : ''}">
-              <td>• Odkvapy</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.odkvapy)}</td>
-            </tr>
+            ${row(!(konfiguraciaData.strecha !== 'korugovan_plech'), `Strecha - korugovaný plech`, `v cene`)}
+            ${row(!(konfiguraciaData.strecha !== 'falcovane'), `Strecha - falcované panely`, `+ ${formatPrice(CENY.strecha_falcovane)}`)}
+            ${row(!(konfiguraciaData.odkvapy !== 'nie'), `Bez odkvapov`, `v cene`)}
+            ${row(!(konfiguraciaData.odkvapy !== 'ano'), `Odkvapy`, `+ ${formatPrice(CENY.odkvapy)}`)}
 
             <!-- 5. OKNÁ A DVERE -->
             <tr class="category"><td colspan="2">5. OKNÁ A DVERE</td></tr>
-            <tr class="${konfiguraciaData.okna !== 'biele' ? 'strikethrough' : ''}">
-              <td>• Okná - biele 3-sklo</td>
-              <td style="text-align: right;">v cene</td>
-            </tr>
-            <tr class="${konfiguraciaData.okna !== 'antracit' ? 'strikethrough' : ''}">
-              <td>• Okná - antracit 3-sklo</td>
-              <td style="text-align: right;">v cene</td>
-            </tr>
-            <tr class="${konfiguraciaData.okna !== 'hnede' ? 'strikethrough' : ''}">
-              <td>• Okná - hnedé 3-sklo</td>
-              <td style="text-align: right;">v cene</td>
-            </tr>
-            <tr class="${konfiguraciaData.vchodoveDvere !== 'plastove' ? 'strikethrough' : ''}">
-              <td>• Vchodové dvere - plast/kov</td>
-              <td style="text-align: right;">v cene</td>
-            </tr>
-            <tr class="${konfiguraciaData.vchodoveDvere !== 'kovove' ? 'strikethrough' : ''}">
-              <td>• Vchodové dvere - kovové</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.dvere_kovove)}</td>
-            </tr>
+            ${row(!(konfiguraciaData.okna !== 'biele'), `Okná - biele 3-sklo`, `v cene`)}
+            ${row(!(konfiguraciaData.okna !== 'antracit'), `Okná - antracit 3-sklo`, `v cene`)}
+            ${row(!(konfiguraciaData.okna !== 'hnede'), `Okná - hnedé 3-sklo`, `v cene`)}
+            ${row(!(konfiguraciaData.vchodoveDvere !== 'plastove'), `Vchodové dvere - plast/kov`, `v cene`)}
+            ${row(!(konfiguraciaData.vchodoveDvere !== 'kovove'), `Vchodové dvere - kovové`, `+ ${formatPrice(CENY.dvere_kovove)}`)}
 
             <!-- 6. INTERIÉR -->
             <tr class="category"><td colspan="2">6. INTERIÉR</td></tr>
-            <tr class="${konfiguraciaData.obkladStien !== 'smrek_8cm' ? 'strikethrough' : ''}">
-              <td>• Obklad - smrek 8cm</td>
-              <td style="text-align: right;">v cene</td>
-            </tr>
-            <tr class="${konfiguraciaData.obkladStien !== 'smrek_bez_uzlov' ? 'strikethrough' : ''}">
-              <td>• Obklad - smrek bez uzlov</td>
-              <td style="text-align: right;">v cene</td>
-            </tr>
-            <tr class="${konfiguraciaData.obkladStien !== 'sadrokarton_tapeta' ? 'strikethrough' : ''}">
-              <td>• Obklad - sadrokartón + tapeta</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.obklad_sadrokarton)}</td>
-            </tr>
-            <tr class="${konfiguraciaData.obkladStien !== 'osb_panel' ? 'strikethrough' : ''}">
-              <td>• Obklad - OSB panel</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.obklad_osb)}</td>
-            </tr>
+            ${row(!(konfiguraciaData.obkladStien !== 'smrek_8cm'), `Obklad - smrek 8cm`, `v cene`)}
+            ${row(!(konfiguraciaData.obkladStien !== 'smrek_bez_uzlov'), `Obklad - smrek bez uzlov`, `v cene`)}
+            ${row(!(konfiguraciaData.obkladStien !== 'sadrokarton_tapeta'), `Obklad - sadrokartón + tapeta`, `+ ${formatPrice(CENY.obklad_sadrokarton)}`)}
+            ${row(!(konfiguraciaData.obkladStien !== 'osb_panel'), `Obklad - OSB panel`, `+ ${formatPrice(CENY.obklad_osb)}`)}
             <tr>
               <td>• Podlaha - laminát</td>
               <td style="text-align: right;">v cene</td>
             </tr>
-            <tr class="${konfiguraciaData.interieroveDvere !== 'kridlove' ? 'strikethrough' : ''}">
-              <td>• Interiérové dvere - krídlové</td>
-              <td style="text-align: right;">v cene</td>
-            </tr>
-            <tr class="${konfiguraciaData.interieroveDvere !== 'posuvne' ? 'strikethrough' : ''}">
-              <td>• Interiérové dvere - posuvné</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.dvere_posuvne)}</td>
-            </tr>
+            ${row(!(konfiguraciaData.interieroveDvere !== 'kridlove'), `Interiérové dvere - krídlové`, `v cene`)}
+            ${row(!(konfiguraciaData.interieroveDvere !== 'posuvne'), `Interiérové dvere - posuvné`, `+ ${formatPrice(CENY.dvere_posuvne)}`)}
 
             <!-- 7. ELEKTRO -->
             <tr class="category"><td colspan="2">7. ELEKTROINŠTALÁCIA</td></tr>
-            <tr class="${konfiguraciaData.elektro !== 'eu' ? 'strikethrough' : ''}">
-              <td>• Elektro - EU štandard</td>
-              <td style="text-align: right;">v cene</td>
-            </tr>
-            <tr class="${konfiguraciaData.elektro !== 'cz' ? 'strikethrough' : ''}">
-              <td>• Elektro - CZ/SK štandard</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.elektro_cz)}</td>
-            </tr>
-            <tr class="${konfiguraciaData.elektro !== 'ge' ? 'strikethrough' : ''}">
-              <td>• Elektro - GE štandard (A0)</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.elektro_ge)}</td>
-            </tr>
-            <tr class="${!konfiguraciaData.bleskozvod ? 'strikethrough' : ''}">
-              <td>• Bleskozvod</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.bleskozvod)}</td>
-            </tr>
-            <tr class="${!konfiguraciaData.prepat ? 'strikethrough' : ''}">
-              <td>• Prepäťová ochrana</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.prepat)}</td>
-            </tr>
-            <tr class="${!konfiguraciaData.pripravaNaSolarnePanely ? 'strikethrough' : ''}">
-              <td>• Príprava na solárne panely</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.pripravaNaSolarnePanely)}</td>
-            </tr>
+            ${row(!(konfiguraciaData.elektro !== 'eu'), `Elektro - EU štandard`, `v cene`)}
+            ${row(!(konfiguraciaData.elektro !== 'cz'), `Elektro - CZ/SK štandard`, `+ ${formatPrice(CENY.elektro_cz)}`)}
+            ${row(!(konfiguraciaData.elektro !== 'ge'), `Elektro - GE štandard (A0)`, `+ ${formatPrice(CENY.elektro_ge)}`)}
+            ${row(!(!konfiguraciaData.bleskozvod), `Bleskozvod`, `+ ${formatPrice(CENY.bleskozvod)}`)}
+            ${row(!(!konfiguraciaData.prepat), `Prepäťová ochrana`, `+ ${formatPrice(CENY.prepat)}`)}
+            ${row(!(!konfiguraciaData.pripravaNaSolarnePanely), `Príprava na solárne panely`, `+ ${formatPrice(CENY.pripravaNaSolarnePanely)}`)}
 
             <!-- 8. KÚPEĽŇA -->
             <tr class="category"><td colspan="2">8. KÚPEĽŇA</td></tr>
-            <tr class="${konfiguraciaData.sprchovyKut !== 'standard' ? 'strikethrough' : ''}">
-              <td>• Sprcha + WC Geberit</td>
-              <td style="text-align: right;">v cene</td>
-            </tr>
-            <tr class="${konfiguraciaData.sprchovyKut !== 'radaway' ? 'strikethrough' : ''}">
-              <td>• Sprchový kút Radaway</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.sprchovyKut)}</td>
-            </tr>
-            <tr class="${konfiguraciaData.bateria !== 'standard' ? 'strikethrough' : ''}">
-              <td>• Batéria - štandard</td>
-              <td style="text-align: right;">v cene</td>
-            </tr>
-            <tr class="${konfiguraciaData.bateria !== 'grohe' ? 'strikethrough' : ''}">
-              <td>• Batéria - Grohe</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.bateria)}</td>
-            </tr>
-            <tr class="${konfiguraciaData.stropKupelna !== 'drevo' ? 'strikethrough' : ''}">
-              <td>• Strop kúpeľňa - drevo</td>
-              <td style="text-align: right;">v cene</td>
-            </tr>
-            <tr class="${konfiguraciaData.stropKupelna !== 'sadrokarton' ? 'strikethrough' : ''}">
-              <td>• Strop kúpeľňa - sadrokartón</td>
-              <td style="text-align: right;">v cene</td>
-            </tr>
-            <tr class="${!konfiguraciaData.vana ? 'strikethrough' : ''}">
-              <td>• Vaňa</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.vana)}</td>
-            </tr>
-            <tr class="${!konfiguraciaData.skrinka ? 'strikethrough' : ''}">
-              <td>• Skrinka</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.skrinka)}</td>
-            </tr>
+            ${row(!(konfiguraciaData.sprchovyKut !== 'standard'), `Sprcha + WC Geberit`, `v cene`)}
+            ${row(!(konfiguraciaData.sprchovyKut !== 'radaway'), `Sprchový kút Radaway`, `+ ${formatPrice(CENY.sprchovyKut)}`)}
+            ${row(!(konfiguraciaData.bateria !== 'standard'), `Batéria - štandard`, `v cene`)}
+            ${row(!(konfiguraciaData.bateria !== 'grohe'), `Batéria - Grohe`, `+ ${formatPrice(CENY.bateria)}`)}
+            ${row(!(konfiguraciaData.stropKupelna !== 'drevo'), `Strop kúpeľňa - drevo`, `v cene`)}
+            ${row(!(konfiguraciaData.stropKupelna !== 'sadrokarton'), `Strop kúpeľňa - sadrokartón`, `v cene`)}
+            ${row(!(!konfiguraciaData.vana), `Vaňa`, `+ ${formatPrice(CENY.vana)}`)}
+            ${row(!(!konfiguraciaData.skrinka), `Skrinka`, `+ ${formatPrice(CENY.skrinka)}`)}
 
             <!-- 9. ZÁKLADY -->
             <tr class="category"><td colspan="2">9. ZÁKLADY</td></tr>
-            <tr class="${konfiguraciaData.zaklady !== 'bez' ? 'strikethrough' : ''}">
-              <td>• Bez základov</td>
-              <td style="text-align: right;">v cene</td>
-            </tr>
-            <tr class="${konfiguraciaData.zaklady !== 'vruty' ? 'strikethrough' : ''}">
-              <td>• Základy - zemné vruty</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.zaklady_vruty)}</td>
-            </tr>
-            <tr class="${konfiguraciaData.zaklady !== 'patky' ? 'strikethrough' : ''}">
-              <td>• Základy - betónové pätky</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.zaklady_patky)}</td>
-            </tr>
-            <tr class="${konfiguraciaData.zaklady !== 'pasove' ? 'strikethrough' : ''}">
-              <td>• Základy - pásové betónové</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.zaklady_pasove)}</td>
-            </tr>
+            ${row(!(konfiguraciaData.zaklady !== 'bez'), `Bez základov`, `v cene`)}
+            ${row(!(konfiguraciaData.zaklady !== 'vruty'), `Základy - zemné vruty`, `+ ${formatPrice(CENY.zaklady_vruty)}`)}
+            ${row(!(konfiguraciaData.zaklady !== 'patky'), `Základy - betónové pätky`, `+ ${formatPrice(CENY.zaklady_patky)}`)}
+            ${row(!(konfiguraciaData.zaklady !== 'pasove'), `Základy - pásové betónové`, `+ ${formatPrice(CENY.zaklady_pasove)}`)}
 
             <!-- 10. INŽINIERING -->
             <tr class="category"><td colspan="2">10. INŽINIERING A DOKUMENTÁCIA (A0)</td></tr>
-            <tr class="${!konfiguraciaData.inziniering ? 'strikethrough' : ''}">
-              <td>• Inžiniering</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.inziniering)}</td>
-            </tr>
-            <tr class="${!konfiguraciaData.projektACertifikacia ? 'strikethrough' : ''}">
-              <td>• Projekt + Certifikácia A0</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.projektACertifikacia)}</td>
-            </tr>
-            <tr class="${!konfiguraciaData.revizia ? 'strikethrough' : ''}">
-              <td>• Revízna dokumentácia</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.revizia)}</td>
-            </tr>
+            ${row(!(!konfiguraciaData.inziniering), `Inžiniering`, `+ ${formatPrice(CENY.inziniering)}`)}
+            ${row(!(!konfiguraciaData.projektACertifikacia), `Projekt + Certifikácia A0`, `+ ${formatPrice(CENY.projektACertifikacia)}`)}
+            ${row(!(!konfiguraciaData.revizia), `Revízna dokumentácia`, `+ ${formatPrice(CENY.revizia)}`)}
 
             <!-- 11. REALIZÁCIA -->
             <tr class="category"><td colspan="2">11. REALIZÁCIA</td></tr>
-            <tr class="${!konfiguraciaData.montaz ? 'strikethrough' : ''}">
-              <td>• Montáž domu</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.montaz)}</td>
-            </tr>
-            <tr class="${!konfiguraciaData.doprava ? 'strikethrough' : ''}">
-              <td>• Doprava modulov</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.doprava)}</td>
-            </tr>
+            ${row(!(!konfiguraciaData.montaz), `Montáž domu`, `+ ${formatPrice(CENY.montaz)}`)}
+            ${row(!(!konfiguraciaData.doprava), `Doprava modulov`, `+ ${formatPrice(CENY.doprava)}`)}
 
             <!-- DODATOČNÉ SLUŽBY -->
             <tr class="category"><td colspan="2">DODATOČNÉ SLUŽBY</td></tr>
-            <tr class="${!konfiguraciaData.predajNehnutelnosti ? 'strikethrough' : ''}">
-              <td>• Predaj predošlej nehnuteľnosti</td>
-              <td style="text-align: right;">na vyžiadanie</td>
-            </tr>
-            <tr class="${!konfiguraciaData.chcemPozemok ? 'strikethrough' : ''}">
-              <td>• Chcem pozemok pod svoj dom</td>
-              <td style="text-align: right;">na vyžiadanie</td>
-            </tr>
-            <tr class="${!konfiguraciaData.financneSluzby ? 'strikethrough' : ''}">
-              <td>• Finančné služby - úvery/pôžičky</td>
-              <td style="text-align: right;">na vyžiadanie</td>
-            </tr>
+            ${row(!(!konfiguraciaData.predajNehnutelnosti), `Predaj predošlej nehnuteľnosti`, `na vyžiadanie`)}
+            ${row(!(!konfiguraciaData.chcemPozemok), `Chcem pozemok pod svoj dom`, `na vyžiadanie`)}
+            ${row(!(!konfiguraciaData.financneSluzby), `Finančné služby - úvery/pôžičky`, `na vyžiadanie`)}
           </tbody>
         </table>
 
