@@ -835,6 +835,49 @@ export default function KonfiguratorLyon(props = {}) {
   const { language, t } = useLanguage();
   const onSubmit = props.onSubmit || (() => {});
   
+  const CENY = props.CENY || {
+    izolacia_stien_200mm: 1799.16,
+    izolacia_stien_250mm: 1558.17,
+    izolacia_podlahy_200mm: 334.08,
+    izolacia_stropu_200mm: 271.44,
+    tepelne_cerpadlo: 2889.27,
+    pripravaNaRekuperaciu: 512,
+    rekuperacia: 1155.36,
+    podlahove_kurenie: 2253.30,
+    klimatizacia: 902,
+    pripravaKrb: 578.55,
+    ochranaKachle: 1279.77,
+    fasada_omietka: 1580.79,
+    fasada_smrekovec: 3349.50,
+    fasada_falcovane: 4953.78,
+    fasada_thermowood: 6677.25,
+    strecha_falcovane: 3227.70,
+    odkvapy: 1502.49,
+    dvere_kovove: 278.40,
+    obklad_smrek_bez_uzlov: 0,
+    obklad_sadrokarton_tapeta: 7855,
+    obklad_osb_panel: 5279,
+    dvere_posuvne: 427.17,
+    elektro_cz: 460.23,
+    elektro_ge: 1583.40,
+    bleskozvod: 856.08,
+    prepat: 311.46,
+    pripravaNaSolarnePanely: 1305,
+    sprchovyKut: 645.54,
+    vana: 501.12,
+    bateria: 139.20,
+    skrinka: 434.13,
+    strop_kupelna_sadrokarton: 0,
+    inziniering: 2773.56,
+    projektACertifikacia: 3745.35,
+    revizia: 1605.15,
+    zaklady_vruty: 4494.42,
+    zaklady_patky: 2568.24,
+    zaklady_pasove: 11825.04,
+    montaz: 4805.88,
+    doprava: 8927.94
+  };
+
   // Načítať texty konfiguratora
   const { data: konfigTexts = [] } = useQuery({
     queryKey: ['konfig-texts-ticab'],
@@ -1166,48 +1209,7 @@ export default function KonfiguratorLyon(props = {}) {
     if (props.setFinancneSluzby) props.setFinancneSluzby(financneSluzby);
   }, [financneSluzby]);
 
-  const CENY = props.CENY || {
-    izolacia_stien_200mm: 1799.16,
-    izolacia_stien_250mm: 1558.17,
-    izolacia_podlahy_200mm: 334.08,
-    izolacia_stropu_200mm: 271.44,
-    tepelne_cerpadlo: 2889.27,
-    pripravaNaRekuperaciu: 512,
-    rekuperacia: 1155.36,
-    podlahove_kurenie: 2253.30,
-    klimatizacia: 902,
-    pripravaKrb: 578.55,
-    ochranaKachle: 1279.77,
-    fasada_omietka: 1580.79,
-    fasada_smrekovec: 3349.50,
-    fasada_falcovane: 4953.78,
-    fasada_thermowood: 6677.25,
-    strecha_falcovane: 3227.70,
-    odkvapy: 1502.49,
-    dvere_kovove: 278.40,
-    obklad_smrek_bez_uzlov: 0,
-    obklad_sadrokarton_tapeta: 7855,
-    obklad_osb_panel: 5279,
-    dvere_posuvne: 427.17,
-    elektro_cz: 460.23,
-    elektro_ge: 1583.40,
-    bleskozvod: 856.08,
-    prepat: 311.46,
-    pripravaNaSolarnePanely: 1305,
-    sprchovyKut: 645.54,
-    vana: 501.12,
-    bateria: 139.20,
-    skrinka: 434.13,
-    strop_kupelna_sadrokarton: 0,
-    inziniering: 2773.56,
-    projektACertifikacia: 3745.35,
-    revizia: 1605.15,
-    zaklady_vruty: 4494.42,
-    zaklady_patky: 2568.24,
-    zaklady_pasove: 11825.04,
-    montaz: 4805.88,
-    doprava: 8927.94
-  };
+
 
   const formatTilePrice = (price) => {
     const num = typeof price === 'number' ? price : parseFloat(price);
