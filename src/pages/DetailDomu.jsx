@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Home, Maximize2, Zap, CheckCircle, Phone, Mail, Settings, AlertCircle, Boxes, Grid2x2, Layers, Edit, X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCcw, Hammer, Caravan, Package, Droplets, Landmark, Share2, Facebook } from "lucide-react";
 import { motion } from "framer-motion";
 import PriceCalculator from "../components/PriceCalculator";
-import ImageWithWatermark from "../components/ImageWithWatermark";
+import ImageWithWatermark, { optimizeImageUrl } from "../components/ImageWithWatermark";
 import HypotekaKalkulator from "../components/HypotekaKalkulator";
 import PriceCalculatorTicabhouse from "../components/PriceCalculatorTicabhouse";
 import FloatingPrice from "../components/FloatingPrice";
@@ -647,6 +647,7 @@ export default function DetailDomu() {
                         src={img}
                         alt={(dom.images_seo_map?.[language] || dom.images_seo_map?.['sk'])?.[img] || `Fotografia ${index + 2}`}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        optimizeWidth={550}
                       />
                       <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-300" />
                       
@@ -751,6 +752,7 @@ export default function DetailDomu() {
                             src={foto}
                             alt={(dom.images_seo_map?.[language] || dom.images_seo_map?.['sk'])?.[foto] || `Náhľad ${fotoIndex + 1}`}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                            optimizeWidth={600}
                           />
                           <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-300" />
                           
@@ -800,7 +802,7 @@ export default function DetailDomu() {
                   {dom.podorysy.map((podorysUrl, index) => (
                     <div key={index} className="rounded-lg overflow-hidden bg-muted">
                       <img
-                        src={podorysUrl}
+                        src={optimizeImageUrl(podorysUrl, 800)}
                         alt={(dom.images_seo_map?.[language] || dom.images_seo_map?.['sk'])?.[podorysUrl] || `Pôdorys ${index + 1}`}
                         className="w-full h-auto object-contain"
                       />

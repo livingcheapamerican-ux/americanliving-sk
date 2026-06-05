@@ -424,6 +424,7 @@ export default function KatalogMobilneDomy() {
                       src={dom.hlavny_obrazok || '/api/placeholder/400/225'}
                       alt={dom.nazov}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      optimizeWidth={500}
                     />
                   </Link>
                   <div className="p-6 flex flex-col flex-1">

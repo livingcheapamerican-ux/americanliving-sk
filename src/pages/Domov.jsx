@@ -15,6 +15,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import HeroSettingsManager from "../components/admin/HeroSettingsManager";
 import { useLanguage } from "../components/LanguageContext";
 import ServiceDetailModal from "../components/ServiceDetailModal";
+import { optimizeImageUrl } from "../components/ImageWithWatermark";
 
 const sliderT = {
   sk: { viz: "Vizualizácia", real: "Realizácia" },
@@ -104,7 +105,7 @@ function ImageComparisonSlider({ beforeImage, afterImage, language }) {
       onTouchStart={() => setIsDragging(true)}
     >
       <img 
-        src={beforeImage} 
+        src={optimizeImageUrl(beforeImage, 800)} 
         alt="Visualization" 
         className="absolute inset-0 w-full h-full object-cover pointer-events-none"
       />
@@ -117,7 +118,7 @@ function ImageComparisonSlider({ beforeImage, afterImage, language }) {
         style={{ clipPath: `polygon(0 0, ${sliderPosition}% 0, ${sliderPosition}% 100%, 0 100%)` }}
       >
         <img 
-          src={afterImage} 
+          src={optimizeImageUrl(afterImage, 800)} 
           alt="Realization" 
           className="absolute inset-0 w-full h-full object-cover pointer-events-none"
         />
@@ -1015,7 +1016,7 @@ export default function Domov() {
                     >
                       {/* Background image overlay - increased opacity and dark overlay for text legibility, no more pale wash-out */}
                       <div className="absolute inset-0 z-0 opacity-70 group-hover:opacity-90 transition-opacity duration-300">
-                        <img src={house.img} alt={house.name} className="w-full h-full object-cover" />
+                        <img src={optimizeImageUrl(house.img, 300)} alt={house.name} className="w-full h-full object-cover" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/5 dark:from-slate-950/85 dark:via-slate-950/45 dark:to-transparent" />
                       </div>
                       <div className="relative z-10">
@@ -1129,7 +1130,7 @@ export default function Domov() {
                           }`}
                         >
                           <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 border border-slate-200 dark:border-white/10 bg-slate-950 transition-all duration-300">
-                            <img src={opt.img} alt={opt.name} className="w-full h-full object-cover" />
+                            <img src={optimizeImageUrl(opt.img, 120)} alt={opt.name} className="w-full h-full object-cover" />
                           </div>
                           <div className="min-w-0">
                             <p className={`text-[11px] leading-tight font-black transition-colors duration-300 ${selectedFacade === opt.id ? 'text-[#C5A880]' : 'text-slate-800 dark:text-slate-200'}`}>{opt.name}</p>
@@ -1348,7 +1349,7 @@ export default function Domov() {
                     <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-white/10 overflow-hidden group hover:-translate-y-2 transition-all duration-300 shadow-md dark:shadow-xl hover:shadow-[#C5A880]/15 dark:hover:shadow-red-950/20">
                       <div className="aspect-[4/3] overflow-hidden relative">
                         <img 
-                          src={dom.hlavny_obrazok || dom.obrazky?.[0]} 
+                          src={optimizeImageUrl(dom.hlavny_obrazok || dom.obrazky?.[0], 600)} 
                           alt={dom.nazov} 
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
                           loading="lazy"
@@ -1507,7 +1508,7 @@ export default function Domov() {
                     {getManufacturerBadge(activeShowcaseHouseManufacturer)}
                   </div>
                   <img
-                    src={img}
+                    src={optimizeImageUrl(img, 600)}
                     alt={t('photoDetail')}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     loading="lazy"
@@ -1544,7 +1545,7 @@ export default function Domov() {
             <motion.img
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              src={lightboxImage}
+              src={optimizeImageUrl(lightboxImage, 1200)}
               alt={t('photoDetail')}
               className="max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl border border-white/15 cursor-default"
               onClick={(e) => e.stopPropagation()}
@@ -1907,7 +1908,7 @@ export default function Domov() {
                   <Card className="group overflow-hidden h-full flex flex-col hover:shadow-2xl hover:shadow-[#C5A880]/15 dark:hover:shadow-red-950/20 transition-all duration-300 cursor-pointer bg-white dark:bg-slate-900 border-slate-200 dark:border-white/10 shadow-md hover:-translate-y-2">
                     <div className="relative flex-1 min-h-[200px] overflow-hidden">
                       <img 
-                        src={sluzba.image.includes("unsplash.com") ? sluzba.image.replace(/\?.*$/, "") + "?fm=webp&auto=format,compress&w=800&q=75" : sluzba.image}
+                        src={optimizeImageUrl(sluzba.image, 800)}
                         alt={sluzba.nazov}
                         className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                         loading="lazy"
@@ -2057,7 +2058,7 @@ export default function Domov() {
                     <Card className="group overflow-hidden hover:shadow-2xl hover:border-[#C5A880]/30 hover:-translate-y-2 transition-all duration-300 bg-white dark:bg-slate-900 border-slate-200/80 dark:border-white/10 shadow-md dark:shadow-xl h-full flex flex-col">
                       <div className="relative aspect-video overflow-hidden">
                         <img
-                          src={dom.hlavny_obrazok?.includes("unsplash.com") ? dom.hlavny_obrazok.replace(/([&?])w=\d+/, "$1w=300").replace("q=80", "q=75") + (dom.hlavny_obrazok.includes("?") ? "&fm=webp" : "?fm=webp") : dom.hlavny_obrazok}
+                          src={optimizeImageUrl(dom.hlavny_obrazok, 300)}
                           alt={dom.nazov}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                           width={300}

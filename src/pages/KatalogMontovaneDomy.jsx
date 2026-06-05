@@ -459,6 +459,7 @@ export default function KatalogMontovaneDomy() {
                       src={dom.hlavny_obrazok || '/api/placeholder/400/225'}
                       alt={dom.nazov}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      optimizeWidth={500}
                     />
                     <div className="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
                       Top Výber

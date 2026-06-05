@@ -1,6 +1,6 @@
 import React from "react";
 import { X, ZoomIn, ZoomOut, RotateCcw, ChevronLeft, ChevronRight } from "lucide-react";
-import ImageWithWatermark from "./ImageWithWatermark";
+import ImageWithWatermark, { optimizeImageUrl } from "./ImageWithWatermark";
 
 export default function GaleriaLightbox({
   lightboxOpen,
@@ -184,20 +184,34 @@ export default function GaleriaLightbox({
               width: `${lightboxImages.length * 100}vw`,
             }}
           >
-            {lightboxImages.map((img, idx) => (
-              <div key={idx} className="w-screen h-screen flex items-center justify-center flex-shrink-0 px-8">
-                <div className="relative max-w-full max-h-full flex items-center justify-center">
-                  <ImageWithWatermark
-                    src={img}
-                    alt={getAlt(img, idx)}
-                    className="select-none w-auto h-auto max-w-[85vw] max-h-[85vh] object-contain"
-                    draggable={false}
-                    priority={true}
-                    onClick={(e) => { e.stopPropagation(); if (!swipeStart && Math.abs(swipeOffset) < 10) handleZoomIn(); }}
-                  />
+            {lightboxImages.map((img, idx) => {
+              const isActive = idx === lightboxIndex;
+              const isPrev = idx === (lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length;
+              const isNext = idx === (lightboxIndex + 1) % lightboxImages.length;
+              const shouldRender = isActive || isPrev || isNext;
+
+              return (
+                <div key={idx} className="w-screen h-screen flex items-center justify-center flex-shrink-0 px-8">
+                  <div className="relative max-w-full max-h-full flex items-center justify-center">
+                    {shouldRender ? (
+                      <ImageWithWatermark
+                        src={img}
+                        alt={getAlt(img, idx)}
+                        className="select-none w-auto h-auto max-w-[85vw] max-h-[85vh] object-contain"
+                        draggable={false}
+                        priority={isActive}
+                        optimizeWidth={1200}
+                        onClick={(e) => { e.stopPropagation(); if (!swipeStart && Math.abs(swipeOffset) < 10) handleZoomIn(); }}
+                      />
+                    ) : (
+                      <div className="w-[85vw] h-[85vh] flex items-center justify-center bg-transparent">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white/20" />
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         ) : (
           <div className="relative flex items-center justify-center w-full h-full">
@@ -206,6 +220,7 @@ export default function GaleriaLightbox({
               alt={getAlt(lightboxImages[lightboxIndex], lightboxIndex)}
               className={`select-none ${zoomLevel > 1 ? 'cursor-grab' : 'cursor-zoom-in'} ${isDragging ? 'cursor-grabbing' : ''} w-auto h-auto object-contain`}
               priority={true}
+              optimizeWidth={1200}
               style={{
                 maxWidth: zoomLevel === 1 ? '85vw' : 'none',
                 maxHeight: zoomLevel === 1 ? '85vh' : 'none',
@@ -236,7 +251,7 @@ export default function GaleriaLightbox({
               onClick={(e) => { e.stopPropagation(); setLightboxIndex(idx); setZoomLevel(1); setPanPosition({ x: 0, y: 0 }); }}
               className={`flex-shrink-0 w-16 h-12 rounded overflow-hidden border-2 transition-all ${idx === lightboxIndex ? 'border-white' : 'border-transparent opacity-60 hover:opacity-100'}`}
             >
-              <img src={img} alt={getAlt(img, idx)} className="w-full h-full object-cover" width={64} height={48} loading="lazy" onContextMenu={(e) => e.preventDefault()} draggable={false} />
+              <img src={optimizeImageUrl(img, 120)} alt={getAlt(img, idx)} className="w-full h-full object-cover" width={64} height={48} loading="lazy" onContextMenu={(e) => e.preventDefault()} draggable={false} />
             </button>
           ))}
         </div>

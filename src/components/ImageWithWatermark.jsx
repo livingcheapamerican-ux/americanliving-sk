@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 
 // ─── URL optimizer ──────────────────────────────────────────────────────────
-function optimizeImageUrl(src, width = 800) {
+export function optimizeImageUrl(src, width = 800) {
   if (!src) return src;
 
   if (src.includes("images.unsplash.com")) {
