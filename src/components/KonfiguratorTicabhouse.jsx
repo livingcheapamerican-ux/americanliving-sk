@@ -421,48 +421,6 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
   const { language, t } = useLanguage();
   const queryClient = useQueryClient();
 
-  // Lokálny state pre okamžitú vizuálnu spätnú väzbu
-  const [localDopravaViditelna, setLocalDopravaViditelna] = React.useState(dom?.doprava_viditelna !== false);
-
-  // Synchronizovať lokálny state s DOM objektom
-  React.useEffect(() => {
-    setLocalDopravaViditelna(dom?.doprava_viditelna !== false);
-  }, [dom?.doprava_viditelna]);
-
-  const dopravaViditelna = localDopravaViditelna;
-
-  // Mutácia pre zmenu viditeľnosti dopravy
-  const toggleDopravaVisibilityMutation = useMutation({
-    mutationFn: (visible) => base44.entities.Dom.update(dom.id, { doprava_viditelna: visible }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['dom', dom.id] });
-      toast.success(!dopravaViditelna ? 'Doprava skrytá pre verejnosť' : 'Doprava zobrazená pre verejnosť');
-    }
-  });
-
-  const handleToggleDopravaVisibility = () => {
-    const newValue = !dopravaViditelna;
-    setLocalDopravaViditelna(newValue);
-    toggleDopravaVisibilityMutation.mutate(newValue);
-  };
-
-  // Načítať texty konfiguratora
-  const { data: konfigTexts = [] } = useQuery({
-    queryKey: ['konfig-texts-ticab'],
-    queryFn: () => base44.entities.KonfiguratorText.filter({ vyrobca: 'Ticab house' }),
-    initialData: []
-  });
-
-  // Pomocná funkcia na získanie preloženého textu
-  const getTranslatedText = (polozkaId, field) => {
-    const text = konfigTexts.find(t => t.polozka_id === polozkaId);
-    if (!text) return null;
-    
-    if (language === 'sk') return text[field] || null;
-    const translatedField = text[`${field}_${language}`];
-    return translatedField || text[field] || null;
-  };
-
   // Načítať ceny z entity Dom alebo použiť default ceny Lyon
   const DEFAULT_CENY = {
     izolacia_stien_200mm: 1799.16,
@@ -510,6 +468,48 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
   const CENY = {
     ...DEFAULT_CENY,
     ...(dom?.konfigurator_ceny || {})
+  };
+
+  // Lokálny state pre okamžitú vizuálnu spätnú väzbu
+  const [localDopravaViditelna, setLocalDopravaViditelna] = React.useState(dom?.doprava_viditelna !== false);
+
+  // Synchronizovať lokálny state s DOM objektom
+  React.useEffect(() => {
+    setLocalDopravaViditelna(dom?.doprava_viditelna !== false);
+  }, [dom?.doprava_viditelna]);
+
+  const dopravaViditelna = localDopravaViditelna;
+
+  // Mutácia pre zmenu viditeľnosti dopravy
+  const toggleDopravaVisibilityMutation = useMutation({
+    mutationFn: (visible) => base44.entities.Dom.update(dom.id, { doprava_viditelna: visible }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['dom', dom.id] });
+      toast.success(!dopravaViditelna ? 'Doprava skrytá pre verejnosť' : 'Doprava zobrazená pre verejnosť');
+    }
+  });
+
+  const handleToggleDopravaVisibility = () => {
+    const newValue = !dopravaViditelna;
+    setLocalDopravaViditelna(newValue);
+    toggleDopravaVisibilityMutation.mutate(newValue);
+  };
+
+  // Načítať texty konfiguratora
+  const { data: konfigTexts = [] } = useQuery({
+    queryKey: ['konfig-texts-ticab'],
+    queryFn: () => base44.entities.KonfiguratorText.filter({ vyrobca: 'Ticab house' }),
+    initialData: []
+  });
+
+  // Pomocná funkcia na získanie preloženého textu
+  const getTranslatedText = (polozkaId, field) => {
+    const text = konfigTexts.find(t => t.polozka_id === polozkaId);
+    if (!text) return null;
+    
+    if (language === 'sk') return text[field] || null;
+    const translatedField = text[`${field}_${language}`];
+    return translatedField || text[field] || null;
   };
   const [kolaudacia, setKolaudacia] = useState("bez_a0");
   const [activeLightbox, setActiveLightbox] = useState(null);
