@@ -17,12 +17,26 @@ function optimizeImageUrl(src, width = 800) {
     return url.toString();
   }
 
-  if (
-    src.includes("base44.app/api/apps") ||
-    src.includes("supabase.co/storage")
-  ) {
+  // Base44 files URL (either with domain or relative)
+  const base44Regex = /^(?:https?:\/\/(?:base44\.app|app\.base44\.com))?\/api\/apps\/([a-f0-9]+)\/files\/public\/\1\/(.+)$/i;
+  const base44Match = src.match(base44Regex);
+  
+  if (base44Match) {
+    const appId = base44Match[1];
+    const filename = base44Match[2];
+    // Convert directly to Supabase resizing URL to bypass the Base44 redirect and enable image optimization
+    return `https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/render/image/public/base44-prod/public/${appId}/${filename}?width=${width}&format=webp&quality=75`;
+  }
+
+  // Direct Supabase storage URL
+  if (src.includes("supabase.co/storage")) {
     try {
-      const url = new URL(src);
+      // Replace object/public with render/image/public for resizing
+      let optimizedUrl = src;
+      if (optimizedUrl.includes("/storage/v1/object/public/")) {
+        optimizedUrl = optimizedUrl.replace("/storage/v1/object/public/", "/storage/v1/render/image/public/");
+      }
+      const url = new URL(optimizedUrl);
       url.searchParams.set("width", String(width));
       url.searchParams.set("format", "webp");
       url.searchParams.set("quality", "75");
