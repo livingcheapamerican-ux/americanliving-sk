@@ -25,7 +25,8 @@ function optimizeImageUrl(src, width = 800) {
     const appId = base44Match[1];
     const filename = base44Match[2];
     // Convert directly to Supabase resizing URL to bypass the Base44 redirect and enable image optimization
-    return `https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/render/image/public/base44-prod/public/${appId}/${filename}?width=${width}&format=webp&quality=75`;
+    // CRITICAL: We MUST add resize=contain to prevent Supabase from cropping the images!
+    return `https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/render/image/public/base44-prod/public/${appId}/${filename}?width=${width}&resize=contain&format=webp&quality=75`;
   }
 
   // Direct Supabase storage URL
@@ -38,6 +39,7 @@ function optimizeImageUrl(src, width = 800) {
       }
       const url = new URL(optimizedUrl);
       url.searchParams.set("width", String(width));
+      url.searchParams.set("resize", "contain"); // Prevent cropping
       url.searchParams.set("format", "webp");
       url.searchParams.set("quality", "75");
       return url.toString();
