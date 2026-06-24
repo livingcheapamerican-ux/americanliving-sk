@@ -1,0 +1,53 @@
+{
+  "name": "CompetitorWatch",
+  "type": "object",
+  "properties": {
+    "competitor_name": {
+      "type": "string",
+      "description": "N\u00e1zov konkurenta"
+    },
+    "post_link": {
+      "type": "string",
+      "description": "Link na pr\u00edspevok"
+    },
+    "post_content": {
+      "type": "string",
+      "description": "Obsah pr\u00edspevku"
+    },
+    "why_it_worked": {
+      "type": "string",
+      "description": "Pre\u010do to fungovalo"
+    },
+    "engagement_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Sk\u00f3re zapojenia (0-100)"
+    },
+    "platform": {
+      "type": "string",
+      "enum": [
+        "Facebook",
+        "Instagram",
+        "TikTok",
+        "LinkedIn",
+        "YouTube"
+      ],
+      "description": "Soci\u00e1lna platforma"
+    },
+    "date_observed": {
+      "type": "string",
+      "format": "date",
+      "description": "D\u00e1tum zaznamenania"
+    },
+    "psychological_trigger": {
+      "type": "string",
+      "description": "Ak\u00fd psychologick\u00fd princ\u00edp pou\u017eili"
+    }
+  },
+  "required": [
+    "competitor_name",
+    "post_content",
+    "why_it_worked"
+  ]
+}

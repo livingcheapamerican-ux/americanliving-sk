@@ -1,0 +1,129 @@
+{
+  "name": "SavedQuote",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "ID prihl\u00e1sen\u00e9ho pou\u017e\u00edvate\u013ea"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email pou\u017e\u00edvate\u013ea"
+    },
+    "dom_id": {
+      "type": "string",
+      "description": "ID domu"
+    },
+    "dom_nazov": {
+      "type": "string",
+      "description": "N\u00e1zov domu"
+    },
+    "dom_kod": {
+      "type": "string",
+      "description": "K\u00f3d domu napr. PH-001"
+    },
+    "konfigurator_data": {
+      "type": "object",
+      "description": "Cel\u00e9 d\u00e1ta z konfigur\u00e1tora"
+    },
+    "celkova_cena": {
+      "type": "number",
+      "description": "Celkov\u00e1 cena konfigur\u00e1cie"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "ulozena",
+        "odoslana_na_posudenie",
+        "cakajuca_na_vyjadrenie",
+        "schvalena_adminom",
+        "s_komentarmi_admina",
+        "zamietnuta_adminom",
+        "akceptovana_klientom",
+        "odmietnuta_klientom"
+      ],
+      "default": "ulozena",
+      "description": "Status cenovej ponuky"
+    },
+    "conversation_id": {
+      "type": "string",
+      "description": "ID chatovej konverz\u00e1cie k tejto ponuke"
+    },
+    "dokumenty": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "nazov": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "typ": {
+            "type": "string"
+          },
+          "velkost": {
+            "type": "number"
+          },
+          "datum": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Zoznam nahrat\u00fdch dokumentov k ponuke"
+    },
+    "uzemny_plan": {
+      "type": "object",
+      "description": "\u00dadaje o pozemku a \u00fazemnom pl\u00e1ne",
+      "properties": {
+        "subor_url": {
+          "type": "string"
+        },
+        "obec": {
+          "type": "string"
+        },
+        "katastralne_uzemie": {
+          "type": "string"
+        },
+        "cislo_pozemku": {
+          "type": "string"
+        },
+        "vymera": {
+          "type": "number"
+        },
+        "gps_lat": {
+          "type": "number"
+        },
+        "gps_lng": {
+          "type": "number"
+        },
+        "poznamka": {
+          "type": "string"
+        },
+        "analyza_status": {
+          "type": "string",
+          "enum": [
+            "nevyziadana",
+            "cakajuca",
+            "v_procese",
+            "dokoncena"
+          ],
+          "default": "nevyziadana"
+        },
+        "analyza_vysledok": {
+          "type": "string"
+        }
+      }
+    },
+    "poznamka_klienta": {
+      "type": "string",
+      "description": "Pozn\u00e1mka klienta k ponuke"
+    }
+  },
+  "required": [
+    "user_id",
+    "dom_nazov",
+    "celkova_cena"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "name": "QuoteComment",
+  "type": "object",
+  "properties": {
+    "cenova_ponuka_id": {
+      "type": "string",
+      "description": "ID cenovej ponuky ku ktorej sa koment\u00e1r vz\u0165ahuje"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "ID pou\u017e\u00edvate\u013ea ktor\u00fd koment\u00e1r pridal"
+    },
+    "user_name": {
+      "type": "string",
+      "description": "Meno pou\u017e\u00edvate\u013ea"
+    },
+    "comment_text": {
+      "type": "string",
+      "description": "Text koment\u00e1ra"
+    },
+    "is_admin_comment": {
+      "type": "boolean",
+      "default": false,
+      "description": "true ak je koment\u00e1r od admina/super admina"
+    }
+  },
+  "required": [
+    "cenova_ponuka_id",
+    "user_id",
+    "comment_text"
+  ]
+}

@@ -1,0 +1,561 @@
+{
+  "name": "Dokument",
+  "type": "object",
+  "properties": {
+    "nazov": {
+      "type": "string",
+      "description": "N\u00e1zov dokumentu"
+    },
+    "popis": {
+      "type": "string",
+      "description": "Popis dokumentu"
+    },
+    "typ": {
+      "type": "string",
+      "enum": [
+        "cenn\u00edk",
+        "technick\u00e1_\u0161pecifik\u00e1cia",
+        "n\u00e1vod",
+        "certifik\u00e1t",
+        "FAQ",
+        "blog",
+        "fotky",
+        "video",
+        "zmluva",
+        "fakt\u00fara",
+        "ponuka",
+        "objedn\u00e1vka",
+        "in\u00e9"
+      ],
+      "description": "Typ dokumentu"
+    },
+    "vyrobca": {
+      "type": "string",
+      "enum": [
+        "JAK Modules",
+        "Ticab house",
+        "Prosto House",
+        "Domki z G\u00f3r",
+        "American Living"
+      ],
+      "description": "V\u00fdrobca alebo American Living pre v\u0161eobecn\u00e9 dokumenty"
+    },
+    "model_domu": {
+      "type": "string",
+      "description": "Model domu extrahovan\u00fd z n\u00e1zvu prie\u010dinka (napr. 'Dom A1', 'Modul 50')"
+    },
+    "podpriecinok": {
+      "type": "string",
+      "description": "N\u00e1zov podprie\u010dinka (napr. 'exteri\u00e9r', 'interi\u00e9r', 'p\u00f4dorysy')"
+    },
+    "cesta_priecinku": {
+      "type": "string",
+      "description": "Cel\u00e1 cesta prie\u010dinka zo ktor\u00e9ho bol s\u00fabor nahran\u00fd"
+    },
+    "subor_url": {
+      "type": "string",
+      "description": "URL nahran\u00e9ho s\u00faboru"
+    },
+    "velkost": {
+      "type": "number",
+      "description": "Ve\u013ekos\u0165 s\u00faboru v bytes"
+    },
+    "typ_suboru": {
+      "type": "string",
+      "description": "MIME typ s\u00faboru"
+    },
+    "pre_chatbota": {
+      "type": "boolean",
+      "default": true,
+      "description": "\u010ci m\u00e1 chatbot pou\u017e\u00edva\u0165 tento dokument ako zdroj vedomost\u00ed"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tagy pre \u013eah\u0161ie vyh\u013ead\u00e1vanie"
+    },
+    "ai_generovane_tagy": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Automaticky AI generovan\u00e9 tagy"
+    },
+    "ai_generovany_popis": {
+      "type": "string",
+      "description": "AI generovan\u00fd popis dokumentu"
+    },
+    "extrahovan\u00fd_obsah": {
+      "type": "string",
+      "description": "Automaticky extrahovan\u00fd a analyzovan\u00fd obsah pre chatbota"
+    },
+    "zhrnutie": {
+      "type": "string",
+      "description": "AI generovan\u00e9 zhrnutie dokumentu (pre dlh\u0161ie dokumenty)"
+    },
+    "detailne_zhrnutie": {
+      "type": "object",
+      "description": "Pokro\u010dil\u00e9 viac\u00farov\u0148ov\u00e9 zhrnutie",
+      "properties": {
+        "kratke": {
+          "type": "string",
+          "description": "Kr\u00e1tke zhrnutie (1-2 vety)"
+        },
+        "stredne": {
+          "type": "string",
+          "description": "Stredn\u00e9 zhrnutie (100-150 slov)"
+        },
+        "klucove_body": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Zoznam k\u013e\u00fa\u010dov\u00fdch bodov"
+        }
+      }
+    },
+    "podobnost_hash": {
+      "type": "string",
+      "description": "Hash pre r\u00fdchle porovn\u00e1vanie podobnosti dokumentov"
+    },
+    "k\u013e\u00fa\u010dov\u00e9_inform\u00e1cie": {
+      "type": "object",
+      "description": "\u0160trukt\u00farovan\u00e9 inform\u00e1cie o dokumente",
+      "properties": {
+        "modely_domov": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "cenov\u00e9_inform\u00e1cie": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "technick\u00e9_\u00fadaje": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rozmery": {
+          "type": "object",
+          "properties": {
+            "sirka": {
+              "type": "string"
+            },
+            "dlzka": {
+              "type": "string"
+            },
+            "vyska": {
+              "type": "string"
+            },
+            "plocha": {
+              "type": "string"
+            }
+          }
+        },
+        "materialy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "energia": {
+          "type": "object",
+          "properties": {
+            "trieda": {
+              "type": "string"
+            },
+            "spotreba": {
+              "type": "string"
+            }
+          }
+        },
+        "zmluva_info": {
+          "type": "object",
+          "description": "Info z zml\u00fav",
+          "properties": {
+            "cislo_zmluvy": {
+              "type": "string"
+            },
+            "datum_podpisu": {
+              "type": "string"
+            },
+            "zmluvne_strany": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "predmet_zmluvy": {
+              "type": "string"
+            },
+            "platnost_od": {
+              "type": "string"
+            },
+            "platnost_do": {
+              "type": "string"
+            }
+          }
+        },
+        "faktura_info": {
+          "type": "object",
+          "description": "Info z fakt\u00far",
+          "properties": {
+            "cislo_faktury": {
+              "type": "string"
+            },
+            "datum_vystavenia": {
+              "type": "string"
+            },
+            "datum_splatnosti": {
+              "type": "string"
+            },
+            "dodavatel": {
+              "type": "string"
+            },
+            "odberatel": {
+              "type": "string"
+            },
+            "suma_bez_dph": {
+              "type": "string"
+            },
+            "dph": {
+              "type": "string"
+            },
+            "suma_s_dph": {
+              "type": "string"
+            },
+            "polozky": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "ponuka_info": {
+          "type": "object",
+          "description": "Info z pon\u00fak",
+          "properties": {
+            "cislo_ponuky": {
+              "type": "string"
+            },
+            "datum_ponuky": {
+              "type": "string"
+            },
+            "platnost_do": {
+              "type": "string"
+            },
+            "ponukane_produkty": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "celkova_cena": {
+              "type": "string"
+            }
+          }
+        },
+        "objednavka_info": {
+          "type": "object",
+          "description": "Info z objedn\u00e1vok",
+          "properties": {
+            "cislo_objednavky": {
+              "type": "string"
+            },
+            "datum_objednavky": {
+              "type": "string"
+            },
+            "pozadovany_termin": {
+              "type": "string"
+            },
+            "objednavatel": {
+              "type": "string"
+            },
+            "objednane_polozky": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "celkova_suma": {
+              "type": "string"
+            }
+          }
+        },
+        "ostatn\u00e9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "odporucana_kategoria": {
+      "type": "string",
+      "enum": [
+        "cenn\u00edk",
+        "technick\u00e1_\u0161pecifik\u00e1cia",
+        "n\u00e1vod",
+        "certifik\u00e1t",
+        "FAQ",
+        "blog",
+        "fotky",
+        "video",
+        "zmluva",
+        "fakt\u00fara",
+        "ponuka",
+        "objedn\u00e1vka",
+        "in\u00e9"
+      ],
+      "description": "AI odpor\u00fa\u010dan\u00e1 kateg\u00f3ria na z\u00e1klade obsahu"
+    },
+    "analyzovan\u00fd": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u010ci bol dokument analyzovan\u00fd AI"
+    },
+    "podrobna_analyza_datum": {
+      "type": "string",
+      "format": "date-time",
+      "description": "D\u00e1tum a \u010das dokon\u010denia podrobnej anal\u00fdzy"
+    },
+    "reorganizovany": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u010ci bol s\u00fabor reorganizovan\u00fd do spr\u00e1vneho prie\u010dinka"
+    },
+    "reorganizovany_datum": {
+      "type": "string",
+      "format": "date-time",
+      "description": "D\u00e1tum a \u010das reorganiz\u00e1cie"
+    },
+    "validovany": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u010ci pre\u0161iel valid\u00e1ciou konzistentnosti d\u00e1t"
+    },
+    "validacia_datum": {
+      "type": "string",
+      "format": "date-time",
+      "description": "D\u00e1tum valid\u00e1cie"
+    },
+    "validacia_status": {
+      "type": "string",
+      "enum": [
+        "ok",
+        "warning",
+        "error",
+        "manual_review"
+      ],
+      "description": "Status valid\u00e1cie"
+    },
+    "validacia_problemy": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Zoznam zisten\u00fdch probl\u00e9mov pri valid\u00e1cii"
+    },
+    "manualna_kontrola_potrebna": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u010ci je potrebn\u00e1 manu\u00e1lna kontrola"
+    },
+    "prod_ready": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u010ci je dokument pripraven\u00fd na produk\u010dn\u00e9 prostredie"
+    },
+    "vizualna_analyza": {
+      "type": "object",
+      "description": "AI anal\u00fdza obr\u00e1zkov - fas\u00e1dy, materi\u00e1ly, detaily, ter\u00e9n, slnko, p\u00f4dorysy",
+      "properties": {
+        "typ_obsahu": {
+          "type": "string",
+          "enum": [
+            "exterier",
+            "interier",
+            "podorys",
+            "ine"
+          ],
+          "description": "Typ obsahu na obr\u00e1zku"
+        },
+        "typ_fasady": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Typy fas\u00e1d detegovan\u00e9 na obr\u00e1zku"
+        },
+        "interier_materialy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Materi\u00e1ly interi\u00e9ru"
+        },
+        "extrier_materialy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Materi\u00e1ly exteri\u00e9ru"
+        },
+        "stresna_krytina": {
+          "type": "string",
+          "description": "Typ stre\u0161nej krytiny"
+        },
+        "slnecna_expoziacia": {
+          "type": "string",
+          "description": "Odhad slne\u010dnej expoz\u00edcie"
+        },
+        "teren_okolie": {
+          "type": "object",
+          "properties": {
+            "typ_terenu": {
+              "type": "string"
+            },
+            "okolie": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "podorys_analyza": {
+          "type": "object",
+          "properties": {
+            "je_podorys": {
+              "type": "boolean"
+            },
+            "celkove_rozmery": {
+              "type": "object",
+              "properties": {
+                "sirka": {
+                  "type": "string"
+                },
+                "dlzka": {
+                  "type": "string"
+                },
+                "zastavana_plocha": {
+                  "type": "string"
+                }
+              }
+            },
+            "miestnosti": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "uzitkova_plocha": {
+              "type": "string"
+            },
+            "terasa_balkon": {
+              "type": "string"
+            },
+            "pocet_izieb": {
+              "type": "number"
+            }
+          }
+        },
+        "technicka_analyza": {
+          "type": "string"
+        },
+        "farby": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "styl": {
+          "type": "string"
+        },
+        "vizualne_odporucania": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "fasada_materialy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "fasada_typy_drevin": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "fasada_povrchove_upravy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "fasada_prvky": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "fasada_farby": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "okna_typ": {
+          "type": "string"
+        },
+        "okna_farba": {
+          "type": "string"
+        },
+        "dvere_typ": {
+          "type": "string"
+        },
+        "dvere_farba": {
+          "type": "string"
+        },
+        "strecha_typ": {
+          "type": "string"
+        },
+        "strecha_farba": {
+          "type": "string"
+        },
+        "strecha_material": {
+          "type": "string"
+        },
+        "stav_fasady": {
+          "type": "string"
+        },
+        "spravny_vyrobca": {
+          "type": "string"
+        },
+        "spravny_model": {
+          "type": "string"
+        },
+        "specificka_kategoria": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "required": [
+    "nazov",
+    "typ",
+    "vyrobca",
+    "subor_url"
+  ]
+}

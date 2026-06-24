@@ -1,0 +1,87 @@
+{
+  "name": "GoogleDriveAutomation",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "N\u00e1zov pravidla"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "file_assignment",
+        "notification",
+        "sync_schedule"
+      ],
+      "description": "Typ automatiz\u00e1cie"
+    },
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "\u010ci je pravidlo akt\u00edvne"
+    },
+    "rule_config": {
+      "type": "object",
+      "description": "Konfigur\u00e1cia pravidla",
+      "properties": {
+        "file_name_pattern": {
+          "type": "string"
+        },
+        "file_type": {
+          "type": "string"
+        },
+        "target_folder_id": {
+          "type": "string"
+        },
+        "notification_type": {
+          "type": "string",
+          "enum": [
+            "token_expiration",
+            "connection_lost",
+            "sync_failed",
+            "sync_completed"
+          ]
+        },
+        "notification_email": {
+          "type": "string"
+        },
+        "sync_frequency": {
+          "type": "string",
+          "enum": [
+            "hourly",
+            "daily",
+            "weekly",
+            "monthly"
+          ]
+        },
+        "sync_time": {
+          "type": "string"
+        }
+      }
+    },
+    "last_run": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Posledn\u00e9 spustenie"
+    },
+    "last_run_status": {
+      "type": "string",
+      "enum": [
+        "success",
+        "failed",
+        "pending"
+      ],
+      "description": "Stav posledn\u00e9ho spustenia"
+    },
+    "run_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Po\u010det spusten\u00ed"
+    }
+  },
+  "required": [
+    "name",
+    "type",
+    "rule_config"
+  ]
+}

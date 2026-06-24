@@ -1,0 +1,105 @@
+{
+  "name": "GoogleDriveSync",
+  "type": "object",
+  "properties": {
+    "folder_id": {
+      "type": "string",
+      "description": "ID prie\u010dinka na Google Drive"
+    },
+    "folder_name": {
+      "type": "string",
+      "description": "N\u00e1zov prie\u010dinka"
+    },
+    "sync_enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "\u010ci je synchroniz\u00e1cia akt\u00edvna"
+    },
+    "sync_frequency": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "hourly",
+        "daily",
+        "weekly"
+      ],
+      "default": "daily",
+      "description": "Frekvencia synchroniz\u00e1cie"
+    },
+    "last_sync": {
+      "type": "string",
+      "format": "date-time",
+      "description": "D\u00e1tum poslednej synchroniz\u00e1cie"
+    },
+    "last_sync_status": {
+      "type": "string",
+      "enum": [
+        "success",
+        "error",
+        "in_progress",
+        "pending"
+      ],
+      "default": "pending",
+      "description": "Stav poslednej synchroniz\u00e1cie"
+    },
+    "last_sync_message": {
+      "type": "string",
+      "description": "Spr\u00e1va z poslednej synchroniz\u00e1cie"
+    },
+    "files_synced": {
+      "type": "number",
+      "default": 0,
+      "description": "Po\u010det synchronizovan\u00fdch s\u00faborov"
+    },
+    "auto_assign_dom": {
+      "type": "boolean",
+      "default": false,
+      "description": "Automaticky priradi\u0165 fotky k domu pod\u013ea n\u00e1zvu"
+    },
+    "target_dom_id": {
+      "type": "string",
+      "description": "ID cie\u013eov\u00e9ho domu pre priradenie fotiek"
+    },
+    "target_dom_nazov": {
+      "type": "string",
+      "description": "N\u00e1zov cie\u013eov\u00e9ho domu"
+    },
+    "default_typ_fotky": {
+      "type": "string",
+      "enum": [
+        "hlavny_obrazok",
+        "zakladna_konfiguracia",
+        "galeria",
+        "stare_fotky",
+        "nove_fotky",
+        "podorys"
+      ],
+      "default": "galeria",
+      "description": "Predvolen\u00fd typ pre importovan\u00e9 fotky"
+    },
+    "default_kategoria": {
+      "type": "string",
+      "enum": [
+        "exterier",
+        "interier",
+        "podorys",
+        "detail",
+        "okolie",
+        "ine"
+      ],
+      "default": "exterier",
+      "description": "Predvolen\u00e1 kateg\u00f3ria pre importovan\u00e9 fotky"
+    },
+    "synced_file_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Zoznam ID u\u017e synchronizovan\u00fdch s\u00faborov"
+    }
+  },
+  "required": [
+    "folder_id",
+    "folder_name"
+  ]
+}

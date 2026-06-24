@@ -1,0 +1,458 @@
+{
+  "name": "UserSession",
+  "type": "object",
+  "properties": {
+    "session_id": {
+      "type": "string",
+      "description": "Unik\u00e1tne ID rel\u00e1cie"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email pou\u017e\u00edvate\u013ea"
+    },
+    "user_name": {
+      "type": "string",
+      "description": "Meno pou\u017e\u00edvate\u013ea"
+    },
+    "is_authenticated": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u010ci je pou\u017e\u00edvate\u013e prihl\u00e1sen\u00fd"
+    },
+    "is_returning": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u010ci je to vracaj\u00faci sa klient"
+    },
+    "start_time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "\u010cas za\u010diatku rel\u00e1cie"
+    },
+    "end_time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "\u010cas ukon\u010denia rel\u00e1cie"
+    },
+    "duration_seconds": {
+      "type": "number",
+      "default": 0,
+      "description": "Trvanie rel\u00e1cie v sekund\u00e1ch"
+    },
+    "pages_visited": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "page_url": {
+            "type": "string"
+          },
+          "page_title": {
+            "type": "string"
+          },
+          "page_name_sk": {
+            "type": "string",
+            "description": "Slovensk\u00fd n\u00e1zov str\u00e1nky"
+          },
+          "timestamp": {
+            "type": "string"
+          },
+          "time_spent_seconds": {
+            "type": "number"
+          },
+          "scroll_depth_percentage": {
+            "type": "number"
+          },
+          "exit_type": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Detailn\u00fd zoznam nav\u0161t\u00edven\u00fdch str\u00e1nok"
+    },
+    "clicks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "element": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string"
+          },
+          "page_url": {
+            "type": "string"
+          },
+          "page_name_sk": {
+            "type": "string",
+            "description": "Slovensk\u00fd n\u00e1zov str\u00e1nky"
+          },
+          "x_position": {
+            "type": "number"
+          },
+          "y_position": {
+            "type": "number"
+          },
+          "element_id": {
+            "type": "string"
+          },
+          "element_class": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "V\u0161etky kliknutia s poz\u00edciou"
+    },
+    "scroll_events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "page_url": {
+            "type": "string"
+          },
+          "percentage": {
+            "type": "number"
+          },
+          "timestamp": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Hist\u00f3ria scrollovania"
+    },
+    "scroll_depth": {
+      "type": "object",
+      "properties": {
+        "max_percentage": {
+          "type": "number"
+        },
+        "depths_per_page": {
+          "type": "object"
+        }
+      },
+      "description": "Maxim\u00e1lna h\u013abka scrollovania"
+    },
+    "mouse_movements": {
+      "type": "number",
+      "default": 0,
+      "description": "Po\u010det pohybov my\u0161i"
+    },
+    "mouse_heatmap_data": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          },
+          "page_url": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Vzorkovanie poz\u00edci\u00ed my\u0161i pre heatmapu"
+    },
+    "form_interactions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "form_id": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string"
+          },
+          "page_url": {
+            "type": "string"
+          },
+          "fields_touched": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "completed": {
+            "type": "boolean"
+          }
+        }
+      },
+      "description": "Interakcie s formul\u00e1rmi (bez obsahu)"
+    },
+    "device_info": {
+      "type": "object",
+      "properties": {
+        "user_agent": {
+          "type": "string"
+        },
+        "screen_width": {
+          "type": "number"
+        },
+        "screen_height": {
+          "type": "number"
+        },
+        "viewport_width": {
+          "type": "number"
+        },
+        "viewport_height": {
+          "type": "number"
+        },
+        "device_type": {
+          "type": "string"
+        },
+        "browser": {
+          "type": "string"
+        },
+        "browser_version": {
+          "type": "string"
+        },
+        "os": {
+          "type": "string"
+        },
+        "os_version": {
+          "type": "string"
+        },
+        "is_mobile": {
+          "type": "boolean"
+        },
+        "is_touch": {
+          "type": "boolean"
+        },
+        "timezone": {
+          "type": "string"
+        },
+        "language": {
+          "type": "string"
+        },
+        "cookie_enabled": {
+          "type": "boolean"
+        },
+        "online": {
+          "type": "boolean"
+        }
+      },
+      "description": "Kompletn\u00e9 info o zariaden\u00ed"
+    },
+    "location_info": {
+      "type": "object",
+      "properties": {
+        "ip": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "country_code": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "timezone": {
+          "type": "string"
+        },
+        "latitude": {
+          "type": "number"
+        },
+        "longitude": {
+          "type": "number"
+        }
+      },
+      "description": "Geografick\u00e1 lok\u00e1cia (z IP, nie GPS)"
+    },
+    "referrer": {
+      "type": "string",
+      "description": "Pln\u00e1 referrer URL"
+    },
+    "referrer_domain": {
+      "type": "string",
+      "description": "Dom\u00e9na referrera"
+    },
+    "utm_params": {
+      "type": "object",
+      "properties": {
+        "utm_source": {
+          "type": "string"
+        },
+        "utm_medium": {
+          "type": "string"
+        },
+        "utm_campaign": {
+          "type": "string"
+        },
+        "utm_term": {
+          "type": "string"
+        },
+        "utm_content": {
+          "type": "string"
+        }
+      },
+      "description": "UTM parametre kampane"
+    },
+    "conversions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          },
+          "value": {
+            "type": "number"
+          }
+        }
+      },
+      "description": "Konverzie (kontakt, konfigur\u00e1tor, at\u010f.)"
+    },
+    "dom_interactions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "dom_id": {
+            "type": "string"
+          },
+          "dom_nazov": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string"
+          },
+          "duration_seconds": {
+            "type": "number"
+          }
+        }
+      },
+      "description": "Detailn\u00e9 interakcie s domami"
+    },
+    "configurator_interactions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "dom_nazov": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          },
+          "option_selected": {
+            "type": "string"
+          },
+          "price_at_time": {
+            "type": "number"
+          },
+          "timestamp": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Interakcie s konfigur\u00e1tormi"
+    },
+    "errors_encountered": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "error_message": {
+            "type": "string"
+          },
+          "error_stack": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string"
+          },
+          "page_url": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "JavaScript chyby po\u010das rel\u00e1cie"
+    },
+    "language": {
+      "type": "string",
+      "description": "Pou\u017e\u00edvan\u00fd jazyk aplik\u00e1cie"
+    },
+    "language_changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Hist\u00f3ria zmien jazyka"
+    },
+    "performance_metrics": {
+      "type": "object",
+      "properties": {
+        "avg_page_load_time": {
+          "type": "number"
+        },
+        "slow_pages": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "total_ajax_calls": {
+          "type": "number"
+        }
+      },
+      "description": "V\u00fdkonnostn\u00e9 metriky"
+    },
+    "engagement_score": {
+      "type": "number",
+      "default": 0,
+      "description": "Sk\u00f3re anga\u017eovanosti (0-100)"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "\u010ci je rel\u00e1cia akt\u00edvna"
+    },
+    "session_tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Automatick\u00e9 tagy (odrazeny, zaujaty, vracajuci_sa, konvertoval, at\u010f.)"
+    }
+  },
+  "required": [
+    "session_id",
+    "start_time"
+  ]
+}

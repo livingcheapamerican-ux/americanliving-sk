@@ -1,0 +1,53 @@
+{
+  "name": "MarketingHistory",
+  "type": "object",
+  "properties": {
+    "action_type": {
+      "type": "string",
+      "enum": [
+        "campaign_approved",
+        "weekly_plan_generated",
+        "daily_briefing",
+        "content_created",
+        "ai_analysis",
+        "strategy_approved"
+      ],
+      "description": "Typ marketingovej akcie"
+    },
+    "title": {
+      "type": "string",
+      "description": "N\u00e1zov akcie"
+    },
+    "description": {
+      "type": "string",
+      "description": "Popis akcie"
+    },
+    "data": {
+      "type": "object",
+      "description": "Kompletn\u00e9 d\u00e1ta akcie (kampa\u0148, pl\u00e1n, anal\u00fdza...)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "completed",
+        "pending",
+        "failed"
+      ],
+      "default": "completed",
+      "description": "Stav akcie"
+    },
+    "budget_allocated": {
+      "type": "number",
+      "description": "Alokovan\u00fd budget v EUR"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Kto vykonal akciu"
+    }
+  },
+  "required": [
+    "action_type",
+    "title",
+    "description"
+  ]
+}

@@ -1,0 +1,364 @@
+{
+  "name": "Dom",
+  "type": "object",
+  "properties": {
+    "nazov": {
+      "type": "string",
+      "description": "N\u00e1zov modelu domu"
+    },
+    "slug": {
+      "type": "string",
+      "description": "SEO friendly URL slug"
+    },
+    "prosto_house_kod": {
+      "type": "string",
+      "description": "\u0160peci\u00e1lne identifika\u010dn\u00e9 \u010d\u00edslo pre Prosto House domy (napr. PH-001, PH-002)"
+    },
+    "vyrobca": {
+      "type": "string",
+      "enum": [
+        "JAK Modules",
+        "Ticab house",
+        "Prosto House",
+        "Domki z G\u00f3r"
+      ],
+      "description": "V\u00fdrobca domu"
+    },
+    "typ_domu": {
+      "type": "string",
+      "enum": [
+        "modularny",
+        "mobilny",
+        "montovany"
+      ],
+      "description": "Typ domu"
+    },
+    "kategoria": {
+      "type": "string",
+      "enum": [
+        "rodinne_domy",
+        "mobilne_domy"
+      ],
+      "default": "rodinne_domy",
+      "description": "Kateg\u00f3ria domu - Rodinn\u00e9 domy alebo Mobiln\u00e9 domy"
+    },
+    "celorocny": {
+      "type": "boolean",
+      "default": true,
+      "description": "\u010ci je dom celoro\u010dn\u00fd"
+    },
+    "pocet_izieb": {
+      "type": "number",
+      "description": "Po\u010det izieb"
+    },
+    "pocet_modulov": {
+      "type": "number",
+      "description": "Po\u010det modulov (pre Ticab house)"
+    },
+    "zastavana_plocha": {
+      "type": "number",
+      "description": "Zastavana plocha v m\u00b2"
+    },
+    "uzitkova_plocha": {
+      "type": "number",
+      "description": "\u00da\u017eitkov\u00e1 plocha v m\u00b2"
+    },
+    "terasa_plocha": {
+      "type": "number",
+      "description": "Plocha terasy zahrnutej v cene v m\u00b2 (pre Ticab house modely)"
+    },
+    "zakladna_cena": {
+      "type": "number",
+      "description": "Z\u00e1kladn\u00e1 cena v EUR s DPH"
+    },
+    "konfigurator_ceny": {
+      "type": "object",
+      "description": "Ceny polo\u017eiek pre konfigur\u00e1tor Ticabhouse"
+    },
+    "konfigurator_skryte_polozky": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Zoznam ID polo\u017eiek ktor\u00e9 s\u00fa skryt\u00e9 v konfigur\u00e1tore Ticabhouse"
+    },
+    "konfigurator_custom_ceny_prosto_house": {
+      "type": "object",
+      "description": "Vlastn\u00e9 ceny polo\u017eiek pre konfigur\u00e1tor Prosto House"
+    },
+    "prosto_skryte_polozky": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Zoznam ID polo\u017eiek ktor\u00e9 s\u00fa skryt\u00e9 v konfigur\u00e1tore Prosto House"
+    },
+    "doprava_viditelna": {
+      "type": "boolean",
+      "default": true,
+      "description": "\u010ci je doprava vidite\u013en\u00e1 v konfigur\u00e1tore pre verejnos\u0165"
+    },
+    "hlavny_obrazok": {
+      "type": "string",
+      "description": "URL hlavn\u00e9ho obr\u00e1zka"
+    },
+    "zakladna_konfiguracia_obrazok": {
+      "type": "string",
+      "description": "URL obr\u00e1zka domu v z\u00e1kladnej konfigur\u00e1cii"
+    },
+    "galeria": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Gal\u00e9ria obr\u00e1zkov"
+    },
+    "stare_fotky": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Star\u00e9 fotky (arch\u00edv pred v\u00fdmenou)"
+    },
+    "nove_fotky": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Nov\u00e9 fotky na v\u00fdmenu"
+    },
+    "galerie": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "nazov": {
+            "type": "string",
+            "description": "N\u00e1zov gal\u00e9rie"
+          },
+          "typ": {
+            "type": "string",
+            "enum": [
+              "exterier_drevo_plech",
+              "exterier_murovka",
+              "interier_drevo",
+              "interier_sadrokarton"
+            ],
+            "description": "Typ gal\u00e9rie"
+          },
+          "fotky": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "URL fotiek v gal\u00e9rii"
+          }
+        }
+      },
+      "description": "Pomenovan\u00e9 gal\u00e9rie s r\u00f4znymi typmi fotiek"
+    },
+    "podorys_2d": {
+      "type": "string",
+      "description": "URL 2D p\u00f4dorysu"
+    },
+    "podorys_3d": {
+      "type": "string",
+      "description": "URL 3D p\u00f4dorysu"
+    },
+    "popis": {
+      "type": "string",
+      "description": "Detailn\u00fd popis domu (sloven\u010dina)"
+    },
+    "popis_en": {
+      "type": "string",
+      "description": "Detailn\u00fd popis domu (angli\u010dtina)"
+    },
+    "popis_hu": {
+      "type": "string",
+      "description": "Detailn\u00fd popis domu (ma\u010far\u010dina)"
+    },
+    "popis_pl": {
+      "type": "string",
+      "description": "Detailn\u00fd popis domu (po\u013e\u0161tina)"
+    },
+    "popis_uk": {
+      "type": "string",
+      "description": "Detailn\u00fd popis domu (ukrajin\u010dina)"
+    },
+    "popis_de": {
+      "type": "string",
+      "description": "Detailn\u00fd popis domu (nem\u010dina)"
+    },
+    "popis_fr": {
+      "type": "string",
+      "description": "Detailn\u00fd popis domu (franc\u00faz\u0161tina)"
+    },
+    "popis_sr": {
+      "type": "string",
+      "description": "Detailn\u00fd popis domu (srb\u010dina)"
+    },
+    "popis_hr": {
+      "type": "string",
+      "description": "Detailn\u00fd popis domu (chorv\u00e1t\u010dina)"
+    },
+    "popis_el": {
+      "type": "string",
+      "description": "Detailn\u00fd popis domu (gr\u00e9\u010dtina)"
+    },
+    "specifikacia": {
+      "type": "string",
+      "description": "Technick\u00e1 \u0161pecifik\u00e1cia domu (sloven\u010dina)"
+    },
+    "specifikacia_en": {
+      "type": "string",
+      "description": "Technick\u00e1 \u0161pecifik\u00e1cia domu (angli\u010dtina)"
+    },
+    "specifikacia_hu": {
+      "type": "string",
+      "description": "Technick\u00e1 \u0161pecifik\u00e1cia domu (ma\u010far\u010dina)"
+    },
+    "specifikacia_pl": {
+      "type": "string",
+      "description": "Technick\u00e1 \u0161pecifik\u00e1cia domu (po\u013e\u0161tina)"
+    },
+    "specifikacia_uk": {
+      "type": "string",
+      "description": "Technick\u00e1 \u0161pecifik\u00e1cia domu (ukrajin\u010dina)"
+    },
+    "specifikacia_de": {
+      "type": "string",
+      "description": "Technick\u00e1 \u0161pecifik\u00e1cia domu (nem\u010dina)"
+    },
+    "specifikacia_fr": {
+      "type": "string",
+      "description": "Technick\u00e1 \u0161pecifik\u00e1cia domu (franc\u00faz\u0161tina)"
+    },
+    "specifikacia_sr": {
+      "type": "string",
+      "description": "Technick\u00e1 \u0161pecifik\u00e1cia domu (srb\u010dina)"
+    },
+    "specifikacia_hr": {
+      "type": "string",
+      "description": "Technick\u00e1 \u0161pecifik\u00e1cia domu (chorv\u00e1t\u010dina)"
+    },
+    "specifikacia_el": {
+      "type": "string",
+      "description": "Technick\u00e1 \u0161pecifik\u00e1cia domu (gr\u00e9\u010dtina)"
+    },
+    "meta_title": {
+      "type": "string",
+      "description": "SEO meta titulok"
+    },
+    "meta_description": {
+      "type": "string",
+      "description": "SEO meta popis"
+    },
+    "podorysy": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "URLs p\u00f4dorysov domu"
+    },
+    "rozmery": {
+      "type": "object",
+      "properties": {
+        "sirka": {
+          "type": "number"
+        },
+        "dlzka": {
+          "type": "number"
+        },
+        "vyska": {
+          "type": "number"
+        }
+      },
+      "description": "Vonkaj\u0161ie rozmery v metroch"
+    },
+    "vyska_stropu": {
+      "type": "string",
+      "description": "V\u00fd\u0161ka stropu"
+    },
+    "energeticky_certifikat": {
+      "type": "boolean",
+      "default": true,
+      "description": "\u010ci je dom celoro\u010dn\u00fd"
+    },
+    "popularny": {
+      "type": "boolean",
+      "default": false,
+      "description": "Popul\u00e1rny model"
+    },
+    "poradie": {
+      "type": "number",
+      "description": "Poradie zobrazoovania"
+    },
+    "youtube_url": {
+      "type": "string",
+      "description": "URL YouTube videa"
+    },
+    "verejny": {
+      "type": "boolean",
+      "default": true,
+      "description": "\u010ci je dom vidite\u013en\u00fd pre verejnos\u0165"
+    },
+    "ai_summary": {
+      "type": "string",
+      "description": "2-vetn\u00e9 zhrnutie domu pre r\u00fdchle odpovede AI (AEO)"
+    },
+    "faq_schema_data": {
+      "type": "object",
+      "description": "Multi-language FAQ schema - kl\u00fa\u010de s\u00fa k\u00f3dy jazykov (sk, en, hu, pl, uk, de, fr, sr, hr, el)",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "faqs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "otazka": {
+                  "type": "string"
+                },
+                "odpoved": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "product_schema_json": {
+      "type": "object",
+      "description": "Auto-generated Product JSON-LD schema for SEO (0 credits)"
+    },
+    "geo_context_keywords": {
+      "type": "string",
+      "description": "K\u013e\u00fa\u010dov\u00e9 slov\u00e1 s tematickou autoritou (napr. 'montovan\u00fd dom, ekologick\u00e1 stavba, energeticky efekt\u00edvny')"
+    },
+    "images_seo_map": {
+      "type": "object",
+      "description": "Multi-language SEO alt texty pre obr\u00e1zky - kl\u00fa\u010de s\u00fa k\u00f3dy jazykov (sk, en, hu, pl, uk, de, fr, sr, hr, el), hodnoty s\u00fa objekty kde kl\u00fa\u010d je URL obr\u00e1zka a hodnota je alt text",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "string"
+        }
+      }
+    },
+    "aeo_update_pending": {
+      "type": "boolean",
+      "default": false,
+      "description": "Flag indicating that this house needs AEO regeneration in the next batch process"
+    }
+  },
+  "required": [
+    "nazov",
+    "vyrobca",
+    "typ_domu",
+    "zastavana_plocha",
+    "zakladna_cena",
+    "hlavny_obrazok"
+  ]
+}

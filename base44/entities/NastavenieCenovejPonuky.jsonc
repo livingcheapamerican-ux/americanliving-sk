@@ -1,0 +1,220 @@
+{
+  "name": "NastavenieCenovejPonuky",
+  "type": "object",
+  "properties": {
+    "nazov": {
+      "type": "string",
+      "description": "N\u00e1zov nastavenia"
+    },
+    "logo_url": {
+      "type": "string",
+      "description": "URL loga spolo\u010dnosti"
+    },
+    "nazov_spolocnosti": {
+      "type": "string",
+      "default": "American Living",
+      "description": "N\u00e1zov spolo\u010dnosti"
+    },
+    "adresa": {
+      "type": "string",
+      "description": "Adresa spolo\u010dnosti"
+    },
+    "telefon": {
+      "type": "string",
+      "default": "+421 905 138 124",
+      "description": "Telef\u00f3nne \u010d\u00edslo"
+    },
+    "email": {
+      "type": "string",
+      "default": "info@americanliving.sk",
+      "description": "Email"
+    },
+    "web": {
+      "type": "string",
+      "default": "www.americanliving.sk",
+      "description": "Webov\u00e1 str\u00e1nka"
+    },
+    "ico": {
+      "type": "string",
+      "description": "I\u010cO"
+    },
+    "dic": {
+      "type": "string",
+      "description": "DI\u010c"
+    },
+    "ic_dph": {
+      "type": "string",
+      "description": "I\u010c DPH"
+    },
+    "sablona_dizajnu": {
+      "type": "string",
+      "enum": [
+        "modern_red",
+        "elegant_blue",
+        "premium_gold",
+        "forest_green",
+        "royal_purple",
+        "ocean_teal",
+        "sunset_orange",
+        "midnight_dark",
+        "cherry_blossom",
+        "slate_professional",
+        "emerald_fresh",
+        "indigo_corporate"
+      ],
+      "default": "modern_red",
+      "description": "Vybrat\u00e1 \u0161abl\u00f3na dizajnu"
+    },
+    "farba_hlavna": {
+      "type": "string",
+      "default": "#EF4444",
+      "description": "Hlavn\u00e1 farba dizajnu"
+    },
+    "farba_sekundarna": {
+      "type": "string",
+      "default": "#dc2626",
+      "description": "Sekund\u00e1rna farba"
+    },
+    "uvodni_text": {
+      "type": "string",
+      "description": "\u00davodn\u00fd text cenovej ponuky"
+    },
+    "zavery_text": {
+      "type": "string",
+      "description": "Z\u00e1vere\u010dn\u00fd text"
+    },
+    "dalsie_texty": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pozicia": {
+            "type": "string",
+            "enum": [
+              "pred_ceny",
+              "po_cenach",
+              "pred_fotky",
+              "po_fotkach",
+              "paticka"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "\u010eal\u0161ie texty na konkr\u00e9tnych poz\u00edci\u00e1ch"
+    },
+    "mapovanie_fotiek_ticabhouse": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "galeria_typ": {
+            "type": "string",
+            "enum": [
+              "exterier_drevo_plech",
+              "exterier_murovka",
+              "interier_drevo",
+              "interier_sadrokarton"
+            ],
+            "description": "Typ gal\u00e9rie z entity Dom"
+          },
+          "galeria_nazov": {
+            "type": "string",
+            "description": "N\u00e1zov gal\u00e9rie"
+          },
+          "dlazdice_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Zoznam ID dla\u017ed\u00edc ktor\u00e9 aktivuj\u00fa t\u00fato gal\u00e9riu"
+          },
+          "dlazdica_id": {
+            "type": "string",
+            "description": "ID dla\u017edice z konfiguratora (pre non-gallery mapping)"
+          },
+          "nazov_dlazdice": {
+            "type": "string"
+          },
+          "typ_fotky": {
+            "type": "string",
+            "enum": [
+              "titulna",
+              "zakladna_konfiguracia"
+            ]
+          },
+          "popis": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Mapovanie gal\u00e9ri\u00ed a dla\u017ed\u00edc na typy fotiek pre Ticabhouse. Gal\u00e9rie sa automaticky mapuj\u00fa pod\u013ea vybran\u00fdch dla\u017ed\u00edc. 2D a 3D p\u00f4dorysy sa v\u017edy automaticky pridaj\u00fa do ka\u017edej ponuky."
+    },
+    "mapovanie_fotiek_prosto": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "dlazdica_id": {
+            "type": "string"
+          },
+          "nazov_dlazdice": {
+            "type": "string"
+          },
+          "typ_fotky": {
+            "type": "string",
+            "enum": [
+              "titulna",
+              "zakladna_konfiguracia",
+              "interier_drevo",
+              "interier_sadrokarton",
+              "galeria_exterier",
+              "galeria_interier",
+              "podorysy"
+            ]
+          },
+          "popis": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Mapovanie dla\u017ed\u00edc na typy fotiek pre Prosto House. 2D a 3D p\u00f4dorysy sa v\u017edy automaticky pridaj\u00fa."
+    },
+    "zobrazovat_preciarknute": {
+      "type": "boolean",
+      "default": true,
+      "description": "\u010ci zobrazova\u0165 pre\u010diarknut\u00e9 polo\u017eky"
+    },
+    "zobrazovat_doplnkove_sluzby": {
+      "type": "boolean",
+      "default": true,
+      "description": "\u010ci zobrazova\u0165 doplnkov\u00e9 slu\u017eby"
+    },
+    "aktivne": {
+      "type": "boolean",
+      "default": true,
+      "description": "\u010ci je toto nastavenie akt\u00edvne"
+    },
+    "automaticke_pravidla": {
+      "type": "object",
+      "description": "Automatick\u00e9 pravidl\u00e1 pre v\u00fdber fotiek",
+      "properties": {
+        "pouzit_zakladnu_konfiguraciu_ak_nie_je_omietka": {
+          "type": "boolean",
+          "default": true,
+          "description": "Ak sa nevyberie \u0161\u00fachan\u00e1 fas\u00e1da (biela omietka), pou\u017ei\u0165 fotku domu v z\u00e1kladnej konfigur\u00e1cii ako \u00favodn\u00fa fotku. Plat\u00ed pre v\u0161etk\u00fdch v\u00fdrobcov."
+        },
+        "vzdy_pridat_podorysy": {
+          "type": "boolean",
+          "default": true,
+          "description": "2D a 3D p\u00f4dorysy sa v\u017edy automaticky pridaj\u00fa do ka\u017edej ponuky"
+        }
+      }
+    }
+  },
+  "required": [
+    "nazov"
+  ]
+}

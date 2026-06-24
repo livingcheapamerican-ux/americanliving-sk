@@ -1,0 +1,74 @@
+{
+  "name": "DailyMarketingAnalysis",
+  "type": "object",
+  "properties": {
+    "analysis_date": {
+      "type": "string",
+      "format": "date",
+      "description": "D\u00e1tum anal\u00fdzy"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "running",
+        "completed",
+        "failed"
+      ],
+      "default": "running",
+      "description": "Stav anal\u00fdzy"
+    },
+    "strategic_briefing": {
+      "type": "string",
+      "description": "Strategick\u00fd br\u00edfing z Deep Think"
+    },
+    "draft_post": {
+      "type": "object",
+      "properties": {
+        "platform": {
+          "type": "string"
+        },
+        "post_text": {
+          "type": "string"
+        },
+        "target_house": {
+          "type": "string"
+        },
+        "psychological_trigger": {
+          "type": "string"
+        }
+      },
+      "description": "Predpripraven\u00fd n\u00e1vrh pr\u00edspevku"
+    },
+    "sessions_analyzed": {
+      "type": "number",
+      "default": 0,
+      "description": "Po\u010det analyzovan\u00fdch sessions"
+    },
+    "dopyty_analyzed": {
+      "type": "number",
+      "default": 0,
+      "description": "Po\u010det analyzovan\u00fdch dopytov"
+    },
+    "competitors_updated": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u010ci bola aktualizovan\u00e1 konkurencia (pondelky)"
+    },
+    "execution_time_seconds": {
+      "type": "number",
+      "description": "\u010cas vykonania v sekund\u00e1ch"
+    },
+    "error_message": {
+      "type": "string",
+      "description": "Chybov\u00e1 spr\u00e1va ak zlyhalo"
+    },
+    "notification_sent": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u010ci bola odoslan\u00e1 notifik\u00e1cia"
+    }
+  },
+  "required": [
+    "analysis_date"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "name": "GoogleDriveNotification",
+  "type": "object",
+  "properties": {
+    "notification_type": {
+      "type": "string",
+      "enum": [
+        "token_expiration",
+        "connection_lost",
+        "sync_failed",
+        "sync_completed"
+      ],
+      "description": "Typ notifik\u00e1cie"
+    },
+    "message": {
+      "type": "string",
+      "description": "Text notifik\u00e1cie"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "info",
+        "warning",
+        "error",
+        "success"
+      ],
+      "default": "info",
+      "description": "Z\u00e1va\u017enos\u0165"
+    },
+    "read": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u010ci bola notifik\u00e1cia pre\u010d\u00edtan\u00e1"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "ID pou\u017e\u00edvate\u013ea"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Dodato\u010dn\u00e9 d\u00e1ta"
+    }
+  },
+  "required": [
+    "notification_type",
+    "message",
+    "user_id"
+  ]
+}

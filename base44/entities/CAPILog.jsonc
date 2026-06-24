@@ -1,0 +1,55 @@
+{
+  "name": "CAPILog",
+  "type": "object",
+  "properties": {
+    "event_name": {
+      "type": "string",
+      "description": "N\u00e1zov eventu (PageView, Purchase, etc.)"
+    },
+    "attempt_method": {
+      "type": "string",
+      "description": "Ktor\u00e1 met\u00f3da bola pou\u017eit\u00e1 (full_payload, no_ip, minimal, etc.)"
+    },
+    "success": {
+      "type": "boolean",
+      "description": "\u010ci event pre\u0161iel \u00faspe\u0161ne"
+    },
+    "duration_ms": {
+      "type": "number",
+      "description": "Trvanie pokusu v ms"
+    },
+    "error_message": {
+      "type": "string",
+      "description": "Chybov\u00e1 spr\u00e1va ak zlyhalo"
+    },
+    "payload_size": {
+      "type": "number",
+      "description": "Ve\u013ekos\u0165 payloadu v bytoch"
+    },
+    "user_data_fields": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ak\u00e9 user_data polia boli poslan\u00e9"
+    },
+    "event_source_url": {
+      "type": "string",
+      "description": "URL kde sa event stal"
+    },
+    "total_attempts": {
+      "type": "number",
+      "description": "Ko\u013eko pokusov bolo potrebn\u00fdch"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Kedy sa to stalo"
+    }
+  },
+  "required": [
+    "event_name",
+    "success",
+    "timestamp"
+  ]
+}

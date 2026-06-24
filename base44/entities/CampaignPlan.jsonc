@@ -1,0 +1,58 @@
+{
+  "name": "CampaignPlan",
+  "type": "object",
+  "properties": {
+    "month": {
+      "type": "string",
+      "description": "Mesiac kampane (napr. 2025-01)"
+    },
+    "budget_limit": {
+      "type": "number",
+      "description": "Rozpo\u010det v EUR"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Draft",
+        "Approved",
+        "Running",
+        "Completed"
+      ],
+      "default": "Draft",
+      "description": "Stav kampane"
+    },
+    "focus_product": {
+      "type": "string",
+      "description": "ID alebo n\u00e1zov hlavn\u00e9ho produktu"
+    },
+    "weekly_schedule": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "week_number": {
+            "type": "number"
+          },
+          "posts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "budget_allocated": {
+            "type": "number"
+          }
+        }
+      },
+      "description": "T\u00fd\u017edenn\u00fd harmonogram"
+    },
+    "ai_generated_strategy": {
+      "type": "string",
+      "description": "AI vygenerovan\u00e1 strat\u00e9gia"
+    }
+  },
+  "required": [
+    "month",
+    "budget_limit"
+  ]
+}

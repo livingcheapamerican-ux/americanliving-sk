@@ -1,0 +1,31 @@
+{
+  "name": "MarketingAssets",
+  "type": "object",
+  "properties": {
+    "asset_type": {
+      "type": "string",
+      "enum": [
+        "google_drive_link",
+        "other"
+      ],
+      "default": "google_drive_link",
+      "description": "Typ assetu"
+    },
+    "link": {
+      "type": "string",
+      "description": "Odkaz na prie\u010dinok s assets"
+    },
+    "description": {
+      "type": "string",
+      "description": "Popis obsahu"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Akt\u00edvny asset"
+    }
+  },
+  "required": [
+    "link"
+  ]
+}

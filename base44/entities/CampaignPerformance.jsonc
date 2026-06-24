@@ -1,0 +1,71 @@
+{
+  "name": "CampaignPerformance",
+  "type": "object",
+  "properties": {
+    "campaign_name": {
+      "type": "string",
+      "description": "N\u00e1zov kampane"
+    },
+    "spend": {
+      "type": "number",
+      "description": "Minen\u00e9 peniaze v EUR"
+    },
+    "reach": {
+      "type": "number",
+      "description": "Dosah pr\u00edspevku"
+    },
+    "link_clicks": {
+      "type": "number",
+      "description": "Po\u010det kliknut\u00ed na link"
+    },
+    "sentiment_summary": {
+      "type": "string",
+      "description": "S\u00fahrn sentimentu z koment\u00e1rov"
+    },
+    "comments_dump": {
+      "type": "string",
+      "description": "V\u0161etky koment\u00e1re (raw text)"
+    },
+    "platform": {
+      "type": "string",
+      "enum": [
+        "Facebook",
+        "Instagram",
+        "TikTok",
+        "LinkedIn",
+        "YouTube"
+      ],
+      "description": "Platforma"
+    },
+    "post_date": {
+      "type": "string",
+      "format": "date",
+      "description": "D\u00e1tum zverejnenia"
+    },
+    "learned_insights": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "\u010co sme sa nau\u010dili z tejto kampane"
+    },
+    "positive_feedback": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Pozit\u00edvne reakcie"
+    },
+    "negative_feedback": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Negat\u00edvne reakcie"
+    }
+  },
+  "required": [
+    "campaign_name",
+    "comments_dump"
+  ]
+}

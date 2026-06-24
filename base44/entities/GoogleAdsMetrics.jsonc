@@ -1,0 +1,109 @@
+{
+  "name": "GoogleAdsMetrics",
+  "type": "object",
+  "properties": {
+    "campaign_id": {
+      "type": "string",
+      "description": "ID kampane z Google Ads"
+    },
+    "campaign_name": {
+      "type": "string",
+      "description": "N\u00e1zov kampane"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "paused",
+        "completed",
+        "removed"
+      ],
+      "default": "active"
+    },
+    "impressions": {
+      "type": "number",
+      "default": 0
+    },
+    "clicks": {
+      "type": "number",
+      "default": 0
+    },
+    "ctr": {
+      "type": "number",
+      "default": 0,
+      "description": "Click-through rate (%)"
+    },
+    "conversions": {
+      "type": "number",
+      "default": 0
+    },
+    "conversion_rate": {
+      "type": "number",
+      "default": 0
+    },
+    "cost": {
+      "type": "number",
+      "default": 0,
+      "description": "N\u00e1klady v EUR"
+    },
+    "cpc": {
+      "type": "number",
+      "default": 0,
+      "description": "Cena za kliknutie"
+    },
+    "cpa": {
+      "type": "number",
+      "default": 0,
+      "description": "Cena za konverziu"
+    },
+    "quality_score": {
+      "type": "number",
+      "description": "Quality Score (1-10)"
+    },
+    "keywords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "K\u013e\u00fa\u010dov\u00e9 slov\u00e1 kampane"
+    },
+    "top_keywords": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "keyword": {
+            "type": "string"
+          },
+          "clicks": {
+            "type": "number"
+          },
+          "impressions": {
+            "type": "number"
+          },
+          "cost": {
+            "type": "number"
+          }
+        }
+      },
+      "description": "Top v\u00fdkonn\u00e9 k\u013e\u00fa\u010dov\u00e9 slov\u00e1"
+    },
+    "date_range_start": {
+      "type": "string",
+      "format": "date"
+    },
+    "date_range_end": {
+      "type": "string",
+      "format": "date"
+    },
+    "last_synced": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Posledn\u00e1 synchroniz\u00e1cia"
+    }
+  },
+  "required": [
+    "campaign_id",
+    "campaign_name"
+  ]
+}

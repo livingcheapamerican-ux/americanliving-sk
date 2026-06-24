@@ -1,0 +1,56 @@
+{
+  "name": "Campaign",
+  "type": "object",
+  "properties": {
+    "campaign_name": {
+      "type": "string",
+      "description": "N\u00e1zov kampane"
+    },
+    "utm_source": {
+      "type": "string",
+      "description": "Zdroj kampane"
+    },
+    "utm_medium": {
+      "type": "string",
+      "description": "M\u00e9dium kampane"
+    },
+    "utm_campaign": {
+      "type": "string",
+      "description": "Kampa\u0148"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date",
+      "description": "D\u00e1tum za\u010diatku"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date",
+      "description": "D\u00e1tum konca"
+    },
+    "total_visits": {
+      "type": "number",
+      "default": 0,
+      "description": "Celkov\u00fd po\u010det n\u00e1v\u0161tev"
+    },
+    "conversions": {
+      "type": "number",
+      "default": 0,
+      "description": "Po\u010det konverzi\u00ed (kontaktn\u00fd formul\u00e1r)"
+    },
+    "conversion_rate": {
+      "type": "number",
+      "default": 0,
+      "description": "Miera konverzie (%)"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "description": "\u010ci je kampa\u0148 akt\u00edvna"
+    }
+  },
+  "required": [
+    "campaign_name",
+    "utm_campaign"
+  ]
+}

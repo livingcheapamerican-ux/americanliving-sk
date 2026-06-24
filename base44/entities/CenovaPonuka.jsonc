@@ -1,0 +1,129 @@
+{
+  "name": "CenovaPonuka",
+  "type": "object",
+  "properties": {
+    "cislo_ponuky": {
+      "type": "string",
+      "description": "\u010c\u00edslo ponuky (napr. CP-2025-001)"
+    },
+    "dom_id": {
+      "type": "string",
+      "description": "ID domu"
+    },
+    "dom_nazov": {
+      "type": "string",
+      "description": "N\u00e1zov domu"
+    },
+    "klient_meno": {
+      "type": "string",
+      "description": "Meno klienta"
+    },
+    "klient_email": {
+      "type": "string",
+      "description": "Email klienta"
+    },
+    "klient_telefon": {
+      "type": "string",
+      "description": "Telef\u00f3n klienta"
+    },
+    "klient_adresa": {
+      "type": "string",
+      "description": "Adresa klienta"
+    },
+    "konfigurator_data": {
+      "type": "object",
+      "description": "Cel\u00e9 d\u00e1ta z konfiguratora"
+    },
+    "celkova_cena": {
+      "type": "number",
+      "description": "Celkov\u00e1 cena"
+    },
+    "polozky": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "nazov": {
+            "type": "string"
+          },
+          "cena": {
+            "type": "number"
+          },
+          "vybrane": {
+            "type": "boolean"
+          },
+          "kategoria": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Zoznam polo\u017eiek s cenami"
+    },
+    "vybrane_fotky": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "URLs vybran\u00fdch fotiek"
+    },
+    "pdf_url": {
+      "type": "string",
+      "description": "URL vygenerovan\u00e9ho PDF"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "nova",
+        "odoslana",
+        "videna",
+        "akceptovana",
+        "odmietnuta",
+        "expirovala"
+      ],
+      "default": "nova",
+      "description": "Status ponuky"
+    },
+    "odoslana": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u010ci bola ponuka odoslan\u00e1"
+    },
+    "datum_odoslania": {
+      "type": "string",
+      "format": "date-time",
+      "description": "D\u00e1tum odoslania"
+    },
+    "datum_zobrazenia": {
+      "type": "string",
+      "format": "date-time",
+      "description": "D\u00e1tum prv\u00e9ho zobrazenia"
+    },
+    "datum_posledneho_followup": {
+      "type": "string",
+      "format": "date-time",
+      "description": "D\u00e1tum posledn\u00e9ho follow-up emailu"
+    },
+    "pocet_followup": {
+      "type": "number",
+      "default": 0,
+      "description": "Po\u010det odoslan\u00fdch follow-up emailov"
+    },
+    "nastavenie_id": {
+      "type": "string",
+      "description": "ID pou\u017eit\u00e9ho nastavenia"
+    },
+    "poznamka": {
+      "type": "string",
+      "description": "Intern\u00e1 pozn\u00e1mka"
+    },
+    "predajca_email": {
+      "type": "string",
+      "description": "Email zodpovedn\u00e9ho predajcu"
+    }
+  },
+  "required": [
+    "cislo_ponuky",
+    "klient_meno",
+    "klient_email"
+  ]
+}

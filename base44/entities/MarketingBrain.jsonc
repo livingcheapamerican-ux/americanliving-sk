@@ -1,0 +1,42 @@
+{
+  "name": "MarketingBrain",
+  "type": "object",
+  "properties": {
+    "category": {
+      "type": "string",
+      "enum": [
+        "Psychol\u00f3gia",
+        "Predaj",
+        "O_Firme",
+        "Lead_Generation",
+        "Social_Proof",
+        "Scarcity"
+      ],
+      "description": "Kateg\u00f3ria know-how"
+    },
+    "content_text": {
+      "type": "string",
+      "description": "Obsah pravidla alebo princ\u00edpu"
+    },
+    "urgency_level": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 10,
+      "default": 5,
+      "description": "Priorita pravidla (1-10)"
+    },
+    "tone_guideline": {
+      "type": "string",
+      "description": "Ak\u00fdm t\u00f3nom komunikova\u0165"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "description": "\u010ci je pravidlo akt\u00edvne"
+    }
+  },
+  "required": [
+    "category",
+    "content_text"
+  ]
+}

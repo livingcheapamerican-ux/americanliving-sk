@@ -1,0 +1,60 @@
+{
+  "name": "Consultation",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "ID klienta"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email klienta"
+    },
+    "user_name": {
+      "type": "string",
+      "description": "Meno klienta"
+    },
+    "saved_quote_id": {
+      "type": "string",
+      "description": "ID ulo\u017eenej cenovej ponuky (volite\u013en\u00e9)"
+    },
+    "typ": {
+      "type": "string",
+      "enum": [
+        "video_hovor",
+        "telefonicky_hovor"
+      ],
+      "description": "Typ konzult\u00e1cie"
+    },
+    "pozadovany_termin": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Po\u017eadovan\u00fd term\u00edn"
+    },
+    "telefon": {
+      "type": "string",
+      "description": "Telef\u00f3nne \u010d\u00edslo"
+    },
+    "poznamka": {
+      "type": "string",
+      "description": "Pozn\u00e1mka k rezerv\u00e1cii"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "nova",
+        "potvrdena",
+        "zrusena",
+        "dokoncena"
+      ],
+      "default": "nova",
+      "description": "Stav rezerv\u00e1cie"
+    }
+  },
+  "required": [
+    "user_id",
+    "user_email",
+    "typ",
+    "pozadovany_termin"
+  ]
+}

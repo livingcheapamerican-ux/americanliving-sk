@@ -1,0 +1,121 @@
+{
+  "name": "CampaignTemplate",
+  "type": "object",
+  "properties": {
+    "template_name": {
+      "type": "string",
+      "description": "N\u00e1zov \u0161abl\u00f3ny kampane"
+    },
+    "template_type": {
+      "type": "string",
+      "enum": [
+        "lead_generation",
+        "brand_awareness",
+        "engagement",
+        "conversion",
+        "retargeting"
+      ],
+      "description": "Typ kampane"
+    },
+    "description": {
+      "type": "string",
+      "description": "Popis \u0161abl\u00f3ny"
+    },
+    "default_budget_daily": {
+      "type": "number",
+      "description": "Predvolen\u00fd denn\u00fd rozpo\u010det v EUR"
+    },
+    "default_budget_total": {
+      "type": "number",
+      "description": "Predvolen\u00fd celkov\u00fd rozpo\u010det v EUR"
+    },
+    "default_duration_days": {
+      "type": "number",
+      "description": "Predvolen\u00e1 d\u013a\u017eka kampane v d\u0148och"
+    },
+    "targeting": {
+      "type": "object",
+      "properties": {
+        "age_range": {
+          "type": "string"
+        },
+        "locations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "interests": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "detailed_targeting": {
+          "type": "string"
+        }
+      },
+      "description": "Predvolen\u00e9 cielenie"
+    },
+    "platforms": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "Facebook",
+          "Instagram",
+          "Google Ads",
+          "TikTok",
+          "LinkedIn"
+        ]
+      },
+      "description": "Platformy pre t\u00fato \u0161abl\u00f3nu"
+    },
+    "creative_guidelines": {
+      "type": "object",
+      "properties": {
+        "visual_style": {
+          "type": "string"
+        },
+        "tone_of_voice": {
+          "type": "string"
+        },
+        "cta_type": {
+          "type": "string"
+        },
+        "format": {
+          "type": "string"
+        }
+      },
+      "description": "Pokyny pre kreat\u00edvu"
+    },
+    "ai_optimized": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u010ci bola \u0161abl\u00f3na optimalizovan\u00e1 AI"
+    },
+    "optimization_data": {
+      "type": "object",
+      "description": "AI navrhnut\u00e9 optimaliz\u00e1cie na z\u00e1klade hist\u00f3rie"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Akt\u00edvna \u0161abl\u00f3na"
+    },
+    "usage_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Ko\u013ekokr\u00e1t bola \u0161abl\u00f3na pou\u017eit\u00e1"
+    },
+    "avg_performance_score": {
+      "type": "number",
+      "default": 0,
+      "description": "Priemern\u00e9 sk\u00f3re v\u00fdkonu kampan\u00ed vytvoren\u00fdch z tejto \u0161abl\u00f3ny"
+    }
+  },
+  "required": [
+    "template_name",
+    "template_type"
+  ]
+}

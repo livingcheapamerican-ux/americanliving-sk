@@ -113,7 +113,9 @@ export default function MajorcaSummaryPanel({
               <p className="text-xs text-yellow-200">{t('missingA0Items')}</p>
             </div>
           )}
-           {/* Zvolené parametre */}
+        </div>
+
+        {/* Zvolené parametre */}
         <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700 space-y-3">
           <div className="text-xs font-bold text-indigo-400 uppercase tracking-widest border-b border-slate-700/50 pb-1.5 mb-1">
             {t('selectedParameters') || 'ZVOLENÉ PARAMETRE'}

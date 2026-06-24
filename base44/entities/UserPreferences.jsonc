@@ -1,0 +1,123 @@
+{
+  "name": "UserPreferences",
+  "type": "object",
+  "properties": {
+    "session_id": {
+      "type": "string",
+      "description": "ID session pou\u017e\u00edvate\u013ea"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email pou\u017e\u00edvate\u013ea (ak je prihl\u00e1sen\u00fd)"
+    },
+    "prehliadnute_domy": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "dom_id": {
+            "type": "string"
+          },
+          "dom_nazov": {
+            "type": "string"
+          },
+          "vyrobca": {
+            "type": "string"
+          },
+          "cas_straveny": {
+            "type": "number"
+          },
+          "timestamp": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Hist\u00f3ria prehliadnut\u00fdch domov"
+    },
+    "oblubene_vyrobcovia": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Preferovan\u00ed v\u00fdrobcovia"
+    },
+    "cenove_pasmo": {
+      "type": "object",
+      "properties": {
+        "min": {
+          "type": "number"
+        },
+        "max": {
+          "type": "number"
+        }
+      },
+      "description": "Preferovan\u00e9 cenov\u00e9 p\u00e1smo"
+    },
+    "preferovana_velkost": {
+      "type": "object",
+      "properties": {
+        "min_plocha": {
+          "type": "number"
+        },
+        "max_plocha": {
+          "type": "number"
+        },
+        "pocet_izieb": {
+          "type": "number"
+        }
+      },
+      "description": "Preferovan\u00e1 ve\u013ekos\u0165 domu"
+    },
+    "preferovany_typ": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Preferovan\u00e9 typy domov (modul\u00e1rny, mobiln\u00fd, montovan\u00fd)"
+    },
+    "konfigurator_interakcie": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "dom_id": {
+            "type": "string"
+          },
+          "konfiguracia": {
+            "type": "object"
+          },
+          "finalna_cena": {
+            "type": "number"
+          },
+          "dokoncene": {
+            "type": "boolean"
+          },
+          "timestamp": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Hist\u00f3ria interakci\u00ed s konfigur\u00e1tormi"
+    },
+    "ai_skore": {
+      "type": "number",
+      "default": 0,
+      "description": "AI sk\u00f3re z\u00e1ujmu (0-100)"
+    },
+    "odporucane_domy": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "AI odpor\u00fa\u010dan\u00e9 domy pre pou\u017e\u00edvate\u013ea"
+    },
+    "posledna_aktivita": {
+      "type": "string",
+      "format": "date-time",
+      "description": "\u010cas poslednej aktivity"
+    }
+  },
+  "required": [
+    "session_id"
+  ]
+}

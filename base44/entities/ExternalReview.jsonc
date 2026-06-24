@@ -1,0 +1,71 @@
+{
+  "name": "ExternalReview",
+  "type": "object",
+  "properties": {
+    "author_name": {
+      "type": "string",
+      "description": "Meno autora recenzie"
+    },
+    "rating": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "Hodnotenie 1-5 hviezdi\u010diek"
+    },
+    "source_label": {
+      "type": "string",
+      "description": "Zdroj recenzie (napr. 'Ticabhouse Verified Client')"
+    },
+    "dom_id": {
+      "type": "string",
+      "description": "ID domu (volite\u013en\u00e9)"
+    },
+    "content_sk": {
+      "type": "string",
+      "description": "Obsah recenzie v sloven\u010dine"
+    },
+    "content_en": {
+      "type": "string",
+      "description": "Obsah recenzie v angli\u010dtine"
+    },
+    "content_de": {
+      "type": "string",
+      "description": "Obsah recenzie v nem\u010dine"
+    },
+    "content_hu": {
+      "type": "string",
+      "description": "Obsah recenzie v ma\u010far\u010dine"
+    },
+    "content_pl": {
+      "type": "string",
+      "description": "Obsah recenzie v po\u013e\u0161tine"
+    },
+    "content_fr": {
+      "type": "string",
+      "description": "Obsah recenzie vo franc\u00faz\u0161tine"
+    },
+    "content_it": {
+      "type": "string",
+      "description": "Obsah recenzie v talian\u010dine"
+    },
+    "content_cz": {
+      "type": "string",
+      "description": "Obsah recenzie v \u010de\u0161tine"
+    },
+    "content_uk": {
+      "type": "string",
+      "description": "Obsah recenzie v ukrajin\u010dine"
+    },
+    "verified": {
+      "type": "boolean",
+      "default": true,
+      "description": "Overen\u00e1 recenzia"
+    }
+  },
+  "required": [
+    "author_name",
+    "rating",
+    "source_label",
+    "content_sk"
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "name": "MarketingNotification",
+  "type": "object",
+  "properties": {
+    "notification_type": {
+      "type": "string",
+      "enum": [
+        "low_performance",
+        "high_cpa",
+        "sync_needed",
+        "campaign_completed",
+        "budget_alert",
+        "opportunity"
+      ],
+      "description": "Typ notifik\u00e1cie"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "info",
+        "warning",
+        "error",
+        "success"
+      ],
+      "default": "info"
+    },
+    "title": {
+      "type": "string",
+      "description": "Nadpis notifik\u00e1cie"
+    },
+    "message": {
+      "type": "string",
+      "description": "Text notifik\u00e1cie"
+    },
+    "campaign_id": {
+      "type": "string",
+      "description": "ID kampane ktorej sa t\u00fdka notifik\u00e1cia"
+    },
+    "action_required": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u010ci je potrebn\u00e1 akcia u\u017e\u00edvate\u013ea"
+    },
+    "action_url": {
+      "type": "string",
+      "description": "URL kde vykona\u0165 akciu"
+    },
+    "read": {
+      "type": "boolean",
+      "default": false,
+      "description": "Pre\u010d\u00edtan\u00e1 notifik\u00e1cia"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Dodato\u010dn\u00e9 d\u00e1ta"
+    }
+  },
+  "required": [
+    "notification_type",
+    "title",
+    "message"
+  ]
+}

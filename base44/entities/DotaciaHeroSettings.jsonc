@@ -1,0 +1,37 @@
+{
+  "name": "DotaciaHeroSettings",
+  "type": "object",
+  "properties": {
+    "klic": {
+      "type": "string",
+      "description": "Unik\u00e1tny k\u013e\u00fa\u010d nastavenia (napr. 'hero_settings')"
+    },
+    "rodina_fotky": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "URL fotiek pre \u013eav\u00fa stranu (Rodina & Istota)"
+    },
+    "rodina_interval": {
+      "type": "number",
+      "default": 5000,
+      "description": "Interval slideshow pre rodinu v milisekund\u00e1ch"
+    },
+    "investor_fotky": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "URL fotiek pre prav\u00fa stranu (Invest\u00edcia & V\u00fdnos)"
+    },
+    "investor_interval": {
+      "type": "number",
+      "default": 5000,
+      "description": "Interval slideshow pre investora v milisekund\u00e1ch"
+    }
+  },
+  "required": [
+    "klic"
+  ]
+}

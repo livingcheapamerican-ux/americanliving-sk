@@ -1,0 +1,76 @@
+{
+  "name": "SEOKeyword",
+  "type": "object",
+  "properties": {
+    "keyword": {
+      "type": "string",
+      "description": "K\u013e\u00fa\u010dov\u00e9 slovo"
+    },
+    "search_volume": {
+      "type": "number",
+      "default": 0,
+      "description": "Mesa\u010dn\u00fd objem vyh\u013ead\u00e1van\u00ed"
+    },
+    "competition": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "default": "medium",
+      "description": "\u00darove\u0148 konkurencie"
+    },
+    "current_position": {
+      "type": "number",
+      "description": "Aktu\u00e1lna poz\u00edcia vo vyh\u013ead\u00e1van\u00ed"
+    },
+    "target_position": {
+      "type": "number",
+      "default": 1,
+      "description": "Cie\u013eov\u00e1 poz\u00edcia"
+    },
+    "difficulty_score": {
+      "type": "number",
+      "default": 50,
+      "description": "Obtia\u017enos\u0165 (0-100)"
+    },
+    "trend": {
+      "type": "string",
+      "enum": [
+        "up",
+        "down",
+        "stable"
+      ],
+      "default": "stable",
+      "description": "Trend vyh\u013ead\u00e1vania"
+    },
+    "target_pages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Cie\u013eov\u00e9 URL str\u00e1nok"
+    },
+    "related_keywords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "S\u00favisiace k\u013e\u00fa\u010dov\u00e9 slov\u00e1"
+    },
+    "monthly_clicks": {
+      "type": "number",
+      "default": 0,
+      "description": "Mesa\u010dn\u00e9 kliknutia"
+    },
+    "ctr": {
+      "type": "number",
+      "default": 0,
+      "description": "Click-through rate (%)"
+    }
+  },
+  "required": [
+    "keyword"
+  ]
+}

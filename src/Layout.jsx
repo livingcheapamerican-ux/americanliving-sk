@@ -623,7 +623,7 @@ function LayoutContent({ children }) {
                     key={item.path}
                     to={item.path}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
+                    className={`flex items-center gap-4 px-5 py-4 rounded-2xl font-bold transition-all text-base min-h-[56px] ${
                       isActive(item.path)
                         ? 'bg-red-600/20 text-red-500 border border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.2)]'
                         : isDotacia
@@ -648,81 +648,81 @@ function LayoutContent({ children }) {
                   <Link
                     to={createPageUrl("AdminAnalyzaDomov")}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-slate-400 hover:bg-white/10 hover:text-white transition-all"
+                    className="flex items-center gap-4 px-5 py-4 rounded-2xl font-bold text-slate-400 hover:bg-white/10 hover:text-white transition-all min-h-[52px]"
                   >
-                    <Brain className="w-5 h-5" />
+                    <Brain className="w-5 h-5 flex-shrink-0" />
                     {t('adminAIAnalysis')}
                   </Link>
                   <Link
                     to={createPageUrl("AdminSpravaDomov")}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-slate-400 hover:bg-white/10 hover:text-white transition-all"
+                    className="flex items-center gap-4 px-5 py-4 rounded-2xl font-bold text-slate-400 hover:bg-white/10 hover:text-white transition-all min-h-[52px]"
                   >
-                    <Image className="w-5 h-5" />
+                    <Image className="w-5 h-5 flex-shrink-0" />
                     {t('adminHouseManagement')}
                   </Link>
                   <Link
                     to={createPageUrl("AdminUploadFotiekDomov")}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-slate-400 hover:bg-white/10 hover:text-white transition-all"
+                    className="flex items-center gap-4 px-5 py-4 rounded-2xl font-bold text-slate-400 hover:bg-white/10 hover:text-white transition-all min-h-[52px]"
                   >
-                    <Image className="w-5 h-5" />
+                    <Image className="w-5 h-5 flex-shrink-0" />
                     {t('adminPhotoUpload')}
                   </Link>
                   <Link
                     to={createPageUrl("AdminPrekladyDomov")}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-slate-400 hover:bg-white/10 hover:text-white transition-all"
+                    className="flex items-center gap-4 px-5 py-4 rounded-2xl font-bold text-slate-400 hover:bg-white/10 hover:text-white transition-all min-h-[52px]"
                   >
-                    <FileText className="w-5 h-5" />
+                    <FileText className="w-5 h-5 flex-shrink-0" />
                     {t('adminTranslationsHouses')}
                   </Link>
                   <Link
                     to={createPageUrl("TestAnalyzaKonfiguratora")}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                    className="flex items-center gap-4 px-5 py-4 rounded-2xl font-medium text-gray-700 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-all min-h-[52px]"
                   >
-                    <Sparkles className="w-5 h-5" />
+                    <Sparkles className="w-5 h-5 flex-shrink-0" />
                     {t('adminConfiguratorAnalysis')}
                   </Link>
                   <Link
                     to={createPageUrl("RegenerujPrekladyDeFrSrHrEl")}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                    className="flex items-center gap-4 px-5 py-4 rounded-2xl font-medium text-gray-700 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-all min-h-[52px]"
                   >
-                    <Languages className="w-5 h-5" />
+                    <Languages className="w-5 h-5 flex-shrink-0" />
                     {t('adminRegenerateTranslations')}
                   </Link>
                   <Link
                     to={createPageUrl("AdminGenerujObrazkyBlogov")}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                    className="flex items-center gap-4 px-5 py-4 rounded-2xl font-medium text-gray-700 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-all min-h-[52px]"
                   >
-                    <Sparkles className="w-5 h-5" />
+                    <Sparkles className="w-5 h-5 flex-shrink-0" />
                     {t('adminBlogImageGen')}
                   </Link>
                   <Link
                     to={createPageUrl("AdminPrekladyBlogov")}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                    className="flex items-center gap-4 px-5 py-4 rounded-2xl font-medium text-gray-700 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-all min-h-[52px]"
                   >
-                    <Languages className="w-5 h-5" />
+                    <Languages className="w-5 h-5 flex-shrink-0" />
                     {t('adminBlogTranslations')}
                   </Link>
                   <Link
                     to={createPageUrl("AdminPrekladyKonfiguratora")}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                    className="flex items-center gap-4 px-5 py-4 rounded-2xl font-medium text-gray-700 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-all min-h-[52px]"
                   >
-                    <Settings className="w-5 h-5" />
+                    <Settings className="w-5 h-5 flex-shrink-0" />
                     {t('adminConfiguratorTranslations')}
                   </Link>
                   <Link
                     to={createPageUrl("AdminMigraciaFotiek")}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                    className="flex items-center gap-4 px-5 py-4 rounded-2xl font-medium text-gray-700 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-all min-h-[52px]"
                   >
-                    <Upload className="w-5 h-5" />
+                    <Upload className="w-5 h-5 flex-shrink-0" />
                     {t('adminPhotoMigration')}
                   </Link>
                   </>
@@ -732,65 +732,65 @@ function LayoutContent({ children }) {
                     <Link
                       to={createPageUrl("AdminUserManagement")}
                       onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                      className="flex items-center gap-4 px-5 py-4 rounded-2xl font-medium text-gray-700 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-all min-h-[52px]"
                     >
-                      <Users className="w-5 h-5" />
+                      <Users className="w-5 h-5 flex-shrink-0" />
                       {t('adminUserManagement')}
                     </Link>
                     <Link
                       to={createPageUrl("AdminPixelSettings")}
                       onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                      className="flex items-center gap-4 px-5 py-4 rounded-2xl font-medium text-gray-700 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-all min-h-[52px]"
                     >
-                      <Settings className="w-5 h-5" />
+                      <Settings className="w-5 h-5 flex-shrink-0" />
                       {t('adminMetaPixel')}
                     </Link>
                     <Link
                       to={createPageUrl("AdminAnalyzaSessions")}
                       onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                      className="flex items-center gap-4 px-5 py-4 rounded-2xl font-medium text-gray-700 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-all min-h-[52px]"
                     >
-                      <Activity className="w-5 h-5" />
+                      <Activity className="w-5 h-5 flex-shrink-0" />
                       {t('adminAnalyticsSessions')}
                     </Link>
                     <Link
                       to={createPageUrl("AdminSEOAnalyzer")}
                       onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                      className="flex items-center gap-4 px-5 py-4 rounded-2xl font-medium text-gray-700 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-all min-h-[52px]"
                     >
-                      <Zap className="w-5 h-5" />
+                      <Zap className="w-5 h-5 flex-shrink-0" />
                       {t('adminSEOAnalyzer')}
                     </Link>
                     <Link
                       to={createPageUrl("AIMarketingInsights")}
                       onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                      className="flex items-center gap-4 px-5 py-4 rounded-2xl font-medium text-gray-700 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-all min-h-[52px]"
                     >
-                      <Sparkles className="w-5 h-5" />
+                      <Sparkles className="w-5 h-5 flex-shrink-0" />
                       {t('adminAIMarketing')}
                     </Link>
                     <Link
                       to={createPageUrl("SocialMediaDashboard")}
                       onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                      className="flex items-center gap-4 px-5 py-4 rounded-2xl font-medium text-gray-700 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-all min-h-[52px]"
                     >
-                      <Activity className="w-5 h-5" />
+                      <Activity className="w-5 h-5 flex-shrink-0" />
                       {t('adminSocialMedia')}
                     </Link>
                     <Link
                       to={createPageUrl("AdminDokumenty")}
                       onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                      className="flex items-center gap-4 px-5 py-4 rounded-2xl font-medium text-gray-700 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-all min-h-[52px]"
                     >
-                      <FileText className="w-5 h-5" />
+                      <FileText className="w-5 h-5 flex-shrink-0" />
                       {t('adminDocuments')}
                     </Link>
                   <Link
                     to={createPageUrl("AdminGoogleDrive")}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                    className="flex items-center gap-4 px-5 py-4 rounded-2xl font-medium text-gray-700 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-all min-h-[52px]"
                   >
-                    <Settings className="w-5 h-5" />
+                    <Settings className="w-5 h-5 flex-shrink-0" />
                     {t('adminGoogleDrive')}
                   </Link>
                   </>

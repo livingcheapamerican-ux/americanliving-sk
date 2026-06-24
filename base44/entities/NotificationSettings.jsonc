@@ -1,0 +1,42 @@
+{
+  "name": "NotificationSettings",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email pou\u017e\u00edvate\u013ea"
+    },
+    "notifikovat_nove_insights": {
+      "type": "boolean",
+      "default": true,
+      "description": "Notifikova\u0165 pri nov\u00fdch insights"
+    },
+    "prah_konverzie_pokles": {
+      "type": "number",
+      "default": 20,
+      "description": "Upozorni\u0165 pri poklese konverzie o % (napr. 20%)"
+    },
+    "prah_zobrazenia_narast": {
+      "type": "number",
+      "default": 50,
+      "description": "Upozorni\u0165 pri n\u00e1raste zobrazen\u00ed o % (napr. 50%)"
+    },
+    "prah_confidence_nizke": {
+      "type": "number",
+      "default": 40,
+      "description": "Upozorni\u0165 pri confidence sk\u00f3re pod % (napr. 40%)"
+    },
+    "email_notifikacie": {
+      "type": "boolean",
+      "default": false,
+      "description": "Posiela\u0165 email notifik\u00e1cie"
+    },
+    "notifikacny_email": {
+      "type": "string",
+      "description": "Email pre notifik\u00e1cie (ak in\u00fd ako user_email)"
+    }
+  },
+  "required": [
+    "user_email"
+  ]
+}

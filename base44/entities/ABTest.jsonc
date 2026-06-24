@@ -1,0 +1,126 @@
+{
+  "name": "ABTest",
+  "type": "object",
+  "properties": {
+    "nazov": {
+      "type": "string",
+      "description": "N\u00e1zov A/B testu"
+    },
+    "typ": {
+      "type": "string",
+      "enum": [
+        "konfigurator_cta",
+        "hlavna_stranka_hero",
+        "katalog_filter",
+        "cena_zobrazenie",
+        "kontaktny_formular"
+      ],
+      "description": "Typ A/B testu"
+    },
+    "varianta_a": {
+      "type": "object",
+      "properties": {
+        "nazov": {
+          "type": "string"
+        },
+        "popis": {
+          "type": "string"
+        },
+        "config": {
+          "type": "object"
+        }
+      },
+      "description": "Konfigur\u00e1cia varianty A (kontroln\u00e1)"
+    },
+    "varianta_b": {
+      "type": "object",
+      "properties": {
+        "nazov": {
+          "type": "string"
+        },
+        "popis": {
+          "type": "string"
+        },
+        "config": {
+          "type": "object"
+        }
+      },
+      "description": "Konfigur\u00e1cia varianty B (testovan\u00e1)"
+    },
+    "aktivny": {
+      "type": "boolean",
+      "default": true,
+      "description": "\u010ci je test akt\u00edvny"
+    },
+    "zaciatok": {
+      "type": "string",
+      "format": "date-time",
+      "description": "D\u00e1tum za\u010diatku testu"
+    },
+    "koniec": {
+      "type": "string",
+      "format": "date-time",
+      "description": "D\u00e1tum ukon\u010denia testu"
+    },
+    "statistiky_a": {
+      "type": "object",
+      "properties": {
+        "zobrazenia": {
+          "type": "number",
+          "default": 0
+        },
+        "konverzie": {
+          "type": "number",
+          "default": 0
+        },
+        "miera_konverzie": {
+          "type": "number",
+          "default": 0
+        },
+        "priemerny_cas": {
+          "type": "number",
+          "default": 0
+        }
+      },
+      "description": "\u0160tatistiky varianty A"
+    },
+    "statistiky_b": {
+      "type": "object",
+      "properties": {
+        "zobrazenia": {
+          "type": "number",
+          "default": 0
+        },
+        "konverzie": {
+          "type": "number",
+          "default": 0
+        },
+        "miera_konverzie": {
+          "type": "number",
+          "default": 0
+        },
+        "priemerny_cas": {
+          "type": "number",
+          "default": 0
+        }
+      },
+      "description": "\u0160tatistiky varianty B"
+    },
+    "vitaz": {
+      "type": "string",
+      "enum": [
+        "a",
+        "b",
+        "nevyhodnotene"
+      ],
+      "default": "nevyhodnotene",
+      "description": "V\u00ed\u0165azn\u00e1 varianta"
+    }
+  },
+  "required": [
+    "nazov",
+    "typ",
+    "varianta_a",
+    "varianta_b"
+  ]
+}

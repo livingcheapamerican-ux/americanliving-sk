@@ -1,0 +1,74 @@
+{
+  "name": "SocialPostQueue",
+  "type": "object",
+  "properties": {
+    "platform": {
+      "type": "string",
+      "enum": [
+        "Facebook",
+        "Instagram",
+        "TikTok",
+        "LinkedIn",
+        "YouTube"
+      ],
+      "description": "Cie\u013eov\u00e1 platforma"
+    },
+    "post_text": {
+      "type": "string",
+      "description": "Text pr\u00edspevku"
+    },
+    "image_description": {
+      "type": "string",
+      "description": "Popis obr\u00e1zka, ktor\u00fd sa m\u00e1 pou\u017ei\u0165"
+    },
+    "psychological_trigger_used": {
+      "type": "string",
+      "description": "Pou\u017eit\u00fd psychologick\u00fd princ\u00edp"
+    },
+    "predicted_conversion_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Predikovan\u00e9 sk\u00f3re konverzie (0-100)"
+    },
+    "scheduled_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Napl\u00e1novan\u00fd d\u00e1tum zverejnenia"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Queued",
+        "Approved",
+        "Published",
+        "Rejected"
+      ],
+      "default": "Queued",
+      "description": "Stav pr\u00edspevku"
+    },
+    "target_house_id": {
+      "type": "string",
+      "description": "ID cie\u013eov\u00e9ho domu"
+    },
+    "budget_allocated": {
+      "type": "number",
+      "description": "Alokovan\u00fd budget v EUR"
+    },
+    "aida_stage": {
+      "type": "string",
+      "enum": [
+        "Attention",
+        "Interest",
+        "Desire",
+        "Action"
+      ],
+      "description": "F\u00e1za AIDA modelu"
+    }
+  },
+  "required": [
+    "platform",
+    "post_text",
+    "psychological_trigger_used"
+  ]
+}

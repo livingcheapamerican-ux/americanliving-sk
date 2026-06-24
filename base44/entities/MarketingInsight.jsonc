@@ -1,0 +1,1031 @@
+{
+  "name": "MarketingInsight",
+  "type": "object",
+  "properties": {
+    "dom_id": {
+      "type": "string",
+      "description": "ID domu, ktor\u00e9ho sa poznatok t\u00fdka"
+    },
+    "dom_nazov": {
+      "type": "string",
+      "description": "N\u00e1zov domu"
+    },
+    "vyrobca": {
+      "type": "string",
+      "description": "V\u00fdrobca domu"
+    },
+    "celkovy_zajem": {
+      "type": "object",
+      "properties": {
+        "pocet_zobrazeni": {
+          "type": "number"
+        },
+        "pocet_konfiguracii": {
+          "type": "number"
+        },
+        "priemerny_cas_na_stranke": {
+          "type": "number"
+        },
+        "miera_konverzie": {
+          "type": "number"
+        }
+      },
+      "description": "Celkov\u00e9 \u0161tatistiky z\u00e1ujmu o dom"
+    },
+    "geograficke_cielenie": {
+      "type": "object",
+      "properties": {
+        "top_krajiny": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "krajina": {
+                "type": "string"
+              },
+              "pocet_navstev": {
+                "type": "number"
+              },
+              "percento": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "top_regiony": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "region": {
+                "type": "string"
+              },
+              "pocet_navstev": {
+                "type": "number"
+              },
+              "percento": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "top_mesta": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "mesto": {
+                "type": "string"
+              },
+              "pocet_navstev": {
+                "type": "number"
+              },
+              "percento": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      },
+      "description": "Geografick\u00e9 cielenie pre reklamy"
+    },
+    "zariadenia_a_platforma": {
+      "type": "object",
+      "properties": {
+        "desktop": {
+          "type": "number"
+        },
+        "mobile": {
+          "type": "number"
+        },
+        "tablet": {
+          "type": "number"
+        },
+        "top_prehliadace": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "odporucane_platformy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Anal\u00fdza zariaden\u00ed a odpor\u00fa\u010dan\u00e9 platformy"
+    },
+    "konfigurator_preferencie": {
+      "type": "object",
+      "properties": {
+        "popularne_fasady": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string"
+              },
+              "pocet": {
+                "type": "number"
+              },
+              "percento": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "popularne_interiery": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string"
+              },
+              "pocet": {
+                "type": "number"
+              },
+              "percento": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "popularne_doplnky": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "nazov": {
+                "type": "string"
+              },
+              "pocet": {
+                "type": "number"
+              },
+              "percento": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "priemerna_koncova_cena": {
+          "type": "number"
+        },
+        "cenove_rozlozenie": {
+          "type": "object",
+          "properties": {
+            "do_50k": {
+              "type": "number"
+            },
+            "50k_100k": {
+              "type": "number"
+            },
+            "100k_150k": {
+              "type": "number"
+            },
+            "nad_150k": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "description": "Preferencie z konfigur\u00e1tora"
+    },
+    "behavioralna_segmentacia": {
+      "type": "object",
+      "properties": {
+        "typ_navstevnika": {
+          "type": "object",
+          "properties": {
+            "prieskumnici": {
+              "type": "number"
+            },
+            "rozhodovatelia": {
+              "type": "number"
+            },
+            "vracajuci_sa": {
+              "type": "number"
+            }
+          }
+        },
+        "priemerny_pocet_zobrazeni_pred_konverziou": {
+          "type": "number"
+        },
+        "oblubene_blogovepPrispevky": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ai_predikcia_konverzie": {
+          "type": "object",
+          "properties": {
+            "najpravdepodobnejsi_typ": {
+              "type": "string",
+              "enum": [
+                "prieskumnici",
+                "rozhodovatelia",
+                "vracajuci_sa"
+              ]
+            },
+            "pravdepodobnost_konverzie": {
+              "type": "number",
+              "description": "Pravdepodobnos\u0165 konverzie v % pre najpravdepodobnej\u0161\u00ed typ"
+            },
+            "dovod": {
+              "type": "string",
+              "description": "AI zd\u00f4vodnenie pre\u010do tento typ konvertuje najlep\u0161ie"
+            },
+            "odporucania_pre_typ": {
+              "type": "string",
+              "description": "\u0160pecifick\u00e9 odpor\u00fa\u010dania ako cieli\u0165 tento typ"
+            },
+            "detailna_analyza_typov": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "typ": {
+                    "type": "string"
+                  },
+                  "konverzna_pravdepodobnost": {
+                    "type": "number"
+                  },
+                  "charakteristiky": {
+                    "type": "string"
+                  },
+                  "ako_cielit": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "kreativne_varianty_pre_typy": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "typ_skupiny": {
+                    "type": "string"
+                  },
+                  "varianty": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "nazov": {
+                          "type": "string"
+                        },
+                        "obrazok_popis": {
+                          "type": "string"
+                        },
+                        "video_koncept": {
+                          "type": "string"
+                        },
+                        "nadpis": {
+                          "type": "string"
+                        },
+                        "text": {
+                          "type": "string"
+                        },
+                        "cta": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "description": "Behavior\u00e1lna anal\u00fdza n\u00e1v\u0161tevn\u00edkov"
+    },
+    "klucove_slova": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Odpor\u00fa\u010dan\u00e9 k\u013e\u00fa\u010dov\u00e9 slov\u00e1 pre reklamy"
+    },
+    "odporucania_kampane": {
+      "type": "object",
+      "properties": {
+        "facebook_instagram": {
+          "type": "object",
+          "properties": {
+            "cielova_skupina": {
+              "type": "string"
+            },
+            "zaujmy": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "umiestnenia": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "format_reklamy": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "budget_odporucanie": {
+              "type": "string"
+            }
+          }
+        },
+        "google_ads": {
+          "type": "object",
+          "properties": {
+            "typ_kampane": {
+              "type": "string"
+            },
+            "klucove_slova": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "geograficke_cielenie": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "budget_odporucanie": {
+              "type": "string"
+            }
+          }
+        },
+        "tiktok": {
+          "type": "object",
+          "properties": {
+            "vhodnost": {
+              "type": "string"
+            },
+            "dovod": {
+              "type": "string"
+            }
+          }
+        },
+        "retargeting_strategie": {
+          "type": "object",
+          "properties": {
+            "facebook_pixel": {
+              "type": "string"
+            },
+            "google_remarketing": {
+              "type": "string"
+            },
+            "lookalike_audiences": {
+              "type": "string"
+            },
+            "custom_audiences": {
+              "type": "string"
+            },
+            "email_retargeting": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "description": "Konkr\u00e9tne odpor\u00fa\u010dania pre jednotliv\u00e9 platformy"
+    },
+    "cookie_analytics": {
+      "type": "object",
+      "properties": {
+        "vracajuci_sa_pouzivatelia": {
+          "type": "number"
+        },
+        "top_preferovani_vyrobcovia": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "suvisiace_prezerane_domy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "dokoncene_konfiguracie": {
+          "type": "number"
+        },
+        "cenove_preferencie": {
+          "type": "object",
+          "properties": {
+            "do_50k": {
+              "type": "number"
+            },
+            "50k_100k": {
+              "type": "number"
+            },
+            "100k_150k": {
+              "type": "number"
+            },
+            "nad_150k": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "description": "Anal\u00fdza cookies a pou\u017e\u00edvate\u013esk\u00fdch preferenci\u00ed"
+    },
+    "ab_testing_strategie": {
+      "type": "object",
+      "properties": {
+        "facebook_testy": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "nazov": {
+                "type": "string"
+              },
+              "varianta_a": {
+                "type": "string"
+              },
+              "varianta_b": {
+                "type": "string"
+              },
+              "odporucany_budget": {
+                "type": "string"
+              },
+              "meratelne_metriky": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "hypoteza": {
+                "type": "string",
+                "description": "Konkr\u00e9tna hypot\u00e9za \u010do test overuje"
+              },
+              "ocakavany_vysledok": {
+                "type": "string",
+                "description": "Ak\u00fd v\u00fdsledok o\u010dak\u00e1vame"
+              }
+            }
+          }
+        },
+        "google_ads_testy": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "nazov": {
+                "type": "string"
+              },
+              "varianta_a": {
+                "type": "string"
+              },
+              "varianta_b": {
+                "type": "string"
+              },
+              "odporucany_budget": {
+                "type": "string"
+              },
+              "meratelne_metriky": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "hypoteza": {
+                "type": "string",
+                "description": "Konkr\u00e9tna hypot\u00e9za \u010do test overuje"
+              },
+              "ocakavany_vysledok": {
+                "type": "string",
+                "description": "Ak\u00fd v\u00fdsledok o\u010dak\u00e1vame"
+              }
+            }
+          }
+        },
+        "google_ads_texty_testy": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "nazov": {
+                "type": "string"
+              },
+              "hypoteza": {
+                "type": "string"
+              },
+              "varianta_a_nadpis": {
+                "type": "string"
+              },
+              "varianta_a_popis": {
+                "type": "string"
+              },
+              "varianta_b_nadpis": {
+                "type": "string"
+              },
+              "varianta_b_popis": {
+                "type": "string"
+              },
+              "ocakavany_vysledok": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "google_ads_kreativy_testy": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "nazov": {
+                "type": "string"
+              },
+              "hypoteza": {
+                "type": "string"
+              },
+              "varianta_a_popis": {
+                "type": "string"
+              },
+              "varianta_b_popis": {
+                "type": "string"
+              },
+              "ocakavany_vysledok": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "description": "Odpor\u00fa\u010dan\u00e9 A/B testovacie strat\u00e9gie"
+    },
+    "roi_predikcia": {
+      "type": "object",
+      "properties": {
+        "facebook_instagram_roi": {
+          "type": "object",
+          "properties": {
+            "odhadovany_dosah": {
+              "type": "number"
+            },
+            "ocakavany_ctr": {
+              "type": "number"
+            },
+            "predpokladane_konverzie": {
+              "type": "number"
+            },
+            "roi_percento": {
+              "type": "number"
+            },
+            "break_even_cas": {
+              "type": "string"
+            }
+          }
+        },
+        "google_ads_roi": {
+          "type": "object",
+          "properties": {
+            "odhadovany_dosah": {
+              "type": "number"
+            },
+            "ocakavany_ctr": {
+              "type": "number"
+            },
+            "predpokladane_konverzie": {
+              "type": "number"
+            },
+            "roi_percento": {
+              "type": "number"
+            },
+            "break_even_cas": {
+              "type": "string"
+            }
+          }
+        },
+        "celkova_roi_prognoza": {
+          "type": "string"
+        },
+        "optimalne_rozdelenie_budgetu": {
+          "type": "object",
+          "properties": {
+            "facebook_percent": {
+              "type": "number",
+              "description": "Percento celkov\u00e9ho budgetu pre Facebook/Instagram"
+            },
+            "google_ads_percent": {
+              "type": "number",
+              "description": "Percento celkov\u00e9ho budgetu pre Google Ads"
+            },
+            "zdovodnenie": {
+              "type": "string",
+              "description": "Pre\u010do toto rozdelenie maximalizuje ROI"
+            },
+            "priklad_rozdelenia": {
+              "type": "object",
+              "properties": {
+                "celkovy_budget_mesacne": {
+                  "type": "number"
+                },
+                "facebook_eur": {
+                  "type": "number"
+                },
+                "google_ads_eur": {
+                  "type": "number"
+                },
+                "ocakavane_konverzie_facebook": {
+                  "type": "number"
+                },
+                "ocakavane_konverzie_google": {
+                  "type": "number"
+                },
+                "celkove_ocakavane_roi": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        },
+        "scaling_odporucania": {
+          "type": "object",
+          "properties": {
+            "facebook_scaling": {
+              "type": "object",
+              "properties": {
+                "aktualny_budget": {
+                  "type": "string"
+                },
+                "odporucany_scaling_plan": {
+                  "type": "string"
+                },
+                "maximalne_zvysenie": {
+                  "type": "string"
+                },
+                "varovanie": {
+                  "type": "string"
+                }
+              }
+            },
+            "google_ads_scaling": {
+              "type": "object",
+              "properties": {
+                "aktualny_budget": {
+                  "type": "string"
+                },
+                "odporucany_scaling_plan": {
+                  "type": "string"
+                },
+                "maximalne_zvysenie": {
+                  "type": "string"
+                },
+                "varovanie": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "description": "Predikcia ROI pre kampane"
+    },
+    "kpi_predikcie": {
+      "type": "object",
+      "properties": {
+        "customer_lifetime_value": {
+          "type": "object",
+          "properties": {
+            "celkove_clv": {
+              "type": "number",
+              "description": "Priemern\u00e1 CLV v EUR"
+            },
+            "clv_podla_segmentu": {
+              "type": "object",
+              "properties": {
+                "prieskumnici": {
+                  "type": "number"
+                },
+                "rozhodovatelia": {
+                  "type": "number"
+                },
+                "vracajuci_sa": {
+                  "type": "number"
+                }
+              }
+            },
+            "faktory_ovplyvnujuce_clv": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "odporucania_na_zvysenie": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "customer_acquisition_cost": {
+          "type": "object",
+          "properties": {
+            "celkove_cac": {
+              "type": "number",
+              "description": "Priemern\u00e9 CAC v EUR"
+            },
+            "cac_podla_kanala": {
+              "type": "object",
+              "properties": {
+                "facebook_instagram": {
+                  "type": "number"
+                },
+                "google_ads": {
+                  "type": "number"
+                },
+                "organicky": {
+                  "type": "number"
+                }
+              }
+            },
+            "cac_trend": {
+              "type": "string",
+              "enum": [
+                "rast\u00faci",
+                "klesaj\u00faci",
+                "stabiln\u00fd"
+              ]
+            },
+            "odporucania_na_znizenie": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "optimalne_cac": {
+              "type": "number",
+              "description": "Odpor\u00fa\u010dan\u00e9 CAC pre udr\u017eate\u013en\u00fd rast"
+            }
+          }
+        },
+        "sales_volume_forecast": {
+          "type": "object",
+          "properties": {
+            "nasledujuci_mesiac": {
+              "type": "object",
+              "properties": {
+                "predpokladany_pocet_predajov": {
+                  "type": "number"
+                },
+                "dolna_hranica": {
+                  "type": "number"
+                },
+                "horna_hranica": {
+                  "type": "number"
+                },
+                "hodnota_eur": {
+                  "type": "number"
+                }
+              }
+            },
+            "nasledujuci_stvr\u0165rok": {
+              "type": "object",
+              "properties": {
+                "predpokladany_pocet_predajov": {
+                  "type": "number"
+                },
+                "dolna_hranica": {
+                  "type": "number"
+                },
+                "horna_hranica": {
+                  "type": "number"
+                },
+                "hodnota_eur": {
+                  "type": "number"
+                }
+              }
+            },
+            "sezonnost": {
+              "type": "object",
+              "properties": {
+                "najlepsie_mesiace": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "najhorsie_mesiace": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "sezonny_multiplikator": {
+                  "type": "number"
+                }
+              }
+            },
+            "vplyv_marketingu": {
+              "type": "string",
+              "description": "Ako marketingov\u00e9 aktivity ovplyvnia predaje"
+            },
+            "odporucania": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "kpi_ratio": {
+          "type": "object",
+          "properties": {
+            "clv_cac_ratio": {
+              "type": "number",
+              "description": "Pomer CLV/CAC (ide\u00e1lne >3)"
+            },
+            "hodnotenie": {
+              "type": "string",
+              "enum": [
+                "v\u00fdborn\u00e9",
+                "dobr\u00e9",
+                "priemerne",
+                "zl\u00e9",
+                "kritick\u00e9"
+              ]
+            },
+            "odporucane_kroky": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "description": "KPI predikcie a optimaliz\u00e1cie"
+    },
+    "kreativne_odporucania": {
+      "type": "object",
+      "properties": {
+        "reklamne_obrazky": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string"
+              },
+              "popis": {
+                "type": "string"
+              },
+              "odporucany_obsah": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "reklamne_texty": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "platform": {
+                "type": "string"
+              },
+              "nadpis": {
+                "type": "string"
+              },
+              "text": {
+                "type": "string"
+              },
+              "cta": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "video_koncepty": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "najuspesnejsie_prvky": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Kreat\u00edvne odpor\u00fa\u010dania pre reklamy"
+    },
+    "konkurencna_analyza": {
+      "type": "object",
+      "properties": {
+        "hlavni_konkurenti": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "nazov": {
+                "type": "string"
+              },
+              "odhadovany_budget_mesacne": {
+                "type": "string"
+              },
+              "najcastejsie_kanaly": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "typicke_kreativy": {
+                "type": "string"
+              },
+              "silne_stranky": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "slabe_stranky": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "nase_konkurencne_vyhody": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "prilezitosti": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "sumar": {
+          "type": "string"
+        }
+      }
+    },
+    "sumar_odporucani": {
+      "type": "string",
+      "description": "Zrozumite\u013en\u00fd s\u00fahrn v\u0161etk\u00fdch odpor\u00fa\u010dan\u00ed v sloven\u010dine"
+    },
+    "ai_generovany_text": {
+      "type": "string",
+      "description": "AI generovan\u00fd detailn\u00fd n\u00e1vod pre market\u00e9ra"
+    },
+    "confidence_score": {
+      "type": "number",
+      "default": 0,
+      "description": "Sk\u00f3re d\u00f4veryhodnosti (0-100) na z\u00e1klade mno\u017estva d\u00e1t"
+    },
+    "pocet_analyzovanych_sessions": {
+      "type": "number",
+      "description": "Po\u010det sessions pou\u017eit\u00fdch na anal\u00fdzu"
+    },
+    "datum_generovania": {
+      "type": "string",
+      "format": "date-time",
+      "description": "D\u00e1tum a \u010das generovania poznatku"
+    },
+    "posledna_aktualizacia": {
+      "type": "string",
+      "format": "date-time",
+      "description": "D\u00e1tum poslednej aktualiz\u00e1cie"
+    },
+    "predchadzajuce_metriky": {
+      "type": "object",
+      "properties": {
+        "pocet_zobrazeni": {
+          "type": "number"
+        },
+        "miera_konverzie": {
+          "type": "number"
+        },
+        "confidence_score": {
+          "type": "number"
+        }
+      },
+      "description": "Predch\u00e1dzaj\u00face hodnoty pre detekciu zmien"
+    }
+  },
+  "required": [
+    "dom_id",
+    "dom_nazov"
+  ]
+}

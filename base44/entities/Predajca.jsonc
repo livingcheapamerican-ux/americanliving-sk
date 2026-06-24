@@ -1,0 +1,52 @@
+{
+  "name": "Predajca",
+  "type": "object",
+  "properties": {
+    "meno": {
+      "type": "string",
+      "description": "Meno predajcu"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Email predajcu"
+    },
+    "telefon": {
+      "type": "string",
+      "description": "Telef\u00f3n predajcu"
+    },
+    "priradene_uzemie": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Zoznam miest/regi\u00f3nov (napr. Bratislava, Ko\u0161ice, \u017dilinsk\u00fd kraj)"
+    },
+    "priradene_vyrobcovia": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "JAK Modules",
+          "Ticab house",
+          "Prosto House",
+          "Domki z G\u00f3r"
+        ]
+      },
+      "description": "\u0160pecializ\u00e1cia na v\u00fdrobcov"
+    },
+    "slack_webhook": {
+      "type": "string",
+      "description": "Slack webhook URL pre notifik\u00e1cie"
+    },
+    "aktivny": {
+      "type": "boolean",
+      "default": true,
+      "description": "\u010ci je predajca akt\u00edvny"
+    }
+  },
+  "required": [
+    "meno",
+    "email"
+  ]
+}

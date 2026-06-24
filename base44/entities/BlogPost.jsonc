@@ -1,0 +1,222 @@
+{
+  "name": "BlogPost",
+  "type": "object",
+  "properties": {
+    "nazov": {
+      "type": "string",
+      "description": "N\u00e1zov \u010dl\u00e1nku (slovensky)"
+    },
+    "nazov_en": {
+      "type": "string",
+      "description": "N\u00e1zov \u010dl\u00e1nku (anglicky)"
+    },
+    "nazov_hu": {
+      "type": "string",
+      "description": "N\u00e1zov \u010dl\u00e1nku (ma\u010farsky)"
+    },
+    "nazov_pl": {
+      "type": "string",
+      "description": "N\u00e1zov \u010dl\u00e1nku (po\u013esky)"
+    },
+    "nazov_uk": {
+      "type": "string",
+      "description": "N\u00e1zov \u010dl\u00e1nku (ukrajinsky)"
+    },
+    "nazov_de": {
+      "type": "string",
+      "description": "N\u00e1zov \u010dl\u00e1nku (nemecky)"
+    },
+    "nazov_fr": {
+      "type": "string",
+      "description": "N\u00e1zov \u010dl\u00e1nku (franc\u00fazsky)"
+    },
+    "nazov_sr": {
+      "type": "string",
+      "description": "N\u00e1zov \u010dl\u00e1nku (srbsky)"
+    },
+    "nazov_hr": {
+      "type": "string",
+      "description": "N\u00e1zov \u010dl\u00e1nku (chorv\u00e1tsky)"
+    },
+    "nazov_el": {
+      "type": "string",
+      "description": "N\u00e1zov \u010dl\u00e1nku (gr\u00e9cky)"
+    },
+    "slug": {
+      "type": "string",
+      "description": "SEO friendly URL slug"
+    },
+    "perex": {
+      "type": "string",
+      "description": "Kr\u00e1tky \u00favodn\u00fd text (slovensky)"
+    },
+    "perex_en": {
+      "type": "string",
+      "description": "Kr\u00e1tky \u00favodn\u00fd text (anglicky)"
+    },
+    "perex_hu": {
+      "type": "string",
+      "description": "Kr\u00e1tky \u00favodn\u00fd text (ma\u010farsky)"
+    },
+    "perex_pl": {
+      "type": "string",
+      "description": "Kr\u00e1tky \u00favodn\u00fd text (po\u013esky)"
+    },
+    "perex_uk": {
+      "type": "string",
+      "description": "Kr\u00e1tky \u00favodn\u00fd text (ukrajinsky)"
+    },
+    "perex_de": {
+      "type": "string",
+      "description": "Kr\u00e1tky \u00favodn\u00fd text (nemecky)"
+    },
+    "perex_fr": {
+      "type": "string",
+      "description": "Kr\u00e1tky \u00favodn\u00fd text (franc\u00fazsky)"
+    },
+    "perex_sr": {
+      "type": "string",
+      "description": "Kr\u00e1tky \u00favodn\u00fd text (srbsky)"
+    },
+    "perex_hr": {
+      "type": "string",
+      "description": "Kr\u00e1tky \u00favodn\u00fd text (chorv\u00e1tsky)"
+    },
+    "perex_el": {
+      "type": "string",
+      "description": "Kr\u00e1tky \u00favodn\u00fd text (gr\u00e9cky)"
+    },
+    "obsah": {
+      "type": "string",
+      "description": "Obsah \u010dl\u00e1nku v markdown (slovensky)"
+    },
+    "obsah_en": {
+      "type": "string",
+      "description": "Obsah \u010dl\u00e1nku v markdown (anglicky)"
+    },
+    "obsah_hu": {
+      "type": "string",
+      "description": "Obsah \u010dl\u00e1nku v markdown (ma\u010farsky)"
+    },
+    "obsah_pl": {
+      "type": "string",
+      "description": "Obsah \u010dl\u00e1nku v markdown (po\u013esky)"
+    },
+    "obsah_uk": {
+      "type": "string",
+      "description": "Obsah \u010dl\u00e1nku v markdown (ukrajinsky)"
+    },
+    "obsah_de": {
+      "type": "string",
+      "description": "Obsah \u010dl\u00e1nku v markdown (nemecky)"
+    },
+    "obsah_fr": {
+      "type": "string",
+      "description": "Obsah \u010dl\u00e1nku v markdown (franc\u00fazsky)"
+    },
+    "obsah_sr": {
+      "type": "string",
+      "description": "Obsah \u010dl\u00e1nku v markdown (srbsky)"
+    },
+    "obsah_hr": {
+      "type": "string",
+      "description": "Obsah \u010dl\u00e1nku v markdown (chorv\u00e1tsky)"
+    },
+    "obsah_el": {
+      "type": "string",
+      "description": "Obsah \u010dl\u00e1nku v markdown (gr\u00e9cky)"
+    },
+    "titulny_obrazok": {
+      "type": "string",
+      "description": "URL tituln\u00e9ho obr\u00e1zka"
+    },
+    "autor": {
+      "type": "string",
+      "description": "Meno autora",
+      "default": "American Living"
+    },
+    "kategoria": {
+      "type": "string",
+      "enum": [
+        "novinky",
+        "tipy",
+        "realizacie",
+        "technologie"
+      ],
+      "default": "novinky",
+      "description": "Kateg\u00f3ria \u010dl\u00e1nku"
+    },
+    "tagy": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tagy pre vyh\u013ead\u00e1vanie"
+    },
+    "publikovany": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u010ci je \u010dl\u00e1nok publikovan\u00fd"
+    },
+    "datum_publikacie": {
+      "type": "string",
+      "format": "date-time",
+      "description": "D\u00e1tum publik\u00e1cie"
+    },
+    "pocet_zobrazeni": {
+      "type": "number",
+      "default": 0,
+      "description": "Po\u010det zobrazen\u00ed \u010dl\u00e1nku"
+    },
+    "meta_title": {
+      "type": "string",
+      "description": "SEO meta titulok"
+    },
+    "meta_description": {
+      "type": "string",
+      "description": "SEO meta popis"
+    },
+    "prelozene": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u010ci je \u010dl\u00e1nok prelo\u017een\u00fd do v\u0161etk\u00fdch jazykov"
+    },
+    "ai_summary": {
+      "type": "string",
+      "description": "2-vetn\u00e9 zhrnutie \u010dl\u00e1nku pre r\u00fdchle odpovede AI (AEO)"
+    },
+    "faq_schema_data": {
+      "type": "object",
+      "description": "Multi-language FAQ schema - k\u013e\u00fa\u010de s\u00fa k\u00f3dy jazykov (sk, en, hu, pl, uk, de, fr, sr, hr, el)",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "faqs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "otazka": {
+                  "type": "string"
+                },
+                "odpoved": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "geo_context_keywords": {
+      "type": "string",
+      "description": "K\u013e\u00fa\u010dov\u00e9 slov\u00e1 s tematickou autoritou (napr. 'montovan\u00fd dom, ekologick\u00e1 stavba, energeticky efekt\u00edvny')"
+    }
+  },
+  "required": [
+    "nazov",
+    "perex",
+    "obsah",
+    "titulny_obrazok"
+  ]
+}

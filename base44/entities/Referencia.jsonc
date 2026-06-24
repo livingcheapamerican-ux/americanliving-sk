@@ -1,0 +1,48 @@
+{
+  "name": "Referencia",
+  "type": "object",
+  "properties": {
+    "meno_klienta": {
+      "type": "string",
+      "description": "Meno klienta (m\u00f4\u017ee by\u0165 len krstn\u00e9 meno)"
+    },
+    "lokacia": {
+      "type": "string",
+      "description": "Lokalita realiz\u00e1cie"
+    },
+    "text_referencie": {
+      "type": "string",
+      "description": "Text referencie od klienta"
+    },
+    "hodnotenie": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "Hodnotenie 1-5"
+    },
+    "obrazky": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Fotografie realiz\u00e1cie"
+    },
+    "zobrazovat": {
+      "type": "boolean",
+      "default": true,
+      "description": "\u010ci sa m\u00e1 zobrazova\u0165 na webe"
+    },
+    "images_seo_map": {
+      "type": "object",
+      "description": "Mapa SEO deskript\u00edvnych textov pre obr\u00e1zky. K\u013e\u00fa\u010dom je URL obr\u00e1zka, hodnotou je AI-generovan\u00fd alt text.",
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "meno_klienta",
+    "text_referencie",
+    "hodnotenie"
+  ]
+}

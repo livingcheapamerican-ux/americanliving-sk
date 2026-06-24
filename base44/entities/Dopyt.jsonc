@@ -1,0 +1,68 @@
+{
+  "name": "Dopyt",
+  "type": "object",
+  "properties": {
+    "meno": {
+      "type": "string",
+      "description": "Meno a priezvisko klienta"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Email klienta"
+    },
+    "telefon": {
+      "type": "string",
+      "description": "Telef\u00f3nne \u010d\u00edslo"
+    },
+    "typ_dopytu": {
+      "type": "string",
+      "enum": [
+        "konfigurator",
+        "vseobecny",
+        "detail_domu"
+      ],
+      "description": "Typ dopytu"
+    },
+    "dom_id": {
+      "type": "string",
+      "description": "ID domu, ak sa t\u00fdka konkr\u00e9tneho modelu"
+    },
+    "konfiguracny_kod": {
+      "type": "string",
+      "description": "K\u00f3d z konfigur\u00e1tora"
+    },
+    "poznamka": {
+      "type": "string",
+      "description": "Dopl\u0148uj\u00faca pozn\u00e1mka od klienta"
+    },
+    "forma_financovania": {
+      "type": "string",
+      "enum": [
+        "Hotovos\u0165",
+        "\u00daver - vybavujem si s\u00e1m",
+        "\u00daver vybavte mi"
+      ],
+      "description": "Forma financovania"
+    },
+    "typ_grantu": {
+      "type": "string",
+      "enum": [
+        "Program AMBASSADOR - Dotovan\u00e9 b\u00fdvanie pre rodiny",
+        "Program INVESTOR & PARTNER"
+      ],
+      "description": "Typ grantu - Ambassador alebo Investor"
+    },
+    "spracovany": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u010ci bol dopyt spracovan\u00fd"
+    }
+  },
+  "required": [
+    "meno",
+    "email",
+    "telefon",
+    "typ_dopytu"
+  ]
+}

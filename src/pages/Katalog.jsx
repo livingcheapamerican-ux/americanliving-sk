@@ -560,7 +560,7 @@ export default function Katalog() {
       {/* Header */}
       <section className="bg-slate-900/5 dark:bg-slate-900/40 border-b border-border/60 py-8 sm:py-16">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col lg:flex-row gap-4 lg:gap-8 items-start lg:items-center">
+          <div className="flex flex-col gap-4 lg:gap-8 lg:flex-row lg:items-center">
             {/* Ľavá časť - Hlavný nadpis a popis */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}

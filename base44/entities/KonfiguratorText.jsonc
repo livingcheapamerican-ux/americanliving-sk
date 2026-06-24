@@ -1,0 +1,238 @@
+{
+  "name": "KonfiguratorText",
+  "type": "object",
+  "properties": {
+    "vyrobca": {
+      "type": "string",
+      "enum": [
+        "Prosto House",
+        "Ticab house",
+        "JAK Modules",
+        "Domki z G\u00f3r"
+      ],
+      "description": "V\u00fdrobca domu"
+    },
+    "polozka_id": {
+      "type": "string",
+      "description": "Identifik\u00e1tor polo\u017eky v konfigur\u00e1tore"
+    },
+    "nazov": {
+      "type": "string",
+      "description": "N\u00e1zov polo\u017eky (slovensky)"
+    },
+    "nazov_en": {
+      "type": "string",
+      "description": "N\u00e1zov polo\u017eky (anglicky)"
+    },
+    "nazov_hu": {
+      "type": "string",
+      "description": "N\u00e1zov polo\u017eky (ma\u010farsky)"
+    },
+    "nazov_pl": {
+      "type": "string",
+      "description": "N\u00e1zov polo\u017eky (po\u013esky)"
+    },
+    "nazov_uk": {
+      "type": "string",
+      "description": "N\u00e1zov polo\u017eky (ukrajinsky)"
+    },
+    "nazov_de": {
+      "type": "string",
+      "description": "N\u00e1zov polo\u017eky (nemecky)"
+    },
+    "nazov_fr": {
+      "type": "string",
+      "description": "N\u00e1zov polo\u017eky (franc\u00fazsky)"
+    },
+    "nazov_sr": {
+      "type": "string",
+      "description": "N\u00e1zov polo\u017eky (srbsky)"
+    },
+    "nazov_hr": {
+      "type": "string",
+      "description": "N\u00e1zov polo\u017eky (chorv\u00e1tsky)"
+    },
+    "nazov_el": {
+      "type": "string",
+      "description": "N\u00e1zov polo\u017eky (gr\u00e9cky)"
+    },
+    "podnadpis": {
+      "type": "string",
+      "description": "Kr\u00e1tky podnadpis (slovensky)"
+    },
+    "podnadpis_en": {
+      "type": "string",
+      "description": "Kr\u00e1tky podnadpis (anglicky)"
+    },
+    "podnadpis_hu": {
+      "type": "string",
+      "description": "Kr\u00e1tky podnadpis (ma\u010farsky)"
+    },
+    "podnadpis_pl": {
+      "type": "string",
+      "description": "Kr\u00e1tky podnadpis (po\u013esky)"
+    },
+    "podnadpis_uk": {
+      "type": "string",
+      "description": "Kr\u00e1tky podnadpis (ukrajinsky)"
+    },
+    "podnadpis_de": {
+      "type": "string",
+      "description": "Kr\u00e1tky podnadpis (nemecky)"
+    },
+    "podnadpis_fr": {
+      "type": "string",
+      "description": "Kr\u00e1tky podnadpis (franc\u00fazsky)"
+    },
+    "podnadpis_sr": {
+      "type": "string",
+      "description": "Kr\u00e1tky podnadpis (srbsky)"
+    },
+    "podnadpis_hr": {
+      "type": "string",
+      "description": "Kr\u00e1tky podnadpis (chorv\u00e1tsky)"
+    },
+    "podnadpis_el": {
+      "type": "string",
+      "description": "Kr\u00e1tky podnadpis (gr\u00e9cky)"
+    },
+    "dlhy_popis": {
+      "type": "string",
+      "description": "Dlh\u00fd popis \u010do polo\u017eka zah\u0155\u0148a (slovensky)"
+    },
+    "dlhy_popis_en": {
+      "type": "string",
+      "description": "Dlh\u00fd popis (anglicky)"
+    },
+    "dlhy_popis_hu": {
+      "type": "string",
+      "description": "Dlh\u00fd popis (ma\u010farsky)"
+    },
+    "dlhy_popis_pl": {
+      "type": "string",
+      "description": "Dlh\u00fd popis (po\u013esky)"
+    },
+    "dlhy_popis_uk": {
+      "type": "string",
+      "description": "Dlh\u00fd popis (ukrajinsky)"
+    },
+    "dlhy_popis_de": {
+      "type": "string",
+      "description": "Dlh\u00fd popis (nemecky)"
+    },
+    "dlhy_popis_fr": {
+      "type": "string",
+      "description": "Dlh\u00fd popis (franc\u00fazsky)"
+    },
+    "dlhy_popis_sr": {
+      "type": "string",
+      "description": "Dlh\u00fd popis (srbsky)"
+    },
+    "dlhy_popis_hr": {
+      "type": "string",
+      "description": "Dlh\u00fd popis (chorv\u00e1tsky)"
+    },
+    "dlhy_popis_el": {
+      "type": "string",
+      "description": "Dlh\u00fd popis (gr\u00e9cky)"
+    },
+    "poznamky": {
+      "type": "string",
+      "description": "Pozn\u00e1mky a upozornenia (slovensky)"
+    },
+    "poznamky_en": {
+      "type": "string",
+      "description": "Pozn\u00e1mky (anglicky)"
+    },
+    "poznamky_hu": {
+      "type": "string",
+      "description": "Pozn\u00e1mky (ma\u010farsky)"
+    },
+    "poznamky_pl": {
+      "type": "string",
+      "description": "Pozn\u00e1mky (po\u013esky)"
+    },
+    "poznamky_uk": {
+      "type": "string",
+      "description": "Pozn\u00e1mky (ukrajinsky)"
+    },
+    "poznamky_de": {
+      "type": "string",
+      "description": "Pozn\u00e1mky (nemecky)"
+    },
+    "poznamky_fr": {
+      "type": "string",
+      "description": "Pozn\u00e1mky (franc\u00fazsky)"
+    },
+    "poznamky_sr": {
+      "type": "string",
+      "description": "Pozn\u00e1mky (srbsky)"
+    },
+    "poznamky_hr": {
+      "type": "string",
+      "description": "Pozn\u00e1mky (chorv\u00e1tsky)"
+    },
+    "poznamky_el": {
+      "type": "string",
+      "description": "Pozn\u00e1mky (gr\u00e9cky)"
+    },
+    "kategoria": {
+      "type": "string",
+      "description": "Kateg\u00f3ria polo\u017eky"
+    },
+    "tooltip": {
+      "type": "string",
+      "description": "Generovan\u00fd tooltip text (slovensky)"
+    },
+    "tooltip_en": {
+      "type": "string",
+      "description": "Tooltip (anglicky)"
+    },
+    "tooltip_hu": {
+      "type": "string",
+      "description": "Tooltip (ma\u010farsky)"
+    },
+    "tooltip_pl": {
+      "type": "string",
+      "description": "Tooltip (po\u013esky)"
+    },
+    "tooltip_uk": {
+      "type": "string",
+      "description": "Tooltip (ukrajinsky)"
+    },
+    "tooltip_de": {
+      "type": "string",
+      "description": "Tooltip (nemecky)"
+    },
+    "tooltip_fr": {
+      "type": "string",
+      "description": "Tooltip (franc\u00fazsky)"
+    },
+    "tooltip_sr": {
+      "type": "string",
+      "description": "Tooltip (srbsky)"
+    },
+    "tooltip_hr": {
+      "type": "string",
+      "description": "Tooltip (chorv\u00e1tsky)"
+    },
+    "tooltip_el": {
+      "type": "string",
+      "description": "Tooltip (gr\u00e9cky)"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "URL obr\u00e1zka pre t\u00fato polo\u017eku konfiguratora"
+    },
+    "prelozene": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u010ci je polo\u017eka prelo\u017een\u00e1 do v\u0161etk\u00fdch jazykov"
+    }
+  },
+  "required": [
+    "vyrobca",
+    "polozka_id",
+    "nazov"
+  ]
+}

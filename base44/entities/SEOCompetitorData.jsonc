@@ -1,0 +1,115 @@
+{
+  "name": "SEOCompetitorData",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Reference to SEOProject"
+    },
+    "average_word_count": {
+      "type": "number",
+      "description": "Average word count from competitors"
+    },
+    "recommended_keywords": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "keyword": {
+            "type": "string"
+          },
+          "target_count": {
+            "type": "number"
+          }
+        }
+      },
+      "description": "List of recommended keywords with target counts"
+    },
+    "average_headings": {
+      "type": "number",
+      "description": "Average number of headings from competitors"
+    },
+    "top_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "URLs of top ranking pages (for future API integration)"
+    },
+    "top_competitors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "rank": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "meta_title": {
+            "type": "string"
+          },
+          "meta_description": {
+            "type": "string"
+          },
+          "h1_tag": {
+            "type": "string"
+          },
+          "word_count": {
+            "type": "number"
+          },
+          "heading_count": {
+            "type": "number"
+          },
+          "cta_buttons": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "strengths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "opportunities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "estimated_monthly_traffic": {
+            "type": "number",
+            "description": "Estimated monthly organic traffic"
+          },
+          "estimated_backlinks": {
+            "type": "number",
+            "description": "Estimated number of backlinks"
+          },
+          "domain_authority": {
+            "type": "number",
+            "description": "Domain authority score (0-100)"
+          },
+          "avg_time_on_page": {
+            "type": "number",
+            "description": "Average time on page in seconds"
+          },
+          "bounce_rate": {
+            "type": "number",
+            "description": "Bounce rate percentage"
+          },
+          "engagement_score": {
+            "type": "number",
+            "description": "Overall engagement score (0-100)"
+          }
+        }
+      },
+      "description": "Detailed analysis of top 3 competitors"
+    }
+  },
+  "required": [
+    "project_id"
+  ]
+}

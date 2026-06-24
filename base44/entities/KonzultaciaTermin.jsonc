@@ -1,0 +1,70 @@
+{
+  "name": "KonzultaciaTermin",
+  "type": "object",
+  "properties": {
+    "klient_meno": {
+      "type": "string",
+      "description": "Meno klienta"
+    },
+    "klient_email": {
+      "type": "string",
+      "format": "email",
+      "description": "Email klienta"
+    },
+    "klient_telefon": {
+      "type": "string",
+      "description": "Telef\u00f3n klienta"
+    },
+    "datum_cas": {
+      "type": "string",
+      "format": "date-time",
+      "description": "D\u00e1tum a \u010das konzult\u00e1cie"
+    },
+    "typ_konzultacie": {
+      "type": "string",
+      "enum": [
+        "online",
+        "osobne",
+        "telefon"
+      ],
+      "default": "online",
+      "description": "Typ konzult\u00e1cie"
+    },
+    "specialista": {
+      "type": "string",
+      "enum": [
+        "financny_poradca",
+        "technicky_poradca",
+        "legislativny_poradca",
+        "vseobecny"
+      ],
+      "default": "vseobecny",
+      "description": "Typ \u0161pecialistu"
+    },
+    "poznamka": {
+      "type": "string",
+      "description": "Pozn\u00e1mka klienta"
+    },
+    "dom_id": {
+      "type": "string",
+      "description": "ID domu o ktor\u00fd m\u00e1 z\u00e1ujem"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "naplanovana",
+        "potvrdena",
+        "zrusena",
+        "dokoncena"
+      ],
+      "default": "naplanovana",
+      "description": "Stav konzult\u00e1cie"
+    }
+  },
+  "required": [
+    "klient_meno",
+    "klient_email",
+    "datum_cas",
+    "typ_konzultacie"
+  ]
+}

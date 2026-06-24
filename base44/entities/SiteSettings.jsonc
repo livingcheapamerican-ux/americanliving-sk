@@ -1,0 +1,74 @@
+{
+  "name": "SiteSettings",
+  "type": "object",
+  "properties": {
+    "klic": {
+      "type": "string",
+      "description": "Jedine\u010dn\u00fd k\u013e\u00fa\u010d nastavenia (napr. 'hero_settings')"
+    },
+    "hero_images": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Zoznam URL obr\u00e1zkov pre hero carousel"
+    },
+    "hero_interval": {
+      "type": "number",
+      "default": 5000,
+      "description": "Interval prep\u00ednania obr\u00e1zkov v milisekund\u00e1ch"
+    },
+    "christmas_enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "\u010ci s\u00fa viano\u010dn\u00e9 efekty zapnut\u00e9"
+    },
+    "watermark_enabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u010ci je watermark zapnut\u00fd na fotk\u00e1ch v gal\u00e9rii detailu domu"
+    },
+    "watermark_enabled_catalog": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u010ci je watermark zapnut\u00fd na fotk\u00e1ch v katal\u00f3gu domov"
+    },
+    "watermark_text": {
+      "type": "string",
+      "default": "American Living",
+      "description": "Text watermarku"
+    },
+    "watermark_position": {
+      "type": "string",
+      "enum": [
+        "top-left",
+        "top-right",
+        "bottom-left",
+        "bottom-right",
+        "center"
+      ],
+      "default": "bottom-right",
+      "description": "Poz\u00edcia watermarku"
+    },
+    "watermark_opacity": {
+      "type": "number",
+      "default": 0.3,
+      "description": "Prieh\u013eadnos\u0165 watermarku (0-1)"
+    },
+    "watermark_size": {
+      "type": "string",
+      "enum": [
+        "small",
+        "medium",
+        "large",
+        "xlarge",
+        "xxlarge"
+      ],
+      "default": "medium",
+      "description": "Ve\u013ekos\u0165 watermarku"
+    }
+  },
+  "required": [
+    "klic"
+  ]
+}

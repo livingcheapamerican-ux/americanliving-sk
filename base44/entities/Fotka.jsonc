@@ -1,0 +1,95 @@
+{
+  "name": "Fotka",
+  "type": "object",
+  "properties": {
+    "nazov": {
+      "type": "string",
+      "description": "N\u00e1zov fotky"
+    },
+    "popis": {
+      "type": "string",
+      "description": "Popis fotky"
+    },
+    "url": {
+      "type": "string",
+      "description": "URL nahranej fotky"
+    },
+    "typ_fotky": {
+      "type": "string",
+      "enum": [
+        "hlavny_obrazok",
+        "zakladna_konfiguracia",
+        "galeria",
+        "stare_fotky",
+        "nove_fotky",
+        "podorys"
+      ],
+      "default": "galeria",
+      "description": "Typ fotky"
+    },
+    "kategoria": {
+      "type": "string",
+      "enum": [
+        "exterier",
+        "interier",
+        "podorys",
+        "detail",
+        "okolie",
+        "ine"
+      ],
+      "default": "exterier",
+      "description": "Kateg\u00f3ria obsahu fotky"
+    },
+    "tagy": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "K\u013e\u00fa\u010dov\u00e9 slov\u00e1 pre vyh\u013ead\u00e1vanie"
+    },
+    "dom_id": {
+      "type": "string",
+      "description": "ID priraden\u00e9ho domu"
+    },
+    "dom_nazov": {
+      "type": "string",
+      "description": "N\u00e1zov priraden\u00e9ho domu"
+    },
+    "vyrobca": {
+      "type": "string",
+      "enum": [
+        "JAK Modules",
+        "Ticab house",
+        "Prosto House",
+        "Domki z G\u00f3r"
+      ],
+      "description": "V\u00fdrobca domu"
+    },
+    "poradie": {
+      "type": "number",
+      "default": 0,
+      "description": "Poradie v gal\u00e9rii"
+    },
+    "zdroj": {
+      "type": "string",
+      "enum": [
+        "upload",
+        "google_drive"
+      ],
+      "default": "upload",
+      "description": "Zdroj fotky"
+    },
+    "povodny_nazov": {
+      "type": "string",
+      "description": "P\u00f4vodn\u00fd n\u00e1zov s\u00faboru"
+    },
+    "cesta_priecinka": {
+      "type": "string",
+      "description": "Cesta prie\u010dinka z Google Drive"
+    }
+  },
+  "required": [
+    "nazov",
+    "url"
+  ]
+}

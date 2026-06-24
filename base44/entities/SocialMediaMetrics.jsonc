@@ -1,0 +1,157 @@
+{
+  "name": "SocialMediaMetrics",
+  "type": "object",
+  "properties": {
+    "campaign_id": {
+      "type": "string",
+      "description": "ID kampane z MarketingHistory"
+    },
+    "platform": {
+      "type": "string",
+      "enum": [
+        "Facebook",
+        "Instagram",
+        "TikTok",
+        "LinkedIn"
+      ],
+      "description": "Platforma"
+    },
+    "campaign_name": {
+      "type": "string",
+      "description": "N\u00e1zov kampane"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "paused",
+        "completed"
+      ],
+      "default": "active",
+      "description": "Stav kampane"
+    },
+    "reach": {
+      "type": "number",
+      "default": 0,
+      "description": "Dosah kampane"
+    },
+    "impressions": {
+      "type": "number",
+      "default": 0,
+      "description": "Po\u010det zobrazen\u00ed"
+    },
+    "clicks": {
+      "type": "number",
+      "default": 0,
+      "description": "Po\u010det kliknut\u00ed"
+    },
+    "ctr": {
+      "type": "number",
+      "default": 0,
+      "description": "Click-through rate (%)"
+    },
+    "conversions": {
+      "type": "number",
+      "default": 0,
+      "description": "Po\u010det konverzi\u00ed"
+    },
+    "conversion_rate": {
+      "type": "number",
+      "default": 0,
+      "description": "Miera konverzie (%)"
+    },
+    "cost": {
+      "type": "number",
+      "default": 0,
+      "description": "Celkov\u00e9 n\u00e1klady v EUR"
+    },
+    "cpc": {
+      "type": "number",
+      "default": 0,
+      "description": "Cena za kliknutie (EUR)"
+    },
+    "cpm": {
+      "type": "number",
+      "default": 0,
+      "description": "Cena za 1000 zobrazen\u00ed (EUR)"
+    },
+    "cpa": {
+      "type": "number",
+      "default": 0,
+      "description": "Cena za akciu/konverziu (EUR)"
+    },
+    "engagement_rate": {
+      "type": "number",
+      "default": 0,
+      "description": "Miera engagement (%)"
+    },
+    "likes": {
+      "type": "number",
+      "default": 0
+    },
+    "comments": {
+      "type": "number",
+      "default": 0
+    },
+    "shares": {
+      "type": "number",
+      "default": 0
+    },
+    "video_views": {
+      "type": "number",
+      "default": 0,
+      "description": "Po\u010det pozret\u00ed videa"
+    },
+    "avg_watch_time": {
+      "type": "number",
+      "default": 0,
+      "description": "Priemern\u00fd \u010das sledovania (sekundy)"
+    },
+    "leads_generated": {
+      "type": "number",
+      "default": 0,
+      "description": "Vygenerovan\u00e9 leady"
+    },
+    "date_range_start": {
+      "type": "string",
+      "format": "date",
+      "description": "Za\u010diatok obdobia merania"
+    },
+    "date_range_end": {
+      "type": "string",
+      "format": "date",
+      "description": "Koniec obdobia merania"
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Posledn\u00e1 aktualiz\u00e1cia metr\u00edk"
+    },
+    "audience_demographics": {
+      "type": "object",
+      "properties": {
+        "age_groups": {
+          "type": "object"
+        },
+        "gender_split": {
+          "type": "object"
+        },
+        "top_locations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Demografick\u00e9 \u00fadaje publika"
+    },
+    "performance_notes": {
+      "type": "string",
+      "description": "Pozn\u00e1mky o v\u00fdkone kampane"
+    }
+  },
+  "required": [
+    "platform",
+    "campaign_name"
+  ]
+}

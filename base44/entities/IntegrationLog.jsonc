@@ -1,0 +1,62 @@
+{
+  "name": "IntegrationLog",
+  "type": "object",
+  "properties": {
+    "function_name": {
+      "type": "string",
+      "description": "N\u00e1zov backend funkcie ktor\u00e1 bola zavolan\u00e1"
+    },
+    "integration_type": {
+      "type": "string",
+      "enum": [
+        "InvokeLLM",
+        "GenerateImage",
+        "SendEmail",
+        "UploadFile",
+        "ExtractDataFromFile",
+        "Other"
+      ],
+      "description": "Typ integr\u00e1cie"
+    },
+    "entity_name": {
+      "type": "string",
+      "description": "N\u00e1zov entity (ak sa t\u00fdka entity)"
+    },
+    "entity_id": {
+      "type": "string",
+      "description": "ID entity (ak sa t\u00fdka entity)"
+    },
+    "trigger": {
+      "type": "string",
+      "enum": [
+        "automation_scheduled",
+        "automation_entity",
+        "manual",
+        "user_action"
+      ],
+      "description": "\u010co spustilo funkciu"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "success",
+        "failed"
+      ],
+      "default": "success",
+      "description": "V\u00fdsledok volania"
+    },
+    "estimated_credits": {
+      "type": "number",
+      "default": 1,
+      "description": "Odhadovan\u00fd po\u010det kreditov (1=mal\u00e9, 3=stredn\u00e9, 10=ve\u013ek\u00e9 LLM volanie)"
+    },
+    "details": {
+      "type": "string",
+      "description": "Dopl\u0148uj\u00face info alebo chybov\u00e1 spr\u00e1va"
+    }
+  },
+  "required": [
+    "function_name",
+    "integration_type"
+  ]
+}

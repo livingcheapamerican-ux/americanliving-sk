@@ -1,0 +1,60 @@
+{
+  "name": "CRMAktivita",
+  "type": "object",
+  "properties": {
+    "typ": {
+      "type": "string",
+      "enum": [
+        "novy_dopyt",
+        "odoslana_ponuka",
+        "zobrazena_ponuka",
+        "follow_up",
+        "telefonat",
+        "stretnutie",
+        "ine"
+      ],
+      "description": "Typ aktivity"
+    },
+    "dopyt_id": {
+      "type": "string",
+      "description": "ID dopytu"
+    },
+    "ponuka_id": {
+      "type": "string",
+      "description": "ID cenovej ponuky"
+    },
+    "klient_email": {
+      "type": "string",
+      "description": "Email klienta"
+    },
+    "klient_meno": {
+      "type": "string",
+      "description": "Meno klienta"
+    },
+    "predajca_email": {
+      "type": "string",
+      "description": "Email zodpovedn\u00e9ho predajcu"
+    },
+    "popis": {
+      "type": "string",
+      "description": "Popis aktivity"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Dodato\u010dn\u00e9 d\u00e1ta"
+    },
+    "konfiga_task_id": {
+      "type": "string",
+      "description": "ID \u00falohy v Konfiga CRM"
+    },
+    "synchronizovane": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u010ci bola aktivita synchronizovan\u00e1 do Konfiga"
+    }
+  },
+  "required": [
+    "typ",
+    "klient_email"
+  ]
+}

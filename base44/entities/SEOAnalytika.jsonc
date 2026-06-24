@@ -1,0 +1,142 @@
+{
+  "name": "SEOAnalytika",
+  "type": "object",
+  "properties": {
+    "url": {
+      "type": "string",
+      "description": "URL str\u00e1nky"
+    },
+    "page_title": {
+      "type": "string",
+      "description": "Titulok str\u00e1nky"
+    },
+    "meta_description": {
+      "type": "string",
+      "description": "Meta popis"
+    },
+    "ai_generated_title": {
+      "type": "string",
+      "description": "AI generovan\u00fd optim\u00e1lny titulok"
+    },
+    "ai_generated_description": {
+      "type": "string",
+      "description": "AI generovan\u00fd optim\u00e1lny meta popis"
+    },
+    "ai_suggested_keywords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "AI navrhnut\u00e9 relevantn\u00e9 k\u013e\u00fa\u010dov\u00e9 slov\u00e1"
+    },
+    "klucove_slova": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "K\u013e\u00fa\u010dov\u00e9 slov\u00e1 pre t\u00fato str\u00e1nku"
+    },
+    "page_load_speed": {
+      "type": "object",
+      "properties": {
+        "desktop_ms": {
+          "type": "number"
+        },
+        "mobile_ms": {
+          "type": "number"
+        },
+        "score": {
+          "type": "number"
+        },
+        "first_contentful_paint": {
+          "type": "number"
+        },
+        "time_to_interactive": {
+          "type": "number"
+        },
+        "speed_index": {
+          "type": "number"
+        }
+      },
+      "description": "R\u00fdchlos\u0165 na\u010d\u00edtania str\u00e1nky"
+    },
+    "mobile_responsiveness": {
+      "type": "object",
+      "properties": {
+        "is_mobile_friendly": {
+          "type": "boolean"
+        },
+        "viewport_configured": {
+          "type": "boolean"
+        },
+        "text_readable": {
+          "type": "boolean"
+        },
+        "tap_targets_sized": {
+          "type": "boolean"
+        },
+        "score": {
+          "type": "number"
+        }
+      },
+      "description": "Mobiln\u00e1 responz\u00edvnos\u0165"
+    },
+    "pocet_navstev": {
+      "type": "number",
+      "default": 0,
+      "description": "Po\u010det n\u00e1v\u0161tev"
+    },
+    "unique_visitors": {
+      "type": "number",
+      "default": 0,
+      "description": "Unik\u00e1tni n\u00e1v\u0161tevn\u00edci"
+    },
+    "avg_time_on_page": {
+      "type": "number",
+      "default": 0,
+      "description": "Priemern\u00fd \u010das na str\u00e1nke (sekundy)"
+    },
+    "bounce_rate": {
+      "type": "number",
+      "default": 0,
+      "description": "Miera odrazu (%)"
+    },
+    "seo_score": {
+      "type": "number",
+      "default": 0,
+      "description": "Celkov\u00e9 SEO sk\u00f3re (0-100)"
+    },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "error",
+              "warning",
+              "info"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "recommendation": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "SEO probl\u00e9my a odpor\u00fa\u010dania"
+    },
+    "last_analyzed": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Posledn\u00e1 anal\u00fdza"
+    }
+  },
+  "required": [
+    "url",
+    "page_title"
+  ]
+}

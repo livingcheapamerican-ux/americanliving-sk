@@ -1,0 +1,105 @@
+{
+  "name": "UserEvent",
+  "type": "object",
+  "properties": {
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "page_view",
+        "button_click",
+        "download",
+        "form_submit",
+        "configurator_start",
+        "configurator_complete",
+        "email_click",
+        "phone_click"
+      ],
+      "description": "Typ udalosti"
+    },
+    "page_url": {
+      "type": "string",
+      "description": "URL str\u00e1nky"
+    },
+    "page_title": {
+      "type": "string",
+      "description": "N\u00e1zov str\u00e1nky"
+    },
+    "referrer": {
+      "type": "string",
+      "description": "Odkia\u013e pou\u017e\u00edvate\u013e pri\u0161iel (HTTP referer)"
+    },
+    "utm_source": {
+      "type": "string",
+      "description": "UTM source parameter"
+    },
+    "utm_medium": {
+      "type": "string",
+      "description": "UTM medium parameter"
+    },
+    "utm_campaign": {
+      "type": "string",
+      "description": "UTM campaign parameter"
+    },
+    "utm_term": {
+      "type": "string",
+      "description": "UTM term parameter"
+    },
+    "utm_content": {
+      "type": "string",
+      "description": "UTM content parameter"
+    },
+    "event_data": {
+      "type": "object",
+      "description": "Dodato\u010dn\u00e9 d\u00e1ta o udalosti",
+      "properties": {
+        "button_text": {
+          "type": "string"
+        },
+        "dom_id": {
+          "type": "string"
+        },
+        "dom_nazov": {
+          "type": "string"
+        },
+        "file_name": {
+          "type": "string"
+        },
+        "section_name": {
+          "type": "string"
+        },
+        "time_spent": {
+          "type": "number"
+        }
+      }
+    },
+    "session_id": {
+      "type": "string",
+      "description": "ID rel\u00e1cie pou\u017e\u00edvate\u013ea"
+    },
+    "user_agent": {
+      "type": "string",
+      "description": "Browser a zariadenie"
+    },
+    "device_type": {
+      "type": "string",
+      "enum": [
+        "desktop",
+        "mobile",
+        "tablet"
+      ],
+      "description": "Typ zariadenia"
+    },
+    "browser": {
+      "type": "string",
+      "description": "Browser"
+    },
+    "language": {
+      "type": "string",
+      "description": "Jazyk prehliada\u010da"
+    }
+  },
+  "required": [
+    "event_type",
+    "page_url"
+  ]
+}

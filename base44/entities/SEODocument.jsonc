@@ -1,0 +1,35 @@
+{
+  "name": "SEODocument",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Reference to SEOProject"
+    },
+    "content_body": {
+      "type": "string",
+      "description": "Main article content in HTML"
+    },
+    "meta_title": {
+      "type": "string",
+      "description": "SEO meta title"
+    },
+    "meta_description": {
+      "type": "string",
+      "description": "SEO meta description"
+    },
+    "word_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Current word count"
+    },
+    "heading_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of headings (H2, H3)"
+    }
+  },
+  "required": [
+    "project_id"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "name": "SEOProject",
+  "type": "object",
+  "properties": {
+    "target_keyword": {
+      "type": "string",
+      "description": "Target keyword for SEO optimization"
+    },
+    "target_region": {
+      "type": "string",
+      "default": "en-US",
+      "description": "Target language and location"
+    },
+    "content_score": {
+      "type": "number",
+      "default": 0,
+      "description": "SEO content score (0-100)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "optimized",
+        "published"
+      ],
+      "default": "draft",
+      "description": "Project status"
+    },
+    "target_word_count": {
+      "type": "number",
+      "default": 1500,
+      "description": "Recommended word count based on competitor analysis"
+    },
+    "target_headings": {
+      "type": "number",
+      "default": 12,
+      "description": "Recommended number of headings"
+    }
+  },
+  "required": [
+    "target_keyword"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "AppConfiguration",
+  "type": "object",
+  "properties": {
+    "config_key": {
+      "type": "string",
+      "description": "Unique configuration key (e.g., 'meta_pixel')"
+    },
+    "metaPixelId": {
+      "type": "string",
+      "description": "Meta Pixel ID (numeric only)"
+    }
+  },
+  "required": [
+    "config_key"
+  ]
+}
