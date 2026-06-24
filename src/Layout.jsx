@@ -600,241 +600,153 @@ function LayoutContent({ children }) {
           </div>
 
           {mobileMenuOpen && (
-            <nav className="lg:hidden mt-4 pb-4 border-t border-slate-200 dark:border-white/10 pt-4 space-y-2">
-              <div className="md:hidden flex items-center justify-center gap-2 py-3 border-b border-slate-200 dark:border-white/10 mb-2">
-                <span className="text-xs text-slate-400 font-medium">Powered by</span>
-                <a 
-                  href="https://konfiga.eu" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                >
-                  <img 
-                    src={KONFIGA_LOGO_URL} 
-                    alt="Konfiga.eu" 
-                    className="h-12 w-auto"
-                  />
-                </a>
+            <nav className="lg:hidden mt-3 border-t border-slate-200 dark:border-white/10 pt-3 overflow-y-auto max-h-[80vh]">
+
+              {/* Hlavná navigácia */}
+              <div className="space-y-1 pb-3">
+                {[...navItems, ...adminNavItems].map((item) => {
+                  const isDotacia = item.path === createPageUrl("DotaciaAmericana");
+                  return (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={`flex items-center gap-4 px-4 py-4 rounded-2xl font-bold transition-all text-base min-h-[64px] ${
+                        isActive(item.path)
+                          ? 'bg-red-600/15 text-red-500 border border-red-500/30'
+                          : isDotacia
+                            ? 'bg-gradient-to-r from-red-600 via-red-500 to-red-700 text-white shadow-[0_0_20px_rgba(239,68,68,0.4)]'
+                            : 'text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/10 active:bg-slate-200 dark:active:bg-white/15'
+                      }`}
+                    >
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                        isActive(item.path) ? 'bg-red-500/20 text-red-500' :
+                        isDotacia ? 'bg-white/20 text-white' :
+                        'bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400'
+                      }`}>
+                        <item.icon className="w-5 h-5" />
+                      </div>
+                      {isDotacia ? (
+                        <div className="flex flex-col leading-tight">
+                          <span className="font-black text-base">{t('dotacia')}</span>
+                          <span className="text-xs font-black text-yellow-300 drop-shadow-lg">AMERICANA</span>
+                        </div>
+                      ) : (
+                        <span className="text-base font-semibold">{item.name}</span>
+                      )}
+                    </Link>
+                  );
+                })}
               </div>
 
-              {[...navItems, ...adminNavItems].map((item) => {
-                const isDotacia = item.path === createPageUrl("DotaciaAmericana");
-                return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-4 px-5 py-4 rounded-2xl font-bold transition-all text-base min-h-[56px] ${
-                      isActive(item.path)
-                        ? 'bg-red-600/20 text-red-500 border border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.2)]'
-                        : isDotacia
-                          ? 'bg-gradient-to-r from-red-600 via-red-500 to-red-700 text-white shadow-[0_0_20px_rgba(239,68,68,0.4)]'
-                          : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-red-500 dark:hover:text-white'
-                    }`}
-                  >
-                    <item.icon className="w-5 h-5" />
-                    {isDotacia ? (
-                      <div className="flex flex-col leading-tight">
-                        <span className="font-black">{t('dotacia')}</span>
-                        <span className="text-xs font-black text-yellow-300 drop-shadow-lg">AMERICANA</span>
-                      </div>
-                    ) : (
-                      item.name
-                    )}
-                  </Link>
-                );
-              })}
-              {isSuperAdmin && (
-                <>
-                  <Link
-                    to={createPageUrl("AdminAnalyzaDomov")}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-4 px-5 py-4 rounded-2xl font-bold text-slate-400 hover:bg-white/10 hover:text-white transition-all min-h-[52px]"
-                  >
-                    <Brain className="w-5 h-5 flex-shrink-0" />
-                    {t('adminAIAnalysis')}
-                  </Link>
-                  <Link
-                    to={createPageUrl("AdminSpravaDomov")}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-4 px-5 py-4 rounded-2xl font-bold text-slate-400 hover:bg-white/10 hover:text-white transition-all min-h-[52px]"
-                  >
-                    <Image className="w-5 h-5 flex-shrink-0" />
-                    {t('adminHouseManagement')}
-                  </Link>
-                  <Link
-                    to={createPageUrl("AdminUploadFotiekDomov")}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-4 px-5 py-4 rounded-2xl font-bold text-slate-400 hover:bg-white/10 hover:text-white transition-all min-h-[52px]"
-                  >
-                    <Image className="w-5 h-5 flex-shrink-0" />
-                    {t('adminPhotoUpload')}
-                  </Link>
-                  <Link
-                    to={createPageUrl("AdminPrekladyDomov")}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-4 px-5 py-4 rounded-2xl font-bold text-slate-400 hover:bg-white/10 hover:text-white transition-all min-h-[52px]"
-                  >
-                    <FileText className="w-5 h-5 flex-shrink-0" />
-                    {t('adminTranslationsHouses')}
-                  </Link>
-                  <Link
-                    to={createPageUrl("TestAnalyzaKonfiguratora")}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-4 px-5 py-4 rounded-2xl font-medium text-gray-700 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-all min-h-[52px]"
-                  >
-                    <Sparkles className="w-5 h-5 flex-shrink-0" />
-                    {t('adminConfiguratorAnalysis')}
-                  </Link>
-                  <Link
-                    to={createPageUrl("RegenerujPrekladyDeFrSrHrEl")}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-4 px-5 py-4 rounded-2xl font-medium text-gray-700 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-all min-h-[52px]"
-                  >
-                    <Languages className="w-5 h-5 flex-shrink-0" />
-                    {t('adminRegenerateTranslations')}
-                  </Link>
-                  <Link
-                    to={createPageUrl("AdminGenerujObrazkyBlogov")}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-4 px-5 py-4 rounded-2xl font-medium text-gray-700 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-all min-h-[52px]"
-                  >
-                    <Sparkles className="w-5 h-5 flex-shrink-0" />
-                    {t('adminBlogImageGen')}
-                  </Link>
-                  <Link
-                    to={createPageUrl("AdminPrekladyBlogov")}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-4 px-5 py-4 rounded-2xl font-medium text-gray-700 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-all min-h-[52px]"
-                  >
-                    <Languages className="w-5 h-5 flex-shrink-0" />
-                    {t('adminBlogTranslations')}
-                  </Link>
-                  <Link
-                    to={createPageUrl("AdminPrekladyKonfiguratora")}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-4 px-5 py-4 rounded-2xl font-medium text-gray-700 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-all min-h-[52px]"
-                  >
-                    <Settings className="w-5 h-5 flex-shrink-0" />
-                    {t('adminConfiguratorTranslations')}
-                  </Link>
-                  <Link
-                    to={createPageUrl("AdminMigraciaFotiek")}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-4 px-5 py-4 rounded-2xl font-medium text-gray-700 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-all min-h-[52px]"
-                  >
-                    <Upload className="w-5 h-5 flex-shrink-0" />
-                    {t('adminPhotoMigration')}
-                  </Link>
-                  </>
-                  )}
-                  {isAdmin && (
-                  <>
-                    <Link
-                      to={createPageUrl("AdminUserManagement")}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-4 px-5 py-4 rounded-2xl font-medium text-gray-700 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-all min-h-[52px]"
-                    >
-                      <Users className="w-5 h-5 flex-shrink-0" />
-                      {t('adminUserManagement')}
-                    </Link>
-                    <Link
-                      to={createPageUrl("AdminPixelSettings")}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-4 px-5 py-4 rounded-2xl font-medium text-gray-700 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-all min-h-[52px]"
-                    >
-                      <Settings className="w-5 h-5 flex-shrink-0" />
-                      {t('adminMetaPixel')}
-                    </Link>
-                    <Link
-                      to={createPageUrl("AdminAnalyzaSessions")}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-4 px-5 py-4 rounded-2xl font-medium text-gray-700 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-all min-h-[52px]"
-                    >
-                      <Activity className="w-5 h-5 flex-shrink-0" />
-                      {t('adminAnalyticsSessions')}
-                    </Link>
-                    <Link
-                      to={createPageUrl("AdminSEOAnalyzer")}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-4 px-5 py-4 rounded-2xl font-medium text-gray-700 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-all min-h-[52px]"
-                    >
-                      <Zap className="w-5 h-5 flex-shrink-0" />
-                      {t('adminSEOAnalyzer')}
-                    </Link>
-                    <Link
-                      to={createPageUrl("AIMarketingInsights")}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-4 px-5 py-4 rounded-2xl font-medium text-gray-700 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-all min-h-[52px]"
-                    >
-                      <Sparkles className="w-5 h-5 flex-shrink-0" />
-                      {t('adminAIMarketing')}
-                    </Link>
-                    <Link
-                      to={createPageUrl("SocialMediaDashboard")}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-4 px-5 py-4 rounded-2xl font-medium text-gray-700 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-all min-h-[52px]"
-                    >
-                      <Activity className="w-5 h-5 flex-shrink-0" />
-                      {t('adminSocialMedia')}
-                    </Link>
-                    <Link
-                      to={createPageUrl("AdminDokumenty")}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-4 px-5 py-4 rounded-2xl font-medium text-gray-700 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-all min-h-[52px]"
-                    >
-                      <FileText className="w-5 h-5 flex-shrink-0" />
-                      {t('adminDocuments')}
-                    </Link>
-                  <Link
-                    to={createPageUrl("AdminGoogleDrive")}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-4 px-5 py-4 rounded-2xl font-medium text-gray-700 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-all min-h-[52px]"
-                  >
-                    <Settings className="w-5 h-5 flex-shrink-0" />
-                    {t('adminGoogleDrive')}
-                  </Link>
-                  </>
-                  )}
-              <div className="pt-4 space-y-3 border-t border-gray-200 mt-4">
-                {/* Logo v mobile menu */}
-                <div className="flex justify-center py-3">
-                  <img 
-                    src={LOGO_URL} 
-                    alt="American Living" 
-                    className="h-16 w-auto"
-                  />
+              {/* Admin sekcia */}
+              {(isSuperAdmin || isAdmin) && (
+                <div className="border-t border-slate-200 dark:border-white/10 pt-3 pb-3">
+                  <p className="px-4 py-1 text-[11px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1">Admin</p>
+                  <div className="space-y-1">
+                    {isSuperAdmin && <>
+                      <Link to={createPageUrl("AdminAnalyzaDomov")} onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-4 px-4 py-3.5 rounded-2xl font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 transition-all min-h-[56px]">
+                        <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/5 flex items-center justify-center flex-shrink-0"><Brain className="w-4 h-4" /></div>
+                        {t('adminAIAnalysis')}
+                      </Link>
+                      <Link to={createPageUrl("AdminSpravaDomov")} onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-4 px-4 py-3.5 rounded-2xl font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 transition-all min-h-[56px]">
+                        <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/5 flex items-center justify-center flex-shrink-0"><Image className="w-4 h-4" /></div>
+                        {t('adminHouseManagement')}
+                      </Link>
+                      <Link to={createPageUrl("AdminUploadFotiekDomov")} onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-4 px-4 py-3.5 rounded-2xl font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 transition-all min-h-[56px]">
+                        <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/5 flex items-center justify-center flex-shrink-0"><Upload className="w-4 h-4" /></div>
+                        {t('adminPhotoUpload')}
+                      </Link>
+                      <Link to={createPageUrl("AdminPrekladyDomov")} onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-4 px-4 py-3.5 rounded-2xl font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 transition-all min-h-[56px]">
+                        <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/5 flex items-center justify-center flex-shrink-0"><FileText className="w-4 h-4" /></div>
+                        {t('adminTranslationsHouses')}
+                      </Link>
+                      <Link to={createPageUrl("AdminGenerujObrazkyBlogov")} onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-4 px-4 py-3.5 rounded-2xl font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 transition-all min-h-[56px]">
+                        <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/5 flex items-center justify-center flex-shrink-0"><Sparkles className="w-4 h-4" /></div>
+                        {t('adminBlogImageGen')}
+                      </Link>
+                      <Link to={createPageUrl("AdminPrekladyBlogov")} onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-4 px-4 py-3.5 rounded-2xl font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 transition-all min-h-[56px]">
+                        <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/5 flex items-center justify-center flex-shrink-0"><Languages className="w-4 h-4" /></div>
+                        {t('adminBlogTranslations')}
+                      </Link>
+                      <Link to={createPageUrl("AdminPrekladyKonfiguratora")} onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-4 px-4 py-3.5 rounded-2xl font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 transition-all min-h-[56px]">
+                        <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/5 flex items-center justify-center flex-shrink-0"><Settings className="w-4 h-4" /></div>
+                        {t('adminConfiguratorTranslations')}
+                      </Link>
+                      <Link to={createPageUrl("AdminMigraciaFotiek")} onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-4 px-4 py-3.5 rounded-2xl font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 transition-all min-h-[56px]">
+                        <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/5 flex items-center justify-center flex-shrink-0"><Upload className="w-4 h-4" /></div>
+                        {t('adminPhotoMigration')}
+                      </Link>
+                      <Link to={createPageUrl("RegenerujPrekladyDeFrSrHrEl")} onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-4 px-4 py-3.5 rounded-2xl font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 transition-all min-h-[56px]">
+                        <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/5 flex items-center justify-center flex-shrink-0"><Languages className="w-4 h-4" /></div>
+                        {t('adminRegenerateTranslations')}
+                      </Link>
+                      <Link to={createPageUrl("TestAnalyzaKonfiguratora")} onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-4 px-4 py-3.5 rounded-2xl font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 transition-all min-h-[56px]">
+                        <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/5 flex items-center justify-center flex-shrink-0"><Sparkles className="w-4 h-4" /></div>
+                        {t('adminConfiguratorAnalysis')}
+                      </Link>
+                    </>}
+                    {isAdmin && <>
+                      <Link to={createPageUrl("AdminUserManagement")} onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-4 px-4 py-3.5 rounded-2xl font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 transition-all min-h-[56px]">
+                        <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/5 flex items-center justify-center flex-shrink-0"><Users className="w-4 h-4" /></div>
+                        {t('adminUserManagement')}
+                      </Link>
+                      <Link to={createPageUrl("AdminPixelSettings")} onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-4 px-4 py-3.5 rounded-2xl font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 transition-all min-h-[56px]">
+                        <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/5 flex items-center justify-center flex-shrink-0"><Settings className="w-4 h-4" /></div>
+                        {t('adminMetaPixel')}
+                      </Link>
+                      <Link to={createPageUrl("AdminAnalyzaSessions")} onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-4 px-4 py-3.5 rounded-2xl font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 transition-all min-h-[56px]">
+                        <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/5 flex items-center justify-center flex-shrink-0"><Activity className="w-4 h-4" /></div>
+                        {t('adminAnalyticsSessions')}
+                      </Link>
+                      <Link to={createPageUrl("AdminSEOAnalyzer")} onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-4 px-4 py-3.5 rounded-2xl font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 transition-all min-h-[56px]">
+                        <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/5 flex items-center justify-center flex-shrink-0"><Zap className="w-4 h-4" /></div>
+                        {t('adminSEOAnalyzer')}
+                      </Link>
+                      <Link to={createPageUrl("AIMarketingInsights")} onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-4 px-4 py-3.5 rounded-2xl font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 transition-all min-h-[56px]">
+                        <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/5 flex items-center justify-center flex-shrink-0"><Sparkles className="w-4 h-4" /></div>
+                        {t('adminAIMarketing')}
+                      </Link>
+                      <Link to={createPageUrl("SocialMediaDashboard")} onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-4 px-4 py-3.5 rounded-2xl font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 transition-all min-h-[56px]">
+                        <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/5 flex items-center justify-center flex-shrink-0"><Activity className="w-4 h-4" /></div>
+                        {t('adminSocialMedia')}
+                      </Link>
+                      <Link to={createPageUrl("AdminDokumenty")} onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-4 px-4 py-3.5 rounded-2xl font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 transition-all min-h-[56px]">
+                        <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/5 flex items-center justify-center flex-shrink-0"><FileText className="w-4 h-4" /></div>
+                        {t('adminDocuments')}
+                      </Link>
+                      <Link to={createPageUrl("AdminGoogleDrive")} onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-4 px-4 py-3.5 rounded-2xl font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 transition-all min-h-[56px]">
+                        <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/5 flex items-center justify-center flex-shrink-0"><Settings className="w-4 h-4" /></div>
+                        {t('adminGoogleDrive')}
+                      </Link>
+                    </>}
+                  </div>
                 </div>
+              )}
 
-                <div className="flex justify-center py-2">
-                  <LanguageSelector />
-                </div>
-
-                {/* Kontakty */}
-                <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+              {/* Kontaktná sekcia na spodku */}
+              <div className="border-t border-slate-200 dark:border-white/10 pt-4 pb-2 space-y-3 mt-1">
+                <div className="grid grid-cols-2 gap-2">
                   <a
                     href="tel:+421905138124"
-                    className="flex items-center justify-center gap-2 text-primary font-semibold py-2"
+                    className="flex items-center justify-center gap-2 bg-slate-100 dark:bg-white/5 text-slate-800 dark:text-slate-200 font-semibold py-3.5 rounded-2xl min-h-[56px] active:bg-slate-200"
                   >
-                    <Phone className="w-5 h-5" />
-                    +421 905 138 124
+                    <Phone className="w-5 h-5 text-primary flex-shrink-0" />
+                    <span className="text-sm font-bold">Zavolať</span>
                   </a>
-                  <a
-                    href="mailto:info@americanliving.sk"
-                    className="flex items-center justify-center gap-2 text-gray-700 text-sm"
+                  <Link to={createPageUrl("Kontakt")} onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center justify-center gap-2 bg-primary text-white font-bold py-3.5 rounded-2xl min-h-[56px] active:opacity-90"
                   >
-                    <Mail className="w-4 h-4" />
-                    info@americanliving.sk
-                  </a>
+                    <Mail className="w-5 h-5 flex-shrink-0" />
+                    <span className="text-sm font-bold">{t('contactUs')}</span>
+                  </Link>
                 </div>
-
-                <Link to={createPageUrl("Kontakt")} onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="w-full bg-secondary hover:bg-secondary/90 text-white font-semibold">
-                    {t('contactUs')}
-                  </Button>
-                </Link>
+                <div className="flex items-center justify-center gap-3 py-2">
+                  <img src={LOGO_URL} alt="American Living" className="h-10 w-auto opacity-60" />
+                </div>
               </div>
-              </nav>
-              )}
+            </nav>
+          )}
         </div>
       </header>
 
