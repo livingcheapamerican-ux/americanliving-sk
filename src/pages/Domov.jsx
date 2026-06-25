@@ -995,7 +995,7 @@ export default function Domov() {
                 initial={{ opacity: 0, y: 25 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
-                className="text-base sm:text-xl text-slate-600 dark:text-slate-300 mb-8 leading-relaxed font-light max-w-2xl"
+                className="text-base sm:text-xl text-slate-800 dark:text-slate-200 mb-8 leading-relaxed font-normal max-w-2xl bg-white/90 dark:bg-slate-900/90 border border-slate-200/85 dark:border-white/10 px-6 py-4 sm:py-5 rounded-2xl shadow-md backdrop-blur-md"
               >
                 {t('heroDescription')}
               </motion.p>
@@ -1027,7 +1027,11 @@ export default function Domov() {
 
               {/* Interactive Quick House Switcher with Real Images */}
               <div className="pt-6 border-t border-white/10 max-w-xl">
-                <p className="text-slate-450 text-xs font-bold uppercase tracking-wider mb-4">{t('clickToSeeMostLucrativeModels')}</p>
+                <div className="mb-4">
+                  <span className="inline-block bg-white/90 dark:bg-slate-900/90 border border-slate-200/85 dark:border-white/10 px-3.5 py-1.5 rounded-xl shadow-sm text-slate-700 dark:text-slate-300 text-[10px] sm:text-xs font-bold uppercase tracking-wider backdrop-blur-md">
+                    {t('clickToSeeMostLucrativeModels')}
+                  </span>
+                </div>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -1446,9 +1450,11 @@ export default function Domov() {
             <h2 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white mb-4 leading-tight transition-colors duration-300">
               {t('gallerySectionTitle')}
             </h2>
-            <p className="text-slate-650 dark:text-slate-400 text-sm sm:text-lg font-light leading-relaxed transition-colors duration-300">
-              {t('galleryDesc')}
-            </p>
+            <div className="mt-2 mb-6">
+              <p className="inline-block text-slate-800 dark:text-slate-200 text-sm sm:text-lg font-normal leading-relaxed bg-white/90 dark:bg-slate-900/90 border border-slate-200/85 dark:border-white/10 px-6 py-3.5 rounded-2xl shadow-sm backdrop-blur-md transition-colors duration-300">
+                {t('galleryDesc')}
+              </p>
+            </div>
           </div>
 
           {/* House Selector Tabs */}
@@ -1683,8 +1689,8 @@ export default function Domov() {
                     {t('financialInjection')}
                   </span>
                 </h2>
-                <p className="text-lg sm:text-xl text-slate-650 dark:text-slate-400 font-light mb-8 leading-relaxed max-w-xl transition-colors duration-300">
-                  {t('grantDescriptionPart1')} <strong className="text-slate-800 dark:text-slate-200">{t('grantDescriptionPart2')}</strong>{t('grantDescriptionPart3')}
+                <p className="text-lg sm:text-xl text-slate-800 dark:text-slate-200 font-normal mb-8 leading-relaxed max-w-xl bg-white/90 dark:bg-slate-900/90 border border-slate-200/85 dark:border-white/10 px-6 py-4 sm:py-5 rounded-2xl shadow-md backdrop-blur-md transition-colors duration-300">
+                  {t('grantDescriptionPart1')} <strong className="text-slate-955 dark:text-white font-bold">{t('grantDescriptionPart2')}</strong>{t('grantDescriptionPart3')}
                 </p>
                 
                 <Link to={createPageUrl("DotaciaAmericana")} className="inline-block w-full sm:w-auto">
@@ -1696,9 +1702,11 @@ export default function Domov() {
                   </Button>
                 </Link>
                 
-                <div className="mt-8 flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400 transition-colors duration-300">
-                  <Shield className="w-5 h-5 text-slate-400 dark:text-slate-450" />
-                  <span>{t('guaranteedFinancing')}</span>
+                <div className="mt-8">
+                  <div className="inline-flex items-center gap-3 text-xs sm:text-sm bg-white/90 dark:bg-slate-900/90 border border-slate-200/85 dark:border-white/10 px-4 py-2.5 rounded-xl shadow-sm text-slate-700 dark:text-slate-300 backdrop-blur-md transition-colors duration-300">
+                    <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-[#C5A880]" />
+                    <span>{t('guaranteedFinancing')}</span>
+                  </div>
                 </div>
               </motion.div>
             </div>
@@ -1895,9 +1903,11 @@ export default function Domov() {
             <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 text-slate-900 dark:text-white transition-colors duration-300">
               {t('allInOnePlace')}
             </h2>
-            <p className="text-sm sm:text-lg text-slate-650 dark:text-slate-400 max-w-3xl mx-auto mb-6 transition-colors duration-300">
-              {t('comprehensiveServicesDesc')}
-            </p>
+            <div className="mt-2 mb-6">
+              <p className="inline-block text-sm sm:text-lg text-slate-800 dark:text-slate-200 max-w-3xl mx-auto bg-white/90 dark:bg-slate-900/90 border border-slate-200/85 dark:border-white/10 px-6 py-3.5 rounded-2xl shadow-sm backdrop-blur-md transition-colors duration-300">
+                {t('comprehensiveServicesDesc')}
+              </p>
+            </div>
             <div className="flex flex-wrap justify-center gap-1 sm:gap-2 text-[10px] sm:text-sm font-semibold">
               <div className="flex items-center gap-1 bg-white dark:bg-white/5 px-2.5 py-1 sm:px-4 sm:py-2 rounded-full text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10 shadow-sm transition-colors duration-300">
                 <Building className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 text-primary" />
@@ -1994,9 +2004,11 @@ export default function Domov() {
             <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-6 text-slate-900 dark:text-white transition-colors duration-300">
               {t('whyAmericanLiving')}
             </h2>
-            <p className="text-sm sm:text-lg text-slate-600 dark:text-slate-400 max-w-3xl mx-auto font-light transition-colors duration-300">
-              {t('qualityBrand')}
-            </p>
+            <div className="mt-2 mb-6">
+              <p className="inline-block text-sm sm:text-lg text-slate-800 dark:text-slate-200 max-w-3xl mx-auto bg-white/90 dark:bg-slate-900/90 border border-slate-200/85 dark:border-white/10 px-6 py-3.5 rounded-2xl shadow-sm backdrop-blur-md transition-colors duration-300">
+                {t('qualityBrand')}
+              </p>
+            </div>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-6 mb-8 sm:mb-12">
@@ -2074,9 +2086,11 @@ export default function Domov() {
               <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-6 text-slate-900 dark:text-white transition-colors duration-300">
                 {t('ourOffer')}
               </h2>
-              <p className="text-sm sm:text-lg text-slate-650 dark:text-slate-400 font-light transition-colors duration-300">
-                {t('woodHouseNotLookWood')}
-              </p>
+              <div className="mt-2 mb-6">
+                <p className="inline-block text-sm sm:text-lg text-slate-800 dark:text-slate-200 bg-white/90 dark:bg-slate-900/90 border border-slate-200/85 dark:border-white/10 px-6 py-3.5 rounded-2xl shadow-sm backdrop-blur-md transition-colors duration-300">
+                  {t('woodHouseNotLookWood')}
+                </p>
+              </div>
             </motion.div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 sm:gap-4 mb-4 sm:mb-12">
@@ -2216,9 +2230,11 @@ export default function Domov() {
             <h2 className="text-lg sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-4 text-slate-900 dark:text-white transition-colors duration-300">
               {t('readyForOwnHouse')}
             </h2>
-            <p className="text-sm sm:text-lg mb-6 sm:mb-10 text-slate-600 dark:text-slate-400 font-light transition-colors duration-300">
-              {t('contactUsAndFind')}
-            </p>
+            <div className="mt-2 mb-6 sm:mb-10">
+              <p className="inline-block text-sm sm:text-lg text-slate-800 dark:text-slate-200 bg-white/90 dark:bg-slate-900/90 border border-slate-200/85 dark:border-white/10 px-6 py-3.5 rounded-2xl shadow-sm backdrop-blur-md transition-colors duration-300">
+                {t('contactUsAndFind')}
+              </p>
+            </div>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
               <Link to={createPageUrl("Katalog")} className="w-full sm:w-auto">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
