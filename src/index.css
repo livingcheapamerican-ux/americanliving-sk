@@ -193,17 +193,6 @@ button:focus-visible {
 }
 
 .fixed-bg-content section {
-  background-color: rgba(250, 248, 245, 0.78) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-  transition: background-color 0.3s ease;
-}
-
-.dark .fixed-bg-content section {
-  background-color: rgba(5, 5, 8, 0.84) !important;
-}
-
-.fixed-bg-content section.hero-section {
   background-color: transparent !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
