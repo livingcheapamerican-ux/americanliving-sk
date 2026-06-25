@@ -974,7 +974,7 @@ export default function Domov() {
     : lcpImage;
 
   return (
-    <div className="min-h-screen -mt-10 sm:-mt-12 md:-mt-14 lg:-mt-16 xl:-mt-20 overflow-x-hidden">
+    <div className="min-h-screen -mt-10 sm:-mt-12 md:-mt-14 lg:-mt-16 xl:-mt-20 overflow-x-clip">
       <Helmet>
         <link
           rel="preload"
