@@ -299,6 +299,152 @@ const headlineWord = {
   }
 };
 
+// NatureAnimatedBackground handles particle animations of glowing forest spores and slowly drifting leaves.
+function NatureAnimatedBackground() {
+  const canvasRef = React.useRef(null);
+
+  React.useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let animationFrameId;
+    let dpr = window.devicePixelRatio || 1;
+    let width = canvas.offsetWidth;
+    let height = canvas.offsetHeight;
+    
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    ctx.scale(dpr, dpr);
+
+    const handleResize = () => {
+      if (!canvas) return;
+      width = canvas.offsetWidth;
+      height = canvas.offsetHeight;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
+    };
+    window.addEventListener("resize", handleResize);
+
+    const particles = [];
+    const particleCount = 45;
+
+    class Particle {
+      constructor() {
+        this.reset();
+        this.y = Math.random() * height;
+      }
+
+      reset() {
+        const isDark = document.documentElement.classList.contains('dark');
+        this.x = Math.random() * width;
+        this.y = -20;
+        this.size = Math.random() * 3 + 1.5;
+        this.speedX = Math.random() * 0.4 - 0.2;
+        this.speedY = Math.random() * 0.35 + 0.15;
+        this.alpha = Math.random() * 0.35 + 0.25;
+        this.color = Math.random() > 0.5 
+          ? `rgba(197, 168, 128, ${this.alpha})` // gold
+          : isDark 
+            ? `rgba(167, 201, 142, ${this.alpha})` // light green
+            : `rgba(46, 117, 89, ${this.alpha})`; // deep forest green
+        this.type = Math.random() > 0.35 ? "spore" : "leaf";
+        
+        if (this.type === "leaf") {
+          this.size = Math.random() * 6 + 5;
+          this.angle = Math.random() * Math.PI * 2;
+          this.spinSpeed = (Math.random() * 0.015 + 0.005) * (Math.random() > 0.5 ? 1 : -1);
+          this.swayRange = Math.random() * 12 + 8;
+          this.swaySpeed = Math.random() * 0.015 + 0.005;
+          this.swayOffset = Math.random() * 100;
+          this.speedY = Math.random() * 0.5 + 0.3;
+          this.greenTone = isDark 
+            ? Math.floor(Math.random() * 40) + 160 
+            : Math.floor(Math.random() * 30) + 100;
+        }
+      }
+
+      update(time) {
+        if (this.type === "spore") {
+          this.x += this.speedX + Math.sin(time * 0.0008 + this.y * 0.005) * 0.1;
+          this.y += this.speedY;
+        } else {
+          this.x += Math.sin(time * this.swaySpeed + this.swayOffset) * 0.35 + this.speedX;
+          this.y += this.speedY;
+          this.angle += this.spinSpeed;
+        }
+
+        if (this.y > height + 20 || this.x < -20 || this.x > width + 20) {
+          this.reset();
+        }
+      }
+
+      draw() {
+        if (this.type === "spore") {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fillStyle = this.color;
+          ctx.shadowBlur = 6;
+          ctx.shadowColor = this.color;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        } else {
+          ctx.save();
+          ctx.translate(this.x, this.y);
+          ctx.rotate(this.angle);
+          ctx.beginPath();
+          ctx.moveTo(0, -this.size);
+          ctx.quadraticCurveTo(this.size * 0.55, -this.size * 0.25, 0, this.size);
+          ctx.quadraticCurveTo(-this.size * 0.55, -this.size * 0.25, 0, -this.size);
+          
+          ctx.fillStyle = `rgba(130, ${this.greenTone}, 80, ${this.alpha})`;
+          ctx.fill();
+          
+          ctx.beginPath();
+          ctx.moveTo(0, -this.size);
+          ctx.lineTo(0, this.size);
+          ctx.strokeStyle = `rgba(255, 255, 255, ${this.alpha * 0.25})`;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+          
+          ctx.restore();
+        }
+      }
+    }
+
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle());
+    }
+
+    const render = (time) => {
+      ctx.clearRect(0, 0, width, height);
+
+      particles.forEach((p) => {
+        p.update(time);
+        p.draw();
+      });
+
+      animationFrameId = requestAnimationFrame(render);
+    };
+
+    animationFrameId = requestAnimationFrame(render);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
+  return (
+    <canvas 
+      ref={canvasRef} 
+      className="absolute inset-0 w-full h-full pointer-events-none z-0 mix-blend-normal"
+    />
+  );
+}
+
 export default function Domov() {
   const [showSettings, setShowSettings] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
@@ -892,6 +1038,7 @@ export default function Domov() {
 
       {/* Hero Section */}
       <section className="relative min-h-[90vh] lg:min-h-screen overflow-hidden bg-[#FAF8F5] dark:bg-[#050508] pt-20 lg:pt-28 pb-12 flex items-center transition-colors duration-300">
+        <NatureAnimatedBackground />
         {/* Blueprint architectural grid lines - Uses CSS variable defined in index.css */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--grid-color)_1px,transparent_1px),linear-gradient(to_bottom,var(--grid-color)_1px,transparent_1px)] bg-[size:5rem_5rem] pointer-events-none" />
         
