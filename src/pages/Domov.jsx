@@ -861,8 +861,10 @@ export default function Domov() {
     : lcpImage;
 
   return (
-    <div className="min-h-screen -mt-10 sm:-mt-12 md:-mt-14 lg:-mt-16 xl:-mt-20 overflow-x-hidden">
-      <Helmet>
+    <div className="min-h-screen -mt-10 sm:-mt-12 md:-mt-14 lg:-mt-16 xl:-mt-20 overflow-x-hidden relative">
+      <NaturePhotoBackground />
+      <div className="fixed-bg-content relative z-10">
+        <Helmet>
         <link
           rel="preload"
           as="image"
@@ -934,8 +936,7 @@ export default function Domov() {
 
 
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] lg:min-h-screen overflow-hidden bg-transparent pt-20 lg:pt-28 pb-12 flex items-center transition-colors duration-300">
-        <NaturePhotoBackground />
+      <section className="hero-section relative min-h-[90vh] lg:min-h-screen overflow-hidden bg-transparent pt-20 lg:pt-28 pb-12 flex items-center transition-colors duration-300">
         {/* Blueprint architectural grid lines - Uses CSS variable defined in index.css */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--grid-color)_1px,transparent_1px),linear-gradient(to_bottom,var(--grid-color)_1px,transparent_1px)] bg-[size:5rem_5rem] pointer-events-none" />
         
@@ -2250,6 +2251,7 @@ export default function Domov() {
           </div>
         </div>
       </section>
+      </div>
     </div>
   );
 }
