@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useRef } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Helmet } from "react-helmet-async";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
@@ -11,13 +11,11 @@ import {
   FileText, Hammer, Key, Phone, Building2, ChevronRight, Building, Landmark, TrendingUp, Settings, LogIn, Gift, Star, Users,
   MessageCircle, Send, Sparkles
 } from "lucide-react";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import HeroSettingsManager from "../components/admin/HeroSettingsManager";
 import { useLanguage } from "../components/LanguageContext";
 import ServiceDetailModal from "../components/ServiceDetailModal";
 import { optimizeImageUrl } from "../components/ImageWithWatermark";
-import MobileHeroSection from "../components/home/MobileHeroSection";
-import KexoConsultationSection from "../components/home/KexoConsultationSection";
 
 const sliderT = {
   sk: { viz: "Vizualizácia", real: "Realizácia" },
@@ -301,119 +299,6 @@ const headlineWord = {
   }
 };
 
-function FogParticlesCanvas() {
-  const canvasRef = useRef(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    let animationFrameId;
-    let width = (canvas.width = canvas.getBoundingClientRect().width || window.innerWidth);
-    let height = (canvas.height = canvas.getBoundingClientRect().height || window.innerHeight);
-
-    const particles = [];
-    const particleCount = 20;
-
-    class Particle {
-      constructor() {
-        this.reset();
-        this.y = Math.random() * height;
-      }
-
-      reset() {
-        this.x = Math.random() * width;
-        this.y = height + Math.random() * 100;
-        this.size = Math.random() * 200 + 100;
-        this.speedX = Math.random() * 0.3 - 0.15;
-        this.speedY = -(Math.random() * 0.25 + 0.08);
-        this.alpha = Math.random() * 0.12 + 0.03;
-        this.color = Math.random() > 0.5 ? "197, 168, 128" : "158, 42, 43"; // gold or red/amber accent
-      }
-
-      update(mouse) {
-        this.x += this.speedX;
-        this.y += this.speedY;
-
-        if (mouse.x && mouse.y) {
-          const dx = this.x - mouse.x;
-          const dy = this.y - mouse.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 300) {
-            const force = (300 - dist) / 300;
-            this.x += (dx / dist) * force * 1.8;
-            this.y += (dy / dist) * force * 1.8;
-          }
-        }
-
-        if (this.y < -this.size || this.x < -this.size || this.x > width + this.size) {
-          this.reset();
-        }
-      }
-
-      draw() {
-        const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
-        grad.addColorStop(0, `rgba(${this.color}, ${this.alpha})`);
-        grad.addColorStop(0.5, `rgba(${this.color}, ${this.alpha * 0.3})`);
-        grad.addColorStop(1, "rgba(0, 0, 0, 0)");
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-
-    for (let i = 0; i < particleCount; i++) {
-      particles.push(new Particle());
-    }
-
-    const mouse = { x: null, y: null };
-    const handleMouseMove = (e) => {
-      const rect = canvas.getBoundingClientRect();
-      mouse.x = e.clientX - rect.left;
-      mouse.y = e.clientY - rect.top;
-    };
-
-    const handleMouseLeave = () => {
-      mouse.x = null;
-      mouse.y = null;
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    canvas.addEventListener("mouseleave", handleMouseLeave);
-
-    const handleResize = () => {
-      if (!canvas) return;
-      width = canvas.width = canvas.getBoundingClientRect().width || window.innerWidth;
-      height = canvas.height = canvas.getBoundingClientRect().height || window.innerHeight;
-    };
-    window.addEventListener("resize", handleResize);
-
-    const render = () => {
-      ctx.clearRect(0, 0, width, height);
-      particles.forEach((p) => {
-        p.update(mouse);
-        p.draw();
-      });
-      animationFrameId = requestAnimationFrame(render);
-    };
-    render();
-
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
-  return (
-    <canvas 
-      ref={canvasRef} 
-      className="absolute inset-0 w-full h-full pointer-events-none opacity-50 mix-blend-screen z-10"
-    />
-  );
-}
-
 export default function Domov() {
   const [showSettings, setShowSettings] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
@@ -425,55 +310,6 @@ export default function Domov() {
 
   // Selected house details state and dynamic lookups
   const [selectedHouseId, setSelectedHouseId] = useState("barn72");
-
-  const timelineContainerRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: timelineContainerRef,
-    offset: ["start start", "end end"]
-  });
-
-  // Model 01 Transforms (Barn Double 72 - Prosto House)
-  const m1Opacity = useTransform(scrollYProgress, [0, 0.35, 0.45], [1, 1, 0]);
-  const m1Scale = useTransform(scrollYProgress, [0, 0.35, 0.45], [1, 1.15, 0.85]);
-  const m1X = useTransform(scrollYProgress, [0, 0.35, 0.45], ["0%", "-10%", "-50%"]);
-  const m1Rotate = useTransform(scrollYProgress, [0, 0.35, 0.45], [0, 3, -10]);
-  const m1TextOpacity = useTransform(scrollYProgress, [0, 0.3, 0.4], [0.08, 0.12, 0]);
-  const m1TextScale = useTransform(scrollYProgress, [0, 0.35], [1, 1.1]);
-  const m1CardOpacity = useTransform(scrollYProgress, [0.05, 0.15, 0.35, 0.45], [0, 1, 1, 0]);
-  const m1CardY = useTransform(scrollYProgress, [0.05, 0.15, 0.35, 0.45], [20, 0, 0, -20]);
-
-  // Model 02 Transforms (London 144 - Ticab House)
-  const m2Opacity = useTransform(scrollYProgress, [0.4, 0.5, 0.85, 0.95], [0, 1, 1, 0]);
-  const m2Scale = useTransform(scrollYProgress, [0.4, 0.5, 0.85, 0.95], [0.85, 1, 1.15, 0.9]);
-  const m2X = useTransform(scrollYProgress, [0.4, 0.5, 0.85, 0.95], ["50%", "0%", "10%", "50%"]);
-  const m2Rotate = useTransform(scrollYProgress, [0.4, 0.5, 0.85, 0.95], [10, 0, -3, -10]);
-  const m2TextOpacity = useTransform(scrollYProgress, [0.45, 0.55, 0.8, 0.9], [0, 0.12, 0.12, 0]);
-  const m2TextScale = useTransform(scrollYProgress, [0.5, 0.8], [0.95, 1.05]);
-  const m2CardOpacity = useTransform(scrollYProgress, [0.5, 0.6, 0.8, 0.9], [0, 1, 1, 0]);
-  const m2CardY = useTransform(scrollYProgress, [0.5, 0.6, 0.8, 0.9], [20, 0, 0, -20]);
-
-  // Global Split Background Controls
-  const bgConcreteWidth = useTransform(scrollYProgress, [0, 0.4, 0.5, 0.9], ["50%", "50%", "30%", "30%"]);
-  const bgWoodWidth = useTransform(scrollYProgress, [0, 0.4, 0.5, 0.9], ["50%", "50%", "70%", "70%"]);
-  const leftScaleX = useTransform(scrollYProgress, [0, 0.4, 0.5, 0.9], [1, 1, 0.6, 0.6]);
-  const introOpacity = useTransform(scrollYProgress, [0, 0.1, 0.2], [1, 1, 0]);
-  const introY = useTransform(scrollYProgress, [0, 0.1, 0.2], [0, 0, -40]);
-  const introPointerEvents = useTransform(scrollYProgress, (v) => (v < 0.2 ? "auto" : "none"));
-  const m1PointerEvents = useTransform(scrollYProgress, (v) => (v >= 0.15 && v < 0.45 ? "auto" : "none"));
-  const m2PointerEvents = useTransform(scrollYProgress, (v) => (v >= 0.5 && v < 0.9 ? "auto" : "none"));
-
-  // Parallax mouse position state
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  useEffect(() => {
-    const handleMouse = (e) => {
-      setMousePos({
-        x: (e.clientX / window.innerWidth - 0.5) * 15,
-        y: (e.clientY / window.innerHeight - 0.5) * 15,
-      });
-    };
-    window.addEventListener("mousemove", handleMouse);
-    return () => window.removeEventListener("mousemove", handleMouse);
-  }, []);
   
   // Facade lookbook options
   const [selectedFacade, setSelectedFacade] = useState("anthracite");
@@ -982,7 +818,7 @@ export default function Domov() {
     : lcpImage;
 
   return (
-    <div className="min-h-screen -mt-10 sm:-mt-12 md:-mt-14 lg:-mt-16 xl:-mt-20 overflow-x-clip">
+    <div className="min-h-screen -mt-10 sm:-mt-12 md:-mt-14 lg:-mt-16 xl:-mt-20 overflow-x-hidden">
       <Helmet>
         <link
           rel="preload"
@@ -1054,444 +890,263 @@ export default function Domov() {
 
 
 
-      {/* Immersive Scroll-Driven Hero Section (Desktop - lg:block hidden) */}
-      <section ref={timelineContainerRef} className="hidden lg:block relative h-[250vh] bg-[#FAF8F5] dark:bg-[#050508] transition-colors duration-300">
+      {/* Hero Section */}
+      <section className="relative min-h-[90vh] lg:min-h-screen overflow-hidden bg-[#FAF8F5] dark:bg-[#050508] pt-20 lg:pt-28 pb-12 flex items-center transition-colors duration-300">
+        {/* Blueprint architectural grid lines - Uses CSS variable defined in index.css */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--grid-color)_1px,transparent_1px),linear-gradient(to_bottom,var(--grid-color)_1px,transparent_1px)] bg-[size:5rem_5rem] pointer-events-none" />
         
-        {/* Sticky viewport container */}
-        <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-center">
-          
-          {/* Universal Backdrop */}
-          <motion.div style={{ scaleX: leftScaleX, transformOrigin: "left" }} className="absolute left-0 top-0 bottom-0 right-0 bg-concrete-split z-0" />
-          <div className="absolute left-0 top-0 bottom-0 right-0 bg-wood-split z-[-1]" />
-          
-          {/* Blueprint architectural grid lines */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--grid-color)_1px,transparent_1px),linear-gradient(to_bottom,var(--grid-color)_1px,transparent_1px)] bg-[size:5rem_5rem] pointer-events-none z-10" />
-          
-          {/* Ambient volumetric fog canvas particles */}
-          <FogParticlesCanvas />
-          
-          {/* Ambient background glows */}
-          <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-[#C5A880]/5 dark:bg-red-600/10 rounded-full blur-[180px] pointer-events-none z-0" />
-          <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-[#C5A880]/5 dark:bg-[#C5A880]/10 rounded-full blur-[180px] pointer-events-none z-0" />
+        {/* Subtle blurred background image for depth */}
+        <div className="absolute inset-0 bg-[url('https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/cbd41c122_Barnbazen.jpeg')] bg-cover bg-center opacity-[0.05] dark:opacity-[0.09] blur-[1px] pointer-events-none mix-blend-overlay" />
 
-          {/* 3D Depth Layer 1: Typography Behind the Houses */}
-          <motion.div 
-            style={{ opacity: m1TextOpacity, scale: m1TextScale, x: mousePos.x * -0.3, y: mousePos.y * -0.3 }}
-            className="text-behind absolute inset-0 flex items-center justify-center text-slate-800/[0.04] dark:text-white/[0.03] select-none z-10 pointer-events-none tracking-tighter"
-          >
-            01 / BARN 72
-          </motion.div>
-          <motion.div 
-            style={{ opacity: m2TextOpacity, scale: m2TextScale, x: mousePos.x * -0.3, y: mousePos.y * -0.3 }}
-            className="text-behind absolute inset-0 flex items-center justify-center text-slate-800/[0.04] dark:text-white/[0.03] select-none z-10 pointer-events-none tracking-tighter"
-          >
-            02 / LONDON 144
-          </motion.div>
+        {/* Ambient background glows - Rich premium gradients */}
+        <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] bg-[#C5A880]/10 dark:bg-red-600/15 rounded-full blur-[180px] pointer-events-none" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] bg-[#C5A880]/10 dark:bg-[#C5A880]/15 rounded-full blur-[180px] pointer-events-none" />
+        <div className="absolute top-[30%] left-[35%] w-[500px] h-[500px] bg-[#C5A880]/5 dark:bg-slate-900/30 rounded-full blur-[150px] pointer-events-none" />
 
-          <div className="relative z-20 container mx-auto px-8 h-full grid grid-cols-12 gap-12 items-center">
+        <div className="relative z-10 container mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
-            {/* Left Column (45% width - lg:col-span-5) */}
-            <div className="col-span-5 h-[70vh] relative flex flex-col justify-center">
-              
-              {/* Scene 1 Welcome/Intro text */}
-              <motion.div 
-                style={{ 
-                  opacity: introOpacity,
-                  y: introY,
-                  pointerEvents: introPointerEvents
-                }}
-                className="absolute inset-y-0 left-0 w-full flex flex-col justify-center text-left"
-              >
-                {/* Logo & Small Badge */}
-                <div className="flex items-center gap-3 mb-6">
-                  <motion.img 
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.6 }}
-                    src={LOGO_URL} 
-                    alt="American Living" 
-                    className="h-14 w-auto drop-shadow-lg rounded-full"
-                    width={56}
-                    height={56}
-                    loading="eager"
-                  />
-                  <motion.div
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6, delay: 0.1 }}
-                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#C5A880]/10 dark:bg-white/5 border border-[#C5A880]/30 dark:border-white/10 text-xs font-semibold text-slate-700 dark:text-slate-350"
-                  >
-                    <span className="w-2 h-2 rounded-full bg-[#C5A880] animate-pulse"></span>
-                    <span>{t('heroBadgeText')}</span>
-                  </motion.div>
-                </div>
-
-                {/* Main Headline */}
-                <motion.h1 
-                  variants={headlineContainer}
-                  initial="hidden"
-                  animate="visible"
-                  className="text-4xl xl:text-5xl font-black text-slate-900 dark:text-white mb-6 leading-[1.1] tracking-tight"
-                  style={{ textShadow: '2px 2px 10px rgba(0,0,0,0.05)' }}
+            {/* Left Column: Copywriting & CTAs */}
+            <div className="lg:col-span-6 flex flex-col text-left">
+              {/* Logo & Small Badge */}
+              <div className="flex items-center gap-3 mb-6 flex-wrap">
+                <motion.img 
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.6 }}
+                  src={LOGO_URL} 
+                  alt="American Living" 
+                  className="h-10 sm:h-14 w-auto drop-shadow-lg rounded-full"
+                  width={56}
+                  height={56}
+                  loading="eager"
+                />
+                <motion.div
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.1 }}
+                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#C5A880]/10 dark:bg-white/5 border border-[#C5A880]/30 dark:border-white/10 text-xs font-semibold text-slate-700 dark:text-slate-300"
                 >
-                  {(t('heroTitleFirst')?.split(" ") || []).map((word, idx) => (
-                    <motion.span key={`first-${idx}`} variants={headlineWord} className="inline-block mr-2">
+                  <span className="w-2 h-2 rounded-full bg-[#C5A880] animate-pulse"></span>
+                  <span>{t('heroBadgeText')}</span>
+                </motion.div>
+              </div>
+
+              {/* Main Headline */}
+              <motion.h1 
+                variants={headlineContainer}
+                initial="hidden"
+                animate="visible"
+                className="text-3xl sm:text-5xl md:text-6xl font-black text-slate-900 dark:text-white mb-6 leading-[1.1] tracking-tight"
+                style={{ textShadow: '2px 2px 10px rgba(0,0,0,0.05)' }}
+              >
+                {(t('heroTitleFirst')?.split(" ") || []).map((word, idx) => (
+                  <motion.span key={`first-${idx}`} variants={headlineWord} className="inline-block mr-2">
+                    {word}
+                  </motion.span>
+                ))}
+                {" "}
+                <span className="bg-gradient-to-r from-[#C5A880] via-[#E2C799] to-[#C5A880] bg-clip-text text-transparent block sm:inline">
+                  {(t('heroTitleSecond')?.split(" ") || []).map((word, idx) => (
+                    <motion.span key={`second-${idx}`} variants={headlineWord} className="inline-block mr-2">
                       {word}
                     </motion.span>
                   ))}
-                  {" "}
-                  <span className="bg-gradient-to-r from-[#C5A880] via-[#E2C799] to-[#C5A880] bg-clip-text text-transparent block">
-                    {(t('heroTitleSecond')?.split(" ") || []).map((word, idx) => (
-                      <motion.span key={`second-${idx}`} variants={headlineWord} className="inline-block mr-2">
-                        {word}
-                      </motion.span>
-                    ))}
-                  </span>
-                </motion.h1>
+                </span>
+              </motion.h1>
 
-                {/* Subheadline */}
-                <motion.p 
-                  initial={{ opacity: 0, y: 25 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.4 }}
-                  className="text-base xl:text-lg text-slate-655 dark:text-slate-300 mb-8 leading-relaxed font-light"
-                >
-                  {t('heroDescription')}
-                </motion.p>
+              {/* Subheadline */}
+              <motion.p 
+                initial={{ opacity: 0, y: 25 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="text-base sm:text-xl text-slate-600 dark:text-slate-300 mb-8 leading-relaxed font-light max-w-2xl"
+              >
+                {t('heroDescription')}
+              </motion.p>
 
-                {/* CTAs */}
-                <motion.div 
-                  initial={{ opacity: 0, y: 25 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.6 }}
-                  className="flex gap-4 mb-8"
-                >
-                  <Link to={createPageUrl("Katalog")} className="w-auto">
-                    <Button size="lg" className="relative bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-black text-base px-8 py-6 shadow-[0_0_30px_rgba(220,38,38,0.4)] border border-red-500/50 transition-all rounded-2xl flex items-center justify-center gap-2 group">
-                      <Home className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-                      <span>{t('viewCatalogButton')}</span>
-                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    </Button>
-                  </Link>
-                  <Button 
-                    size="lg" 
-                    variant="outline" 
-                    onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))}
-                    className="bg-white/70 dark:bg-white/5 hover:bg-[#C5A880]/10 dark:hover:bg-[#C5A880]/15 hover:border-[#C5A880]/50 text-slate-800 dark:text-white border border-slate-200 dark:border-white/15 font-bold text-sm px-8 py-6 rounded-2xl transition-all flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(197,168,128,0.15)] backdrop-blur-sm shadow-sm"
-                  >
-                    <MessageCircle className="w-5 h-5" />
-                    <span>{t('consultationWithKexo')}</span>
+              {/* CTAs */}
+              <motion.div 
+                initial={{ opacity: 0, y: 25 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+                className="flex flex-col sm:flex-row gap-4 mb-10"
+              >
+                <Link to={createPageUrl("Katalog")} className="w-full sm:w-auto">
+                  <Button size="lg" className="relative w-full sm:w-auto bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-black text-lg px-8 py-7 shadow-[0_0_30px_rgba(220,38,38,0.4)] border border-red-500/50 transition-all rounded-2xl flex items-center justify-center gap-2 group">
+                    <Home className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                    <span>{t('viewCatalogButton')}</span>
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </Button>
+                </Link>
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))}
+                  className="w-full sm:w-auto bg-white/70 dark:bg-white/5 hover:bg-[#C5A880]/10 dark:hover:bg-[#C5A880]/15 hover:border-[#C5A880]/50 text-slate-800 dark:text-white border border-slate-200 dark:border-white/15 font-bold text-base px-8 py-7 rounded-2xl transition-all flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(197,168,128,0.15)] backdrop-blur-sm shadow-sm"
+                >
+                  <MessageCircle className="w-5 h-5" />
+                  <span>{t('consultationWithKexo')}</span>
+                </Button>
+              </motion.div>
+
+              {/* Interactive Quick House Switcher with Real Images */}
+              <div className="pt-6 border-t border-white/10 max-w-xl">
+                <p className="text-slate-450 text-xs font-bold uppercase tracking-wider mb-4">{t('clickToSeeMostLucrativeModels')}</p>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.8 }}
+                  className="flex overflow-x-auto gap-3 pb-3 pt-1 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-805 scroll-smooth snap-x"
+                >
+                  {switcherHouses.map((house) => (
+                    <button
+                      key={house.id}
+                      type="button"
+                      onClick={() => {
+                        setSelectedHouseId(house.id);
+                        // Reset facade to anthracite to avoid missing configurations
+                        setSelectedFacade("anthracite");
+                      }}
+                      className={`snap-start flex-shrink-0 w-28 h-20 sm:w-36 sm:h-24 group p-2.5 rounded-xl border text-left transition-all duration-300 relative overflow-hidden flex flex-col justify-end ${
+                        selectedHouseId === house.id 
+                          ? 'border-[#C5A880] ring-1 ring-[#C5A880]/50 bg-white/95 dark:bg-slate-900/90 shadow-[0_4px_12px_rgba(197,168,128,0.15)] dark:shadow-[0_0_15px_rgba(197,168,128,0.2)] scale-[1.02]' 
+                          : 'border-slate-200 dark:border-white/10 bg-white/75 dark:bg-slate-955/60 hover:bg-slate-50 dark:hover:bg-slate-900/40 hover:border-slate-300 dark:hover:border-white/20 hover:scale-[1.02] backdrop-blur-sm shadow-sm dark:shadow-none'
+                      }`}
+                    >
+                      {/* Background image overlay - increased opacity and dark overlay for text legibility, no more pale wash-out */}
+                      <div className="absolute inset-0 z-0 opacity-70 group-hover:opacity-90 transition-opacity duration-300">
+                        <img src={optimizeImageUrl(house.img, 300)} alt={house.name} className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/5 dark:from-slate-950/85 dark:via-slate-950/45 dark:to-transparent" />
+                      </div>
+                      <div className="relative z-10">
+                        <p className={`text-[10px] sm:text-xs font-black transition-colors duration-300 text-white ${selectedHouseId === house.id ? 'text-[#E2C799]' : ''}`}>{house.name}</p>
+                        <p className="text-[8px] sm:text-[9px] text-slate-200 dark:text-slate-350 mt-0.5 leading-tight font-medium line-clamp-1">{house.desc}</p>
+                      </div>
+                    </button>
+                  ))}
                 </motion.div>
-
-                {/* Switcher */}
-                <div className="pt-6 border-t border-white/10 w-full">
-                  <p className="text-slate-450 text-xs font-bold uppercase tracking-wider mb-3">{t('clickToSeeMostLucrativeModels')}</p>
-                  <div className="flex gap-3 pb-2 pt-1 overflow-x-auto scrollbar-thin">
-                    {switcherHouses.map((house) => (
-                      <button
-                        key={house.id}
-                        type="button"
-                        onClick={() => {
-                          setSelectedHouseId(house.id);
-                          setSelectedFacade("anthracite");
-                        }}
-                        className={`flex-shrink-0 w-28 h-20 group p-2.5 rounded-xl border text-left transition-all duration-300 relative overflow-hidden flex flex-col justify-end ${
-                          selectedHouseId === house.id 
-                            ? 'border-[#C5A880] ring-1 ring-[#C5A880]/50 bg-white/95 dark:bg-slate-900/90 shadow-md scale-[1.02]' 
-                            : 'border-slate-200 dark:border-white/10 bg-white/75 dark:bg-slate-900/40 hover:bg-slate-50 dark:hover:bg-slate-900/40 hover:scale-[1.02] backdrop-blur-sm'
-                        }`}
-                      >
-                        <div className="absolute inset-0 z-0 opacity-70 group-hover:opacity-95 transition-opacity">
-                          <img src={optimizeImageUrl(house.img, 300)} alt={house.name} className="w-full h-full object-cover" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent" />
-                        </div>
-                        <div className="relative z-10">
-                          <p className={`text-[10px] font-black text-white ${selectedHouseId === house.id ? 'text-[#E2C799]' : ''}`}>{house.name}</p>
-                          <p className="text-[8px] text-slate-350 mt-0.5 leading-tight font-medium line-clamp-1">{house.desc}</p>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Scene 2 specs card (Barn Double 72) */}
-              <motion.div 
-                style={{ 
-                  opacity: m1CardOpacity, 
-                  y: m1CardY, 
-                  x: mousePos.x * 0.2,
-                  pointerEvents: m1PointerEvents
-                }}
-                className="absolute inset-y-0 left-0 w-full flex flex-col justify-center text-left"
-              >
-                <div className="w-full max-w-md bg-slate-900/40 dark:bg-slate-955/60 backdrop-blur-2xl border border-slate-200 dark:border-white/15 p-6 rounded-3xl shadow-xl pointer-events-auto">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-[10px] font-black uppercase tracking-wider text-[#C5A880] bg-[#C5A880]/15 border border-[#C5A880]/30 px-2.5 py-1 rounded-full">Prosto House</span>
-                    <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Trieda A0</span>
-                  </div>
-                  <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-1">Barn Double 72</h3>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 font-light mb-4">Dvojposchodový rodinný dom v tvare severskej stodoly s čistými líniami a garantovanou životnosťou cez 80 rokov.</p>
-                  
-                  <div className="grid grid-cols-3 gap-2 mb-4 border-t border-b border-slate-200 dark:border-white/5 py-3">
-                    <div>
-                      <p className="text-[8px] text-slate-400 dark:text-slate-505 uppercase font-black">Úžitková plocha</p>
-                      <p className="text-xs font-black text-slate-800 dark:text-white">72 m²</p>
-                    </div>
-                    <div>
-                      <p className="text-[8px] text-slate-400 dark:text-slate-505 uppercase font-black">Počet izieb</p>
-                      <p className="text-xs font-black text-slate-800 dark:text-white">3 izby</p>
-                    </div>
-                    <div>
-                      <p className="text-[8px] text-slate-400 dark:text-slate-505 uppercase font-black">Dodanie</p>
-                      <p className="text-xs font-black text-slate-800 dark:text-white">12 týždňov</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-[8px] text-slate-400 dark:text-slate-505 font-bold uppercase">{t('priceFrom')}</p>
-                      <p className="text-[10px] font-bold text-slate-450 line-through">36 900 € bez DPH</p>
-                      <p className="text-lg font-black text-slate-900 dark:text-white">45 387 € <span className="text-[10px] font-normal text-slate-500">s DPH (23%)</span></p>
-                    </div>
-                    <Link to={`${createPageUrl("DetailDomu")}?id=6916ec94c11aacdd15248f2c`}>
-                      <Button className="bg-[#C5A880] hover:bg-[#b0926a] text-slate-955 font-black rounded-xl px-5 py-2.5 text-xs flex items-center gap-1">
-                        <span>{t('configure')}</span>
-                        <ChevronRight className="w-3.5 h-3.5" />
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Scene 3 specs card (London 144) */}
-              <motion.div 
-                style={{ 
-                  opacity: m2CardOpacity, 
-                  y: m2CardY, 
-                  x: mousePos.x * 0.2,
-                  pointerEvents: m2PointerEvents
-                }}
-                className="absolute inset-y-0 left-0 w-full flex flex-col justify-center text-left"
-              >
-                <div className="w-full max-w-md bg-slate-900/40 dark:bg-slate-955/60 backdrop-blur-2xl border border-slate-200 dark:border-white/15 p-6 rounded-3xl shadow-xl pointer-events-auto">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-[10px] font-black uppercase tracking-wider text-[#C5A880] bg-[#C5A880]/15 border border-[#C5A880]/30 px-2.5 py-1 rounded-full">Ticab House</span>
-                    <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Trieda A0</span>
-                  </div>
-                  <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-1">London 144</h3>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 font-light mb-4">Veľkolepá rodinná vila s lepeným drevom GL24, vyrábaná s milimetrovou CNC presnosťou.</p>
-                  
-                  <div className="grid grid-cols-3 gap-2 mb-4 border-t border-b border-slate-200 dark:border-white/5 py-3">
-                    <div>
-                      <p className="text-[8px] text-slate-400 dark:text-slate-505 uppercase font-black">Úžitková plocha</p>
-                      <p className="text-xs font-black text-slate-800 dark:text-white">144 m²</p>
-                    </div>
-                    <div>
-                      <p className="text-[8px] text-slate-400 dark:text-slate-505 uppercase font-black">Počet izieb</p>
-                      <p className="text-xs font-black text-slate-800 dark:text-white">5 izieb</p>
-                    </div>
-                    <div>
-                      <p className="text-[8px] text-slate-400 dark:text-slate-505 uppercase font-black">Dodanie</p>
-                      <p className="text-xs font-black text-slate-800 dark:text-white">6 týždňov</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-[8px] text-slate-400 dark:text-slate-505 font-bold uppercase">{t('priceFrom')}</p>
-                      <p className="text-[9px] font-bold text-emerald-400">s dotáciou -5%</p>
-                      <p className="text-[10px] font-bold text-slate-450 line-through">120 000 € bez DPH</p>
-                      <p className="text-lg font-black text-slate-900 dark:text-white">140 220 € <span className="text-[10px] font-normal text-slate-500">s DPH (23%)</span></p>
-                    </div>
-                    <Link to={`${createPageUrl("DetailDomu")}?id=6916ec94c11aacdd15248f07`}>
-                      <Button className="bg-[#C5A880] hover:bg-[#b0926a] text-slate-955 font-black rounded-xl px-5 py-2.5 text-xs flex items-center gap-1">
-                        <span>{t('configure')}</span>
-                        <ChevronRight className="w-3.5 h-3.5" />
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-              </motion.div>
-
+              </div>
             </div>
 
-            {/* Right Column (55% width - lg:col-span-7) */}
-            <div className="col-span-7 h-[70vh] relative flex flex-col justify-center">
-              
-              {/* Scene 1 Lookbook & facade switcher */}
-              <motion.div 
-                style={{ 
-                  opacity: introOpacity,
-                  y: introY,
-                  pointerEvents: introPointerEvents
-                }}
-                className="w-full relative z-30 flex justify-center"
+            {/* Right Column: Interactive Lookbook (Color Swapper) & Floating Tags */}
+            <div className="lg:col-span-6 relative">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="relative bg-gradient-to-br from-white/95 to-slate-50/55 dark:from-slate-900/50 dark:to-slate-950/70 backdrop-blur-2xl border border-slate-200 dark:border-white/15 rounded-3xl p-4 sm:p-6 shadow-[0_20px_50px_rgba(197,168,128,0.06)] dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)] overflow-hidden group transition-colors duration-300"
               >
-                <div className="w-full max-w-[500px] bg-white/95 dark:bg-slate-900/50 backdrop-blur-2xl border border-slate-200 dark:border-white/15 rounded-3xl p-5 shadow-xl">
-                  <div className="aspect-[4/3] rounded-2xl overflow-hidden relative border border-slate-250 dark:border-white/5 bg-slate-955">
-                    <AnimatePresence mode="wait">
-                      <motion.img 
-                        key={`${selectedHouseId}-${selectedFacade}`}
-                        src={selectedFacadeImage} 
-                        alt={currentHouseData.name}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="absolute inset-0 w-full h-full object-cover" 
-                        loading="eager"
-                      />
-                    </AnimatePresence>
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent" />
-                    
-                    <div className="absolute top-4 right-4 z-20">
-                      {getManufacturerBadge(currentHouseData.manufacturer)}
+                {/* Lookbook main image wrapper */}
+                <div className="aspect-[4/3] rounded-2xl overflow-hidden relative border border-slate-250 dark:border-white/5 bg-slate-950">
+                  <AnimatePresence>
+                    <motion.img 
+                      key={`${selectedHouseId}-${selectedFacade}`}
+                      src={selectedFacadeImage} 
+                      alt={currentHouseData.name}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.4 }}
+                      className="absolute inset-0 w-full h-full object-cover" 
+                      loading="eager"
+                    />
+                  </AnimatePresence>
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
+                  
+                  {/* Floating Brand Badge */}
+                  <div className="absolute top-4 right-4 z-20">
+                    {getManufacturerBadge(currentHouseData.manufacturer)}
+                  </div>
+                  
+                  {/* Floating stats tag 1 (top-left) - Dynamic delivery time based on manufacturer */}
+                  <motion.div 
+                    animate={{ y: [0, -5, 0] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute top-4 left-4 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border border-slate-200 dark:border-white/15 rounded-xl px-3.5 py-2 flex items-center gap-2 shadow-[0_8px_32px_rgba(0,0,0,0.15)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)] z-20 transition-colors duration-300"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-[#C5A880]/20 flex items-center justify-center border border-[#C5A880]/30">
+                       <Clock className="w-4 h-4 text-[#C5A880]" />
                     </div>
-                    
-                    <div className="absolute top-4 left-4 bg-white/90 dark:bg-slate-955/90 backdrop-blur-md border border-slate-200 dark:border-white/15 rounded-xl px-3 py-1.5 z-20">
-                      <p className="text-[9px] text-slate-505 font-semibold uppercase tracking-wider">
+                    <div>
+                      <p className="text-[9px] text-slate-505 dark:text-slate-400 font-semibold uppercase tracking-wider">
                         {currentHouseData.manufacturer?.toLowerCase().includes("ticab") ? t('factoryProduction') : t('turnkeyDelivery')}
                       </p>
                       <p className="text-xs font-black text-slate-800 dark:text-white">
                         {currentHouseData.manufacturer?.toLowerCase().includes("ticab") ? t('sixWeeks') : t('upToTwelveWeeks')}
                       </p>
                     </div>
-                  </div>
+                  </motion.div>
 
-                  <div className="mt-4">
-                    <div className="flex items-center justify-between mb-4">
-                      <div>
-                        <h3 className="text-xl font-bold text-slate-850 dark:text-white leading-tight">{currentHouseData.name}</h3>
-                        <div className="text-xs text-slate-500 mt-1.5 font-medium flex items-center gap-1.5 flex-wrap">
-                          <span>{currentHouseData.rooms} {t('roomsLabel')}</span>
-                          <span>•</span>
-                          <span>{currentHouseData.area} m²</span>
-                          <span>•</span>
-                          <span><strong className="text-[#C5A880]">{t('from')} {currentHouseData.price.toLocaleString()} €</strong></span>
-                        </div>
+                  {/* Floating stats tag 2 (bottom-right) */}
+                  <motion.div 
+                    animate={{ y: [0, 5, 0] }}
+                    transition={{ duration: 4, delay: 2, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute bottom-4 right-4 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border border-slate-250 dark:border-white/15 rounded-xl px-3.5 py-2 flex items-center gap-2 shadow-[0_8px_32px_rgba(0,0,0,0.15)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)] z-20 transition-colors duration-300"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center border border-emerald-500/35">
+                      <Star className="w-4 h-4 text-emerald-400 animate-pulse" />
+                    </div>
+                    <div>
+                      <p className="text-[9px] text-slate-505 dark:text-slate-400 font-semibold uppercase tracking-wider">{t('builtArea')}</p>
+                      <p className="text-xs font-black text-emerald-400">{currentHouseData.area} m²</p>
+                    </div>
+                  </motion.div>
+                </div>
+
+                {/* Lookbook info & controls */}
+                <div className="mt-4 sm:mt-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <h3 className="text-base sm:text-xl font-bold text-slate-800 dark:text-white leading-tight">{currentHouseData.name}</h3>
+                      <div className="text-xs text-slate-500 dark:text-slate-400 mt-1.5 font-medium flex items-center gap-1.5 flex-wrap">
+                        <span>{currentHouseData.rooms} {t('roomsLabel')}</span>
+                        <span>•</span>
+                        {getManufacturerBadge(currentHouseData.manufacturer)}
+                        <span>•</span>
+                        <span><strong className="text-slate-800 dark:text-white">{t('from')} {currentHouseData.price.toLocaleString()} €</strong></span>
                       </div>
-                      <Link to={`${createPageUrl("DetailDomu")}?id=${currentHouseData.id}`}>
-                        <Button variant="ghost" size="sm" className="text-xs text-[#C5A880] p-0 hover:bg-transparent font-black">
-                          <span>{t('configure')}</span>
-                          <ChevronRight className="w-4 h-4" />
-                        </Button>
-                      </Link>
                     </div>
-
-                    {hasMultipleFacades && (
-                      <div className="flex gap-2">
-                        {facadeOptions.map((opt) => (
-                          <button
-                            key={opt.id}
-                            type="button"
-                            onClick={() => setSelectedFacade(opt.id)}
-                            className={`flex-1 p-2 rounded-xl border text-left transition-all duration-300 flex items-center gap-2.5 ${
-                              selectedFacade === opt.id 
-                                ? 'bg-[#C5A880]/15 border-[#C5A880] text-[#C5A880]' 
-                                : 'bg-slate-100 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-350'
-                            }`}
-                          >
-                            <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 border border-slate-200 dark:border-white/10">
-                              <img src={optimizeImageUrl(opt.img, 100)} alt={opt.name} className="w-full h-full object-cover" />
-                            </div>
-                            <div className="min-w-0">
-                              <p className="text-[10px] leading-tight font-black truncate">{opt.name}</p>
-                              <p className="text-[8px] leading-tight text-slate-400 mt-0.5 truncate">{opt.desc}</p>
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    )}
+                    <Link to={`${createPageUrl("DetailDomu")}?id=${currentHouseData.id}`}>
+                      <Button variant="ghost" size="sm" className="text-xs text-[#C5A880] hover:text-[#C5A880]/80 p-0 hover:bg-transparent flex items-center gap-1 font-black transition-colors duration-300">
+                        <span>{t('configure')}</span>
+                        <ChevronRight className="w-4 h-4" />
+                      </Button>
+                    </Link>
                   </div>
+
+                  {/* Facade switcher controls with live thumbnails */}
+                  {hasMultipleFacades && (
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      {facadeOptions.map((opt) => (
+                        <button
+                          key={opt.id}
+                          type="button"
+                          onClick={() => setSelectedFacade(opt.id)}
+                          className={`flex-1 p-2 rounded-xl border text-left transition-all duration-300 flex items-center gap-2.5 hover:scale-[1.02] ${
+                            selectedFacade === opt.id 
+                              ? 'bg-[#C5A880]/10 border-[#C5A880] text-[#C5A880] dark:text-white shadow-[0_0_15px_rgba(197,168,128,0.1)]' 
+                              : 'bg-slate-100 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-white/10 hover:border-slate-300 dark:hover:border-white/15'
+                          }`}
+                        >
+                          <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 border border-slate-200 dark:border-white/10 bg-slate-950 transition-all duration-300">
+                            <img src={optimizeImageUrl(opt.img, 120)} alt={opt.name} className="w-full h-full object-cover" />
+                          </div>
+                          <div className="min-w-0">
+                            <p className={`text-[11px] leading-tight font-black transition-colors duration-300 ${selectedFacade === opt.id ? 'text-[#C5A880]' : 'text-slate-800 dark:text-slate-200'}`}>{opt.name}</p>
+                            <p className="text-[9px] leading-tight text-slate-505 dark:text-slate-400 mt-0.5 truncate">{opt.desc}</p>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </motion.div>
-
-              {/* Scene 2 Barn Double 72 image card */}
-              <motion.div 
-                style={{ 
-                  opacity: m1Opacity, 
-                  scale: m1Scale, 
-                  x: m1X, 
-                  y: mousePos.y * 0.8, 
-                  rotate: m1Rotate,
-                  pointerEvents: m1PointerEvents
-                }}
-                className="absolute inset-0 flex items-center justify-center z-20"
-              >
-                <div className="w-full max-w-[500px] aspect-[4/3] sm:aspect-[16/10] bg-slate-900/40 dark:bg-slate-950/60 backdrop-blur-xl border border-slate-250 dark:border-white/15 rounded-3xl p-3 shadow-2xl pointer-events-auto transform hover:scale-[1.03] transition-transform duration-500 group relative">
-                  {/* Decorative target markers inside CAD viewport */}
-                  <div className="absolute top-4 right-4 text-[9px] text-[#C5A880]/30 font-mono tracking-widest">SYS.LOCK // ACTIVE</div>
-                  <div className="absolute bottom-4 left-4 text-[9px] text-[#C5A880]/30 font-mono tracking-widest">CAD_VIEW_3D: AXIS_Z</div>
-                  
-                  <div className="relative w-full h-full rounded-2xl overflow-hidden">
-                    <img 
-                      src="https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/eccd583aa_barn-double-prosto-house-3.jpg" 
-                      alt="Barn Double 72" 
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 to-transparent" />
-                    <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-[#C5A880]">{t('exteriorBarn')}</span>
-                      <span className="text-[10px] text-white/50">{t('clickToDetails')}</span>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Scene 3 London 144 image card */}
-              <motion.div 
-                style={{ 
-                  opacity: m2Opacity, 
-                  scale: m2Scale, 
-                  x: m2X, 
-                  y: mousePos.y * 0.8, 
-                  rotate: m2Rotate,
-                  pointerEvents: m2PointerEvents
-                }}
-                className="absolute inset-0 flex items-center justify-center z-20"
-              >
-                <div className="w-full max-w-[500px] aspect-[4/3] sm:aspect-[16/10] bg-slate-900/40 dark:bg-slate-950/60 backdrop-blur-xl border border-slate-255 dark:border-white/15 rounded-3xl p-3 shadow-2xl pointer-events-auto transform hover:scale-[1.03] transition-transform duration-500 group relative">
-                  {/* Decorative target markers inside CAD viewport */}
-                  <div className="absolute top-4 right-4 text-[9px] text-[#C5A880]/30 font-mono tracking-widest">SYS.LOCK // ACTIVE</div>
-                  <div className="absolute bottom-4 left-4 text-[9px] text-[#C5A880]/30 font-mono tracking-widest">CAD_VIEW_3D: AXIS_Z</div>
-
-                  <div className="relative w-full h-full rounded-2xl overflow-hidden">
-                    <img 
-                      src="https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/25e2796ce_Londonexteriermurovka1.jpeg" 
-                      alt="London 144" 
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 to-transparent" />
-                    <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-[#C5A880]">{t('exteriorLondon')}</span>
-                      <span className="text-[10px] text-white/50">{t('clickToDetails')}</span>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-
             </div>
 
           </div>
         </div>
       </section>
-
-      {/* Immersive Bento Hero Section (Mobile - block lg:hidden) */}
-      <MobileHeroSection
-        t={t}
-        selectedFacadeImage={selectedFacadeImage}
-        currentHouseData={currentHouseData}
-        getManufacturerBadge={getManufacturerBadge}
-        switcherHouses={switcherHouses}
-        selectedHouseId={selectedHouseId}
-        setSelectedHouseId={setSelectedHouseId}
-        setSelectedFacade={setSelectedFacade}
-        selectedFacade={selectedFacade}
-        hasMultipleFacades={hasMultipleFacades}
-        facadeOptions={facadeOptions}
-      />
 
       {/* Trust Grid: Tri hlavné záruky a predajné argumenty */}
       <section className="py-8 sm:py-12 bg-slate-50 dark:bg-[#07070a] relative border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
@@ -1579,7 +1234,90 @@ export default function Domov() {
       </section>
 
       {/* AI Consultation Section - Kexo */}
-      <KexoConsultationSection t={t} />
+      <section className="py-12 sm:py-16 bg-background relative overflow-hidden border-b border-[#C5A880]/15 transition-colors duration-300">
+        {/* Glow Effects */}
+        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-80 h-80 bg-[#C5A880]/10 dark:bg-[#9E2A2B]/10 rounded-full blur-[100px] pointer-events-none"></div>
+        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-[#C5A880]/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-5xl mx-auto">
+            <div className="bg-gradient-to-br from-white/95 to-slate-50/80 dark:from-[#0D0D11]/90 dark:to-[#16161D]/80 backdrop-blur-xl border border-[#C5A880]/30 dark:border-[#C5A880]/20 rounded-3xl p-6 sm:p-12 shadow-[0_15px_40px_rgba(197,168,128,0.06)] dark:shadow-[0_0_50px_rgba(197,168,128,0.08)] flex flex-col lg:flex-row items-center gap-8 sm:gap-12 transition-colors duration-300">
+              
+                <div className="flex-1 text-left">
+                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#C5A880]/15 dark:bg-[#9E2A2B]/10 border border-[#C5A880]/30 dark:border-[#9E2A2B]/35 text-slate-800 dark:text-[#C5A880] text-xs sm:text-sm font-bold mb-4 sm:mb-6 animate-pulse">
+                    <span className="w-2 h-2 bg-green-400 rounded-full"></span>
+                    <span>{t('kexoAiAssistantBadge')}</span>
+                  </div>
+                 <h2 className="text-2xl sm:text-4xl font-black text-slate-800 dark:text-white mb-4 sm:mb-6 leading-tight tracking-tight">
+                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C5A880] via-slate-800 dark:via-white to-[#C5A880]">
+                     {t('consultWithKexoTitle')}
+                   </span>
+                   {" "}{t('consultWithKexoSub')}
+                 </h2>
+                 <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed font-light mb-6 sm:mb-8">
+                   {t('kexoDescription')}
+                 </p>
+                 <div className="flex flex-wrap gap-4">
+                   <button 
+                     onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))}
+                     className="bg-gradient-to-r from-[#9E2A2B] to-[#b13536] hover:from-[#b13536] hover:to-[#9E2A2B] text-white font-bold px-8 py-6 rounded-2xl shadow-[0_0_20px_rgba(158,42,43,0.35)] hover:shadow-[0_0_30px_rgba(158,42,43,0.5)] border border-[#C5A880]/30 transition-all text-sm sm:text-base flex items-center justify-center gap-2 group"
+                   >
+                     <MessageCircle className="w-5 h-5 text-white animate-pulse" />
+                     <span>{t('startChatWithKexo')}</span>
+                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                   </button>
+                 </div>
+               </div>
+
+               {/* Right column: Interactive mock chat panel */}
+               <div className="w-full lg:w-96 shrink-0">
+                 <div className="bg-white/95 dark:bg-[#08080A]/90 border border-slate-200 dark:border-[#C5A880]/15 rounded-2xl p-4 sm:p-5 shadow-xl dark:shadow-2xl relative overflow-hidden transition-colors duration-305">
+                   {/* Top Chat Header */}
+                   <div className="flex items-center gap-3 border-b border-slate-200 dark:border-[#C5A880]/10 pb-3 mb-4">
+                     <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#16161D] border border-slate-200 dark:border-[#C5A880]/30 flex items-center justify-center">
+                       <Sparkles className="w-4.5 h-4.5 text-[#C5A880]" />
+                     </div>
+                     <div>
+                       <p className="text-xs font-bold text-slate-800 dark:text-white leading-tight">Kexo</p>
+                       <p className="text-[10px] text-green-500 dark:text-green-400 flex items-center gap-1.5">
+                         <span className="w-1.5 h-1.5 bg-green-500 dark:bg-green-400 rounded-full animate-pulse"></span>
+                         {t('activeNow')}
+                       </p>
+                     </div>
+                   </div>
+
+                   {/* Chat Message Stream (Mock) */}
+                   <div className="space-y-4 mb-4 min-h-[140px] flex flex-col justify-end">
+                     <div className="flex items-start gap-2.5">
+                       <div className="bg-slate-100 dark:bg-[#16161D]/80 border border-slate-200 dark:border-[#C5A880]/10 rounded-2xl px-3 py-2 text-xs text-slate-700 dark:text-slate-300 max-w-[90%]">
+                         {t('kexoIntroMessage')}
+                       </div>
+                     </div>
+                   </div>
+
+                   {/* Input Box (Mock) */}
+                   <div className="flex gap-2">
+                     <input 
+                       type="text" 
+                       placeholder={t('askMeAnything')}
+                       className="flex-1 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880] transition-colors"
+                       readOnly
+                       onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))}
+                     />
+                     <button 
+                       onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))}
+                       className="bg-[#C5A880] text-slate-950 p-3 rounded-xl hover:bg-[#C5A880]/90 transition-colors"
+                     >
+                       <Send className="w-4 h-4" />
+                     </button>
+                   </div>
+                 </div>
+               </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Populárne domy Carousel */}
       {domy && domy.length > 0 && (
