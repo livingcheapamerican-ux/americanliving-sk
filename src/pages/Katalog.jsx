@@ -21,6 +21,35 @@ import { Info, Gift } from "lucide-react";
 import ImageWithWatermark from "../components/ImageWithWatermark";
 import ProstoHouseMarketing from "../components/ProstoHouseMarketing";
 
+// CatalogPhotoBackground renders a premium, high-resolution nature landscape photo
+// with an infinite, slow Ken Burns zoom/pan animation, overlayed with soft gradient masks.
+function CatalogPhotoBackground() {
+  const isDark = document.documentElement.classList.contains('dark');
+  const [dark, setDark] = useState(isDark);
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setDark(document.documentElement.classList.contains('dark'));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
+  const lightImage = "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1920&q=80"; // Yosemite valley
+  const darkImage = "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1920&q=80";  // Starry mountains night
+
+  return (
+    <div className="fixed inset-0 w-full h-full overflow-hidden bg-[#FAF8F5] dark:bg-[#050508] z-0 pointer-events-none select-none">
+      <img
+        src={dark ? darkImage : lightImage}
+        alt="Catalog background"
+        className="w-full h-full object-cover animate-ken-burns transition-all duration-1000 ease-in-out scale-105"
+        style={{ filter: dark ? 'brightness(0.35) contrast(1.1)' : 'brightness(0.95) contrast(1.02)' }}
+      />
+    </div>
+  );
+}
+
 // Memoizovaný komponent pre kartičku domu
 const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitImages, jeVybrany, toggleSrovnanie, vybraneNaSrovnanie, canManage, handleToggleVerejny, toggleVerejnyMutation, handleDeleteDom, deleteDomMutation, location, t }) => {
   return (
@@ -542,76 +571,80 @@ export default function Katalog() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden max-w-full font-['Outfit']">
-      <Helmet>
-        <title>{metaTitle}</title>
-        <meta name="description" content={metaDescription} />
-        <meta property="og:title" content={metaTitle} />
-        <meta property="og:description" content={metaDescription} />
-        <meta property="og:type" content="website" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={metaTitle} />
-        <meta name="twitter:description" content={metaDescription} />
-        <link rel="canonical" href={`https://americanliving.sk/katalog`} />
-        <script type="application/ld+json">
-          {JSON.stringify(generateSchemaOrg())}
-        </script>
-      </Helmet>
-      {/* Header */}
-      <section className="bg-slate-900/5 dark:bg-slate-900/40 border-b border-border/60 py-8 sm:py-16">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col gap-4 lg:gap-8 lg:flex-row lg:items-center">
-            {/* Ľavá časť - Hlavný nadpis a popis */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex-1">
-              <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-2 sm:mb-4 text-foreground">
-                {t('houseCatalog')}
-              </h1>
-              <p className="text-sm sm:text-lg text-muted-foreground font-light">
-                {t('modularAndMobileHouses')}
-              </p>
-            </motion.div>
-
-            {/* Pravá časť - Fixácia úrokov banner */}
-            <Card className="w-full lg:w-[650px] lg:flex-shrink-0 bg-gradient-to-br from-orange-600 via-red-600 to-orange-700 border-2 border-yellow-400 p-3 sm:p-5 shadow-2xl">
-              <div className="flex gap-3 items-center">
-                <motion.div
-                  animate={{ scale: [1, 1.1, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  className="flex-shrink-0"
-                >
-                  <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border-2 border-white/40">
-                    <Euro className="w-7 h-7 text-white" />
-                  </div>
-                </motion.div>
-                <div className="flex-1 min-w-0">
-                  <h2 className="text-sm sm:text-lg font-black text-white mb-1.5 leading-tight">
-                    {t('mortgageFixationTitle')}
-                  </h2>
-                  <p className="text-xs sm:text-sm text-white/95 leading-snug mb-2.5">
-                    {t('mortgageFixationDesc')}
+    <div className="min-h-screen bg-transparent text-foreground overflow-x-hidden max-w-full font-['Outfit'] relative">
+      <CatalogPhotoBackground />
+      <div className="fixed-bg-content relative z-10">
+        <Helmet>
+          <title>{metaTitle}</title>
+          <meta name="description" content={metaDescription} />
+          <meta property="og:title" content={metaTitle} />
+          <meta property="og:description" content={metaDescription} />
+          <meta property="og:type" content="website" />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content={metaTitle} />
+          <meta name="twitter:description" content={metaDescription} />
+          <link rel="canonical" href={`https://americanliving.sk/katalog`} />
+          <script type="application/ld+json">
+            {JSON.stringify(generateSchemaOrg())}
+          </script>
+        </Helmet>
+        {/* Header */}
+        <div className="bg-slate-900/5 dark:bg-slate-900/40 backdrop-blur-md border-b border-border/60 py-8 sm:py-16 relative z-10">
+          <div className="container mx-auto px-4">
+            <div className="flex flex-col gap-4 lg:gap-8 lg:flex-row lg:items-center">
+              {/* Ľavá časť - Hlavný nadpis a popis */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex-1">
+                <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-2 sm:mb-4 text-foreground">
+                  {t('houseCatalog')}
+                </h1>
+                <div className="mt-2">
+                  <p className="inline-block text-slate-800 dark:text-slate-200 text-sm sm:text-lg font-normal leading-relaxed bg-white/90 dark:bg-slate-900/90 border border-slate-200/85 dark:border-white/10 px-5 py-2.5 rounded-2xl shadow-md backdrop-blur-md transition-colors duration-300">
+                    {t('modularAndMobileHouses')}
                   </p>
-                  <div className="flex gap-2">
-                    <Link to={createPageUrl("Kontakt")}>
-                      <Button size="sm" className="bg-white text-red-700 hover:bg-yellow-100 font-bold text-xs px-3 py-1.5 h-auto">
-                        {t('contactUs')}
-                      </Button>
-                    </Link>
-                    <a href="tel:+421905138124">
-                      <Button size="sm" variant="outline" className="bg-white/10 backdrop-blur-md border border-white/30 text-white hover:bg-white/20 hover:text-white font-bold text-xs px-3 py-1.5 h-auto transition-all shadow-lg">
-                        <Phone className="mr-1 w-3 h-3" />
-                        {t('callLabel')}
-                      </Button>
-                    </a>
+                </div>
+              </motion.div>
+
+              {/* Pravá časť - Fixácia úrokov banner */}
+              <Card className="w-full lg:w-[650px] lg:flex-shrink-0 bg-gradient-to-br from-orange-600 via-red-600 to-orange-700 border-2 border-yellow-400 p-3 sm:p-5 shadow-2xl">
+                <div className="flex gap-3 items-center">
+                  <motion.div
+                    animate={{ scale: [1, 1.1, 1] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="flex-shrink-0"
+                  >
+                    <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border-2 border-white/40">
+                      <Euro className="w-7 h-7 text-white" />
+                    </div>
+                  </motion.div>
+                  <div className="flex-1 min-w-0">
+                    <h2 className="text-sm sm:text-lg font-black text-white mb-1.5 leading-tight">
+                      {t('mortgageFixationTitle')}
+                    </h2>
+                    <p className="text-xs sm:text-sm text-white/95 leading-snug mb-2.5">
+                      {t('mortgageFixationDesc')}
+                    </p>
+                    <div className="flex gap-2">
+                      <Link to={createPageUrl("Kontakt")}>
+                        <Button size="sm" className="bg-white text-red-700 hover:bg-yellow-100 font-bold text-xs px-3 py-1.5 h-auto">
+                          {t('contactUs')}
+                        </Button>
+                      </Link>
+                      <a href="tel:+421905138124">
+                        <Button size="sm" variant="outline" className="bg-white/10 backdrop-blur-md border border-white/30 text-white hover:bg-white/20 hover:text-white font-bold text-xs px-3 py-1.5 h-auto transition-all shadow-lg">
+                          <Phone className="mr-1 w-3 h-3" />
+                          {t('callLabel')}
+                        </Button>
+                      </a>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Card>
+              </Card>
+            </div>
           </div>
         </div>
-      </section>
 
       <div className="container mx-auto px-2 sm:px-4 py-6 sm:py-12 max-w-full overflow-hidden">
         {/* Tabs pre kategórie */}
@@ -1212,6 +1245,7 @@ export default function Katalog() {
             )}
           </div>
         </div>
+      </div>
       </div>
     </div>);
 
