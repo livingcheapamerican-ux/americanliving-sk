@@ -16,6 +16,8 @@ import HeroSettingsManager from "../components/admin/HeroSettingsManager";
 import { useLanguage } from "../components/LanguageContext";
 import ServiceDetailModal from "../components/ServiceDetailModal";
 import { optimizeImageUrl } from "../components/ImageWithWatermark";
+import MobileHeroSection from "../components/home/MobileHeroSection";
+import KexoConsultationSection from "../components/home/KexoConsultationSection";
 
 const sliderT = {
   sk: { viz: "Vizualizácia", real: "Realizácia" },
@@ -453,7 +455,13 @@ export default function Domov() {
   // Global Split Background Controls
   const bgConcreteWidth = useTransform(scrollYProgress, [0, 0.4, 0.5, 0.9], ["50%", "50%", "30%", "30%"]);
   const bgWoodWidth = useTransform(scrollYProgress, [0, 0.4, 0.5, 0.9], ["50%", "50%", "70%", "70%"]);
-  
+  const leftScaleX = useTransform(scrollYProgress, [0, 0.4, 0.5, 0.9], [1, 1, 0.6, 0.6]);
+  const introOpacity = useTransform(scrollYProgress, [0, 0.1, 0.2], [1, 1, 0]);
+  const introY = useTransform(scrollYProgress, [0, 0.1, 0.2], [0, 0, -40]);
+  const introPointerEvents = useTransform(scrollYProgress, (v) => (v < 0.2 ? "auto" : "none"));
+  const m1PointerEvents = useTransform(scrollYProgress, (v) => (v >= 0.15 && v < 0.45 ? "auto" : "none"));
+  const m2PointerEvents = useTransform(scrollYProgress, (v) => (v >= 0.5 && v < 0.9 ? "auto" : "none"));
+
   // Parallax mouse position state
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   useEffect(() => {
@@ -1471,249 +1479,19 @@ export default function Domov() {
       </section>
 
       {/* Immersive Bento Hero Section (Mobile - block lg:hidden) */}
-      <section className="block lg:hidden relative bg-concrete-split dark:bg-[#050508] transition-colors duration-300 py-12 px-4 border-b border-slate-200 dark:border-white/5">
-        {/* Blueprint architectural grid lines */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--grid-color)_1px,transparent_1px),linear-gradient(to_bottom,var(--grid-color)_1px,transparent_1px)] bg-[size:3rem_3rem] pointer-events-none z-10 opacity-30" />
-        
-        <div className="relative z-20 max-w-2xl mx-auto flex flex-col gap-10">
-          
-          {/* Welcome Card */}
-          <div className="flex flex-col text-left">
-            {/* Logo & Small Badge */}
-            <div className="flex items-center gap-3 mb-6">
-              <img 
-                src={LOGO_URL} 
-                alt="American Living" 
-                className="h-12 w-auto drop-shadow-lg rounded-full"
-                width={48}
-                height={48}
-                loading="eager"
-              />
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#C5A880]/10 dark:bg-white/5 border border-[#C5A880]/30 dark:border-white/10 text-xs font-semibold text-slate-700 dark:text-slate-350">
-                <span className="w-2 h-2 rounded-full bg-[#C5A880] animate-pulse"></span>
-                <span>{t('heroBadgeText')}</span>
-              </div>
-            </div>
-
-            {/* Main Headline */}
-            <h1 className="text-3xl font-black text-slate-900 dark:text-white mb-4 leading-[1.1] tracking-tight">
-              {t('heroTitleFirst')}{" "}
-              <span className="bg-gradient-to-r from-[#C5A880] via-[#E2C799] to-[#C5A880] bg-clip-text text-transparent block">
-                {t('heroTitleSecond')}
-              </span>
-            </h1>
-
-            {/* Subheadline */}
-            <p className="text-base text-slate-655 dark:text-slate-300 mb-6 leading-relaxed font-light">
-              {t('heroDescription')}
-            </p>
-
-            {/* CTAs */}
-            <div className="flex flex-col gap-3 mb-6">
-              <Link to={createPageUrl("Katalog")} className="w-full">
-                <Button size="lg" className="w-full bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-black text-base py-5 shadow-[0_0_20px_rgba(220,38,38,0.3)] border border-red-500/50 transition-all rounded-xl flex items-center justify-center gap-2">
-                  <Home className="w-5 h-5" />
-                  <span>{t('viewCatalogButton')}</span>
-                  <ArrowRight className="w-5 h-5" />
-                </Button>
-              </Link>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))}
-                className="w-full bg-white/70 dark:bg-white/5 hover:bg-[#C5A880]/10 text-slate-800 dark:text-white border border-slate-200 dark:border-white/15 font-bold text-sm py-5 rounded-xl transition-all flex items-center justify-center gap-2 backdrop-blur-sm shadow-sm"
-              >
-                <MessageCircle className="w-5 h-5" />
-                <span>{t('consultationWithKexo')}</span>
-              </Button>
-            </div>
-          </div>
-
-          {/* Lookbook / Interactive Section */}
-          <div className="bg-white/95 dark:bg-slate-900/50 backdrop-blur-2xl border border-slate-200 dark:border-white/15 rounded-3xl p-4 shadow-xl">
-            <div className="aspect-[4/3] rounded-2xl overflow-hidden relative border border-slate-255 dark:border-white/5 bg-slate-955">
-              <img 
-                src={selectedFacadeImage} 
-                alt={currentHouseData.name}
-                className="absolute inset-0 w-full h-full object-cover" 
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-955/80 to-transparent" />
-              
-              <div className="absolute top-3 right-3 z-20">
-                {getManufacturerBadge(currentHouseData.manufacturer)}
-              </div>
-              
-              <div className="absolute top-3 left-3 bg-white/90 dark:bg-slate-955/90 backdrop-blur-md border border-slate-200 dark:border-white/15 rounded-xl px-2.5 py-1 z-20">
-                <p className="text-[8px] text-slate-505 font-semibold uppercase tracking-wider">
-                  {currentHouseData.manufacturer?.toLowerCase().includes("ticab") ? t('factoryProduction') : t('turnkeyDelivery')}
-                </p>
-                <p className="text-[10px] font-black text-slate-800 dark:text-white">
-                  {currentHouseData.manufacturer?.toLowerCase().includes("ticab") ? t('sixWeeks') : t('upToTwelveWeeks')}
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-4">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h3 className="text-lg font-bold text-slate-850 dark:text-white leading-tight">{currentHouseData.name}</h3>
-                  <div className="text-xs text-slate-500 mt-1 font-medium flex items-center gap-1.5 flex-wrap">
-                    <span>{currentHouseData.rooms} {t('roomsLabel')}</span>
-                    <span>•</span>
-                    <span>{currentHouseData.area} m²</span>
-                    <span>•</span>
-                    <span><strong className="text-[#C5A880]">{t('from')} {currentHouseData.price.toLocaleString()} €</strong></span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Selector buttons for houses */}
-              <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-thin">
-                {switcherHouses.map((house) => (
-                  <button
-                    key={house.id}
-                    type="button"
-                    onClick={() => {
-                      setSelectedHouseId(house.id);
-                      setSelectedFacade("anthracite");
-                    }}
-                    className={`flex-shrink-0 px-3 py-2 rounded-xl border text-xs font-bold transition-all ${
-                      selectedHouseId === house.id
-                        ? 'border-[#C5A880] bg-[#C5A880]/10 text-[#C5A880]'
-                        : 'border-slate-200 dark:border-white/10 bg-white/50 dark:bg-slate-900/40 text-slate-655 dark:text-slate-300'
-                    }`}
-                  >
-                    {house.name}
-                  </button>
-                ))}
-              </div>
-
-              {hasMultipleFacades && (
-                <div className="flex flex-col gap-2 mt-2">
-                  {facadeOptions.map((opt) => (
-                    <button
-                      key={opt.id}
-                      type="button"
-                      onClick={() => setSelectedFacade(opt.id)}
-                      className={`p-2 rounded-xl border text-left transition-all duration-300 flex items-center gap-2.5 ${
-                        selectedFacade === opt.id 
-                          ? 'bg-[#C5A880]/15 border-[#C5A880] text-[#C5A880]' 
-                          : 'bg-slate-100 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-350'
-                      }`}
-                    >
-                      <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 border border-slate-200 dark:border-white/10">
-                        <img src={optimizeImageUrl(opt.img, 100)} alt={opt.name} className="w-full h-full object-cover" />
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-[10px] leading-tight font-black truncate">{opt.name}</p>
-                        <p className="text-[8px] leading-tight text-slate-400 mt-0.5 truncate">{opt.desc}</p>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Barn Double 72 Mobile Card */}
-          <div className="bg-slate-900/30 dark:bg-slate-950/40 border border-slate-200 dark:border-white/10 p-5 rounded-3xl shadow-lg">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-[10px] font-black uppercase tracking-wider text-[#C5A880] bg-[#C5A880]/15 border border-[#C5A880]/30 px-2 py-0.5 rounded-full">Prosto House</span>
-              <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Trieda A0</span>
-            </div>
-            <h3 className="text-xl font-black text-slate-900 dark:text-white mb-2">Barn Double 72</h3>
-            
-            <div className="aspect-[16/10] rounded-2xl overflow-hidden mb-4 border border-white/5 bg-slate-950">
-              <img 
-                src="https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/eccd583aa_barn-double-prosto-house-3.jpg" 
-                alt="Barn Double 72" 
-                className="w-full h-full object-cover"
-              />
-            </div>
-
-            <p className="text-xs text-slate-655 dark:text-slate-400 font-light mb-4">Dvojposchodový rodinný dom v tvare severskej stodoly s čistými líniami a garantovanou životnosťou cez 80 rokov.</p>
-            
-            <div className="grid grid-cols-3 gap-2 mb-4 border-t border-b border-slate-200 dark:border-white/5 py-3 text-center">
-              <div>
-                <p className="text-[8px] text-slate-400 dark:text-slate-505 uppercase font-black">Úžitková plocha</p>
-                <p className="text-xs font-black text-slate-800 dark:text-white">72 m²</p>
-              </div>
-              <div>
-                <p className="text-[8px] text-slate-400 dark:text-slate-505 uppercase font-black">Počet izieb</p>
-                <p className="text-xs font-black text-slate-800 dark:text-white">3 izby</p>
-              </div>
-              <div>
-                <p className="text-[8px] text-slate-400 dark:text-slate-505 uppercase font-black">Dodanie</p>
-                <p className="text-xs font-black text-slate-800 dark:text-white">12 týždňov</p>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-[8px] text-slate-400 dark:text-slate-505 font-bold uppercase">{t('priceFrom')}</p>
-                <p className="text-[10px] font-bold text-slate-450 line-through">36 900 € bez DPH</p>
-                <p className="text-base font-black text-slate-900 dark:text-white">45 387 € <span className="text-[10px] font-normal text-slate-500">s DPH (23%)</span></p>
-              </div>
-              <Link to={`${createPageUrl("DetailDomu")}?id=6916ec94c11aacdd15248f2c`}>
-                <Button className="bg-[#C5A880] hover:bg-[#b0926a] text-slate-950 font-black rounded-xl px-4 py-2 text-xs flex items-center gap-1">
-                  <span>{t('configure')}</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </Button>
-              </Link>
-            </div>
-          </div>
-
-          {/* London 144 Mobile Card */}
-          <div className="bg-slate-900/30 dark:bg-slate-950/40 border border-slate-200 dark:border-white/10 p-5 rounded-3xl shadow-lg">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-[10px] font-black uppercase tracking-wider text-[#C5A880] bg-[#C5A880]/15 border border-[#C5A880]/30 px-2 py-0.5 rounded-full">Ticab House</span>
-              <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Trieda A0</span>
-            </div>
-            <h3 className="text-xl font-black text-slate-900 dark:text-white mb-2">London 144</h3>
-            
-            <div className="aspect-[16/10] rounded-2xl overflow-hidden mb-4 border border-white/5 bg-slate-950">
-              <img 
-                src="https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/25e2796ce_Londonexteriermurovka1.jpeg" 
-                alt="London 144" 
-                className="w-full h-full object-cover"
-              />
-            </div>
-
-            <p className="text-xs text-slate-655 dark:text-slate-400 font-light mb-4">Veľkolepá rodinná vila s lepeným drevom GL24, vyrábaná s milimetrovou CNC presnosťou.</p>
-            
-            <div className="grid grid-cols-3 gap-2 mb-4 border-t border-b border-slate-200 dark:border-white/5 py-3 text-center">
-              <div>
-                <p className="text-[8px] text-slate-400 dark:text-slate-505 uppercase font-black">Úžitková plocha</p>
-                <p className="text-xs font-black text-slate-800 dark:text-white">144 m²</p>
-              </div>
-              <div>
-                <p className="text-[8px] text-slate-400 dark:text-slate-505 uppercase font-black">Počet izieb</p>
-                <p className="text-xs font-black text-slate-800 dark:text-white">5 izieb</p>
-              </div>
-              <div>
-                <p className="text-[8px] text-slate-400 dark:text-slate-505 uppercase font-black">Dodanie</p>
-                <p className="text-xs font-black text-slate-800 dark:text-white">6 týždňov</p>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-[8px] text-slate-400 dark:text-slate-505 font-bold uppercase">{t('priceFrom')}</p>
-                <p className="text-[9px] font-bold text-emerald-400">s dotáciou -5%</p>
-                <p className="text-[10px] font-bold text-slate-450 line-through">120 000 € bez DPH</p>
-                <p className="text-base font-black text-slate-900 dark:text-white">140 220 € <span className="text-[10px] font-normal text-slate-500">s DPH (23%)</span></p>
-              </div>
-              <Link to={`${createPageUrl("DetailDomu")}?id=6916ec94c11aacdd15248f07`}>
-                <Button className="bg-[#C5A880] hover:bg-[#b0926a] text-slate-950 font-black rounded-xl px-4 py-2 text-xs flex items-center gap-1">
-                  <span>{t('configure')}</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </Button>
-              </Link>
-            </div>
-          </div>
-
-        </div>
-      </section>
+      <MobileHeroSection
+        t={t}
+        selectedFacadeImage={selectedFacadeImage}
+        currentHouseData={currentHouseData}
+        getManufacturerBadge={getManufacturerBadge}
+        switcherHouses={switcherHouses}
+        selectedHouseId={selectedHouseId}
+        setSelectedHouseId={setSelectedHouseId}
+        setSelectedFacade={setSelectedFacade}
+        selectedFacade={selectedFacade}
+        hasMultipleFacades={hasMultipleFacades}
+        facadeOptions={facadeOptions}
+      />
 
       {/* Trust Grid: Tri hlavné záruky a predajné argumenty */}
       <section className="py-8 sm:py-12 bg-slate-50 dark:bg-[#07070a] relative border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
@@ -1801,90 +1579,7 @@ export default function Domov() {
       </section>
 
       {/* AI Consultation Section - Kexo */}
-      <section className="py-12 sm:py-16 bg-background relative overflow-hidden border-b border-[#C5A880]/15 transition-colors duration-300">
-        {/* Glow Effects */}
-        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-80 h-80 bg-[#C5A880]/10 dark:bg-[#9E2A2B]/10 rounded-full blur-[100px] pointer-events-none"></div>
-        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-[#C5A880]/5 rounded-full blur-[100px] pointer-events-none"></div>
-
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-5xl mx-auto">
-            <div className="bg-gradient-to-br from-white/95 to-slate-50/80 dark:from-[#0D0D11]/90 dark:to-[#16161D]/80 backdrop-blur-xl border border-[#C5A880]/30 dark:border-[#C5A880]/20 rounded-3xl p-6 sm:p-12 shadow-[0_15px_40px_rgba(197,168,128,0.06)] dark:shadow-[0_0_50px_rgba(197,168,128,0.08)] flex flex-col lg:flex-row items-center gap-8 sm:gap-12 transition-colors duration-300">
-              
-                <div className="flex-1 text-left">
-                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#C5A880]/15 dark:bg-[#9E2A2B]/10 border border-[#C5A880]/30 dark:border-[#9E2A2B]/35 text-slate-800 dark:text-[#C5A880] text-xs sm:text-sm font-bold mb-4 sm:mb-6 animate-pulse">
-                    <span className="w-2 h-2 bg-green-400 rounded-full"></span>
-                    <span>{t('kexoAiAssistantBadge')}</span>
-                  </div>
-                 <h2 className="text-2xl sm:text-4xl font-black text-slate-800 dark:text-white mb-4 sm:mb-6 leading-tight tracking-tight">
-                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C5A880] via-slate-800 dark:via-white to-[#C5A880]">
-                     {t('consultWithKexoTitle')}
-                   </span>
-                   {" "}{t('consultWithKexoSub')}
-                 </h2>
-                 <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed font-light mb-6 sm:mb-8">
-                   {t('kexoDescription')}
-                 </p>
-                 <div className="flex flex-wrap gap-4">
-                   <button 
-                     onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))}
-                     className="bg-gradient-to-r from-[#9E2A2B] to-[#b13536] hover:from-[#b13536] hover:to-[#9E2A2B] text-white font-bold px-8 py-6 rounded-2xl shadow-[0_0_20px_rgba(158,42,43,0.35)] hover:shadow-[0_0_30px_rgba(158,42,43,0.5)] border border-[#C5A880]/30 transition-all text-sm sm:text-base flex items-center justify-center gap-2 group"
-                   >
-                     <MessageCircle className="w-5 h-5 text-white animate-pulse" />
-                     <span>{t('startChatWithKexo')}</span>
-                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                   </button>
-                 </div>
-               </div>
-
-               {/* Right column: Interactive mock chat panel */}
-               <div className="w-full lg:w-96 shrink-0">
-                 <div className="bg-white/95 dark:bg-[#08080A]/90 border border-slate-200 dark:border-[#C5A880]/15 rounded-2xl p-4 sm:p-5 shadow-xl dark:shadow-2xl relative overflow-hidden transition-colors duration-305">
-                   {/* Top Chat Header */}
-                   <div className="flex items-center gap-3 border-b border-slate-200 dark:border-[#C5A880]/10 pb-3 mb-4">
-                     <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#16161D] border border-slate-200 dark:border-[#C5A880]/30 flex items-center justify-center">
-                       <Sparkles className="w-4.5 h-4.5 text-[#C5A880]" />
-                     </div>
-                     <div>
-                       <p className="text-xs font-bold text-slate-800 dark:text-white leading-tight">Kexo</p>
-                       <p className="text-[10px] text-green-500 dark:text-green-400 flex items-center gap-1.5">
-                         <span className="w-1.5 h-1.5 bg-green-500 dark:bg-green-400 rounded-full animate-pulse"></span>
-                         {t('activeNow')}
-                       </p>
-                     </div>
-                   </div>
-
-                   {/* Chat Message Stream (Mock) */}
-                   <div className="space-y-4 mb-4 min-h-[140px] flex flex-col justify-end">
-                     <div className="flex items-start gap-2.5">
-                       <div className="bg-slate-100 dark:bg-[#16161D]/80 border border-slate-200 dark:border-[#C5A880]/10 rounded-2xl px-3 py-2 text-xs text-slate-700 dark:text-slate-300 max-w-[90%]">
-                         {t('kexoIntroMessage')}
-                       </div>
-                     </div>
-                   </div>
-
-                   {/* Input Box (Mock) */}
-                   <div className="flex gap-2">
-                     <input 
-                       type="text" 
-                       placeholder={t('askMeAnything')}
-                       className="flex-1 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880] transition-colors"
-                       readOnly
-                       onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))}
-                     />
-                     <button 
-                       onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))}
-                       className="bg-[#C5A880] text-slate-950 p-3 rounded-xl hover:bg-[#C5A880]/90 transition-colors"
-                     >
-                       <Send className="w-4 h-4" />
-                     </button>
-                   </div>
-                 </div>
-               </div>
-
-            </div>
-          </div>
-        </div>
-      </section>
+      <KexoConsultationSection t={t} />
 
       {/* Populárne domy Carousel */}
       {domy && domy.length > 0 && (
