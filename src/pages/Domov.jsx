@@ -299,249 +299,46 @@ const headlineWord = {
   }
 };
 
-// NatureAnimatedBackground handles particle animations of glowing forest spores and slowly drifting leaves.
-function NatureAnimatedBackground() {
-  const canvasRef = React.useRef(null);
+// NaturePhotoBackground renders a premium, high-resolution nature landscape photo
+// with an infinite, slow Ken Burns zoom/pan animation, overlayed with soft gradient masks
+// to ensure perfect contrast and legibility for text content in both light and dark modes.
+function NaturePhotoBackground() {
+  const isDark = document.documentElement.classList.contains('dark');
+  const [dark, setDark] = React.useState(isDark);
 
   React.useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let animationFrameId;
-    let dpr = window.devicePixelRatio || 1;
-    let width = canvas.offsetWidth;
-    let height = canvas.offsetHeight;
-    
-    canvas.width = width * dpr;
-    canvas.height = height * dpr;
-    ctx.scale(dpr, dpr);
-
-    const handleResize = () => {
-      if (!canvas) return;
-      width = canvas.offsetWidth;
-      height = canvas.offsetHeight;
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-      ctx.scale(dpr, dpr);
-    };
-    window.addEventListener("resize", handleResize);
-
-    const getHillHeight = (x, layerIndex, time) => {
-      if (layerIndex === 0) {
-        return height * 0.52 + Math.sin(x * 0.0015 + time * 0.00012) * 55 + Math.cos(x * 0.0008 - time * 0.00006) * 30;
-      } else if (layerIndex === 1) {
-        return height * 0.65 + Math.sin(x * 0.003 - time * 0.00025) * 38 + Math.cos(x * 0.0015 + time * 0.00015) * 20;
-      } else {
-        return height * 0.78 + Math.sin(x * 0.006 + time * 0.00045) * 25 + Math.cos(x * 0.0028 - time * 0.00025) * 15;
-      }
-    };
-
-    const drawHills = (layerIndex, fillStyle, treeColor, speedCoeff, time) => {
-      ctx.beginPath();
-      const firstY = getHillHeight(0, layerIndex, time * speedCoeff);
-      ctx.moveTo(0, height);
-      ctx.lineTo(0, firstY);
-      
-      for (let x = 0; x <= width; x += 15) {
-        const y = getHillHeight(x, layerIndex, time * speedCoeff);
-        ctx.lineTo(x, y);
-      }
-      ctx.lineTo(width, height);
-      ctx.closePath();
-      ctx.fillStyle = fillStyle;
-      ctx.fill();
-
-      // Draw stylized pine trees along the wave peak
-      if (treeColor) {
-        ctx.fillStyle = treeColor;
-        const step = layerIndex === 1 ? 30 : 45;
-        const treeHeight = layerIndex === 1 ? 16 : 24;
-        const treeWidth = layerIndex === 1 ? 6 : 9;
-
-        for (let x = 5; x < width; x += step) {
-          const rX = x + (Math.sin(x + time * 0.001) * 6);
-          const y = getHillHeight(rX, layerIndex, time * speedCoeff);
-          
-          ctx.beginPath();
-          ctx.moveTo(rX, y);
-          ctx.lineTo(rX - treeWidth, y + treeHeight);
-          ctx.lineTo(rX + treeWidth, y + treeHeight);
-          ctx.closePath();
-          ctx.fill();
-
-          ctx.beginPath();
-          ctx.moveTo(rX, y - treeHeight * 0.25);
-          ctx.lineTo(rX - treeWidth * 0.7, y + treeHeight * 0.45);
-          ctx.lineTo(rX + treeWidth * 0.7, y + treeHeight * 0.45);
-          ctx.closePath();
-          ctx.fill();
-        }
-      }
-    };
-
-    const particles = [];
-    const particleCount = 40;
-
-    class Particle {
-      constructor() {
-        this.reset();
-        this.y = Math.random() * height;
-      }
-
-      reset() {
-        const isDark = document.documentElement.classList.contains('dark');
-        this.x = Math.random() * width;
-        this.y = -20;
-        this.size = Math.random() * 3 + 1.2;
-        this.speedX = Math.random() * 0.3 - 0.15;
-        this.speedY = Math.random() * 0.3 + 0.12;
-        this.alpha = Math.random() * 0.35 + 0.25;
-        this.color = Math.random() > 0.5 
-          ? `rgba(197, 168, 128, ${this.alpha})` // gold
-          : isDark 
-            ? `rgba(167, 201, 142, ${this.alpha})` // light green
-            : `rgba(46, 117, 89, ${this.alpha})`; // deep forest green
-        this.type = Math.random() > 0.35 ? "spore" : "leaf";
-        
-        if (this.type === "leaf") {
-          this.size = Math.random() * 5 + 4;
-          this.angle = Math.random() * Math.PI * 2;
-          this.spinSpeed = (Math.random() * 0.015 + 0.005) * (Math.random() > 0.5 ? 1 : -1);
-          this.swayRange = Math.random() * 10 + 6;
-          this.swaySpeed = Math.random() * 0.012 + 0.004;
-          this.swayOffset = Math.random() * 100;
-          this.speedY = Math.random() * 0.4 + 0.25;
-          this.greenTone = isDark 
-            ? Math.floor(Math.random() * 40) + 160 
-            : Math.floor(Math.random() * 30) + 100;
-        }
-      }
-
-      update(time) {
-        if (this.type === "spore") {
-          this.x += this.speedX + Math.sin(time * 0.0008 + this.y * 0.005) * 0.1;
-          this.y += this.speedY;
-        } else {
-          this.x += Math.sin(time * this.swaySpeed + this.swayOffset) * 0.3 + this.speedX;
-          this.y += this.speedY;
-          this.angle += this.spinSpeed;
-        }
-
-        if (this.y > height + 20 || this.x < -20 || this.x > width + 20) {
-          this.reset();
-        }
-      }
-
-      draw() {
-        if (this.type === "spore") {
-          ctx.beginPath();
-          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-          ctx.fillStyle = this.color;
-          ctx.shadowBlur = 5;
-          ctx.shadowColor = this.color;
-          ctx.fill();
-          ctx.shadowBlur = 0;
-        } else {
-          ctx.save();
-          ctx.translate(this.x, this.y);
-          ctx.rotate(this.angle);
-          ctx.beginPath();
-          ctx.moveTo(0, -this.size);
-          ctx.quadraticCurveTo(this.size * 0.55, -this.size * 0.25, 0, this.size);
-          ctx.quadraticCurveTo(-this.size * 0.55, -this.size * 0.25, 0, -this.size);
-          
-          ctx.fillStyle = `rgba(130, ${this.greenTone}, 80, ${this.alpha})`;
-          ctx.fill();
-          
-          ctx.beginPath();
-          ctx.moveTo(0, -this.size);
-          ctx.lineTo(0, this.size);
-          ctx.strokeStyle = `rgba(255, 255, 255, ${this.alpha * 0.25})`;
-          ctx.lineWidth = 1;
-          ctx.stroke();
-          
-          ctx.restore();
-        }
-      }
-    }
-
-    for (let i = 0; i < particleCount; i++) {
-      particles.push(new Particle());
-    }
-
-    const render = (time) => {
-      ctx.clearRect(0, 0, width, height);
-      
-      const isDark = document.documentElement.classList.contains('dark');
-
-      // 1. Sky Gradient Background
-      const skyGrad = ctx.createLinearGradient(0, 0, 0, height);
-      if (isDark) {
-        skyGrad.addColorStop(0, '#050508');
-        skyGrad.addColorStop(0.5, '#0c121e');
-        skyGrad.addColorStop(1, '#1b1410'); // Warm amber horizon glow
-      } else {
-        skyGrad.addColorStop(0, '#FAF8F5');
-        skyGrad.addColorStop(0.65, '#f3ebd9');
-        skyGrad.addColorStop(1, '#e5d8c1'); // Soft sand/sunset hue
-      }
-      ctx.fillStyle = skyGrad;
-      ctx.fillRect(0, 0, width, height);
-
-      // 2. Far Hills (Layer 0)
-      const farHillsColor = isDark ? 'rgba(22, 32, 28, 0.45)' : 'rgba(198, 182, 161, 0.22)';
-      drawHills(0, farHillsColor, null, 0.12, time);
-
-      // 2b. Mid-landscape glowing mist
-      const mistGrad1 = ctx.createLinearGradient(0, height * 0.5, 0, height);
-      mistGrad1.addColorStop(0, 'rgba(255, 255, 255, 0)');
-      mistGrad1.addColorStop(0.6, isDark ? 'rgba(197, 168, 128, 0.05)' : 'rgba(255, 255, 255, 0.3)');
-      mistGrad1.addColorStop(1, 'rgba(255, 255, 255, 0)');
-      ctx.fillStyle = mistGrad1;
-      ctx.fillRect(0, height * 0.5, width, height * 0.5);
-
-      // 3. Mid Hills (Layer 1)
-      const midHillsColor = isDark ? 'rgba(15, 25, 21, 0.65)' : 'rgba(145, 172, 148, 0.25)';
-      const midTreesColor = isDark ? 'rgba(15, 25, 21, 0.8)' : 'rgba(145, 172, 148, 0.35)';
-      drawHills(1, midHillsColor, midTreesColor, 0.28, time);
-
-      // 3b. Foreground mist
-      const mistGrad2 = ctx.createLinearGradient(0, height * 0.7, 0, height);
-      mistGrad2.addColorStop(0, 'rgba(255, 255, 255, 0)');
-      mistGrad2.addColorStop(0.5, isDark ? 'rgba(12, 18, 28, 0.25)' : 'rgba(255, 255, 255, 0.35)');
-      mistGrad2.addColorStop(1, 'rgba(255, 255, 255, 0)');
-      ctx.fillStyle = mistGrad2;
-      ctx.fillRect(0, height * 0.7, width, height * 0.3);
-
-      // 4. Near Hills (Layer 2)
-      const nearHillsColor = isDark ? 'rgba(8, 16, 13, 0.88)' : 'rgba(105, 133, 110, 0.42)';
-      const nearTreesColor = isDark ? 'rgba(8, 16, 13, 0.95)' : 'rgba(105, 133, 110, 0.55)';
-      drawHills(2, nearHillsColor, nearTreesColor, 0.65, time);
-
-      // 5. Particles (Spores & Leaves)
-      particles.forEach((p) => {
-        p.update(time);
-        p.draw();
-      });
-
-      animationFrameId = requestAnimationFrame(render);
-    };
-
-    animationFrameId = requestAnimationFrame(render);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      cancelAnimationFrame(animationFrameId);
-    };
+    // Listen for dark mode toggle on root element
+    const observer = new MutationObserver(() => {
+      setDark(document.documentElement.classList.contains('dark'));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
   }, []);
 
+  // Premium, atmospheric landscape photos of misty forests/hills at sunrise
+  const lightImage = "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1920&q=80"; // Gorgeous misty hills & forest at sunrise (golden/green tones)
+  const darkImage = "https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=1920&q=80";  // Deep misty pine forest (dark green, gold light rays)
+
   return (
-    <canvas 
-      ref={canvasRef} 
-      className="absolute inset-0 w-full h-full pointer-events-none z-0 mix-blend-normal"
-    />
+    <div className="absolute inset-0 w-full h-full overflow-hidden z-0 pointer-events-none select-none">
+      {/* Background Image with slow Ken Burns effect */}
+      <img
+        src={dark ? darkImage : lightImage}
+        alt="Nature background"
+        className="w-full h-full object-cover animate-ken-burns transition-all duration-1000 ease-in-out scale-105"
+        style={{ filter: dark ? 'brightness(0.35) contrast(1.1)' : 'brightness(0.95) contrast(1.02)' }}
+      />
+      
+      {/* Premium Gradient Overlays for legibility */}
+      {/* Left-to-right fade overlay to protect left column text */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#FAF8F5]/90 via-[#FAF8F5]/60 to-transparent dark:from-[#050508]/90 dark:via-[#050508]/60 dark:to-transparent z-10" />
+
+      {/* Bottom-to-top fade to blend with subsequent section */}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#FAF8F5] via-transparent to-[#FAF8F5]/30 dark:from-[#050508] dark:via-transparent dark:to-[#050508]/30 z-10" />
+      
+      {/* Soft color filters */}
+      <div className="absolute inset-0 bg-[#C5A880]/3 dark:bg-emerald-950/5 mix-blend-overlay z-10" />
+    </div>
   );
 }
 
@@ -1138,7 +935,7 @@ export default function Domov() {
 
       {/* Hero Section */}
       <section className="relative min-h-[90vh] lg:min-h-screen overflow-hidden bg-[#FAF8F5] dark:bg-[#050508] pt-20 lg:pt-28 pb-12 flex items-center transition-colors duration-300">
-        <NatureAnimatedBackground />
+        <NaturePhotoBackground />
         {/* Blueprint architectural grid lines - Uses CSS variable defined in index.css */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--grid-color)_1px,transparent_1px),linear-gradient(to_bottom,var(--grid-color)_1px,transparent_1px)] bg-[size:5rem_5rem] pointer-events-none" />
         
