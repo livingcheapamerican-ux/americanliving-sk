@@ -320,7 +320,7 @@ function NaturePhotoBackground() {
   const darkImage = "https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=1920&q=80";  // Deep misty pine forest (dark green, gold light rays)
 
   return (
-    <div className="absolute inset-0 w-full h-full overflow-hidden z-0 pointer-events-none select-none">
+    <div className="fixed inset-0 w-full h-full overflow-hidden bg-[#FAF8F5] dark:bg-[#050508] z-0 pointer-events-none select-none">
       {/* Background Image with slow Ken Burns effect */}
       <img
         src={dark ? darkImage : lightImage}
@@ -934,7 +934,7 @@ export default function Domov() {
 
 
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] lg:min-h-screen overflow-hidden bg-[#FAF8F5] dark:bg-[#050508] pt-20 lg:pt-28 pb-12 flex items-center transition-colors duration-300">
+      <section className="relative min-h-[90vh] lg:min-h-screen overflow-hidden bg-transparent pt-20 lg:pt-28 pb-12 flex items-center transition-colors duration-300">
         <NaturePhotoBackground />
         {/* Blueprint architectural grid lines - Uses CSS variable defined in index.css */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--grid-color)_1px,transparent_1px),linear-gradient(to_bottom,var(--grid-color)_1px,transparent_1px)] bg-[size:5rem_5rem] pointer-events-none" />
