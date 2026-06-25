@@ -1046,15 +1046,15 @@ export default function Domov() {
 
 
 
-      {/* Immersive Scroll-Driven Hero Section (Antigravity 2) */}
-      <section ref={timelineContainerRef} className="relative h-[250vh] bg-[#FAF8F5] dark:bg-[#050508] transition-colors duration-300">
+      {/* Immersive Scroll-Driven Hero Section (Desktop - lg:block hidden) */}
+      <section ref={timelineContainerRef} className="hidden lg:block relative h-[250vh] bg-[#FAF8F5] dark:bg-[#050508] transition-colors duration-300">
         
         {/* Sticky viewport container */}
         <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-center">
           
           {/* Universal Backdrop */}
-          <motion.div style={{ width: bgConcreteWidth }} className="absolute left-0 top-0 bottom-0 bg-concrete-split z-0 transition-all duration-500" />
-          <motion.div style={{ width: bgWoodWidth }} className="absolute right-0 top-0 bottom-0 bg-wood-split z-0 transition-all duration-500" />
+          <motion.div style={{ scaleX: leftScaleX, transformOrigin: "left" }} className="absolute left-0 top-0 bottom-0 right-0 bg-concrete-split z-0" />
+          <div className="absolute left-0 top-0 bottom-0 right-0 bg-wood-split z-[-1]" />
           
           {/* Blueprint architectural grid lines */}
           <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--grid-color)_1px,transparent_1px),linear-gradient(to_bottom,var(--grid-color)_1px,transparent_1px)] bg-[size:5rem_5rem] pointer-events-none z-10" />
@@ -1080,28 +1080,29 @@ export default function Domov() {
             02 / LONDON 144
           </motion.div>
 
-          <div className="relative z-20 container mx-auto px-4 h-full flex items-center">
+          <div className="relative z-20 container mx-auto px-8 h-full grid grid-cols-12 gap-12 items-center">
             
-            {/* Scroll Scene 1: Introduction (Original copywriting block + Lookbook) */}
-            <motion.div 
-              style={{ 
-                opacity: useTransform(scrollYProgress, [0, 0.22, 0.28], [1, 1, 0]),
-                y: useTransform(scrollYProgress, [0, 0.28], [0, -30]),
-                pointerEvents: useTransform(scrollYProgress, [0, 0.26], ["auto", "none"])
-              }}
-              className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center w-full"
-            >
-              {/* Left Column: Original copywriting */}
-              <div className="lg:col-span-6 flex flex-col text-left">
+            {/* Left Column (45% width - lg:col-span-5) */}
+            <div className="col-span-5 h-[70vh] relative flex flex-col justify-center">
+              
+              {/* Scene 1 Welcome/Intro text */}
+              <motion.div 
+                style={{ 
+                  opacity: introOpacity,
+                  y: introY,
+                  pointerEvents: introPointerEvents
+                }}
+                className="absolute inset-y-0 left-0 w-full flex flex-col justify-center text-left"
+              >
                 {/* Logo & Small Badge */}
-                <div className="flex items-center gap-3 mb-6 flex-wrap">
+                <div className="flex items-center gap-3 mb-6">
                   <motion.img 
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.6 }}
                     src={LOGO_URL} 
                     alt="American Living" 
-                    className="h-10 sm:h-14 w-auto drop-shadow-lg rounded-full"
+                    className="h-14 w-auto drop-shadow-lg rounded-full"
                     width={56}
                     height={56}
                     loading="eager"
@@ -1122,7 +1123,7 @@ export default function Domov() {
                   variants={headlineContainer}
                   initial="hidden"
                   animate="visible"
-                  className="text-3xl sm:text-5xl md:text-6xl font-black text-slate-900 dark:text-white mb-6 leading-[1.1] tracking-tight"
+                  className="text-4xl xl:text-5xl font-black text-slate-900 dark:text-white mb-6 leading-[1.1] tracking-tight"
                   style={{ textShadow: '2px 2px 10px rgba(0,0,0,0.05)' }}
                 >
                   {(t('heroTitleFirst')?.split(" ") || []).map((word, idx) => (
@@ -1131,7 +1132,7 @@ export default function Domov() {
                     </motion.span>
                   ))}
                   {" "}
-                  <span className="bg-gradient-to-r from-[#C5A880] via-[#E2C799] to-[#C5A880] bg-clip-text text-transparent block sm:inline">
+                  <span className="bg-gradient-to-r from-[#C5A880] via-[#E2C799] to-[#C5A880] bg-clip-text text-transparent block">
                     {(t('heroTitleSecond')?.split(" ") || []).map((word, idx) => (
                       <motion.span key={`second-${idx}`} variants={headlineWord} className="inline-block mr-2">
                         {word}
@@ -1145,7 +1146,7 @@ export default function Domov() {
                   initial={{ opacity: 0, y: 25 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.4 }}
-                  className="text-base sm:text-xl text-slate-650 dark:text-slate-300 mb-8 leading-relaxed font-light max-w-2xl"
+                  className="text-base xl:text-lg text-slate-655 dark:text-slate-300 mb-8 leading-relaxed font-light"
                 >
                   {t('heroDescription')}
                 </motion.p>
@@ -1155,10 +1156,10 @@ export default function Domov() {
                   initial={{ opacity: 0, y: 25 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.6 }}
-                  className="flex flex-col sm:flex-row gap-4 mb-8"
+                  className="flex gap-4 mb-8"
                 >
-                  <Link to={createPageUrl("Katalog")} className="w-full sm:w-auto">
-                    <Button size="lg" className="relative w-full sm:w-auto bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-black text-lg px-8 py-7 shadow-[0_0_30px_rgba(220,38,38,0.4)] border border-red-500/50 transition-all rounded-2xl flex items-center justify-center gap-2 group">
+                  <Link to={createPageUrl("Katalog")} className="w-auto">
+                    <Button size="lg" className="relative bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-black text-base px-8 py-6 shadow-[0_0_30px_rgba(220,38,38,0.4)] border border-red-500/50 transition-all rounded-2xl flex items-center justify-center gap-2 group">
                       <Home className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                       <span>{t('viewCatalogButton')}</span>
                       <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -1168,7 +1169,7 @@ export default function Domov() {
                     size="lg" 
                     variant="outline" 
                     onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))}
-                    className="w-full sm:w-auto bg-white/70 dark:bg-white/5 hover:bg-[#C5A880]/10 dark:hover:bg-[#C5A880]/15 hover:border-[#C5A880]/50 text-slate-800 dark:text-white border border-slate-200 dark:border-white/15 font-bold text-base px-8 py-7 rounded-2xl transition-all flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(197,168,128,0.15)] backdrop-blur-sm shadow-sm"
+                    className="bg-white/70 dark:bg-white/5 hover:bg-[#C5A880]/10 dark:hover:bg-[#C5A880]/15 hover:border-[#C5A880]/50 text-slate-800 dark:text-white border border-slate-200 dark:border-white/15 font-bold text-sm px-8 py-6 rounded-2xl transition-all flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(197,168,128,0.15)] backdrop-blur-sm shadow-sm"
                   >
                     <MessageCircle className="w-5 h-5" />
                     <span>{t('consultationWithKexo')}</span>
@@ -1176,9 +1177,9 @@ export default function Domov() {
                 </motion.div>
 
                 {/* Switcher */}
-                <div className="pt-6 border-t border-white/10 max-w-xl">
-                  <p className="text-slate-450 text-xs font-bold uppercase tracking-wider mb-4">{t('clickToSeeMostLucrativeModels')}</p>
-                  <div className="flex overflow-x-auto gap-3 pb-3 pt-1 scrollbar-thin">
+                <div className="pt-6 border-t border-white/10 w-full">
+                  <p className="text-slate-450 text-xs font-bold uppercase tracking-wider mb-3">{t('clickToSeeMostLucrativeModels')}</p>
+                  <div className="flex gap-3 pb-2 pt-1 overflow-x-auto scrollbar-thin">
                     {switcherHouses.map((house) => (
                       <button
                         key={house.id}
@@ -1187,7 +1188,7 @@ export default function Domov() {
                           setSelectedHouseId(house.id);
                           setSelectedFacade("anthracite");
                         }}
-                        className={`snap-start flex-shrink-0 w-28 h-20 sm:w-36 sm:h-24 group p-2.5 rounded-xl border text-left transition-all duration-300 relative overflow-hidden flex flex-col justify-end ${
+                        className={`flex-shrink-0 w-28 h-20 group p-2.5 rounded-xl border text-left transition-all duration-300 relative overflow-hidden flex flex-col justify-end ${
                           selectedHouseId === house.id 
                             ? 'border-[#C5A880] ring-1 ring-[#C5A880]/50 bg-white/95 dark:bg-slate-900/90 shadow-md scale-[1.02]' 
                             : 'border-slate-200 dark:border-white/10 bg-white/75 dark:bg-slate-900/40 hover:bg-slate-50 dark:hover:bg-slate-900/40 hover:scale-[1.02] backdrop-blur-sm'
@@ -1198,20 +1199,131 @@ export default function Domov() {
                           <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent" />
                         </div>
                         <div className="relative z-10">
-                          <p className={`text-[10px] sm:text-xs font-black text-white ${selectedHouseId === house.id ? 'text-[#E2C799]' : ''}`}>{house.name}</p>
-                          <p className="text-[8px] sm:text-[9px] text-slate-350 mt-0.5 leading-tight font-medium line-clamp-1">{house.desc}</p>
+                          <p className={`text-[10px] font-black text-white ${selectedHouseId === house.id ? 'text-[#E2C799]' : ''}`}>{house.name}</p>
+                          <p className="text-[8px] text-slate-350 mt-0.5 leading-tight font-medium line-clamp-1">{house.desc}</p>
                         </div>
                       </button>
                     ))}
                   </div>
                 </div>
-              </div>
+              </motion.div>
 
-              {/* Right Column: Lookbook & Facade switcher */}
-              <div className="lg:col-span-6 relative">
-                <div className="bg-gradient-to-br from-white/95 to-slate-55/55 dark:from-slate-900/50 dark:to-slate-950/70 backdrop-blur-2xl border border-slate-200 dark:border-white/15 rounded-3xl p-4 sm:p-6 shadow-xl overflow-hidden">
-                  <div className="aspect-[4/3] rounded-2xl overflow-hidden relative border border-slate-250 dark:border-white/5 bg-slate-950">
-                    <AnimatePresence>
+              {/* Scene 2 specs card (Barn Double 72) */}
+              <motion.div 
+                style={{ 
+                  opacity: m1CardOpacity, 
+                  y: m1CardY, 
+                  x: mousePos.x * 0.2,
+                  pointerEvents: m1PointerEvents
+                }}
+                className="absolute inset-y-0 left-0 w-full flex flex-col justify-center text-left"
+              >
+                <div className="w-full max-w-md bg-slate-900/40 dark:bg-slate-955/60 backdrop-blur-2xl border border-slate-200 dark:border-white/15 p-6 rounded-3xl shadow-xl pointer-events-auto">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-[#C5A880] bg-[#C5A880]/15 border border-[#C5A880]/30 px-2.5 py-1 rounded-full">Prosto House</span>
+                    <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Trieda A0</span>
+                  </div>
+                  <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-1">Barn Double 72</h3>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 font-light mb-4">Dvojposchodový rodinný dom v tvare severskej stodoly s čistými líniami a garantovanou životnosťou cez 80 rokov.</p>
+                  
+                  <div className="grid grid-cols-3 gap-2 mb-4 border-t border-b border-slate-200 dark:border-white/5 py-3">
+                    <div>
+                      <p className="text-[8px] text-slate-400 dark:text-slate-505 uppercase font-black">Úžitková plocha</p>
+                      <p className="text-xs font-black text-slate-800 dark:text-white">72 m²</p>
+                    </div>
+                    <div>
+                      <p className="text-[8px] text-slate-400 dark:text-slate-505 uppercase font-black">Počet izieb</p>
+                      <p className="text-xs font-black text-slate-800 dark:text-white">3 izby</p>
+                    </div>
+                    <div>
+                      <p className="text-[8px] text-slate-400 dark:text-slate-505 uppercase font-black">Dodanie</p>
+                      <p className="text-xs font-black text-slate-800 dark:text-white">12 týždňov</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-[8px] text-slate-400 dark:text-slate-505 font-bold uppercase">{t('priceFrom')}</p>
+                      <p className="text-[10px] font-bold text-slate-450 line-through">36 900 € bez DPH</p>
+                      <p className="text-lg font-black text-slate-900 dark:text-white">45 387 € <span className="text-[10px] font-normal text-slate-500">s DPH (23%)</span></p>
+                    </div>
+                    <Link to={`${createPageUrl("DetailDomu")}?id=6916ec94c11aacdd15248f2c`}>
+                      <Button className="bg-[#C5A880] hover:bg-[#b0926a] text-slate-955 font-black rounded-xl px-5 py-2.5 text-xs flex items-center gap-1">
+                        <span>{t('configure')}</span>
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Scene 3 specs card (London 144) */}
+              <motion.div 
+                style={{ 
+                  opacity: m2CardOpacity, 
+                  y: m2CardY, 
+                  x: mousePos.x * 0.2,
+                  pointerEvents: m2PointerEvents
+                }}
+                className="absolute inset-y-0 left-0 w-full flex flex-col justify-center text-left"
+              >
+                <div className="w-full max-w-md bg-slate-900/40 dark:bg-slate-955/60 backdrop-blur-2xl border border-slate-200 dark:border-white/15 p-6 rounded-3xl shadow-xl pointer-events-auto">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-[#C5A880] bg-[#C5A880]/15 border border-[#C5A880]/30 px-2.5 py-1 rounded-full">Ticab House</span>
+                    <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Trieda A0</span>
+                  </div>
+                  <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-1">London 144</h3>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 font-light mb-4">Veľkolepá rodinná vila s lepeným drevom GL24, vyrábaná s milimetrovou CNC presnosťou.</p>
+                  
+                  <div className="grid grid-cols-3 gap-2 mb-4 border-t border-b border-slate-200 dark:border-white/5 py-3">
+                    <div>
+                      <p className="text-[8px] text-slate-400 dark:text-slate-505 uppercase font-black">Úžitková plocha</p>
+                      <p className="text-xs font-black text-slate-800 dark:text-white">144 m²</p>
+                    </div>
+                    <div>
+                      <p className="text-[8px] text-slate-400 dark:text-slate-505 uppercase font-black">Počet izieb</p>
+                      <p className="text-xs font-black text-slate-800 dark:text-white">5 izieb</p>
+                    </div>
+                    <div>
+                      <p className="text-[8px] text-slate-400 dark:text-slate-505 uppercase font-black">Dodanie</p>
+                      <p className="text-xs font-black text-slate-800 dark:text-white">6 týždňov</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-[8px] text-slate-400 dark:text-slate-505 font-bold uppercase">{t('priceFrom')}</p>
+                      <p className="text-[9px] font-bold text-emerald-400">s dotáciou -5%</p>
+                      <p className="text-[10px] font-bold text-slate-450 line-through">120 000 € bez DPH</p>
+                      <p className="text-lg font-black text-slate-900 dark:text-white">140 220 € <span className="text-[10px] font-normal text-slate-500">s DPH (23%)</span></p>
+                    </div>
+                    <Link to={`${createPageUrl("DetailDomu")}?id=6916ec94c11aacdd15248f07`}>
+                      <Button className="bg-[#C5A880] hover:bg-[#b0926a] text-slate-955 font-black rounded-xl px-5 py-2.5 text-xs flex items-center gap-1">
+                        <span>{t('configure')}</span>
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              </motion.div>
+
+            </div>
+
+            {/* Right Column (55% width - lg:col-span-7) */}
+            <div className="col-span-7 h-[70vh] relative flex flex-col justify-center">
+              
+              {/* Scene 1 Lookbook & facade switcher */}
+              <motion.div 
+                style={{ 
+                  opacity: introOpacity,
+                  y: introY,
+                  pointerEvents: introPointerEvents
+                }}
+                className="w-full relative z-30 flex justify-center"
+              >
+                <div className="w-full max-w-[500px] bg-white/95 dark:bg-slate-900/50 backdrop-blur-2xl border border-slate-200 dark:border-white/15 rounded-3xl p-5 shadow-xl">
+                  <div className="aspect-[4/3] rounded-2xl overflow-hidden relative border border-slate-250 dark:border-white/5 bg-slate-955">
+                    <AnimatePresence mode="wait">
                       <motion.img 
                         key={`${selectedHouseId}-${selectedFacade}`}
                         src={selectedFacadeImage} 
@@ -1230,7 +1342,7 @@ export default function Domov() {
                       {getManufacturerBadge(currentHouseData.manufacturer)}
                     </div>
                     
-                    <div className="absolute top-4 left-4 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border border-slate-200 dark:border-white/15 rounded-xl px-3 py-1.5 z-20">
+                    <div className="absolute top-4 left-4 bg-white/90 dark:bg-slate-955/90 backdrop-blur-md border border-slate-200 dark:border-white/15 rounded-xl px-3 py-1.5 z-20">
                       <p className="text-[9px] text-slate-505 font-semibold uppercase tracking-wider">
                         {currentHouseData.manufacturer?.toLowerCase().includes("ticab") ? t('factoryProduction') : t('turnkeyDelivery')}
                       </p>
@@ -1243,7 +1355,7 @@ export default function Domov() {
                   <div className="mt-4">
                     <div className="flex items-center justify-between mb-4">
                       <div>
-                        <h3 className="text-base sm:text-xl font-bold text-slate-850 dark:text-white leading-tight">{currentHouseData.name}</h3>
+                        <h3 className="text-xl font-bold text-slate-850 dark:text-white leading-tight">{currentHouseData.name}</h3>
                         <div className="text-xs text-slate-500 mt-1.5 font-medium flex items-center gap-1.5 flex-wrap">
                           <span>{currentHouseData.rooms} {t('roomsLabel')}</span>
                           <span>•</span>
@@ -1261,7 +1373,7 @@ export default function Domov() {
                     </div>
 
                     {hasMultipleFacades && (
-                      <div className="flex flex-col sm:flex-row gap-2">
+                      <div className="flex gap-2">
                         {facadeOptions.map((opt) => (
                           <button
                             key={opt.id}
@@ -1286,137 +1398,320 @@ export default function Domov() {
                     )}
                   </div>
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
 
-            {/* Scroll Scene 2: Full-screen Model 01 (Barn Double 72) */}
-            <motion.div 
-              style={{ 
-                opacity: m1Opacity, 
-                scale: m1Scale, 
-                x: m1X, 
-                y: mousePos.y * 0.8, 
-                rotate: m1Rotate,
-                pointerEvents: useTransform(scrollYProgress, [0.28, 0.45], ["none", "auto"])
-              }}
-              className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
-            >
+              {/* Scene 2 Barn Double 72 image card */}
+              <motion.div 
+                style={{ 
+                  opacity: m1Opacity, 
+                  scale: m1Scale, 
+                  x: m1X, 
+                  y: mousePos.y * 0.8, 
+                  rotate: m1Rotate,
+                  pointerEvents: m1PointerEvents
+                }}
+                className="absolute inset-0 flex items-center justify-center z-20"
+              >
+                <div className="w-full max-w-[500px] aspect-[4/3] sm:aspect-[16/10] bg-slate-900/40 dark:bg-slate-950/60 backdrop-blur-xl border border-slate-250 dark:border-white/15 rounded-3xl p-3 shadow-2xl pointer-events-auto transform hover:scale-[1.03] transition-transform duration-500 group relative">
+                  {/* Decorative target markers inside CAD viewport */}
+                  <div className="absolute top-4 right-4 text-[9px] text-[#C5A880]/30 font-mono tracking-widest">SYS.LOCK // ACTIVE</div>
+                  <div className="absolute bottom-4 left-4 text-[9px] text-[#C5A880]/30 font-mono tracking-widest">CAD_VIEW_3D: AXIS_Z</div>
+                  
+                  <div className="relative w-full h-full rounded-2xl overflow-hidden">
+                    <img 
+                      src="https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/eccd583aa_barn-double-prosto-house-3.jpg" 
+                      alt="Barn Double 72" 
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 to-transparent" />
+                    <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-[#C5A880]">{t('exteriorBarn')}</span>
+                      <span className="text-[10px] text-white/50">{t('clickToDetails')}</span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Scene 3 London 144 image card */}
+              <motion.div 
+                style={{ 
+                  opacity: m2Opacity, 
+                  scale: m2Scale, 
+                  x: m2X, 
+                  y: mousePos.y * 0.8, 
+                  rotate: m2Rotate,
+                  pointerEvents: m2PointerEvents
+                }}
+                className="absolute inset-0 flex items-center justify-center z-20"
+              >
+                <div className="w-full max-w-[500px] aspect-[4/3] sm:aspect-[16/10] bg-slate-900/40 dark:bg-slate-950/60 backdrop-blur-xl border border-slate-255 dark:border-white/15 rounded-3xl p-3 shadow-2xl pointer-events-auto transform hover:scale-[1.03] transition-transform duration-500 group relative">
+                  {/* Decorative target markers inside CAD viewport */}
+                  <div className="absolute top-4 right-4 text-[9px] text-[#C5A880]/30 font-mono tracking-widest">SYS.LOCK // ACTIVE</div>
+                  <div className="absolute bottom-4 left-4 text-[9px] text-[#C5A880]/30 font-mono tracking-widest">CAD_VIEW_3D: AXIS_Z</div>
+
+                  <div className="relative w-full h-full rounded-2xl overflow-hidden">
+                    <img 
+                      src="https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/25e2796ce_Londonexteriermurovka1.jpeg" 
+                      alt="London 144" 
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 to-transparent" />
+                    <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-[#C5A880]">{t('exteriorLondon')}</span>
+                      <span className="text-[10px] text-white/50">{t('clickToDetails')}</span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* Immersive Bento Hero Section (Mobile - block lg:hidden) */}
+      <section className="block lg:hidden relative bg-concrete-split dark:bg-[#050508] transition-colors duration-300 py-12 px-4 border-b border-slate-200 dark:border-white/5">
+        {/* Blueprint architectural grid lines */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--grid-color)_1px,transparent_1px),linear-gradient(to_bottom,var(--grid-color)_1px,transparent_1px)] bg-[size:3rem_3rem] pointer-events-none z-10 opacity-30" />
+        
+        <div className="relative z-20 max-w-2xl mx-auto flex flex-col gap-10">
+          
+          {/* Welcome Card */}
+          <div className="flex flex-col text-left">
+            {/* Logo & Small Badge */}
+            <div className="flex items-center gap-3 mb-6">
+              <img 
+                src={LOGO_URL} 
+                alt="American Living" 
+                className="h-12 w-auto drop-shadow-lg rounded-full"
+                width={48}
+                height={48}
+                loading="eager"
+              />
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#C5A880]/10 dark:bg-white/5 border border-[#C5A880]/30 dark:border-white/10 text-xs font-semibold text-slate-700 dark:text-slate-350">
+                <span className="w-2 h-2 rounded-full bg-[#C5A880] animate-pulse"></span>
+                <span>{t('heroBadgeText')}</span>
+              </div>
+            </div>
+
+            {/* Main Headline */}
+            <h1 className="text-3xl font-black text-slate-900 dark:text-white mb-4 leading-[1.1] tracking-tight">
+              {t('heroTitleFirst')}{" "}
+              <span className="bg-gradient-to-r from-[#C5A880] via-[#E2C799] to-[#C5A880] bg-clip-text text-transparent block">
+                {t('heroTitleSecond')}
+              </span>
+            </h1>
+
+            {/* Subheadline */}
+            <p className="text-base text-slate-655 dark:text-slate-300 mb-6 leading-relaxed font-light">
+              {t('heroDescription')}
+            </p>
+
+            {/* CTAs */}
+            <div className="flex flex-col gap-3 mb-6">
+              <Link to={createPageUrl("Katalog")} className="w-full">
+                <Button size="lg" className="w-full bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-black text-base py-5 shadow-[0_0_20px_rgba(220,38,38,0.3)] border border-red-500/50 transition-all rounded-xl flex items-center justify-center gap-2">
+                  <Home className="w-5 h-5" />
+                  <span>{t('viewCatalogButton')}</span>
+                  <ArrowRight className="w-5 h-5" />
+                </Button>
+              </Link>
+              <Button 
+                size="lg" 
+                variant="outline" 
+                onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))}
+                className="w-full bg-white/70 dark:bg-white/5 hover:bg-[#C5A880]/10 text-slate-800 dark:text-white border border-slate-200 dark:border-white/15 font-bold text-sm py-5 rounded-xl transition-all flex items-center justify-center gap-2 backdrop-blur-sm shadow-sm"
+              >
+                <MessageCircle className="w-5 h-5" />
+                <span>{t('consultationWithKexo')}</span>
+              </Button>
+            </div>
+          </div>
+
+          {/* Lookbook / Interactive Section */}
+          <div className="bg-white/95 dark:bg-slate-900/50 backdrop-blur-2xl border border-slate-200 dark:border-white/15 rounded-3xl p-4 shadow-xl">
+            <div className="aspect-[4/3] rounded-2xl overflow-hidden relative border border-slate-255 dark:border-white/5 bg-slate-955">
+              <img 
+                src={selectedFacadeImage} 
+                alt={currentHouseData.name}
+                className="absolute inset-0 w-full h-full object-cover" 
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-955/80 to-transparent" />
+              
+              <div className="absolute top-3 right-3 z-20">
+                {getManufacturerBadge(currentHouseData.manufacturer)}
+              </div>
+              
+              <div className="absolute top-3 left-3 bg-white/90 dark:bg-slate-955/90 backdrop-blur-md border border-slate-200 dark:border-white/15 rounded-xl px-2.5 py-1 z-20">
+                <p className="text-[8px] text-slate-505 font-semibold uppercase tracking-wider">
+                  {currentHouseData.manufacturer?.toLowerCase().includes("ticab") ? t('factoryProduction') : t('turnkeyDelivery')}
+                </p>
+                <p className="text-[10px] font-black text-slate-800 dark:text-white">
+                  {currentHouseData.manufacturer?.toLowerCase().includes("ticab") ? t('sixWeeks') : t('upToTwelveWeeks')}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h3 className="text-lg font-bold text-slate-850 dark:text-white leading-tight">{currentHouseData.name}</h3>
+                  <div className="text-xs text-slate-500 mt-1 font-medium flex items-center gap-1.5 flex-wrap">
+                    <span>{currentHouseData.rooms} {t('roomsLabel')}</span>
+                    <span>•</span>
+                    <span>{currentHouseData.area} m²</span>
+                    <span>•</span>
+                    <span><strong className="text-[#C5A880]">{t('from')} {currentHouseData.price.toLocaleString()} €</strong></span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Selector buttons for houses */}
+              <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-thin">
+                {switcherHouses.map((house) => (
+                  <button
+                    key={house.id}
+                    type="button"
+                    onClick={() => {
+                      setSelectedHouseId(house.id);
+                      setSelectedFacade("anthracite");
+                    }}
+                    className={`flex-shrink-0 px-3 py-2 rounded-xl border text-xs font-bold transition-all ${
+                      selectedHouseId === house.id
+                        ? 'border-[#C5A880] bg-[#C5A880]/10 text-[#C5A880]'
+                        : 'border-slate-200 dark:border-white/10 bg-white/50 dark:bg-slate-900/40 text-slate-655 dark:text-slate-300'
+                    }`}
+                  >
+                    {house.name}
+                  </button>
+                ))}
+              </div>
+
+              {hasMultipleFacades && (
+                <div className="flex flex-col gap-2 mt-2">
+                  {facadeOptions.map((opt) => (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      onClick={() => setSelectedFacade(opt.id)}
+                      className={`p-2 rounded-xl border text-left transition-all duration-300 flex items-center gap-2.5 ${
+                        selectedFacade === opt.id 
+                          ? 'bg-[#C5A880]/15 border-[#C5A880] text-[#C5A880]' 
+                          : 'bg-slate-100 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-350'
+                      }`}
+                    >
+                      <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 border border-slate-200 dark:border-white/10">
+                        <img src={optimizeImageUrl(opt.img, 100)} alt={opt.name} className="w-full h-full object-cover" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-[10px] leading-tight font-black truncate">{opt.name}</p>
+                        <p className="text-[8px] leading-tight text-slate-400 mt-0.5 truncate">{opt.desc}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Barn Double 72 Mobile Card */}
+          <div className="bg-slate-900/30 dark:bg-slate-950/40 border border-slate-200 dark:border-white/10 p-5 rounded-3xl shadow-lg">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[10px] font-black uppercase tracking-wider text-[#C5A880] bg-[#C5A880]/15 border border-[#C5A880]/30 px-2 py-0.5 rounded-full">Prosto House</span>
+              <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Trieda A0</span>
+            </div>
+            <h3 className="text-xl font-black text-slate-900 dark:text-white mb-2">Barn Double 72</h3>
+            
+            <div className="aspect-[16/10] rounded-2xl overflow-hidden mb-4 border border-white/5 bg-slate-950">
               <img 
                 src="https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/eccd583aa_barn-double-prosto-house-3.jpg" 
                 alt="Barn Double 72" 
-                className="max-h-[50vh] sm:max-h-[55vh] md:max-h-[60vh] w-auto object-contain drop-shadow-[0_25px_50px_rgba(0,0,0,0.65)] pointer-events-auto cursor-pointer"
+                className="w-full h-full object-cover"
               />
-            </motion.div>
+            </div>
 
-            <motion.div 
-              style={{ 
-                opacity: m1CardOpacity, 
-                y: m1CardY, 
-                x: mousePos.x * 0.2,
-                pointerEvents: useTransform(scrollYProgress, [0.05, 0.45], ["none", "auto"])
-              }}
-              className="absolute bottom-[6vh] left-4 right-4 sm:left-auto sm:right-[5vw] md:right-[8vw] sm:w-[360px] premium-glass-card p-6 rounded-3xl z-30"
-            >
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-[10px] font-black uppercase tracking-wider text-[#C5A880] bg-[#C5A880]/15 border border-[#C5A880]/30 px-2 py-0.5 rounded-full">Prosto House</span>
-                <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Trieda A0</span>
+            <p className="text-xs text-slate-655 dark:text-slate-400 font-light mb-4">Dvojposchodový rodinný dom v tvare severskej stodoly s čistými líniami a garantovanou životnosťou cez 80 rokov.</p>
+            
+            <div className="grid grid-cols-3 gap-2 mb-4 border-t border-b border-slate-200 dark:border-white/5 py-3 text-center">
+              <div>
+                <p className="text-[8px] text-slate-400 dark:text-slate-505 uppercase font-black">Úžitková plocha</p>
+                <p className="text-xs font-black text-slate-800 dark:text-white">72 m²</p>
               </div>
-              <h3 className="text-xl font-black text-white mb-1">Barn Double 72</h3>
-              <p className="text-xs text-slate-400 font-light mb-4">Dvojposchodový rodinný dom v tvare severskej stodoly s čistými líniami.</p>
-              <div className="grid grid-cols-3 gap-2 mb-4 border-t border-b border-white/5 py-3">
-                <div>
-                  <p className="text-[8px] text-slate-500 uppercase font-black">Úžitková plocha</p>
-                  <p className="text-xs font-black text-white">72 m²</p>
-                </div>
-                <div>
-                  <p className="text-[8px] text-slate-500 uppercase font-black">Počet izieb</p>
-                  <p className="text-xs font-black text-white">3 izby</p>
-                </div>
-                <div>
-                  <p className="text-[8px] text-slate-500 uppercase font-black">Dodanie</p>
-                  <p className="text-xs font-black text-white">12 týždňov</p>
-                </div>
+              <div>
+                <p className="text-[8px] text-slate-400 dark:text-slate-505 uppercase font-black">Počet izieb</p>
+                <p className="text-xs font-black text-slate-800 dark:text-white">3 izby</p>
               </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-[8px] text-slate-500 font-bold uppercase">{t('priceFrom')}</p>
-                  <p className="text-[10px] font-bold text-slate-450 line-through">36 900 € bez DPH</p>
-                  <p className="text-base font-black text-white">45 387 € <span className="text-[10px] font-normal text-slate-400">s DPH (23%)</span></p>
-                </div>
-                <Link to={`${createPageUrl("DetailDomu")}?id=6916ec94c11aacdd15248f2c`}>
-                  <Button className="bg-[#C5A880] hover:bg-[#b0926a] text-slate-950 font-black rounded-xl px-4 py-2 text-xs flex items-center gap-1">
-                    <span>{t('configure')}</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </Button>
-                </Link>
+              <div>
+                <p className="text-[8px] text-slate-400 dark:text-slate-505 uppercase font-black">Dodanie</p>
+                <p className="text-xs font-black text-slate-800 dark:text-white">12 týždňov</p>
               </div>
-            </motion.div>
+            </div>
 
-            {/* Scroll Scene 3: Full-screen Model 02 (London 144) */}
-            <motion.div 
-              style={{ 
-                opacity: m2Opacity, 
-                scale: m2Scale, 
-                x: m2X, 
-                y: mousePos.y * 0.8, 
-                rotate: m2Rotate,
-                pointerEvents: useTransform(scrollYProgress, [0.45, 0.95], ["none", "auto"])
-              }}
-              className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
-            >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[8px] text-slate-400 dark:text-slate-505 font-bold uppercase">{t('priceFrom')}</p>
+                <p className="text-[10px] font-bold text-slate-450 line-through">36 900 € bez DPH</p>
+                <p className="text-base font-black text-slate-900 dark:text-white">45 387 € <span className="text-[10px] font-normal text-slate-500">s DPH (23%)</span></p>
+              </div>
+              <Link to={`${createPageUrl("DetailDomu")}?id=6916ec94c11aacdd15248f2c`}>
+                <Button className="bg-[#C5A880] hover:bg-[#b0926a] text-slate-950 font-black rounded-xl px-4 py-2 text-xs flex items-center gap-1">
+                  <span>{t('configure')}</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </Button>
+              </Link>
+            </div>
+          </div>
+
+          {/* London 144 Mobile Card */}
+          <div className="bg-slate-900/30 dark:bg-slate-950/40 border border-slate-200 dark:border-white/10 p-5 rounded-3xl shadow-lg">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[10px] font-black uppercase tracking-wider text-[#C5A880] bg-[#C5A880]/15 border border-[#C5A880]/30 px-2 py-0.5 rounded-full">Ticab House</span>
+              <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Trieda A0</span>
+            </div>
+            <h3 className="text-xl font-black text-slate-900 dark:text-white mb-2">London 144</h3>
+            
+            <div className="aspect-[16/10] rounded-2xl overflow-hidden mb-4 border border-white/5 bg-slate-950">
               <img 
                 src="https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/25e2796ce_Londonexteriermurovka1.jpeg" 
                 alt="London 144" 
-                className="max-h-[50vh] sm:max-h-[55vh] md:max-h-[60vh] w-auto object-contain drop-shadow-[0_25px_50px_rgba(0,0,0,0.65)] pointer-events-auto cursor-pointer"
+                className="w-full h-full object-cover"
               />
-            </motion.div>
+            </div>
 
-            <motion.div 
-              style={{ 
-                opacity: m2CardOpacity, 
-                y: m2CardY, 
-                x: mousePos.x * 0.2,
-                pointerEvents: useTransform(scrollYProgress, [0.5, 0.95], ["none", "auto"])
-              }}
-              className="absolute bottom-[6vh] left-4 right-4 sm:left-auto sm:right-[5vw] md:right-[8vw] sm:w-[360px] premium-glass-card p-6 rounded-3xl z-30"
-            >
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-[10px] font-black uppercase tracking-wider text-[#C5A880] bg-[#C5A880]/15 border border-[#C5A880]/30 px-2 py-0.5 rounded-full">Ticab House</span>
-                <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Trieda A0</span>
+            <p className="text-xs text-slate-655 dark:text-slate-400 font-light mb-4">Veľkolepá rodinná vila s lepeným drevom GL24, vyrábaná s milimetrovou CNC presnosťou.</p>
+            
+            <div className="grid grid-cols-3 gap-2 mb-4 border-t border-b border-slate-200 dark:border-white/5 py-3 text-center">
+              <div>
+                <p className="text-[8px] text-slate-400 dark:text-slate-505 uppercase font-black">Úžitková plocha</p>
+                <p className="text-xs font-black text-slate-800 dark:text-white">144 m²</p>
               </div>
-              <h3 className="text-xl font-black text-white mb-1">London 144</h3>
-              <p className="text-xs text-slate-400 font-light mb-4">Veľkolepá rodinná vila s jedinečným spojením obytného priestoru a presklenej fasády.</p>
-              <div className="grid grid-cols-3 gap-2 mb-4 border-t border-b border-white/5 py-3">
-                <div>
-                  <p className="text-[8px] text-slate-500 uppercase font-black">Úžitková plocha</p>
-                  <p className="text-xs font-black text-white">144 m²</p>
-                </div>
-                <div>
-                  <p className="text-[8px] text-slate-500 uppercase font-black">Počet izieb</p>
-                  <p className="text-xs font-black text-white">5 izieb</p>
-                </div>
-                <div>
-                  <p className="text-[8px] text-slate-500 uppercase font-black">Dodanie</p>
-                  <p className="text-xs font-black text-white">6 týždňov</p>
-                </div>
+              <div>
+                <p className="text-[8px] text-slate-400 dark:text-slate-505 uppercase font-black">Počet izieb</p>
+                <p className="text-xs font-black text-slate-800 dark:text-white">5 izieb</p>
               </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-[8px] text-slate-500 font-bold uppercase">{t('priceFrom')}</p>
-                  <p className="text-[9px] font-bold text-green-400">s dotáciou -5%</p>
-                  <p className="text-[10px] font-bold text-slate-450 line-through">120 000 € bez DPH</p>
-                  <p className="text-base font-black text-white">140 220 € <span className="text-[10px] font-normal text-slate-400">s DPH (23%)</span></p>
-                </div>
-                <Link to={`${createPageUrl("DetailDomu")}?id=6916ec94c11aacdd15248f07`}>
-                  <Button className="bg-[#C5A880] hover:bg-[#b0926a] text-slate-950 font-black rounded-xl px-4 py-2 text-xs flex items-center gap-1">
-                    <span>{t('configure')}</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </Button>
-                </Link>
+              <div>
+                <p className="text-[8px] text-slate-400 dark:text-slate-505 uppercase font-black">Dodanie</p>
+                <p className="text-xs font-black text-slate-800 dark:text-white">6 týždňov</p>
               </div>
-            </motion.div>
+            </div>
 
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[8px] text-slate-400 dark:text-slate-505 font-bold uppercase">{t('priceFrom')}</p>
+                <p className="text-[9px] font-bold text-emerald-400">s dotáciou -5%</p>
+                <p className="text-[10px] font-bold text-slate-450 line-through">120 000 € bez DPH</p>
+                <p className="text-base font-black text-slate-900 dark:text-white">140 220 € <span className="text-[10px] font-normal text-slate-500">s DPH (23%)</span></p>
+              </div>
+              <Link to={`${createPageUrl("DetailDomu")}?id=6916ec94c11aacdd15248f07`}>
+                <Button className="bg-[#C5A880] hover:bg-[#b0926a] text-slate-950 font-black rounded-xl px-4 py-2 text-xs flex items-center gap-1">
+                  <span>{t('configure')}</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </Button>
+              </Link>
+            </div>
           </div>
+
         </div>
       </section>
 

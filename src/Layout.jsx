@@ -22,6 +22,7 @@ import SessionRecorder from "./components/SessionRecorder";
 
 function LayoutContent({ children }) {
   const location = useLocation();
+  const isHomePage = location.pathname === "/" || location.pathname.toLowerCase() === "/domov";
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { t, language, setLanguage } = useLanguage();
@@ -750,8 +751,8 @@ function LayoutContent({ children }) {
         </div>
       </header>
 
-      <main className="lg:bg-background relative transition-colors duration-300" style={{ paddingTop: '2.5rem' }}>
-        <div className="lg:max-w-[1200px] xl:max-w-[1400px] lg:mx-auto bg-background min-h-screen relative z-20 transition-colors duration-300">
+      <main className="lg:bg-background relative transition-colors duration-300" style={{ paddingTop: isHomePage ? '0px' : '2.5rem' }}>
+        <div className={`${isHomePage ? 'w-full' : 'lg:max-w-[1200px] xl:max-w-[1400px] lg:mx-auto'} bg-background min-h-screen relative z-20 transition-colors duration-300`}>
           {children}
         </div>
       </main>
