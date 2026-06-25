@@ -328,16 +328,6 @@ function NaturePhotoBackground() {
         className="w-full h-full object-cover animate-ken-burns transition-all duration-1000 ease-in-out scale-105"
         style={{ filter: dark ? 'brightness(0.35) contrast(1.1)' : 'brightness(0.95) contrast(1.02)' }}
       />
-      
-      {/* Premium Gradient Overlays for legibility */}
-      {/* Left-to-right fade overlay to protect left column text */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#FAF8F5]/90 via-[#FAF8F5]/60 to-transparent dark:from-[#050508]/90 dark:via-[#050508]/60 dark:to-transparent z-10" />
-
-      {/* Bottom-to-top fade to blend with subsequent section */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#FAF8F5] via-transparent to-[#FAF8F5]/30 dark:from-[#050508] dark:via-transparent dark:to-[#050508]/30 z-10" />
-      
-      {/* Soft color filters */}
-      <div className="absolute inset-0 bg-[#C5A880]/3 dark:bg-emerald-950/5 mix-blend-overlay z-10" />
     </div>
   );
 }
