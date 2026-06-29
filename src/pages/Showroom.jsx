@@ -27,7 +27,9 @@ import {
   AlertTriangle,
   Play,
   Layers,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Upload,
+  Loader2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -95,7 +97,7 @@ const INITIAL_PARTNERS = [
   { email: "partner.levoca@americanliving.sk", password: "partner", name: "Spiš Prefab Partner s.r.o.", propertyId: "levoca" }
 ];
 
-function ShowroomBackgroundVideo() {
+function ShowroomBackgroundVideo({ customVideoUrl }) {
   const isDark = typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
   const [dark, setDark] = useState(isDark);
   const videoRef = useRef(null);
@@ -111,12 +113,13 @@ function ShowroomBackgroundVideo() {
 
   useEffect(() => {
     if (videoRef.current) {
+      videoRef.current.load();
       videoRef.current.muted = true;
       videoRef.current.play().catch(err => {
         console.warn("Showroom video autoplay failed:", err);
       });
     }
-  }, []);
+  }, [customVideoUrl]);
 
   return (
     <div className="fixed inset-0 w-full h-full overflow-hidden bg-[#FAF8F5] dark:bg-[#050508] z-0 pointer-events-none select-none">
@@ -130,6 +133,7 @@ function ShowroomBackgroundVideo() {
         className="w-full h-full object-cover transition-all duration-1000 ease-in-out"
         style={{ filter: dark ? 'brightness(0.35) contrast(1.1)' : 'brightness(0.95) contrast(1.02)' }}
       >
+        {customVideoUrl && <source src={customVideoUrl} type="video/mp4" />}
         <source src="https://videos.pexels.com/video-files/3209828/3209828-hd_1920_1080_25fps.mp4" type="video/mp4" />
         <source src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Backflip_into_pool_from_3_metres.webm" type="video/webm" />
         <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4" />
@@ -140,6 +144,9 @@ function ShowroomBackgroundVideo() {
 
 export default function Showroom() {
   // --- STATE ---
+  const [customBgVideo, setCustomBgVideo] = useState(() => localStorage.getItem('al_showroom_bg_video') || '');
+  const [uploadingBgVideo, setUploadingBgVideo] = useState(false);
+
   const [properties, setProperties] = useState(() => {
     const saved = localStorage.getItem('al_showroom_properties');
     let parsed = saved ? JSON.parse(saved) : INITIAL_PROPERTIES;
@@ -197,6 +204,31 @@ export default function Showroom() {
   const [editStornoDays, setEditStornoDays] = useState(7);
   const [editStornoRefund, setEditStornoRefund] = useState(100);
   const [editVop, setEditVop] = useState('');
+
+  const handleBgVideoUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingBgVideo(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      if (file_url) {
+        localStorage.setItem('al_showroom_bg_video', file_url);
+        setCustomBgVideo(file_url);
+        toast.success("Video pozadia bolo úspešne nahrané!");
+      }
+    } catch (err) {
+      console.error("Failed to upload video:", err);
+      toast.error("Nepodarilo sa nahrať video.");
+    } finally {
+      setUploadingBgVideo(false);
+    }
+  };
+
+  const handleResetBgVideo = () => {
+    localStorage.removeItem('al_showroom_bg_video');
+    setCustomBgVideo('');
+    toast.success("Predvolené video bolo obnovené.");
+  };
 
   // Simulácia času
   const [simulatedTimeOffset, setSimulatedTimeOffset] = useState(() => {
@@ -689,7 +721,7 @@ export default function Showroom() {
   return (
     <div className="min-h-screen -mt-10 sm:-mt-12 md:-mt-14 lg:-mt-16 xl:-mt-20 overflow-x-hidden relative">
       {/* 1. VRSTVA (SPODNÁ) - LOOPING VIDEO DETÍ V BAZÉNE (rovnako ako NaturePhotoBackground na domovskej stránke) */}
-      <ShowroomBackgroundVideo />
+      <ShowroomBackgroundVideo customVideoUrl={customBgVideo} />
       
       {/* 2. VRSTVA (HORNÁ) - ADAPTÍVNE PREMIUM GLASSMORPHIC UI (využívame triedu fixed-bg-content) */}
       <div className="fixed-bg-content relative z-10 pb-24 text-slate-800 dark:text-slate-100 font-sans transition-colors duration-300">
@@ -1650,7 +1682,7 @@ export default function Showroom() {
             </span>
           </summary>
 
-          <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-8 max-h-[350px] overflow-y-auto">
+          <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-8 max-h-[350px] overflow-y-auto">
             
             <div className="space-y-4 text-left">
               <h4 className="font-bold text-xs uppercase tracking-wider text-[#C5A880] border-b border-slate-200 dark:border-white/5 pb-1">
@@ -1686,9 +1718,9 @@ export default function Showroom() {
               </div>
             </div>
 
-            <div className="space-y-3 text-left">
+            <div className="space-y-3 text-left border-t md:border-t-0 md:border-l border-slate-200 dark:border-white/5 md:pl-8">
               <h4 className="font-bold text-xs uppercase tracking-wider text-[#C5A880] border-b border-slate-200 dark:border-white/5 pb-1 flex justify-between items-center">
-                <span>Simulovaná schránka (Odosielateľ: info@americanliving.sk)</span>
+                <span>Simulovaná schránka (info@americanliving.sk)</span>
                 {emails.length > 0 && (
                   <button onClick={() => setEmails([])} className="text-[9px] text-red-650 hover:text-red-500 font-bold">Vymazať</button>
                 )}
@@ -1720,6 +1752,67 @@ export default function Showroom() {
                   ))}
                 </div>
               )}
+            </div>
+
+            <div className="space-y-4 text-left border-t md:border-t-0 md:border-l border-slate-200 dark:border-white/5 md:pl-8">
+              <h4 className="font-bold text-xs uppercase tracking-wider text-[#C5A880] border-b border-slate-200 dark:border-white/5 pb-1 flex items-center gap-1.5">
+                <Video className="w-3.5 h-3.5 text-[#C5A880]" /> Video pozadia
+              </h4>
+              <p className="text-slate-500 dark:text-slate-400 leading-relaxed font-light">
+                Nahrajte vlastné MP4/WebM video a automaticky ho použite ako aktívne pozadie celej sekcie Showroom.
+              </p>
+              
+              <div className="space-y-3">
+                {customBgVideo ? (
+                  <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-3 text-xs text-green-700 dark:text-green-400 flex flex-col gap-2">
+                    <span className="font-bold flex items-center gap-1">
+                      <CheckCircle className="w-3.5 h-3.5 text-green-500" />
+                      Aktívne vlastné video pozadia
+                    </span>
+                    <span className="truncate block font-mono text-[9px] bg-white/10 dark:bg-slate-950/45 p-1.5 rounded">{customBgVideo}</span>
+                    <Button 
+                      size="sm"
+                      onClick={handleResetBgVideo}
+                      className="bg-red-650 hover:bg-red-500 text-white font-bold self-start rounded-lg py-1 px-3 text-[10px]"
+                    >
+                      Obnoviť predvolené
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="bg-[#C5A880]/5 border border-[#C5A880]/15 rounded-xl p-3 text-[10px] text-slate-500 dark:text-slate-450 italic">
+                    Aktívne je predvolené video bazéna.
+                  </div>
+                )}
+
+                <div className="relative">
+                  <input 
+                    type="file"
+                    accept="video/*"
+                    id="dev-bg-video-upload"
+                    onChange={handleBgVideoUpload}
+                    disabled={uploadingBgVideo}
+                    className="hidden"
+                  />
+                  <label 
+                    htmlFor="dev-bg-video-upload"
+                    className={`flex items-center justify-center gap-2 border border-dashed border-[#C5A880]/40 rounded-xl p-4 cursor-pointer hover:bg-[#C5A880]/10 dark:hover:bg-white/5 transition-colors font-bold text-xs ${
+                      uploadingBgVideo ? 'opacity-50 pointer-events-none' : ''
+                    }`}
+                  >
+                    {uploadingBgVideo ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin text-[#C5A880]" />
+                        <span>Nahrávam video...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Upload className="w-4 h-4 text-[#C5A880]" />
+                        <span>Vybrať a nahrať MP4/WebM</span>
+                      </>
+                    )}
+                  </label>
+                </div>
+              </div>
             </div>
 
           </div>
