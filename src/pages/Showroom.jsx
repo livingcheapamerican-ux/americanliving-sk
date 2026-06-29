@@ -738,7 +738,7 @@ export default function Showroom() {
               Rezidenčné Showroomy <span className="bg-gradient-to-r from-[#C5A880] via-[#E2C799] to-[#C5A880] bg-clip-text text-transparent">American Living</span>
             </h1>
             
-            <p className="text-sm sm:text-lg text-slate-650 dark:text-slate-300 max-w-2xl mx-auto font-light leading-relaxed drop-shadow-sm">
+            <p className="text-sm sm:text-base text-slate-900 dark:text-slate-100 max-w-2xl mx-auto font-bold leading-relaxed bg-white/70 dark:bg-slate-950/40 backdrop-blur-md px-6 py-3.5 rounded-2xl border border-white/30 dark:border-white/5 inline-block shadow-sm">
               Vyberte si termín v kalendári a vyskúšajte si celoročné bývanie s bazénom a saunou na vlastnej koži.
             </p>
 
