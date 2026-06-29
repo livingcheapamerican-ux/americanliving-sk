@@ -1424,7 +1424,7 @@ export default function Domov() {
                       <h4 className="font-bold text-sm text-white">Komárno</h4>
                       <Badge className="bg-orange-600/15 text-orange-400 text-[8px] border border-orange-500/25 py-0.5 px-2">staviame</Badge>
                     </div>
-                    <p className="text-[11px] text-slate-400 font-light mt-1">Celoročný modulárny Barn House pri vode s wellness prvkami.</p>
+                    <p className="text-[11px] text-slate-400 font-light mt-1">Celoročný modulárny Barn House s krásnym bazénom a saunou v prírode.</p>
                     <p className="text-[10px] text-slate-500 mt-2 font-medium">Partner: American Living s.r.o.</p>
                   </div>
                 </div>

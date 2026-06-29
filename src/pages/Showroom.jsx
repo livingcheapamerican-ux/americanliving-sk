@@ -38,7 +38,7 @@ const INITIAL_PROPERTIES = {
     name: "Showroom Komárno - Moderný Barn House",
     location: "Komárno",
     status: "pripravujeme",
-    desc: "Luxusný celoročný modulárny dom typu Barn House s veľkými presklenými plochami. Nachádza sa priamo pri vodnej ploche s možnosťou wellnessu a vyskúšania všetkých moderných technológií bývania na vlastnej koži.",
+    desc: "Luxusný celoročný modulárny dom typu Barn House s veľkými presklenými plochami. Disponuje krásnym bazénom a saunou. Všetko sa nachádza v tichej a čistej prírode, kde si môžete vyskúšať všetky moderné technológie bývania na vlastnej koži.",
     price: 120,
     video: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     partnerEmail: "partner.komarno@americanliving.sk",
@@ -78,7 +78,11 @@ export default function Showroom() {
   // --- STATE ---
   const [properties, setProperties] = useState(() => {
     const saved = localStorage.getItem('al_showroom_properties');
-    return saved ? JSON.parse(saved) : INITIAL_PROPERTIES;
+    let parsed = saved ? JSON.parse(saved) : INITIAL_PROPERTIES;
+    if (parsed.komarno && (parsed.komarno.desc.includes("vodnej ploche") || parsed.komarno.desc.includes("pri vode"))) {
+      parsed.komarno.desc = INITIAL_PROPERTIES.komarno.desc;
+    }
+    return parsed;
   });
   
   const [partners, setPartners] = useState(() => {
