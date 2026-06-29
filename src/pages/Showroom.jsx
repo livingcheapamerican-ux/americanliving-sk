@@ -95,6 +95,36 @@ const INITIAL_PARTNERS = [
   { email: "partner.levoca@americanliving.sk", password: "partner", name: "Spiš Prefab Partner s.r.o.", propertyId: "levoca" }
 ];
 
+function ShowroomBackgroundVideo() {
+  const isDark = typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
+  const [dark, setDark] = useState(isDark);
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const observer = new MutationObserver(() => {
+      setDark(document.documentElement.classList.contains('dark'));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div className="fixed inset-0 w-full h-full overflow-hidden bg-[#FAF8F5] dark:bg-[#050508] z-0 pointer-events-none select-none">
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="auto"
+        className="w-full h-full object-cover transition-all duration-1000 ease-in-out"
+        style={{ filter: dark ? 'brightness(0.35) contrast(1.1)' : 'brightness(0.95) contrast(1.02)' }}
+      >
+        <source src="https://player.vimeo.com/external/434045526.sd.mp4?s=236a2c3d3f29c7e1c1b1c3b3b3b3b3b3&profile_id=164" type="video/mp4" />
+      </video>
+    </div>
+  );
+}
+
 export default function Showroom() {
   // --- STATE ---
   const [properties, setProperties] = useState(() => {
@@ -644,27 +674,12 @@ export default function Showroom() {
   const currentPhotos = getPhotosForLocation(selectedLoc);
 
   return (
-    <div className="relative min-h-screen bg-transparent text-slate-800 dark:text-slate-100 font-sans pb-24 transition-colors duration-300">
+    <div className="min-h-screen -mt-10 sm:-mt-12 md:-mt-14 lg:-mt-16 xl:-mt-20 overflow-x-hidden relative">
+      {/* 1. VRSTVA (SPODNÁ) - LOOPING VIDEO DETÍ V BAZÉNE (rovnako ako NaturePhotoBackground na domovskej stránke) */}
+      <ShowroomBackgroundVideo />
       
-      {/* 1. VRSTVA (SPODNÁ) - LOOPING VIDEO DETÍ V BAZÉNE */}
-      {/* Používame z-10 a fixed. Renders on top of Layout wrapper solid background, but under all content layer (z-20) */}
-      <div className="fixed inset-0 w-full h-full z-10 overflow-hidden select-none pointer-events-none transition-colors duration-300">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-          className="w-full h-full object-cover scale-[1.02] filter brightness-[0.9] dark:brightness-[0.35] contrast-[1.02] saturate-[0.85] transition-all duration-300"
-        >
-          <source src="https://player.vimeo.com/external/434045526.sd.mp4?s=236a2c3d3f29c7e1c1b1c3b3b3b3b3b3&profile_id=164" type="video/mp4" />
-        </video>
-        {/* Svetlý overlay v light mode a tmavý v dark mode pre 100% čitateľnosť textu a prémiovú flexibilitu */}
-        <div className="absolute inset-0 bg-white/75 dark:bg-slate-950/85 backdrop-blur-[3px] transition-colors duration-300" />
-      </div>
-
-      {/* 2. VRSTVA (HORNÁ) - ADAPTÍVNE PREMIUM GLASSMORPHIC UI */}
-      <div className="relative z-20">
+      {/* 2. VRSTVA (HORNÁ) - ADAPTÍVNE PREMIUM GLASSMORPHIC UI (využívame triedu fixed-bg-content) */}
+      <div className="fixed-bg-content relative z-10 pb-24 text-slate-800 dark:text-slate-100 font-sans transition-colors duration-300">
         
         {/* HERO HEADER */}
         <div className="relative pt-16 pb-12 px-4 text-center">
