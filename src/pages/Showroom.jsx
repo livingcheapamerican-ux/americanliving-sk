@@ -62,7 +62,7 @@ const INITIAL_PROPERTIES = {
     location: "Komárno",
     status: "pripravujeme",
     desc: "Luxusný celoročný modulárny dom typu Barn House s veľkými presklenými plochami. Tento showroom disponuje krásnym zapusteným bazénom a saunou. Všetko sa nachádza v tichej prírode, kde si môžete na vlastnej koži otestovať technológie a komfort nášho bývania.",
-    price: 120,
+    price: 0,
     video: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     partnerEmail: "partner.komarno@americanliving.sk",
     iban: "SK1281300000002938475628",
@@ -79,7 +79,7 @@ const INITIAL_PROPERTIES = {
     location: "Okolie Levoče",
     status: "pripravujeme",
     desc: "Útulný montovaný rodinný dom zasadený do krásnej prírody Spiša. Ideálny pre rodiny, ktoré chcú zažiť zdravú klímu, ekologické materiály a špičkovú tepelnú izoláciu pred samotným rozhodnutím o kúpe.",
-    price: 140,
+    price: 0,
     video: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     partnerEmail: "partner.levoca@americanliving.sk",
     iban: "SK4911000000002621543789",
@@ -153,6 +153,8 @@ export default function Showroom() {
     if (parsed.komarno && (parsed.komarno.desc.includes("vodnej ploche") || parsed.komarno.desc.includes("pri vode"))) {
       parsed.komarno.desc = INITIAL_PROPERTIES.komarno.desc;
     }
+    if (parsed.komarno) parsed.komarno.price = 0;
+    if (parsed.levoca) parsed.levoca.price = 0;
     return parsed;
   });
   
@@ -212,8 +214,15 @@ export default function Showroom() {
     try {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
       if (file_url) {
+        const list = await base44.entities.AppConfiguration.filter({ config_key: 'showroom_bg_video' });
+        if (list.length > 0) {
+          await base44.entities.AppConfiguration.update(list[0].id, { customBgVideo: file_url });
+        } else {
+          await base44.entities.AppConfiguration.create({ config_key: 'showroom_bg_video', customBgVideo: file_url });
+        }
         localStorage.setItem('al_showroom_bg_video', file_url);
         setCustomBgVideo(file_url);
+        refetchBgVideoConfig();
         toast.success("Video pozadia bolo úspešne nahrané!");
       }
     } catch (err) {
@@ -224,10 +233,20 @@ export default function Showroom() {
     }
   };
 
-  const handleResetBgVideo = () => {
-    localStorage.removeItem('al_showroom_bg_video');
-    setCustomBgVideo('');
-    toast.success("Predvolené video bolo obnovené.");
+  const handleResetBgVideo = async () => {
+    try {
+      const list = await base44.entities.AppConfiguration.filter({ config_key: 'showroom_bg_video' });
+      if (list.length > 0) {
+        await base44.entities.AppConfiguration.update(list[0].id, { customBgVideo: '' });
+      }
+      localStorage.removeItem('al_showroom_bg_video');
+      setCustomBgVideo('');
+      refetchBgVideoConfig();
+      toast.success("Predvolené video bolo obnovené.");
+    } catch (err) {
+      console.error("Failed to reset video:", err);
+      toast.error("Nepodarilo sa resetovať video.");
+    }
   };
 
   // Simulácia času
@@ -244,6 +263,36 @@ export default function Showroom() {
     queryKey: ['showroom-db-domy'],
     queryFn: () => base44.entities.Dom.list()
   });
+
+  const { data: user } = useQuery({
+    queryKey: ['me'],
+    queryFn: () => base44.auth.me().catch(() => null)
+  });
+  const isAdmin = user?.role === 'admin' || user?.super_admin === true;
+
+  const { data: bgVideoConfig, refetch: refetchBgVideoConfig } = useQuery({
+    queryKey: ['showroom_bg_video_config'],
+    queryFn: async () => {
+      try {
+        const list = await base44.entities.AppConfiguration.filter({ config_key: 'showroom_bg_video' });
+        return list[0] || null;
+      } catch (err) {
+        console.warn("Failed to fetch custom background video from database:", err);
+        return null;
+      }
+    }
+  });
+
+  useEffect(() => {
+    if (bgVideoConfig && bgVideoConfig.customBgVideo !== undefined) {
+      setCustomBgVideo(bgVideoConfig.customBgVideo);
+      if (bgVideoConfig.customBgVideo) {
+        localStorage.setItem('al_showroom_bg_video', bgVideoConfig.customBgVideo);
+      } else {
+        localStorage.removeItem('al_showroom_bg_video');
+      }
+    }
+  }, [bgVideoConfig]);
 
   // Nájdenie modelov v DB na vytiahnutie kompletnej galérie
   const barnDb = dbDomy.find(d => d.id === "6916ec94c11aacdd15248f31" || d.prosto_house_kod === "PH-008" || d.nazov?.toLowerCase().includes("barn 48") || d.nazov?.toLowerCase().includes("barn"));
@@ -1704,159 +1753,161 @@ export default function Showroom() {
 
       {/* TEST & DEVELOPER BAR */}
       {/* Renders fixed at the bottom with a high z-index, adapting layout dynamically */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-white/10 text-slate-800 dark:text-white text-xs shadow-2xl transition-colors duration-300">
-        <details className="group">
-          
-          <summary className="cursor-pointer py-3.5 px-6 flex justify-between items-center bg-slate-50/95 dark:bg-slate-950/80 hover:bg-slate-100/50 dark:hover:bg-slate-950 transition-colors border-b border-slate-200 dark:border-white/5">
-            <span className="font-black text-[10px] uppercase tracking-wider text-[#C5A880] flex items-center gap-2">
-              <Smartphone className="w-4 h-4 animate-pulse" />
-              Testovacia konzola & Simulátor emailov
-            </span>
-            <span className="flex items-center gap-3">
-              <span className="bg-slate-200/50 dark:bg-slate-900 px-3 py-1 rounded text-[10px] text-slate-500 dark:text-slate-400">
-                Simulovaný čas: <strong className="text-[#C5A880]">{getSimulatedNow().toLocaleTimeString('sk-SK')}</strong>
-              </span>
-              <span className="text-[#C5A880] font-black group-open:hidden">Zobraziť panel ↑</span>
-              <span className="text-[#C5A880] font-black hidden group-open:inline">Skryť panel ↓</span>
-            </span>
-          </summary>
-
-          <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-8 max-h-[350px] overflow-y-auto">
+      {isAdmin && (
+        <div className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-white/10 text-slate-800 dark:text-white text-xs shadow-2xl transition-colors duration-300">
+          <details className="group">
             
-            <div className="space-y-4 text-left">
-              <h4 className="font-bold text-xs uppercase tracking-wider text-[#C5A880] border-b border-slate-200 dark:border-white/5 pb-1">
-                Ovládanie času a auto-storna
-              </h4>
-              <p className="text-slate-500 dark:text-slate-400 leading-relaxed font-light">
-                Posuňte čas o +24 hodín a otestujte automatické stornovanie schválených rezervácií pri neuhradení zálohy.
-              </p>
+            <summary className="cursor-pointer py-3.5 px-6 flex justify-between items-center bg-slate-50/95 dark:bg-slate-950/80 hover:bg-slate-100/50 dark:hover:bg-slate-950 transition-colors border-b border-slate-200 dark:border-white/5">
+              <span className="font-black text-[10px] uppercase tracking-wider text-[#C5A880] flex items-center gap-2">
+                <Smartphone className="w-4 h-4 animate-pulse" />
+                Testovacia konzola & Simulátor emailov
+              </span>
+              <span className="flex items-center gap-3">
+                <span className="bg-slate-200/50 dark:bg-slate-900 px-3 py-1 rounded text-[10px] text-slate-500 dark:text-slate-400">
+                  Simulovaný čas: <strong className="text-[#C5A880]">{getSimulatedNow().toLocaleTimeString('sk-SK')}</strong>
+                </span>
+                <span className="text-[#C5A880] font-black group-open:hidden">Zobraziť panel ↑</span>
+                <span className="text-[#C5A880] font-black hidden group-open:inline">Skryť panel ↓</span>
+              </span>
+            </summary>
+
+            <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-8 max-h-[350px] overflow-y-auto">
               
-              <div className="flex gap-2 flex-wrap">
-                <Button 
-                  size="sm"
-                  onClick={() => handleSimulateTimeJump(1)}
-                  className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-bold"
-                >
-                  Posunúť +1 hodinu
-                </Button>
-                <Button 
-                  size="sm"
-                  onClick={() => handleSimulateTimeJump(24)}
-                  className="bg-yellow-600 hover:bg-yellow-500 text-slate-950 font-black text-xs"
-                >
-                  Posunúť +24 hodín
-                </Button>
-                <Button 
-                  size="sm"
-                  onClick={handleResetTime}
-                  variant="outline"
-                  className="border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-350 font-bold"
-                >
-                  Resetovať čas
-                </Button>
+              <div className="space-y-4 text-left">
+                <h4 className="font-bold text-xs uppercase tracking-wider text-[#C5A880] border-b border-slate-200 dark:border-white/5 pb-1">
+                  Ovládanie času a auto-storna
+                </h4>
+                <p className="text-slate-500 dark:text-slate-400 leading-relaxed font-light">
+                  Posuňte čas o +24 hodín a otestujte automatické stornovanie schválených rezervácií pri neuhradení zálohy.
+                </p>
+                
+                <div className="flex gap-2 flex-wrap">
+                  <Button 
+                    size="sm"
+                    onClick={() => handleSimulateTimeJump(1)}
+                    className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-bold"
+                  >
+                    Posunúť +1 hodinu
+                  </Button>
+                  <Button 
+                    size="sm"
+                    onClick={() => handleSimulateTimeJump(24)}
+                    className="bg-yellow-600 hover:bg-yellow-500 text-slate-950 font-black text-xs"
+                  >
+                    Posunúť +24 hodín
+                  </Button>
+                  <Button 
+                    size="sm"
+                    onClick={handleResetTime}
+                    variant="outline"
+                    className="border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-350 font-bold"
+                  >
+                    Resetovať čas
+                  </Button>
+                </div>
               </div>
-            </div>
 
-            <div className="space-y-3 text-left border-t md:border-t-0 md:border-l border-slate-200 dark:border-white/5 md:pl-8">
-              <h4 className="font-bold text-xs uppercase tracking-wider text-[#C5A880] border-b border-slate-200 dark:border-white/5 pb-1 flex justify-between items-center">
-                <span>Simulovaná schránka (info@americanliving.sk)</span>
-                {emails.length > 0 && (
-                  <button onClick={() => setEmails([])} className="text-[9px] text-red-650 hover:text-red-500 font-bold">Vymazať</button>
-                )}
-              </h4>
+              <div className="space-y-3 text-left border-t md:border-t-0 md:border-l border-slate-200 dark:border-white/5 md:pl-8">
+                <h4 className="font-bold text-xs uppercase tracking-wider text-[#C5A880] border-b border-slate-200 dark:border-white/5 pb-1 flex justify-between items-center">
+                  <span>Simulovaná schránka (info@americanliving.sk)</span>
+                  {emails.length > 0 && (
+                    <button onClick={() => setEmails([])} className="text-[9px] text-red-650 hover:text-red-500 font-bold">Vymazať</button>
+                  )}
+                </h4>
 
-              {emails.length === 0 ? (
-                <div className="text-center py-8 text-slate-400 dark:text-slate-500 italic">
-                  V schránke nie sú žiadne maily.
-                </div>
-              ) : (
-                <div className="space-y-3 max-h-[220px] overflow-y-auto pr-1">
-                  {emails.map((email) => (
-                    <div 
-                      key={email.id} 
-                      className="p-3 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-white/5 text-xs space-y-2"
-                    >
-                      <div className="flex justify-between items-center text-[9px] text-slate-500 font-bold">
-                        <span>Odoslané: {email.sentAt}</span>
-                        <span className="bg-[#C5A880]/15 text-[#E2C799] px-2 py-0.5 rounded font-black">Od: {email.from}</span>
-                      </div>
-                      <div className="text-slate-800 dark:text-slate-300">
-                        <p className="font-extrabold text-[#C5A880] text-xs">Pre: {email.to}</p>
-                        <p className="font-black text-slate-900 dark:text-white text-xs mt-0.5">Predmet: {email.subject}</p>
-                      </div>
-                      <pre className="text-[10px] text-slate-650 dark:text-slate-400 leading-normal font-sans bg-white dark:bg-slate-950 p-2.5 rounded border border-slate-200 dark:border-white/5 whitespace-pre-wrap max-h-[150px] overflow-y-auto">
-                        {email.body}
-                      </pre>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div className="space-y-4 text-left border-t md:border-t-0 md:border-l border-slate-200 dark:border-white/5 md:pl-8">
-              <h4 className="font-bold text-xs uppercase tracking-wider text-[#C5A880] border-b border-slate-200 dark:border-white/5 pb-1 flex items-center gap-1.5">
-                <Video className="w-3.5 h-3.5 text-[#C5A880]" /> Video pozadia
-              </h4>
-              <p className="text-slate-500 dark:text-slate-400 leading-relaxed font-light">
-                Nahrajte vlastné MP4/WebM video a automaticky ho použite ako aktívne pozadie celej sekcie Showroom.
-              </p>
-              
-              <div className="space-y-3">
-                {customBgVideo ? (
-                  <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-3 text-xs text-green-700 dark:text-green-400 flex flex-col gap-2">
-                    <span className="font-bold flex items-center gap-1">
-                      <CheckCircle className="w-3.5 h-3.5 text-green-500" />
-                      Aktívne vlastné video pozadia
-                    </span>
-                    <span className="truncate block font-mono text-[9px] bg-white/10 dark:bg-slate-950/45 p-1.5 rounded">{customBgVideo}</span>
-                    <Button 
-                      size="sm"
-                      onClick={handleResetBgVideo}
-                      className="bg-red-650 hover:bg-red-500 text-white font-bold self-start rounded-lg py-1 px-3 text-[10px]"
-                    >
-                      Obnoviť predvolené
-                    </Button>
+                {emails.length === 0 ? (
+                  <div className="text-center py-8 text-slate-400 dark:text-slate-500 italic">
+                    V schránke nie sú žiadne maily.
                   </div>
                 ) : (
-                  <div className="bg-[#C5A880]/5 border border-[#C5A880]/15 rounded-xl p-3 text-[10px] text-slate-500 dark:text-slate-450 italic">
-                    Aktívne je predvolené video bazéna.
+                  <div className="space-y-3 max-h-[220px] overflow-y-auto pr-1">
+                    {emails.map((email) => (
+                      <div 
+                        key={email.id} 
+                        className="p-3 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-white/5 text-xs space-y-2"
+                      >
+                        <div className="flex justify-between items-center text-[9px] text-slate-500 font-bold">
+                          <span>Odoslané: {email.sentAt}</span>
+                          <span className="bg-[#C5A880]/15 text-[#E2C799] px-2 py-0.5 rounded font-black">Od: {email.from}</span>
+                        </div>
+                        <div className="text-slate-800 dark:text-slate-300">
+                          <p className="font-extrabold text-[#C5A880] text-xs">Pre: {email.to}</p>
+                          <p className="font-black text-slate-900 dark:text-white text-xs mt-0.5">Predmet: {email.subject}</p>
+                        </div>
+                        <pre className="text-[10px] text-slate-650 dark:text-slate-400 leading-normal font-sans bg-white dark:bg-slate-950 p-2.5 rounded border border-slate-200 dark:border-white/5 whitespace-pre-wrap max-h-[150px] overflow-y-auto">
+                          {email.body}
+                        </pre>
+                      </div>
+                    ))}
                   </div>
                 )}
+              </div>
 
-                <div className="relative">
-                  <input 
-                    type="file"
-                    accept="video/*"
-                    id="dev-bg-video-upload"
-                    onChange={handleBgVideoUpload}
-                    disabled={uploadingBgVideo}
-                    className="hidden"
-                  />
-                  <label 
-                    htmlFor="dev-bg-video-upload"
-                    className={`flex items-center justify-center gap-2 border border-dashed border-[#C5A880]/40 rounded-xl p-4 cursor-pointer hover:bg-[#C5A880]/10 dark:hover:bg-white/5 transition-colors font-bold text-xs ${
-                      uploadingBgVideo ? 'opacity-50 pointer-events-none' : ''
-                    }`}
-                  >
-                    {uploadingBgVideo ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin text-[#C5A880]" />
-                        <span>Nahrávam video...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Upload className="w-4 h-4 text-[#C5A880]" />
-                        <span>Vybrať a nahrať MP4/WebM</span>
-                      </>
-                    )}
-                  </label>
+              <div className="space-y-4 text-left border-t md:border-t-0 md:border-l border-slate-200 dark:border-white/5 md:pl-8">
+                <h4 className="font-bold text-xs uppercase tracking-wider text-[#C5A880] border-b border-slate-200 dark:border-white/5 pb-1 flex items-center gap-1.5">
+                  <Video className="w-3.5 h-3.5 text-[#C5A880]" /> Video pozadia
+                </h4>
+                <p className="text-slate-500 dark:text-slate-400 leading-relaxed font-light">
+                  Nahrajte vlastné MP4/WebM video a automaticky ho použite ako aktívne pozadie celej sekcie Showroom.
+                </p>
+                
+                <div className="space-y-3">
+                  {customBgVideo ? (
+                    <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-3 text-xs text-green-700 dark:text-green-400 flex flex-col gap-2">
+                      <span className="font-bold flex items-center gap-1">
+                        <CheckCircle className="w-3.5 h-3.5 text-green-500" />
+                        Aktívne vlastné video pozadia
+                      </span>
+                      <span className="truncate block font-mono text-[9px] bg-white/10 dark:bg-slate-950/45 p-1.5 rounded">{customBgVideo}</span>
+                      <Button 
+                        size="sm"
+                        onClick={handleResetBgVideo}
+                        className="bg-red-650 hover:bg-red-500 text-white font-bold self-start rounded-lg py-1 px-3 text-[10px]"
+                      >
+                        Obnoviť predvolené
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="bg-[#C5A880]/5 border border-[#C5A880]/15 rounded-xl p-3 text-[10px] text-slate-500 dark:text-slate-450 italic">
+                      Aktívne je predvolené video bazéna.
+                    </div>
+                  )}
+
+                  <div className="relative">
+                    <input 
+                      type="file"
+                      accept="video/*"
+                      id="dev-bg-video-upload"
+                      onChange={handleBgVideoUpload}
+                      disabled={uploadingBgVideo}
+                      className="hidden"
+                    />
+                    <label 
+                      htmlFor="dev-bg-video-upload"
+                      className={`flex items-center justify-center gap-2 border border-dashed border-[#C5A880]/40 rounded-xl p-4 cursor-pointer hover:bg-[#C5A880]/10 dark:hover:bg-white/5 transition-colors font-bold text-xs ${
+                        uploadingBgVideo ? 'opacity-50 pointer-events-none' : ''
+                      }`}
+                    >
+                      {uploadingBgVideo ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin text-[#C5A880]" />
+                          <span>Nahrávam video...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Upload className="w-4 h-4 text-[#C5A880]" />
+                          <span>Vybrať a nahrať MP4/WebM</span>
+                        </>
+                      )}
+                    </label>
+                  </div>
                 </div>
               </div>
-            </div>
 
-          </div>
-        </details>
-      </div>
+            </div>
+          </details>
+        </div>
+      )}
 
     </div>
   );
