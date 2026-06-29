@@ -956,6 +956,45 @@ export default function Showroom() {
                   );
                 })()}
 
+                {/* NEW: Public Background Video uploader card - read-only / trial version */}
+                <Card className="border-slate-200/40 dark:border-white/5 bg-white/12 dark:bg-slate-950/12 backdrop-blur-xl rounded-3xl overflow-hidden shadow-xl dark:shadow-2xl text-slate-800 dark:text-slate-100 mt-6 relative">
+                  <div className="absolute top-4 right-4">
+                    <span className="bg-[#C5A880]/15 text-[#E2C799] border border-[#C5A880]/30 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider">
+                      Skúšobná verzia
+                    </span>
+                  </div>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base sm:text-lg font-black uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
+                      <Video className="w-5 h-5 text-[#C5A880]" />
+                      Video pozadia showroomu
+                    </CardTitle>
+                    <CardDescription className="text-xs">
+                      Prispôsobenie hlavnej video vrstvy pre návštevníkov
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 font-light leading-relaxed text-left">
+                      Nahrajte vlastné MP4/WebM video (napr. spomalené zábery detí v bazéne vygenerované cez Gemini Veo) a zmeňte predvolené pozadie tohto showroomu.
+                    </p>
+                    
+                    <div className="bg-slate-50/55 dark:bg-slate-950/30 border border-slate-200 dark:border-white/5 rounded-2xl p-4 text-xs text-left space-y-3">
+                      <div className="flex items-center gap-2 text-slate-500 dark:text-slate-450">
+                        <AlertTriangle className="w-4 h-4 text-[#C5A880]" />
+                        <span>Nahrávanie je v tejto skúšobnej verzii zakázané.</span>
+                      </div>
+                      
+                      <div className="relative opacity-65 cursor-not-allowed">
+                        <label 
+                          className="flex items-center justify-center gap-2 border border-dashed border-slate-350 dark:border-white/10 rounded-xl p-4 bg-slate-100/50 dark:bg-slate-900/30 font-bold text-xs pointer-events-none"
+                        >
+                          <Upload className="w-4 h-4 text-slate-400" />
+                          <span>Vybrať a nahrať MP4/WebM video</span>
+                        </label>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
               </div>
 
               {/* RIGHT COLUMN: CALENDAR & FORM */}
