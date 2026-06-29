@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { 
@@ -98,6 +98,7 @@ const INITIAL_PARTNERS = [
 function ShowroomBackgroundVideo() {
   const isDark = typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
   const [dark, setDark] = useState(isDark);
+  const videoRef = useRef(null);
 
   useEffect(() => {
     if (typeof document === 'undefined') return;
@@ -108,9 +109,19 @@ function ShowroomBackgroundVideo() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = true;
+      videoRef.current.play().catch(err => {
+        console.warn("Showroom video autoplay failed:", err);
+      });
+    }
+  }, []);
+
   return (
     <div className="fixed inset-0 w-full h-full overflow-hidden bg-[#FAF8F5] dark:bg-[#050508] z-0 pointer-events-none select-none">
       <video
+        ref={videoRef}
         autoPlay
         loop
         muted
@@ -120,6 +131,8 @@ function ShowroomBackgroundVideo() {
         style={{ filter: dark ? 'brightness(0.35) contrast(1.1)' : 'brightness(0.95) contrast(1.02)' }}
       >
         <source src="https://player.vimeo.com/external/434045526.sd.mp4?s=236a2c3d3f29c7e1c1b1c3b3b3b3b3b3&profile_id=164" type="video/mp4" />
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-swimming-pool-in-a-sunny-day-4561-large.mp4" type="video/mp4" />
+        <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4" />
       </video>
     </div>
   );
