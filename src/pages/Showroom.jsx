@@ -125,6 +125,7 @@ function ShowroomBackgroundVideo({ customVideoUrl }) {
     <div className="fixed inset-0 w-full h-full overflow-hidden bg-[#FAF8F5] dark:bg-[#050508] z-0 pointer-events-none select-none">
       <video
         ref={videoRef}
+        src={customVideoUrl || "https://videos.pexels.com/video-files/3209828/3209828-hd_1920_1080_25fps.mp4"}
         autoPlay
         loop
         muted
@@ -132,12 +133,7 @@ function ShowroomBackgroundVideo({ customVideoUrl }) {
         preload="auto"
         className="w-full h-full object-cover transition-all duration-1000 ease-in-out"
         style={{ filter: dark ? 'brightness(0.35) contrast(1.1)' : 'brightness(0.95) contrast(1.02)' }}
-      >
-        {customVideoUrl && <source src={customVideoUrl} type="video/mp4" />}
-        <source src="https://videos.pexels.com/video-files/3209828/3209828-hd_1920_1080_25fps.mp4" type="video/mp4" />
-        <source src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Backflip_into_pool_from_3_metres.webm" type="video/webm" />
-        <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4" />
-      </video>
+      />
     </div>
   );
 }
@@ -216,9 +212,9 @@ export default function Showroom() {
       if (file_url) {
         const list = await base44.entities.AppConfiguration.filter({ config_key: 'showroom_bg_video' });
         if (list.length > 0) {
-          await base44.entities.AppConfiguration.update(list[0].id, { customBgVideo: file_url });
+          await base44.entities.AppConfiguration.update(list[0].id, { metaPixelId: file_url });
         } else {
-          await base44.entities.AppConfiguration.create({ config_key: 'showroom_bg_video', customBgVideo: file_url });
+          await base44.entities.AppConfiguration.create({ config_key: 'showroom_bg_video', metaPixelId: file_url });
         }
         localStorage.setItem('al_showroom_bg_video', file_url);
         setCustomBgVideo(file_url);
@@ -237,7 +233,7 @@ export default function Showroom() {
     try {
       const list = await base44.entities.AppConfiguration.filter({ config_key: 'showroom_bg_video' });
       if (list.length > 0) {
-        await base44.entities.AppConfiguration.update(list[0].id, { customBgVideo: '' });
+        await base44.entities.AppConfiguration.update(list[0].id, { metaPixelId: '' });
       }
       localStorage.removeItem('al_showroom_bg_video');
       setCustomBgVideo('');
@@ -284,10 +280,10 @@ export default function Showroom() {
   });
 
   useEffect(() => {
-    if (bgVideoConfig && bgVideoConfig.customBgVideo !== undefined) {
-      setCustomBgVideo(bgVideoConfig.customBgVideo);
-      if (bgVideoConfig.customBgVideo) {
-        localStorage.setItem('al_showroom_bg_video', bgVideoConfig.customBgVideo);
+    if (bgVideoConfig && bgVideoConfig.metaPixelId !== undefined) {
+      setCustomBgVideo(bgVideoConfig.metaPixelId);
+      if (bgVideoConfig.metaPixelId) {
+        localStorage.setItem('al_showroom_bg_video', bgVideoConfig.metaPixelId);
       } else {
         localStorage.removeItem('al_showroom_bg_video');
       }
