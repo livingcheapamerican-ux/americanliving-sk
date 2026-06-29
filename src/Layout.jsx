@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Home, Grid3x3, Phone, Info, Menu, X, Mail, Settings, FileText, Image, Brain, Upload, ChevronDown, Sparkles, Languages, FileText as BlogIcon, Activity, Zap, Users, Gift, MapPinned, MessageCircle, Sun, Moon } from "lucide-react";
+import { Home, Grid3x3, Phone, Info, Menu, X, Mail, Settings, FileText, Image, Brain, Upload, ChevronDown, Sparkles, Languages, FileText as BlogIcon, Activity, Zap, Users, Gift, MapPinned, MessageCircle, Sun, Moon, Calendar } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { AVAILABLE_LANGUAGES } from "./components/LanguageContext";
 import { Button } from "@/components/ui/button";
@@ -67,12 +67,16 @@ function LayoutContent({ children }) {
   const searchParams = new URLSearchParams(location.search);
   let defaultCanonical = `https://americanliving.sk${cleanPath || '/'}`;
 
+  const isStaging = typeof window !== 'undefined' &&
+    window.location.hostname !== 'americanliving.sk' &&
+    window.location.hostname !== 'www.americanliving.sk';
+
   // Client-side variant parameter detection for noindex, follow injection
-  const variantKeys = ['color', 'option', 'facade', 'strecha', 'okna', 'material', 'vybava', 'typ', 'vyrobca', 'kategoria'];
+  const variantKeys = ['color', 'option', 'facade', 'strecha', 'okna', 'material', 'vybava', 'typ'];
   const hasVariantParams = variantKeys.some(key => searchParams.has(key));
   const isConfiguratorOrCatalog = cleanPath.includes('konfigurator') || cleanPath.includes('katalog') || cleanPath.includes('detail-domu');
 
-  const shouldNoindex = noindexPaths.some(path => location.pathname.startsWith(path));
+  const shouldNoindex = isStaging || noindexPaths.some(path => location.pathname.toLowerCase().startsWith(path.toLowerCase()));
   const shouldNoindexFollow = isConfiguratorOrCatalog && hasVariantParams;
 
   // Keep allowed query parameters for specific routes
@@ -177,6 +181,7 @@ function LayoutContent({ children }) {
   const navItems = [
     { name: t('home'), path: createPageUrl("Domov"), icon: Home },
     { name: t('dotacia'), path: createPageUrl("DotaciaAmericana"), icon: Gift },
+    { name: t('showroom'), path: createPageUrl("Showroom"), icon: Calendar },
     ...(isAdmin ? [{ name: '💰 ' + t('adminPriceList'), path: createPageUrl("AdminCennik"), icon: Grid3x3 }] : []),
     ...(isAdmin ? [{ name: '🗺️ ' + t('grantCampaign'), path: createPageUrl("GrantovaKampan"), icon: MapPinned }] : []),
     { name: t('catalog'), path: createPageUrl("Katalog"), icon: Grid3x3 },

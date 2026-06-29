@@ -9,7 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { 
   ArrowRight, CheckCircle, Home, Zap, Clock, Shield, Euro,
   FileText, Hammer, Key, Phone, Building2, ChevronRight, Building, Landmark, TrendingUp, Settings, LogIn, Gift, Star, Users,
-  MessageCircle, Send, Sparkles
+  MessageCircle, Send, Sparkles, Calendar
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import HeroSettingsManager from "../components/admin/HeroSettingsManager";
@@ -855,6 +855,9 @@ export default function Domov() {
       <NaturePhotoBackground />
       <div className="fixed-bg-content relative z-10">
         <Helmet>
+        <link rel="canonical" href="https://americanliving.sk" />
+        <title>American Living – Modulárne a montované domy na kľúč | Slovensko</title>
+        <meta name="description" content="Exkluzívny distribútor modulárnych a montovaných domov na Slovensku. Ticab house, Prosto House. Energetická trieda A0, montáž 60 dní, ceny od 19 500 €." />
         <link
           rel="preload"
           as="image"
@@ -1012,6 +1015,12 @@ export default function Domov() {
                     <Home className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                     <span>{t('viewCatalogButton')}</span>
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
+                <Link to={createPageUrl("Showroom")} className="w-full sm:w-auto">
+                  <Button size="lg" className="relative w-full sm:w-auto bg-gradient-to-r from-[#C5A880] to-[#bca076] hover:from-[#bca076] hover:to-[#C5A880] text-slate-950 font-black text-lg px-8 py-7 shadow-[0_0_30px_rgba(197,168,128,0.3)] border border-[#C5A880]/50 transition-all rounded-2xl flex items-center justify-center gap-2 group">
+                    <Calendar className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                    <span>{t('showroom')}</span>
                   </Button>
                 </Link>
                 <Button 
@@ -1354,6 +1363,92 @@ export default function Domov() {
                </div>
 
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Showroom Promo Section */}
+      <section className="py-16 sm:py-24 bg-gradient-to-br from-slate-900 via-slate-805 to-slate-950 text-white relative overflow-hidden border-b border-[#C5A880]/15">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(197,168,128,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(197,168,128,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-[#9E2A2B]/10 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-[#C5A880]/10 rounded-full blur-[120px] pointer-events-none" />
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-5xl mx-auto flex flex-col lg:flex-row items-center gap-12">
+            
+            {/* Left side: engaging copywriting */}
+            <div className="flex-1 text-left space-y-6">
+              <Badge className="bg-[#C5A880] text-slate-950 font-bold px-3.5 py-1.5 rounded-full text-xs uppercase tracking-wider">
+                Vyskúšajte pred kúpou
+              </Badge>
+              <h2 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
+                Vyskúšajte si bývanie na vlastnej koži predtým, <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#C5A880] to-[#E2C799]">než ho kúpite!</span>
+              </h2>
+              <p className="text-slate-300 font-light leading-relaxed text-sm sm:text-base">
+                Kúpa nového domu je životné rozhodnutie. Prečo by ste mali kupovať "mačku vo vreci"? V spolupráci s našimi partnermi pre vás staviame zážitkové **Showroom domy**, ktoré si budete môcť prenajať na víkend alebo pár nocí. Zažijete tak dokonalé ticho, vôňu dreva, špičkové zateplenie a tepelnú pohodu na vlastnej koži.
+              </p>
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-5 text-xs sm:text-sm text-slate-350 space-y-2">
+                <p className="font-bold text-[#E2C799] flex items-center gap-2">
+                  <Sparkles className="w-4.5 h-4.5 text-[#C5A880]" />
+                  GARANCIA VRÁTENIA PENAZÍ:
+                </p>
+                <p className="font-light">
+                  Ak sa po ubytovaní v našom showroome rozhodnete pre kúpu akéhokoľvek domu z nášho katalógu, **celú sumu, ktorú ste zaplatili za prenájom, vám odpočítame z kúpnej ceny domu!** Vyskúšanie máte v takom prípade úplne zadarmo.
+                </p>
+              </div>
+
+              <div className="pt-2">
+                <Link to={createPageUrl("Showroom")}>
+                  <Button size="lg" className="bg-[#C5A880] hover:bg-[#C5A880]/90 text-slate-950 font-black text-base px-8 py-6 rounded-2xl transition-all shadow-[0_0_25px_rgba(197,168,128,0.25)] flex items-center justify-center gap-2 group">
+                    <Calendar className="w-5 h-5 group-hover:rotate-6 transition-transform" />
+                    <span>Rezervovať showroom dom</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
+            {/* Right side: Locations preview */}
+            <div className="w-full lg:w-96 shrink-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-6 shadow-2xl relative overflow-hidden text-left">
+              <h3 className="font-bold text-xs uppercase tracking-wider text-[#C5A880] mb-4">Pripravované lokality:</h3>
+              
+              <div className="space-y-4">
+                {/* Location 1: Komárno */}
+                <div className="p-4 rounded-2xl bg-slate-950/60 border border-white/5 flex gap-3.5 items-start">
+                  <div className="w-10 h-10 rounded-xl bg-orange-600/10 border border-orange-500/25 flex items-center justify-center text-[#C5A880] shrink-0 font-bold text-lg">
+                    1
+                  </div>
+                  <div>
+                    <div className="flex justify-between items-center w-full">
+                      <h4 className="font-bold text-sm text-white">Komárno</h4>
+                      <Badge className="bg-orange-600/15 text-orange-400 text-[8px] border border-orange-500/25 py-0.5 px-2">staviame</Badge>
+                    </div>
+                    <p className="text-[11px] text-slate-400 font-light mt-1">Celoročný modulárny Barn House pri vode s wellness prvkami.</p>
+                    <p className="text-[10px] text-slate-500 mt-2 font-medium">Partner: American Living s.r.o.</p>
+                  </div>
+                </div>
+
+                {/* Location 2: Levoča */}
+                <div className="p-4 rounded-2xl bg-slate-950/60 border border-white/5 flex gap-3.5 items-start">
+                  <div className="w-10 h-10 rounded-xl bg-orange-600/10 border border-orange-500/25 flex items-center justify-center text-[#C5A880] shrink-0 font-bold text-lg">
+                    2
+                  </div>
+                  <div>
+                    <div className="flex justify-between items-center w-full">
+                      <h4 className="font-bold text-sm text-white">Okolie Levoče</h4>
+                      <Badge className="bg-orange-600/15 text-orange-400 text-[8px] border border-orange-500/25 py-0.5 px-2">pripravujeme</Badge>
+                    </div>
+                    <p className="text-[11px] text-slate-400 font-light mt-1">Ekologický montovaný rodinný dom v lone spišskej prírody.</p>
+                    <p className="text-[10px] text-slate-500 mt-2 font-medium">Partner: American Living s.r.o.</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-4 pt-4 border-t border-white/5 text-[10px] text-slate-450 text-center font-medium">
+                Domy vlastnia a spravujú licencovaní partneri.
+              </div>
+            </div>
+
           </div>
         </div>
       </section>

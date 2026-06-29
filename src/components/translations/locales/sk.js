@@ -1,6 +1,8 @@
 export default {
   "home": "Domov",
   "dotacia": "SÚKROMNÝ GRANT",
+  "showroom": "Showroom",
+  "showroomCTA": "Vyskúšať pred kúpou",
   "catalog": "Katalóg domov",
   "gallery": "Galéria realizácií",
   "configurator": "Konfigurátor",
