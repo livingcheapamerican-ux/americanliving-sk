@@ -29,7 +29,9 @@ import {
   Layers,
   Image as ImageIcon,
   Upload,
-  Loader2
+  Loader2,
+  Plus,
+  Trash2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -218,7 +220,7 @@ export default function Showroom() {
         }
         localStorage.setItem('al_showroom_bg_video', file_url);
         setCustomBgVideo(file_url);
-        refetchBgVideoConfig();
+        refetchAppConfigs();
         toast.success("Video pozadia bolo úspešne nahrané!");
       }
     } catch (err) {
@@ -237,7 +239,7 @@ export default function Showroom() {
       }
       localStorage.removeItem('al_showroom_bg_video');
       setCustomBgVideo('');
-      refetchBgVideoConfig();
+      refetchAppConfigs();
       toast.success("Predvolené video bolo obnovené.");
     } catch (err) {
       console.error("Failed to reset video:", err);
@@ -254,7 +256,7 @@ export default function Showroom() {
   // Zobrazenie predfaktúry
   const [selectedInvoice, setSelectedInvoice] = useState(null);
 
-  // --- DYNAMICKÝ ODBER FOTIEK Z DETABÁZY BASE44 ---
+  // --- DYNAMICKÝ ODBER PODKLADOV Z DATABÁZY BASE44 ---
   const { data: dbDomy = [] } = useQuery({
     queryKey: ['showroom-db-domy'],
     queryFn: () => base44.entities.Dom.list()
@@ -266,18 +268,48 @@ export default function Showroom() {
   });
   const isAdmin = user?.role === 'admin' || user?.super_admin === true;
 
-  const { data: bgVideoConfig, refetch: refetchBgVideoConfig } = useQuery({
-    queryKey: ['showroom_bg_video_config'],
+  // Spoločný odber konfigurácií (vrátane videa a fotiek)
+  const { data: appConfigs = [], refetch: refetchAppConfigs } = useQuery({
+    queryKey: ['showroom_app_configs'],
     queryFn: async () => {
       try {
-        const list = await base44.entities.AppConfiguration.filter({ config_key: 'showroom_bg_video' });
-        return list[0] || null;
+        return await base44.entities.AppConfiguration.filter({});
       } catch (err) {
-        console.warn("Failed to fetch custom background video from database:", err);
-        return null;
+        console.warn("Failed to fetch app configurations:", err);
+        return [];
       }
     }
   });
+
+  const bgVideoConfig = React.useMemo(() => {
+    return appConfigs.find(c => c.config_key === 'showroom_bg_video') || null;
+  }, [appConfigs]);
+
+  const customPhotosByLoc = React.useMemo(() => {
+    const result = { komarno: [], levoca: [] };
+    
+    const komarnoConfig = appConfigs.find(c => c.config_key === 'showroom_photos_komarno');
+    if (komarnoConfig?.metaPixelId) {
+      try {
+        const parsed = JSON.parse(komarnoConfig.metaPixelId);
+        if (Array.isArray(parsed)) result.komarno = parsed;
+      } catch (e) {
+        console.warn("Failed to parse komarno custom photos:", e);
+      }
+    }
+
+    const levocaConfig = appConfigs.find(c => c.config_key === 'showroom_photos_levoca');
+    if (levocaConfig?.metaPixelId) {
+      try {
+        const parsed = JSON.parse(levocaConfig.metaPixelId);
+        if (Array.isArray(parsed)) result.levoca = parsed;
+      } catch (e) {
+        console.warn("Failed to parse levoca custom photos:", e);
+      }
+    }
+    
+    return result;
+  }, [appConfigs]);
 
   useEffect(() => {
     if (bgVideoConfig && bgVideoConfig.metaPixelId !== undefined) {
@@ -292,30 +324,24 @@ export default function Showroom() {
 
   // Nájdenie modelov v DB na vytiahnutie kompletnej galérie
   const barnDb = dbDomy.find(d => d.id === "6916ec94c11aacdd15248f31" || d.prosto_house_kod === "PH-008" || d.nazov?.toLowerCase().includes("barn 48") || d.nazov?.toLowerCase().includes("barn"));
-  const prefabDb = dbDomy.find(d => d.nazov?.toLowerCase().includes("london") || d.nazov?.toLowerCase().includes("prefab") || d.id === "london" || d.prosto_house_kod === "PH-010");
 
   const getPhotosForLocation = (locId) => {
-    if (locId === 'komarno') {
-      if (barnDb) {
-        const photos = [
-          barnDb.hlavny_obrazok,
-          ...(barnDb.galeria || []),
-          ...(barnDb.galerie ? barnDb.galerie.flatMap(g => g.fotky || []) : [])
-        ].filter(Boolean);
-        if (photos.length > 0) return photos;
-      }
-      return BARN_PHOTOS;
-    } else {
-      if (prefabDb) {
-        const photos = [
-          prefabDb.hlavny_obrazok,
-          ...(prefabDb.galeria || []),
-          ...(prefabDb.galerie ? prefabDb.galerie.flatMap(g => g.fotky || []) : [])
-        ].filter(Boolean);
-        if (photos.length > 0) return photos;
-      }
-      return PREFAB_PHOTOS;
+    // 1. Ak existujú nahrané vlastné fotky administrátora pre túto lokalitu, použi ich
+    const customList = customPhotosByLoc[locId];
+    if (customList && customList.length > 0) {
+      return customList;
     }
+
+    // 2. Inak použi fotky domu Barn House pre obe lokality ako predvolené
+    if (barnDb) {
+      const photos = [
+        barnDb.hlavny_obrazok,
+        ...(barnDb.galeria || []),
+        ...(barnDb.galerie ? barnDb.galerie.flatMap(g => g.fotky || []) : [])
+      ].filter(Boolean);
+      if (photos.length > 0) return photos;
+    }
+    return BARN_PHOTOS;
   };
 
   // Pri zmene lokality resetovať index aktívnej fotky
@@ -918,10 +944,113 @@ export default function Showroom() {
                         <div className="absolute top-4 right-4 z-20">
                           <Badge className="bg-[#C5A880] text-slate-950 font-black text-[9px] uppercase tracking-wider py-1 px-3 border border-[#C5A880] flex items-center gap-1 shadow-md">
                             <ImageIcon className="w-3.5 h-3.5" />
-                            {barnDb && selectedLoc === 'komarno' ? 'Kompletná galéria Barn 48' : 'Fotky z galérie domu'}
+                            {customPhotosByLoc[selectedLoc]?.length > 0 ? 'Vlastná galéria showroomu' : 'Predvolená galéria Barn House'}
                           </Badge>
                         </div>
                       </div>
+
+                      {/* Admin Photo Manager - only visible to admins */}
+                      {isAdmin && (
+                        <div className="p-5 border-b border-slate-200/50 dark:border-white/5 bg-slate-50/50 dark:bg-slate-950/20 text-left">
+                          <div className="flex items-center justify-between mb-4">
+                            <h4 className="text-xs font-black uppercase tracking-widest text-[#C5A880] flex items-center gap-2">
+                              <ImageIcon className="w-4 h-4" />
+                              Správa fotiek galérie ({selectedLoc === 'komarno' ? 'Komárno' : 'Levoča'})
+                            </h4>
+                            <button
+                              onClick={async () => {
+                                if (window.confirm("Naozaj chcete obnoviť predvolené fotky (Barn House)?")) {
+                                  try {
+                                    const configKey = `showroom_photos_${selectedLoc}`;
+                                    const list = await base44.entities.AppConfiguration.filter({ config_key: configKey });
+                                    if (list.length > 0) {
+                                      await base44.entities.AppConfiguration.update(list[0].id, { metaPixelId: "" });
+                                    }
+                                    refetchAppConfigs();
+                                    toast.success("Predvolené fotky boli obnovené.");
+                                  } catch (e) {
+                                    console.error(e);
+                                    toast.error("Nepodarilo sa obnoviť fotky.");
+                                  }
+                                }
+                              }}
+                              className="text-[10px] text-slate-400 hover:text-red-500 font-bold uppercase transition-colors"
+                            >
+                              Obnoviť predvolené
+                            </button>
+                          </div>
+
+                          {/* Thumbnails of current photos */}
+                          <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 mb-4">
+                            {currentPhotos.map((photo, idx) => (
+                              <div key={idx} className="relative aspect-video rounded-lg overflow-hidden border border-slate-200 dark:border-white/10 group bg-slate-950">
+                                <img src={photo} alt="" className="w-full h-full object-cover" />
+                                <button
+                                  onClick={async () => {
+                                    try {
+                                      const updatedPhotos = currentPhotos.filter((_, i) => i !== idx);
+                                      const configKey = `showroom_photos_${selectedLoc}`;
+                                      const list = await base44.entities.AppConfiguration.filter({ config_key: configKey });
+                                      const serialized = JSON.stringify(updatedPhotos);
+                                      if (list.length > 0) {
+                                        await base44.entities.AppConfiguration.update(list[0].id, { metaPixelId: serialized });
+                                      } else {
+                                        await base44.entities.AppConfiguration.create({ config_key: configKey, metaPixelId: serialized });
+                                      }
+                                      refetchAppConfigs();
+                                      toast.success("Fotka bola odstránená.");
+                                      if (activePhotoIndex >= updatedPhotos.length) {
+                                        setActivePhotoIndex(Math.max(0, updatedPhotos.length - 1));
+                                      }
+                                    } catch (e) {
+                                      console.error(e);
+                                      toast.error("Chyba pri odstraňovaní fotky.");
+                                    }
+                                  }}
+                                  className="absolute inset-0 bg-red-600/85 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </div>
+                            ))}
+
+                            {/* Uploader slot */}
+                            <label className="aspect-video rounded-lg border border-dashed border-slate-350 dark:border-white/15 hover:border-[#C5A880] dark:hover:border-[#C5A880] bg-white/5 flex flex-col items-center justify-center cursor-pointer transition-colors text-slate-400 hover:text-[#C5A880]">
+                              <Plus className="w-4 h-4" />
+                              <span className="text-[8px] font-black uppercase mt-1">Pridať fotku</span>
+                              <input
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={async (e) => {
+                                  const file = e.target.files?.[0];
+                                  if (!file) return;
+                                  const uploadToast = toast.loading("Nahrávam fotku...");
+                                  try {
+                                    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                                    if (file_url) {
+                                      const updatedPhotos = [...currentPhotos, file_url];
+                                      const configKey = `showroom_photos_${selectedLoc}`;
+                                      const list = await base44.entities.AppConfiguration.filter({ config_key: configKey });
+                                      const serialized = JSON.stringify(updatedPhotos);
+                                      if (list.length > 0) {
+                                        await base44.entities.AppConfiguration.update(list[0].id, { metaPixelId: serialized });
+                                      } else {
+                                        await base44.entities.AppConfiguration.create({ config_key: configKey, metaPixelId: serialized });
+                                      }
+                                      refetchAppConfigs();
+                                      toast.success("Fotka pridaná úspešne!", { id: uploadToast });
+                                    }
+                                  } catch (err) {
+                                    console.error(err);
+                                    toast.error("Nepodarilo sa nahrať fotku.", { id: uploadToast });
+                                  }
+                                }}
+                              />
+                            </label>
+                          </div>
+                        </div>
+                      )}
 
                       <CardHeader className="pt-6 border-b border-slate-200/50 dark:border-white/5">
                         <div className="flex justify-between items-start gap-4 flex-wrap">
