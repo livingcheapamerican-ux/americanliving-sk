@@ -34,12 +34,23 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { toast } from 'sonner';
 
-// Obrázky z base44 archívu - dom s bazénom (Barnbazen) a ďalšie fotky
-const HOUSE_PHOTOS = [
+// Prednastavené fotky z base44 archívu pre Barn domy (Komárno)
+const BARN_PHOTOS = [
   "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/cbd41c122_Barnbazen.jpeg",
+  "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/eccd583aa_barn-double-prosto-house-3.jpg",
   "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/5ddf7431e_BarnDoubledrevouvodnafotka.jpg",
+  "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/2b401b76a_BarnDouble72exteriermurovkauvodnyobrazok.jpg",
   "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/49133a5d4_Barnhills.jpeg",
-  "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/24cecde9d_BarnZilina.jpeg"
+  "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/24cecde9d_BarnZilina.jpeg",
+  "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/ee82ce3f5_Barnmurovkazilina.jpeg"
+];
+
+// Prednastavené fotky z base44 archívu pre Prefab domy (Levoča)
+const PREFAB_PHOTOS = [
+  "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/25e2796ce_Londonexteriermurovka1.jpeg",
+  "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/9e0922961_Londonexteriermurovka1.jpeg",
+  "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/952c7dee5_Londonexterierdrevoplech1.jpg",
+  "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/25cd528c6_Londonexterierdrevoplech2.jpg"
 ];
 
 const INITIAL_PROPERTIES = {
@@ -153,6 +164,45 @@ export default function Showroom() {
   // Zobrazenie predfaktúry
   const [selectedInvoice, setSelectedInvoice] = useState(null);
 
+  // --- DYNAMICKÝ ODBER FOTIEK Z DETABÁZY BASE44 ---
+  const { data: dbDomy = [] } = useQuery({
+    queryKey: ['showroom-db-domy'],
+    queryFn: () => base44.entities.Dom.list()
+  });
+
+  // Nájdenie modelov v DB na vytiahnutie kompletnej galérie
+  const barnDb = dbDomy.find(d => d.id === "6916ec94c11aacdd15248f31" || d.prosto_house_kod === "PH-008" || d.nazov?.toLowerCase().includes("barn 48") || d.nazov?.toLowerCase().includes("barn"));
+  const prefabDb = dbDomy.find(d => d.nazov?.toLowerCase().includes("london") || d.nazov?.toLowerCase().includes("prefab") || d.id === "london" || d.prosto_house_kod === "PH-010");
+
+  const getPhotosForLocation = (locId) => {
+    if (locId === 'komarno') {
+      if (barnDb) {
+        const photos = [
+          barnDb.hlavny_obrazok,
+          ...(barnDb.galeria || []),
+          ...(barnDb.galerie ? barnDb.galerie.flatMap(g => g.fotky || []) : [])
+        ].filter(Boolean);
+        if (photos.length > 0) return photos;
+      }
+      return BARN_PHOTOS;
+    } else {
+      if (prefabDb) {
+        const photos = [
+          prefabDb.hlavny_obrazok,
+          ...(prefabDb.galeria || []),
+          ...(prefabDb.galerie ? prefabDb.galerie.flatMap(g => g.fotky || []) : [])
+        ].filter(Boolean);
+        if (photos.length > 0) return photos;
+      }
+      return PREFAB_PHOTOS;
+    }
+  };
+
+  // Pri zmene lokality resetovať index aktívnej fotky
+  useEffect(() => {
+    setActivePhotoIndex(0);
+  }, [selectedLoc]);
+
   // --- SAVE TO LOCALSTORAGE ON CHANGES ---
   useEffect(() => {
     localStorage.setItem('al_showroom_properties', JSON.stringify(properties));
@@ -179,7 +229,7 @@ export default function Showroom() {
     return new Date(Date.now() + simulatedTimeOffset);
   };
 
-  // --- AUTO-CANCELLATION LOOP ---
+  // --- AUTO-CANCELLATION checking ---
   useEffect(() => {
     const checkExpirations = () => {
       const now = getSimulatedNow();
@@ -591,41 +641,44 @@ export default function Showroom() {
     return `${diffHrs}h ${diffMins}m`;
   };
 
+  const currentPhotos = getPhotosForLocation(selectedLoc);
+
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans pb-24 relative overflow-hidden transition-colors duration-300">
+    <div className="relative min-h-screen bg-transparent text-slate-800 dark:text-slate-100 font-sans pb-24 transition-colors duration-300">
       
       {/* 1. VRSTVA (SPODNÁ) - LOOPING VIDEO DETÍ V BAZÉNE */}
-      <div className="fixed inset-0 w-full h-full z-0 overflow-hidden select-none pointer-events-none">
+      {/* Používame z-10 a fixed. Renders on top of Layout wrapper solid background, but under all content layer (z-20) */}
+      <div className="fixed inset-0 w-full h-full z-10 overflow-hidden select-none pointer-events-none transition-colors duration-300">
         <video
           autoPlay
           loop
           muted
           playsInline
           preload="auto"
-          className="w-full h-full object-cover scale-[1.02] filter brightness-[0.3] contrast-[1.05] saturate-[0.8]"
+          className="w-full h-full object-cover scale-[1.02] filter brightness-[0.9] dark:brightness-[0.35] contrast-[1.02] saturate-[0.85] transition-all duration-300"
         >
           <source src="https://player.vimeo.com/external/434045526.sd.mp4?s=236a2c3d3f29c7e1c1b1c3b3b3b3b3b3&profile_id=164" type="video/mp4" />
         </video>
-        {/* Tmavý prekrývajúci filter pre vynikajúcu čitateľnosť textu na vrstve 2 */}
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-950/70 to-slate-950/90 backdrop-blur-[3px]" />
+        {/* Svetlý overlay v light mode a tmavý v dark mode pre 100% čitateľnosť textu a prémiovú flexibilitu */}
+        <div className="absolute inset-0 bg-white/75 dark:bg-slate-950/85 backdrop-blur-[3px] transition-colors duration-300" />
       </div>
 
-      {/* 2. VRSTVA (HORNÁ) - PREMIUM GLASSMORPHIC UI */}
-      <div className="relative z-10">
+      {/* 2. VRSTVA (HORNÁ) - ADAPTÍVNE PREMIUM GLASSMORPHIC UI */}
+      <div className="relative z-20">
         
         {/* HERO HEADER */}
-        <div className="relative pt-20 pb-16 px-4 text-center">
+        <div className="relative pt-16 pb-12 px-4 text-center">
           <div className="relative z-10 max-w-4xl mx-auto space-y-6">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#C5A880]/15 border border-[#C5A880]/30 backdrop-blur-md animate-pulse">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#C5A880]/15 border border-[#C5A880]/30 backdrop-blur-md">
               <Layers className="w-3.5 h-3.5 text-[#C5A880]" />
-              <span className="text-[10px] sm:text-xs font-black tracking-widest text-[#E2C799] uppercase">Imersívne 2-vrstvové zobrazenie</span>
+              <span className="text-[10px] sm:text-xs font-black tracking-widest text-[#C5A880] dark:text-[#E2C799] uppercase">Zážitkový pobyt</span>
             </div>
             
-            <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight drop-shadow-2xl">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight text-slate-900 dark:text-white drop-shadow-sm dark:drop-shadow-2xl">
               Rezidenčné Showroomy <span className="bg-gradient-to-r from-[#C5A880] via-[#E2C799] to-[#C5A880] bg-clip-text text-transparent">American Living</span>
             </h1>
             
-            <p className="text-sm sm:text-lg text-slate-300 max-w-2xl mx-auto font-light leading-relaxed drop-shadow-md">
+            <p className="text-sm sm:text-lg text-slate-650 dark:text-slate-300 max-w-2xl mx-auto font-light leading-relaxed drop-shadow-sm">
               Pozrite si fotky našich domov z base44 archívu, vyberte si termín v kalendári a vyskúšajte si celoročné bývanie s bazénom a saunou na vlastnej koži.
             </p>
 
@@ -634,8 +687,8 @@ export default function Showroom() {
                 onClick={() => setActiveTab('client')}
                 className={`rounded-xl px-7 py-6 font-bold text-xs sm:text-sm uppercase tracking-wider transition-all border ${
                   activeTab === 'client' 
-                    ? 'bg-[#C5A880] hover:bg-[#C5A880]/90 text-slate-950 border-[#C5A880] shadow-[0_0_30px_rgba(197,168,128,0.35)]' 
-                    : 'bg-white/5 hover:bg-white/10 text-slate-200 border-white/10 backdrop-blur-md'
+                    ? 'bg-[#C5A880] hover:bg-[#C5A880]/90 text-slate-950 border-[#C5A880] shadow-[0_4px_20px_rgba(197,168,128,0.25)]' 
+                    : 'bg-white/40 dark:bg-white/5 hover:bg-white/60 dark:hover:bg-white/10 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-white/10 backdrop-blur-md'
                 }`}
               >
                 <CalendarIcon className="w-4 h-4 mr-2" />
@@ -645,8 +698,8 @@ export default function Showroom() {
                 onClick={() => setActiveTab('partner')}
                 className={`rounded-xl px-7 py-6 font-bold text-xs sm:text-sm uppercase tracking-wider transition-all border ${
                   activeTab === 'partner' 
-                    ? 'bg-[#C5A880] hover:bg-[#C5A880]/90 text-slate-950 border-[#C5A880] shadow-[0_0_30px_rgba(197,168,128,0.35)]' 
-                    : 'bg-white/5 hover:bg-white/10 text-slate-200 border-white/10 backdrop-blur-md'
+                    ? 'bg-[#C5A880] hover:bg-[#C5A880]/90 text-slate-950 border-[#C5A880] shadow-[0_4px_20px_rgba(197,168,128,0.25)]' 
+                    : 'bg-white/40 dark:bg-white/5 hover:bg-white/60 dark:hover:bg-white/10 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-white/10 backdrop-blur-md'
                 }`}
               >
                 <ShieldCheck className="w-4 h-4 mr-2" />
@@ -678,8 +731,8 @@ export default function Showroom() {
                       }}
                       className={`flex flex-col p-6 rounded-3xl border text-left transition-all duration-300 relative overflow-hidden backdrop-blur-md ${
                         selectedLoc === prop.id 
-                          ? 'border-[#C5A880] bg-slate-900/60 shadow-[0_12px_40px_rgba(197,168,128,0.15)] scale-[1.01]' 
-                          : 'border-white/5 bg-slate-950/40 hover:bg-slate-900/40 hover:border-white/10'
+                          ? 'border-[#C5A880] bg-white dark:bg-slate-900/60 shadow-[0_8px_30px_rgba(197,168,128,0.15)] scale-[1.01]' 
+                          : 'border-slate-200/50 dark:border-white/5 bg-white/40 dark:bg-slate-950/40 hover:bg-white/65 dark:hover:bg-slate-900/40 hover:border-slate-300 dark:hover:border-white/10'
                       }`}
                     >
                       <div className="flex items-center justify-between w-full mb-3">
@@ -687,13 +740,13 @@ export default function Showroom() {
                           <MapPin className="w-4 h-4" />
                           {prop.location}
                         </div>
-                        <Badge className="bg-orange-500/10 text-orange-400 border border-orange-500/20 text-[9px] font-black uppercase tracking-wider py-0.5 px-2">
+                        <Badge className="bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20 text-[9px] font-black uppercase tracking-wider py-0.5 px-2">
                           Pripravujeme
                         </Badge>
                       </div>
-                      <h3 className="font-black text-lg text-white leading-snug mb-2">{prop.name}</h3>
-                      <div className="flex justify-between items-end mt-4 pt-3 border-t border-white/5 w-full">
-                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Cena za noc:</span>
+                      <h3 className="font-black text-lg text-slate-800 dark:text-white leading-snug mb-2">{prop.name}</h3>
+                      <div className="flex justify-between items-end mt-4 pt-3 border-t border-slate-200 dark:border-white/5 w-full">
+                        <span className="text-[10px] text-slate-500 dark:text-slate-450 font-bold uppercase tracking-wider">Cena za noc:</span>
                         <span className="text-[#C5A880] font-black text-lg">{prop.price} EUR</span>
                       </div>
                     </button>
@@ -704,65 +757,78 @@ export default function Showroom() {
                 {(() => {
                   const prop = properties[selectedLoc];
                   return (
-                    <Card className="border-white/10 bg-slate-900/45 backdrop-blur-xl rounded-3xl overflow-hidden shadow-2xl">
+                    <Card className="border-slate-200 dark:border-white/10 bg-white/70 dark:bg-slate-900/45 backdrop-blur-xl rounded-3xl overflow-hidden shadow-xl dark:shadow-2xl text-slate-800 dark:text-slate-100">
                       
                       {/* Base44 House Photo Gallery (Layered Photo Slider) */}
-                      <div className="relative aspect-[16/10] overflow-hidden bg-slate-950 border-b border-white/10 group">
-                        <img 
-                          src={HOUSE_PHOTOS[activePhotoIndex]} 
-                          alt="Fotka domu s bazénom" 
-                          className="w-full h-full object-cover transition-all duration-700 ease-in-out transform group-hover:scale-105"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-90 pointer-events-none" />
+                      <div className="relative aspect-[16/10] overflow-hidden bg-slate-900 border-b border-slate-200 dark:border-white/10 group">
+                        {currentPhotos.length > 0 ? (
+                          <img 
+                            src={currentPhotos[activePhotoIndex]} 
+                            alt="Fotka domu s bazénom" 
+                            className="w-full h-full object-cover transition-all duration-750 ease-in-out transform group-hover:scale-103"
+                          />
+                        ) : (
+                          <div className="flex items-center justify-center h-full text-slate-500">
+                            <ImageIcon className="w-10 h-10 text-slate-700 mb-2 animate-pulse" />
+                            <span className="text-xs">Fotky sa načítavajú...</span>
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-90 pointer-events-none" />
                         
                         {/* Photo indicators */}
-                        <div className="absolute bottom-4 left-4 flex gap-2 z-20">
-                          {HOUSE_PHOTOS.map((_, idx) => (
-                            <button
-                              key={idx}
-                              onClick={() => setActivePhotoIndex(idx)}
-                              className={`w-2.5 h-2.5 rounded-full border transition-all ${
-                                activePhotoIndex === idx 
-                                  ? 'bg-[#C5A880] border-[#C5A880] scale-110' 
-                                  : 'bg-black/50 border-white/30 hover:border-white'
-                              }`}
-                            />
-                          ))}
-                        </div>
+                        {currentPhotos.length > 1 && (
+                          <div className="absolute bottom-4 left-4 flex gap-2 z-20">
+                            {currentPhotos.map((_, idx) => (
+                              <button
+                                key={idx}
+                                onClick={() => setActivePhotoIndex(idx)}
+                                className={`w-2 h-2 rounded-full border transition-all ${
+                                  activePhotoIndex === idx 
+                                    ? 'bg-[#C5A880] border-[#C5A880] scale-110' 
+                                    : 'bg-black/50 border-white/30 hover:border-white'
+                                }`}
+                              />
+                            ))}
+                          </div>
+                        )}
 
                         {/* Prev/Next arrows */}
-                        <button
-                          onClick={() => setActivePhotoIndex(prev => (prev - 1 + HOUSE_PHOTOS.length) % HOUSE_PHOTOS.length)}
-                          className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white p-2 rounded-full border border-white/10 z-20 transition-all opacity-0 group-hover:opacity-100"
-                        >
-                          <ChevronLeft className="w-5 h-5" />
-                        </button>
-                        <button
-                          onClick={() => setActivePhotoIndex(prev => (prev + 1) % HOUSE_PHOTOS.length)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white p-2 rounded-full border border-white/10 z-20 transition-all opacity-0 group-hover:opacity-100"
-                        >
-                          <ChevronRight className="w-5 h-5" />
-                        </button>
+                        {currentPhotos.length > 1 && (
+                          <>
+                            <button
+                              onClick={() => setActivePhotoIndex(prev => (prev - 1 + currentPhotos.length) % currentPhotos.length)}
+                              className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/45 hover:bg-black/60 text-white p-2 rounded-full border border-white/15 z-25 transition-all opacity-0 group-hover:opacity-100"
+                            >
+                              <ChevronLeft className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => setActivePhotoIndex(prev => (prev + 1) % currentPhotos.length)}
+                              className="absolute right-3 top-1/2 -translate-y-1/2 bg-black/45 hover:bg-black/60 text-white p-2 rounded-full border border-white/15 z-25 transition-all opacity-0 group-hover:opacity-100"
+                            >
+                              <ChevronRight className="w-4 h-4" />
+                            </button>
+                          </>
+                        )}
 
                         <div className="absolute top-4 right-4 z-20">
-                          <Badge className="bg-[#C5A880] text-slate-950 font-black text-[9px] uppercase tracking-wider py-1 px-3 border border-[#C5A880] flex items-center gap-1 shadow-lg">
+                          <Badge className="bg-[#C5A880] text-slate-950 font-black text-[9px] uppercase tracking-wider py-1 px-3 border border-[#C5A880] flex items-center gap-1 shadow-md">
                             <ImageIcon className="w-3.5 h-3.5" />
-                            Archív fotiek domu
+                            {barnDb && selectedLoc === 'komarno' ? 'Kompletná galéria Barn 48' : 'Fotky z galérie domu'}
                           </Badge>
                         </div>
                       </div>
 
-                      <CardHeader className="pt-6 border-b border-white/5">
+                      <CardHeader className="pt-6 border-b border-slate-200/50 dark:border-white/5">
                         <div className="flex justify-between items-start gap-4 flex-wrap">
                           <div>
-                            <CardTitle className="text-xl sm:text-2xl font-black text-white">{prop.name}</CardTitle>
-                            <CardDescription className="flex items-center gap-1.5 mt-1 font-bold text-[10px] sm:text-xs text-slate-450 uppercase tracking-wider">
+                            <CardTitle className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white leading-tight">{prop.name}</CardTitle>
+                            <CardDescription className="flex items-center gap-1.5 mt-1 font-bold text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                               <span>Partner American Living s.r.o.</span>
                               <span>•</span>
-                              <span className="text-[#C5A880]">{prop.location}</span>
+                              <span className="text-[#C5A880] font-extrabold">{prop.location}</span>
                             </CardDescription>
                           </div>
-                          <div className="bg-slate-950/60 border border-white/5 rounded-2xl px-5 py-3 text-right">
+                          <div className="bg-slate-100/80 dark:bg-slate-950/60 border border-slate-200/60 dark:border-white/5 rounded-2xl px-5 py-3 text-right">
                             <div className="text-2xl font-black text-[#C5A880] leading-none">{prop.price} EUR</div>
                             <div className="text-[8px] text-slate-500 font-bold uppercase tracking-widest mt-1">za jednu noc</div>
                           </div>
@@ -771,18 +837,18 @@ export default function Showroom() {
                       
                       <CardContent className="pt-6 space-y-6">
                         {/* Description */}
-                        <div className="space-y-2">
-                          <h4 className="text-xs font-black uppercase tracking-widest text-[#C5A880]">Popis a výbava objektu</h4>
-                          <p className="text-sm text-slate-300 leading-relaxed font-light">{prop.desc}</p>
+                        <div className="space-y-2 text-left">
+                          <h4 className="text-xs font-black uppercase tracking-widest text-[#C5A880]">Popis a výbava showroomu</h4>
+                          <p className="text-sm text-slate-650 dark:text-slate-300 leading-relaxed font-light">{prop.desc}</p>
                         </div>
 
                         {/* Video */}
-                        <div className="space-y-3">
+                        <div className="space-y-3 text-left">
                           <h4 className="text-xs font-black uppercase tracking-widest text-[#C5A880] flex items-center gap-2">
                             <Video className="w-4 h-4" />
                             Prezentačné video
                           </h4>
-                          <div className="relative aspect-video rounded-2xl overflow-hidden bg-slate-950 border border-white/10 shadow-2xl">
+                          <div className="relative aspect-video rounded-2xl overflow-hidden bg-slate-950 border border-slate-200 dark:border-white/10 shadow-lg">
                             {prop.video ? (
                               <iframe 
                                 src={prop.video} 
@@ -792,7 +858,7 @@ export default function Showroom() {
                                 allowFullScreen
                               ></iframe>
                             ) : (
-                              <div className="flex flex-col items-center justify-center h-full text-slate-500">
+                              <div className="flex flex-col items-center justify-center h-full text-slate-550">
                                 <Video className="w-10 h-10 text-slate-700 mb-2 animate-pulse" />
                                 <span className="text-xs">Video nie je k dispozícii</span>
                               </div>
@@ -801,25 +867,25 @@ export default function Showroom() {
                         </div>
 
                         {/* Policies */}
-                        <div className="bg-slate-950/50 p-5 rounded-2xl border border-white/5 space-y-4">
-                          <h4 className="text-xs font-black uppercase tracking-widest text-slate-300 flex items-center gap-2 border-b border-white/5 pb-2">
+                        <div className="bg-slate-50/80 dark:bg-slate-950/50 p-5 rounded-2xl border border-slate-200/50 dark:border-white/5 space-y-4 text-left">
+                          <h4 className="text-xs font-black uppercase tracking-widest text-slate-600 dark:text-slate-300 flex items-center gap-2 border-b border-slate-200/60 dark:border-white/5 pb-2">
                             <FileText className="w-4 h-4 text-[#C5A880]" />
                             Zmluvné a storno podmienky
                           </h4>
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                             <div>
-                              <p className="text-slate-500 font-bold uppercase tracking-wider text-[9px]">Storno lehota</p>
-                              <p className="text-slate-200 mt-1 font-bold text-sm">Do {prop.stornoDays} dní pred príchodom</p>
+                              <p className="text-slate-450 dark:text-slate-500 font-bold uppercase tracking-wider text-[9px]">Storno lehota</p>
+                              <p className="text-slate-800 dark:text-slate-200 mt-1 font-black text-sm">Do {prop.stornoDays} dní pred príchodom</p>
                             </div>
                             <div>
-                              <p className="text-slate-500 font-bold uppercase tracking-wider text-[9px]">Navrátenie platby</p>
-                              <p className="text-slate-200 mt-1 font-bold text-sm">Vrátenie {prop.stornoRefund}% zo zálohy</p>
+                              <p className="text-slate-450 dark:text-slate-500 font-bold uppercase tracking-wider text-[9px]">Navrátenie platby</p>
+                              <p className="text-slate-800 dark:text-slate-200 mt-1 font-black text-sm">Vrátenie {prop.stornoRefund}% zo zálohy</p>
                             </div>
                           </div>
                           {prop.vop && (
-                            <div className="pt-3 border-t border-white/5">
-                              <p className="text-slate-500 font-bold uppercase tracking-wider text-[9px] mb-1">Obchodné podmienky partnera (VOP)</p>
-                              <p className="text-slate-350 leading-relaxed text-xs font-light line-clamp-3 hover:line-clamp-none transition-all cursor-pointer">
+                            <div className="pt-3 border-t border-slate-200/65 dark:border-white/5">
+                              <p className="text-slate-450 dark:text-slate-500 font-bold uppercase tracking-wider text-[9px] mb-1">Obchodné podmienky partnera (VOP)</p>
+                              <p className="text-slate-600 dark:text-slate-350 leading-relaxed text-xs font-light line-clamp-3 hover:line-clamp-none transition-all cursor-pointer">
                                 {prop.vop}
                               </p>
                             </div>
@@ -836,27 +902,27 @@ export default function Showroom() {
               <div className="lg:col-span-5 space-y-6">
                 
                 {/* Calendar */}
-                <Card className="border-white/10 bg-slate-900/45 backdrop-blur-xl rounded-3xl shadow-2xl">
+                <Card className="border-slate-200 dark:border-white/10 bg-white/70 dark:bg-slate-900/45 backdrop-blur-xl rounded-3xl shadow-xl">
                   <CardHeader className="pb-3 flex flex-row items-center justify-between">
                     <div>
-                      <CardTitle className="text-base sm:text-lg font-black uppercase tracking-wider">Dostupnosť & Termíny</CardTitle>
+                      <CardTitle className="text-base sm:text-lg font-black uppercase tracking-wider text-slate-900 dark:text-white">Dostupnosť & Termíny</CardTitle>
                       <CardDescription className="text-[10px] sm:text-xs">Označte požadované dátumy pobytu</CardDescription>
                     </div>
                     <CalendarIcon className="w-5 h-5 text-[#C5A880]" />
                   </CardHeader>
                   <CardContent className="pt-2">
                     
-                    <div className="flex justify-between items-center mb-4 bg-slate-950/60 p-2 rounded-xl border border-white/5">
+                    <div className="flex justify-between items-center mb-4 bg-slate-50 dark:bg-slate-950/60 p-2 rounded-xl border border-slate-200 dark:border-white/5">
                       <button 
                         onClick={() => {
                           const prev = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1);
                           setCurrentMonth(prev);
                         }}
-                        className="p-2 rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition-colors"
+                        className="p-2 rounded-lg hover:bg-slate-200/50 dark:hover:bg-white/5 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors"
                       >
                         <ChevronLeft className="w-4 h-4" />
                       </button>
-                      <span className="font-extrabold text-sm uppercase tracking-wider text-slate-200">
+                      <span className="font-extrabold text-sm uppercase tracking-wider text-slate-700 dark:text-slate-200">
                         {currentMonth.toLocaleString('sk-SK', { month: 'long', year: 'numeric' })}
                       </span>
                       <button 
@@ -864,13 +930,13 @@ export default function Showroom() {
                           const next = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1);
                           setCurrentMonth(next);
                         }}
-                        className="p-2 rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition-colors"
+                        className="p-2 rounded-lg hover:bg-slate-200/50 dark:hover:bg-white/5 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors"
                       >
                         <ChevronRight className="w-4 h-4" />
                       </button>
                     </div>
 
-                    <div className="grid grid-cols-7 gap-1 text-center text-[10px] font-black text-slate-500 uppercase tracking-wider mb-2">
+                    <div className="grid grid-cols-7 gap-1 text-center text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">
                       <span>Po</span><span>Ut</span><span>St</span><span>Št</span><span>Pi</span><span>So</span><span>Ne</span>
                     </div>
                     
@@ -896,10 +962,10 @@ export default function Showroom() {
                                   onClick={() => handleDateClick(day, selectedLoc)}
                                   className={`aspect-square rounded-xl flex flex-col items-center justify-center relative transition-all text-xs font-bold border ${
                                     isBooked 
-                                      ? 'bg-red-500/10 text-red-500 border-red-500/20 cursor-not-allowed' 
+                                      ? 'bg-red-500/10 text-red-650 dark:text-red-500 border-red-500/20 cursor-not-allowed' 
                                       : isSelected 
                                         ? 'bg-[#C5A880] text-slate-950 border-[#C5A880] shadow-[0_0_15px_rgba(197,168,128,0.4)] scale-105' 
-                                        : 'bg-slate-950/20 border-white/5 hover:bg-white/10 hover:border-white/20 text-slate-300'
+                                        : 'bg-slate-50/50 dark:bg-slate-950/20 border-slate-200/40 dark:border-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-slate-350'
                                   } ${isToday ? 'border-blue-500' : ''}`}
                                 >
                                   <span>{day.getDate()}</span>
@@ -913,7 +979,7 @@ export default function Showroom() {
                       })()}
                     </div>
 
-                    <div className="flex gap-4 justify-center items-center mt-5 text-[9px] text-slate-400 font-black uppercase tracking-widest border-t border-white/5 pt-4">
+                    <div className="flex gap-4 justify-center items-center mt-5 text-[9px] text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest border-t border-slate-200/60 dark:border-white/5 pt-4">
                       <div className="flex items-center gap-1.5">
                         <span className="w-2.5 h-2.5 rounded bg-[#C5A880]" />
                         <span>Vybraté</span>
@@ -928,17 +994,17 @@ export default function Showroom() {
                 </Card>
 
                 {/* Booking Form */}
-                <Card className="border-white/10 bg-slate-900/45 backdrop-blur-xl rounded-3xl shadow-2xl">
+                <Card className="border-slate-200 dark:border-white/10 bg-white/70 dark:bg-slate-900/45 backdrop-blur-xl rounded-3xl shadow-xl">
                   <CardHeader>
-                    <CardTitle className="text-base sm:text-lg font-black uppercase tracking-wider">Rezervačný dopyt</CardTitle>
-                    <CardDescription className="text-xs text-slate-400">
+                    <CardTitle className="text-base sm:text-lg font-black uppercase tracking-wider text-slate-900 dark:text-white">Rezervačný dopyt</CardTitle>
+                    <CardDescription className="text-xs">
                       {startDate && endDate 
                         ? `Zvolený termín: ${formatDateString(startDate)} až ${formatDateString(endDate)}` 
                         : 'Vyberte dni v kalendári.'}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <form onSubmit={handleClientBookingSubmit} className="space-y-4">
+                    <form onSubmit={handleClientBookingSubmit} className="space-y-4 text-left">
                       <div>
                         <label className="block text-[10px] font-black uppercase tracking-widest text-[#C5A880] mb-1">Meno a priezvisko *</label>
                         <input 
@@ -947,7 +1013,7 @@ export default function Showroom() {
                           value={clientName}
                           onChange={(e) => setClientName(e.target.value)}
                           placeholder="napr. Ján Kováč"
-                          className="w-full bg-slate-950/65 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A880] transition-colors"
+                          className="w-full bg-white dark:bg-slate-950/65 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880] transition-colors"
                         />
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -959,7 +1025,7 @@ export default function Showroom() {
                             value={clientEmail}
                             onChange={(e) => setClientEmail(e.target.value)}
                             placeholder="jan.kovac@example.com"
-                            className="w-full bg-slate-950/65 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A880] transition-colors"
+                            className="w-full bg-white dark:bg-slate-950/65 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880] transition-colors"
                           />
                         </div>
                         <div>
@@ -970,7 +1036,7 @@ export default function Showroom() {
                             value={clientPhone}
                             onChange={(e) => setClientPhone(e.target.value)}
                             placeholder="+421 900 000 000"
-                            className="w-full bg-slate-950/65 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A880] transition-colors"
+                            className="w-full bg-white dark:bg-slate-950/65 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880] transition-colors"
                           />
                         </div>
                       </div>
@@ -981,27 +1047,27 @@ export default function Showroom() {
                           value={clientNote}
                           onChange={(e) => setClientNote(e.target.value)}
                           placeholder="Požiadavky alebo doplňujúce otázky..."
-                          className="w-full bg-slate-950/65 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A880] transition-colors resize-none"
+                          className="w-full bg-white dark:bg-slate-950/65 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880] transition-colors resize-none"
                         />
                       </div>
 
                       {startDate && endDate && (
                         <div className="bg-[#C5A880]/10 border border-[#C5A880]/20 rounded-xl p-4 text-xs space-y-1.5">
                           <div className="flex justify-between">
-                            <span className="text-slate-400">Počet nocí:</span>
-                            <span className="font-bold text-white">{Math.ceil(Math.abs(endDate - startDate) / (1000 * 60 * 60 * 24))} nocí</span>
+                            <span className="text-slate-500 dark:text-slate-400">Počet nocí:</span>
+                            <span className="font-bold text-slate-800 dark:text-white">{Math.ceil(Math.abs(endDate - startDate) / (1000 * 60 * 60 * 24))} nocí</span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-slate-400">Cena za noc:</span>
-                            <span className="font-bold text-white">{properties[selectedLoc].price} EUR</span>
+                            <span className="text-slate-500 dark:text-slate-400">Cena za noc:</span>
+                            <span className="font-bold text-slate-800 dark:text-white">{properties[selectedLoc].price} EUR</span>
                           </div>
-                          <div className="flex justify-between border-t border-[#C5A880]/30 pt-2 text-sm text-slate-200">
+                          <div className="flex justify-between border-t border-[#C5A880]/30 pt-2 text-sm text-slate-700 dark:text-slate-200">
                             <span className="font-bold">Celkom:</span>
                             <span className="font-black text-[#C5A880]">
                               {Math.ceil(Math.abs(endDate - startDate) / (1000 * 60 * 60 * 24)) * properties[selectedLoc].price} EUR
                             </span>
                           </div>
-                          <div className="flex justify-between text-slate-500 mt-1">
+                          <div className="flex justify-between text-slate-450 dark:text-slate-500 mt-1">
                             <span>Záloha na platbu ({properties[selectedLoc].prepayPercent}%):</span>
                             <span className="font-bold">
                               {((Math.ceil(Math.abs(endDate - startDate) / (1000 * 60 * 60 * 24)) * properties[selectedLoc].price * properties[selectedLoc].prepayPercent) / 100).toFixed(2)} EUR
@@ -1013,7 +1079,7 @@ export default function Showroom() {
                       <Button 
                         type="submit" 
                         disabled={!startDate || !endDate}
-                        className="w-full bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-black text-xs uppercase tracking-wider py-4 rounded-xl shadow-lg border border-red-500/30 transition-all flex items-center justify-center gap-1.5"
+                        className="w-full bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-black text-xs uppercase tracking-wider py-4 rounded-xl shadow-md border border-red-500/30 transition-all flex items-center justify-center gap-1.5"
                       >
                         <CalendarIcon className="w-4 h-4" />
                         <span>Odoslať dopyt na schválenie</span>
@@ -1032,40 +1098,40 @@ export default function Showroom() {
             <div className="max-w-4xl mx-auto">
               
               {!partnerLoggedIn ? (
-                <Card className="border-white/10 bg-slate-900/40 backdrop-blur-xl rounded-3xl shadow-2xl p-6 sm:p-10">
+                <Card className="border-slate-200 dark:border-white/10 bg-white/70 dark:bg-slate-900/40 backdrop-blur-xl rounded-3xl shadow-xl p-6 sm:p-10 text-slate-800 dark:text-slate-100">
                   <div className="text-center mb-8 max-w-md mx-auto">
                     <ShieldCheck className="w-12 h-12 text-[#C5A880] mx-auto mb-3" />
-                    <h2 className="text-2xl font-black text-white uppercase tracking-wider">Portál pre partnerov</h2>
-                    <p className="text-xs text-slate-400 mt-1.5">
+                    <h2 className="text-2xl font-black text-slate-900 dark:text-white uppercase tracking-wider">Portál pre partnerov</h2>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1.5">
                       Spravujte a schvaľujte rezervácie vašich zážitkových showroomov.
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
                     {/* Login */}
                     <div>
-                      <h3 className="font-black text-xs uppercase tracking-widest text-slate-500 mb-4">Prihlásenie</h3>
+                      <h3 className="font-black text-xs uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-4">Prihlásenie</h3>
                       <form onSubmit={handlePartnerLogin} className="space-y-4">
                         <div>
-                          <label className="block text-[10px] font-black uppercase tracking-widest text-slate-450 mb-1">E-mail partnera</label>
+                          <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-455 mb-1">E-mail partnera</label>
                           <input 
                             type="email" 
                             required
                             value={pEmail}
                             onChange={(e) => setPEmail(e.target.value)}
                             placeholder="partner@americanliving.sk"
-                            className="w-full bg-slate-950/60 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A880]"
+                            className="w-full bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880]"
                           />
                         </div>
                         <div>
-                          <label className="block text-[10px] font-black uppercase tracking-widest text-slate-450 mb-1">Heslo</label>
+                          <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-455 mb-1">Heslo</label>
                           <input 
                             type="password" 
                             required
                             value={pPassword}
                             onChange={(e) => setPPassword(e.target.value)}
                             placeholder="Heslo"
-                            className="w-full bg-slate-950/60 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A880]"
+                            className="w-full bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880]"
                           />
                         </div>
                         <Button type="submit" className="w-full bg-[#C5A880] text-slate-950 font-black text-xs uppercase tracking-wider py-3.5 rounded-xl hover:bg-[#C5A880]/90">
@@ -1073,62 +1139,62 @@ export default function Showroom() {
                         </Button>
                       </form>
                       
-                      <div className="bg-slate-950/70 rounded-xl p-4 mt-6 text-[11px] text-slate-500 space-y-1.5 border border-white/5">
-                        <p className="font-bold text-slate-350 flex items-center gap-1"><Info className="w-3.5 h-3.5 text-[#C5A880]" /> Testovacie účty:</p>
-                        <p><strong>Komárno:</strong> partner.komarno@americanliving.sk / <code className="bg-white/10 px-1 rounded text-white font-bold">partner</code></p>
-                        <p><strong>Levoča:</strong> partner.levoca@americanliving.sk / <code className="bg-white/10 px-1 rounded text-white font-bold">partner</code></p>
+                      <div className="bg-slate-50 dark:bg-slate-950/70 rounded-xl p-4 mt-6 text-[11px] text-slate-500 dark:text-slate-500 space-y-1.5 border border-slate-200 dark:border-white/5">
+                        <p className="font-bold text-slate-700 dark:text-slate-350 flex items-center gap-1"><Info className="w-3.5 h-3.5 text-[#C5A880]" /> Testovacie účty:</p>
+                        <p><strong>Komárno:</strong> partner.komarno@americanliving.sk / <code className="bg-slate-200/50 dark:bg-white/10 px-1 rounded text-slate-900 dark:text-white font-bold">partner</code></p>
+                        <p><strong>Levoča:</strong> partner.levoca@americanliving.sk / <code className="bg-slate-200/50 dark:bg-white/10 px-1 rounded text-slate-900 dark:text-white font-bold">partner</code></p>
                       </div>
                     </div>
 
                     {/* Register */}
-                    <div className="border-t md:border-t-0 md:border-l border-white/5 pt-6 md:pt-0 md:pl-8">
-                      <h3 className="font-black text-xs uppercase tracking-widest text-slate-500 mb-4">Registrácia partnera</h3>
+                    <div className="border-t md:border-t-0 md:border-l border-slate-250 dark:border-white/5 pt-6 md:pt-0 md:pl-8">
+                      <h3 className="font-black text-xs uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-4">Registrácia partnera</h3>
                       <form onSubmit={handlePartnerRegister} className="space-y-4">
                         <div>
-                          <label className="block text-[10px] font-black uppercase tracking-widest text-slate-450 mb-1">Spoločnosť / Názov partnera</label>
+                          <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-455 mb-1">Spoločnosť / Názov partnera</label>
                           <input 
                             type="text" 
                             required
                             value={pName}
                             onChange={(e) => setPName(e.target.value)}
                             placeholder="napr. Spišská výstavba s.r.o."
-                            className="w-full bg-slate-950/60 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-slate-500"
+                            className="w-full bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C5A880]"
                           />
                         </div>
                         <div>
-                          <label className="block text-[10px] font-black uppercase tracking-widest text-slate-450 mb-1">E-mail</label>
+                          <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-455 mb-1">E-mail</label>
                           <input 
                             type="email" 
                             required
                             value={pEmail}
                             onChange={(e) => setPEmail(e.target.value)}
                             placeholder="email@partner.sk"
-                            className="w-full bg-slate-950/60 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-slate-500"
+                            className="w-full bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C5A880]"
                           />
                         </div>
                         <div>
-                          <label className="block text-[10px] font-black uppercase tracking-widest text-slate-450 mb-1">Heslo</label>
+                          <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-455 mb-1">Heslo</label>
                           <input 
                             type="password" 
                             required
                             value={pPassword}
                             onChange={(e) => setPPassword(e.target.value)}
                             placeholder="Heslo"
-                            className="w-full bg-slate-950/60 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-slate-500"
+                            className="w-full bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C5A880]"
                           />
                         </div>
                         <div>
-                          <label className="block text-[10px] font-black uppercase tracking-widest text-slate-450 mb-1">Priradený objekt</label>
+                          <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-455 mb-1">Priradený objekt</label>
                           <select 
                             value={pProperty} 
                             onChange={(e) => setPProperty(e.target.value)}
-                            className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-slate-500"
+                            className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880]"
                           >
                             <option value="komarno">Showroom Komárno</option>
                             <option value="levoca">Showroom Levoča</option>
                           </select>
                         </div>
-                        <Button type="submit" className="w-full bg-white/10 hover:bg-white/15 text-white font-black text-xs uppercase tracking-wider py-3.5 rounded-xl border border-white/10">
+                        <Button type="submit" className="w-full bg-slate-100 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/15 text-slate-800 dark:text-white font-black text-xs uppercase tracking-wider py-3.5 rounded-xl border border-slate-300 dark:border-white/10">
                           Vytvoriť partnerský účet
                         </Button>
                       </form>
@@ -1141,20 +1207,20 @@ export default function Showroom() {
                 <div className="space-y-6">
                   
                   {/* Header info bar */}
-                  <div className="flex justify-between items-center bg-slate-900/60 backdrop-blur-xl p-6 rounded-3xl border border-white/10 shadow-xl flex-wrap gap-4">
+                  <div className="flex justify-between items-center bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl p-6 rounded-3xl border border-slate-200 dark:border-white/10 shadow-md dark:shadow-xl flex-wrap gap-4 text-left">
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 rounded-xl bg-[#C5A880]/20 flex items-center justify-center border border-[#C5A880]/30 shadow-inner">
                         <ShieldCheck className="w-6 h-6 text-[#C5A880]" />
                       </div>
                       <div>
-                        <h2 className="text-lg font-black text-white uppercase tracking-wider">{partnerLoggedIn.name}</h2>
-                        <p className="text-xs text-slate-400">Správa showroomu: <span className="font-bold text-[#E2C799]">{properties[partnerLoggedIn.propertyId].name}</span></p>
+                        <h2 className="text-lg font-black text-slate-900 dark:text-white uppercase tracking-wider">{partnerLoggedIn.name}</h2>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">Správa showroomu: <span className="font-bold text-[#E2C799]">{properties[partnerLoggedIn.propertyId].name}</span></p>
                       </div>
                     </div>
                     <Button 
                       variant="outline" 
                       onClick={() => setPartnerLoggedIn(null)}
-                      className="rounded-xl border-white/10 hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/20 text-slate-300 font-bold uppercase tracking-wider text-xs px-4"
+                      className="rounded-xl border-slate-250 dark:border-white/10 hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/20 text-slate-700 dark:text-slate-300 font-bold uppercase tracking-wider text-xs px-4"
                     >
                       <LogOut className="w-4 h-4 mr-2" />
                       Odhlásiť sa
@@ -1167,10 +1233,10 @@ export default function Showroom() {
                     {/* Left side: Reservation Request Manager */}
                     <div className="lg:col-span-7 space-y-6">
                       
-                      <Card className="border-white/10 bg-slate-900/40 backdrop-blur-xl rounded-3xl shadow-xl">
-                        <CardHeader className="pb-3 border-b border-white/5">
-                          <CardTitle className="text-base sm:text-lg font-black uppercase tracking-wider">Klientske rezervácie</CardTitle>
-                          <CardDescription className="text-xs text-slate-450">Spravujte dopyty, prezerajte platby a zálohy.</CardDescription>
+                      <Card className="border-slate-200 dark:border-white/10 bg-white/70 dark:bg-slate-900/40 backdrop-blur-xl rounded-3xl shadow-xl">
+                        <CardHeader className="pb-3 border-b border-slate-200 dark:border-white/5">
+                          <CardTitle className="text-base sm:text-lg font-black uppercase tracking-wider text-slate-900 dark:text-white">Klientske rezervácie</CardTitle>
+                          <CardDescription className="text-xs">Spravujte dopyty, prezerajte platby a zálohy.</CardDescription>
                         </CardHeader>
                         <CardContent className="pt-4 space-y-4">
                           {reservations.filter(r => r.propertyId === partnerLoggedIn.propertyId).length === 0 ? (
@@ -1190,39 +1256,39 @@ export default function Showroom() {
                                 return (
                                   <div 
                                     key={res.id} 
-                                    className="p-4 rounded-2xl border border-white/5 bg-slate-950/60 space-y-3 relative overflow-hidden text-left"
+                                    className="p-4 rounded-2xl border border-slate-200 dark:border-white/5 bg-white/80 dark:bg-slate-950/60 space-y-3 relative overflow-hidden text-left"
                                   >
                                     <div className="flex justify-between items-center w-full">
-                                      <span className="text-[10px] text-slate-450 font-black uppercase tracking-wider">{res.startDate} až {res.endDate} ({res.nights} nocí)</span>
+                                      <span className="text-[10px] text-slate-500 dark:text-slate-450 font-black uppercase tracking-wider">{res.startDate} až {res.endDate} ({res.nights} nocí)</span>
                                       <div>
-                                        {isPending && <Badge className="bg-yellow-600/10 text-yellow-500 border border-yellow-500/20 font-black text-[9px] uppercase tracking-wider">Čaká</Badge>}
-                                        {isApproved && <Badge className="bg-blue-600/10 text-blue-500 border border-blue-500/20 font-black text-[9px] uppercase tracking-wider">Schválená</Badge>}
-                                        {isPaid && <Badge className="bg-green-600/10 text-green-500 border border-green-500/20 font-black text-[9px] uppercase tracking-wider">Zaplatená</Badge>}
-                                        {isRejected && <Badge className="bg-red-600/10 text-red-500 border border-red-500/20 font-black text-[9px] uppercase tracking-wider">Zamietnutá</Badge>}
-                                        {isExpired && <Badge className="bg-slate-600/10 text-slate-500 border border-slate-500/20 font-black text-[9px] uppercase tracking-wider">Expirovaná</Badge>}
+                                        {isPending && <Badge className="bg-yellow-600/10 text-yellow-650 dark:text-yellow-500 border border-yellow-500/20 font-black text-[9px] uppercase tracking-wider">Čaká</Badge>}
+                                        {isApproved && <Badge className="bg-blue-600/10 text-blue-650 dark:text-blue-500 border border-blue-500/20 font-black text-[9px] uppercase tracking-wider">Schválená</Badge>}
+                                        {isPaid && <Badge className="bg-green-600/10 text-green-650 dark:text-green-500 border border-green-500/20 font-black text-[9px] uppercase tracking-wider">Zaplatená</Badge>}
+                                        {isRejected && <Badge className="bg-red-600/10 text-red-650 dark:text-red-500 border border-red-500/20 font-black text-[9px] uppercase tracking-wider">Zamietnutá</Badge>}
+                                        {isExpired && <Badge className="bg-slate-600/10 text-slate-550 dark:text-slate-500 border border-slate-500/20 font-black text-[9px] uppercase tracking-wider">Expirovaná</Badge>}
                                       </div>
                                     </div>
 
                                     <div className="text-xs space-y-1.5">
-                                      <p className="font-extrabold text-sm text-white">{res.clientName}</p>
-                                      <p className="text-slate-400">Email: <span className="text-slate-200 font-bold">{res.clientEmail}</span> | Tel: <span className="text-slate-200 font-bold">{res.clientPhone}</span></p>
-                                      {res.clientNote && <p className="italic text-slate-450 mt-1 border-l-2 border-[#C5A880]/30 pl-2">„{res.clientNote}“</p>}
+                                      <p className="font-black text-sm text-slate-900 dark:text-white">{res.clientName}</p>
+                                      <p className="text-slate-500 dark:text-slate-400 font-medium">Email: <span className="text-slate-800 dark:text-slate-200 font-bold">{res.clientEmail}</span> | Tel: <span className="text-slate-800 dark:text-slate-200 font-bold">{res.clientPhone}</span></p>
+                                      {res.clientNote && <p className="italic text-slate-500 dark:text-slate-450 mt-1 border-l-2 border-[#C5A880]/30 pl-2">„{res.clientNote}“</p>}
                                     </div>
 
-                                    <div className="bg-slate-900 p-3 rounded-xl border border-white/5 text-xs flex justify-between items-center">
+                                    <div className="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-white/5 text-xs flex justify-between items-center">
                                       <div>
-                                        <p className="text-[8px] font-black uppercase tracking-widest text-slate-500">Celková cena</p>
-                                        <p className="font-black text-white text-sm">{res.totalPrice} EUR</p>
+                                        <p className="text-[8px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Celková cena</p>
+                                        <p className="font-black text-slate-800 dark:text-white text-sm">{res.totalPrice} EUR</p>
                                       </div>
                                       <div className="text-right">
-                                        <p className="text-[8px] font-black uppercase tracking-widest text-slate-500">Záloha ({res.prepayPercent || properties[partnerLoggedIn.propertyId].prepayPercent}%)</p>
+                                        <p className="text-[8px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Záloha ({res.prepayPercent || properties[partnerLoggedIn.propertyId].prepayPercent}%)</p>
                                         <p className="font-black text-[#C5A880] text-sm">{res.depositAmount} EUR</p>
                                       </div>
                                     </div>
 
                                     {isApproved && (
-                                      <div className="flex justify-between items-center text-[10px] bg-blue-500/5 border border-blue-500/10 p-2.5 rounded-xl text-blue-400">
-                                        <span>VS: <strong className="text-white font-extrabold">{res.variableSymbol}</strong></span>
+                                      <div className="flex justify-between items-center text-[10px] bg-blue-500/5 border border-blue-500/10 p-2.5 rounded-xl text-blue-600 dark:text-blue-400">
+                                        <span>VS: <strong className="text-slate-800 dark:text-white font-extrabold">{res.variableSymbol}</strong></span>
                                         <span className="flex items-center gap-1 font-bold">
                                           <Clock className="w-3.5 h-3.5 animate-pulse" />
                                           Platobný limit: {getRemainingTimeText(res)}
@@ -1236,7 +1302,7 @@ export default function Showroom() {
                                           <Button 
                                             size="sm"
                                             onClick={() => handleApproveReservation(res.id)}
-                                            className="flex-1 bg-green-700 hover:bg-green-600 text-white font-black uppercase tracking-wider text-[10px] rounded-lg"
+                                            className="flex-1 bg-green-700 hover:bg-green-600 text-white font-black uppercase tracking-wider text-[10px] rounded-lg border border-green-700/25"
                                           >
                                             Schváliť & Odoslať QR
                                           </Button>
@@ -1244,7 +1310,7 @@ export default function Showroom() {
                                             size="sm"
                                             variant="outline"
                                             onClick={() => handleRejectReservation(res.id)}
-                                            className="border-white/10 hover:bg-red-500/15 hover:text-red-500 text-[10px] uppercase font-bold tracking-wider rounded-lg"
+                                            className="border-slate-200 dark:border-white/10 hover:bg-red-500/15 hover:text-red-500 text-[10px] uppercase font-bold tracking-wider rounded-lg text-slate-700 dark:text-slate-350"
                                           >
                                             Zamietnuť
                                           </Button>
@@ -1264,7 +1330,7 @@ export default function Showroom() {
                                             size="sm"
                                             variant="outline"
                                             onClick={() => setSelectedInvoice(res)}
-                                            className="border-white/10 text-white text-[10px] font-bold uppercase tracking-wider rounded-lg"
+                                            className="border-slate-200 dark:border-white/10 text-slate-700 dark:text-white text-[10px] font-bold uppercase tracking-wider rounded-lg"
                                           >
                                             Zobraziť QR Kód
                                           </Button>
@@ -1272,14 +1338,14 @@ export default function Showroom() {
                                       )}
 
                                       {isPaid && (
-                                        <div className="flex items-center gap-1.5 text-green-500 font-extrabold text-[10px] uppercase tracking-wider bg-green-500/5 border border-green-500/15 px-3 py-2.5 rounded-xl w-full justify-center">
+                                        <div className="flex items-center gap-1.5 text-green-600 dark:text-green-500 font-extrabold text-[10px] uppercase tracking-wider bg-green-500/5 border border-green-500/15 px-3 py-2.5 rounded-xl w-full justify-center">
                                           <CheckCircle className="w-4 h-4" />
                                           <span>Rezervácia zaplatená & Záväzná</span>
                                         </div>
                                       )}
 
                                       {isExpired && (
-                                        <div className="flex items-center gap-1.5 text-slate-500 font-extrabold text-[10px] uppercase tracking-wider bg-white/5 border border-white/10 px-3 py-2.5 rounded-xl w-full justify-center">
+                                        <div className="flex items-center gap-1.5 text-slate-500 font-extrabold text-[10px] uppercase tracking-wider bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 px-3 py-2.5 rounded-xl w-full justify-center">
                                           <AlertTriangle className="w-4 h-4" />
                                           <span>Vypršal časový limit na platbu</span>
                                         </div>
@@ -1297,12 +1363,12 @@ export default function Showroom() {
                     {/* Right side: Property Settings Form */}
                     <div className="lg:col-span-5 space-y-6">
                       
-                      <Card className="border-white/10 bg-slate-900/40 backdrop-blur-xl rounded-3xl shadow-xl">
-                        <CardHeader className="pb-3 border-b border-white/5">
-                          <CardTitle className="text-base sm:text-lg font-black uppercase tracking-wider">Nastavenia showroomu</CardTitle>
-                          <CardDescription className="text-xs text-slate-450">Konfigurácia cien, storno a obchodných podmienok.</CardDescription>
+                      <Card className="border-slate-200 dark:border-white/10 bg-white/70 dark:bg-slate-900/40 backdrop-blur-xl rounded-3xl shadow-xl">
+                        <CardHeader className="pb-3 border-b border-slate-200 dark:border-white/5">
+                          <CardTitle className="text-base sm:text-lg font-black uppercase tracking-wider text-slate-900 dark:text-white">Nastavenia showroomu</CardTitle>
+                          <CardDescription className="text-xs">Konfigurácia cien, storno a obchodných podmienok.</CardDescription>
                         </CardHeader>
-                        <CardContent className="pt-4">
+                        <CardContent className="pt-4 text-left">
                           <form onSubmit={handleSaveSettings} className="space-y-4">
                             
                             {/* Payments */}
@@ -1312,37 +1378,37 @@ export default function Showroom() {
                                 Bankové spojenie partnera
                               </h4>
                               <div>
-                                <label className="block text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Meno majiteľa účtu</label>
+                                <label className="block text-[9px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">Meno majiteľa účtu</label>
                                 <input 
                                   type="text"
                                   required
                                   value={editAccName}
                                   onChange={(e) => setEditAccName(e.target.value)}
-                                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#C5A880] text-white"
+                                  className="w-full bg-white dark:bg-slate-950 border border-slate-350 dark:border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#C5A880] text-slate-800 dark:text-white"
                                 />
                               </div>
                               <div>
-                                <label className="block text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">IBAN pre platby záloh</label>
+                                <label className="block text-[9px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">IBAN pre platby záloh</label>
                                 <input 
                                   type="text"
                                   required
                                   value={editIban}
                                   onChange={(e) => setEditIban(e.target.value)}
-                                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#C5A880] text-white"
+                                  className="w-full bg-white dark:bg-slate-950 border border-slate-350 dark:border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#C5A880] text-slate-800 dark:text-white"
                                 />
                               </div>
                               <div className="grid grid-cols-2 gap-3">
                                 <div>
-                                  <label className="block text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">BIC / SWIFT</label>
+                                  <label className="block text-[9px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">BIC / SWIFT</label>
                                   <input 
                                     type="text"
                                     value={editBic}
                                     onChange={(e) => setEditBic(e.target.value)}
-                                    className="w-full bg-slate-950 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none"
+                                    className="w-full bg-white dark:bg-slate-950 border border-slate-350 dark:border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none text-slate-800 dark:text-white"
                                   />
                                 </div>
                                 <div>
-                                  <label className="block text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Výška zálohy (%)</label>
+                                  <label className="block text-[9px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">Výška zálohy (%)</label>
                                   <input 
                                     type="number"
                                     required
@@ -1350,41 +1416,41 @@ export default function Showroom() {
                                     max="100"
                                     value={editPrepay}
                                     onChange={(e) => setEditPrepay(e.target.value)}
-                                    className="w-full bg-slate-950 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none"
+                                    className="w-full bg-white dark:bg-slate-950 border border-slate-350 dark:border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none text-slate-800 dark:text-white"
                                   />
                                 </div>
                               </div>
                             </div>
 
                             {/* Storno */}
-                            <div className="bg-slate-950/60 p-4 rounded-2xl border border-white/5 space-y-3 text-xs">
-                              <h4 className="text-[10px] font-black uppercase tracking-wider text-slate-350">Stornovanie rezervácií</h4>
+                            <div className="bg-slate-50 dark:bg-slate-950/60 p-4 rounded-2xl border border-slate-200 dark:border-white/5 space-y-3 text-xs">
+                              <h4 className="text-[10px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-350">Stornovanie rezervácií</h4>
                               <div className="grid grid-cols-2 gap-3">
                                 <div>
-                                  <label className="block text-[9px] font-black uppercase tracking-widest text-slate-500 mb-1">Bezplatné storno do</label>
-                                  <div className="flex items-center gap-1.5 bg-slate-950 border border-white/10 rounded-xl px-3 py-2">
+                                  <label className="block text-[9px] font-black uppercase tracking-widest text-slate-450 dark:text-slate-500 mb-1">Bezplatné storno do</label>
+                                  <div className="flex items-center gap-1.5 bg-white dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl px-3 py-2">
                                     <input 
                                       type="number"
                                       min="0"
                                       value={editStornoDays}
                                       onChange={(e) => setEditStornoDays(e.target.value)}
-                                      className="w-full bg-transparent border-none text-white focus:outline-none text-xs font-bold"
+                                      className="w-full bg-transparent border-none text-slate-800 dark:text-white focus:outline-none text-xs font-bold"
                                     />
-                                    <span className="text-slate-500 text-[8px] font-bold uppercase shrink-0">dní</span>
+                                    <span className="text-slate-400 dark:text-slate-500 text-[8px] font-bold uppercase shrink-0">dní</span>
                                   </div>
                                 </div>
                                 <div>
-                                  <label className="block text-[9px] font-black uppercase tracking-widest text-slate-500 mb-1">Vrátená suma zálohy</label>
-                                  <div className="flex items-center gap-1.5 bg-slate-950 border border-white/10 rounded-xl px-3 py-2">
+                                  <label className="block text-[9px] font-black uppercase tracking-widest text-slate-450 dark:text-slate-500 mb-1">Vrátená suma zálohy</label>
+                                  <div className="flex items-center gap-1.5 bg-white dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl px-3 py-2">
                                     <input 
                                       type="number"
                                       min="0"
                                       max="100"
                                       value={editStornoRefund}
                                       onChange={(e) => setEditStornoRefund(e.target.value)}
-                                      className="w-full bg-transparent border-none text-white focus:outline-none text-xs font-bold"
+                                      className="w-full bg-transparent border-none text-slate-800 dark:text-white focus:outline-none text-xs font-bold"
                                     />
-                                    <span className="text-slate-500 text-[8px] font-bold uppercase shrink-0">%</span>
+                                    <span className="text-slate-400 dark:text-slate-500 text-[8px] font-bold uppercase shrink-0">%</span>
                                   </div>
                                 </div>
                               </div>
@@ -1392,48 +1458,48 @@ export default function Showroom() {
 
                             {/* Custom Terms Txt */}
                             <div>
-                              <label className="block text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Vlastné Obchodné Podmienky (VOP)</label>
+                              <label className="block text-[9px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">Vlastné Obchodné Podmienky (VOP)</label>
                               <textarea 
                                 rows="3"
                                 value={editVop}
                                 onChange={(e) => setEditVop(e.target.value)}
-                                className="w-full bg-slate-950 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#C5A880] resize-none text-white font-light leading-normal"
+                                className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#C5A880] resize-none text-slate-800 dark:text-white font-light leading-normal"
                               />
                             </div>
 
                             {/* Standard details */}
                             <div className="grid grid-cols-2 gap-3">
                               <div>
-                                <label className="block text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Cena za noc (EUR)</label>
+                                <label className="block text-[9px] font-black uppercase tracking-widest text-slate-550 dark:text-slate-400 mb-1">Cena za noc (EUR)</label>
                                 <input 
                                   type="number" 
                                   required
                                   value={editPrice}
                                   onChange={(e) => setEditPrice(e.target.value)}
-                                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none"
+                                  className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl px-3 py-2.5 text-xs text-slate-800 dark:text-white focus:outline-none"
                                 />
                               </div>
                               <div>
-                                <label className="block text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">URL videa (embed)</label>
+                                <label className="block text-[9px] font-black uppercase tracking-widest text-slate-550 dark:text-slate-400 mb-1">URL videa (embed)</label>
                                 <input 
                                   type="text" 
                                   value={editVideo}
                                   onChange={(e) => setEditVideo(e.target.value)}
-                                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none"
+                                  className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl px-3 py-2.5 text-xs text-slate-800 dark:text-white focus:outline-none"
                                 />
                               </div>
                             </div>
                             <div>
-                              <label className="block text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Popis nehnuteľnosti</label>
+                              <label className="block text-[9px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">Popis nehnuteľnosti</label>
                               <textarea 
                                 rows="2"
                                 value={editDesc}
                                 onChange={(e) => setEditDesc(e.target.value)}
-                                className="w-full bg-slate-950 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none resize-none"
+                                className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-white focus:outline-none resize-none"
                               />
                             </div>
 
-                            <Button type="submit" className="w-full bg-white/10 hover:bg-white/15 text-white font-black text-xs uppercase tracking-wider py-3.5 rounded-xl border border-white/10 flex items-center justify-center gap-1.5">
+                            <Button type="submit" className="w-full bg-[#C5A880]/15 dark:bg-white/10 hover:bg-[#C5A880]/25 dark:hover:bg-white/15 text-slate-800 dark:text-white font-black text-xs uppercase tracking-wider py-3.5 rounded-xl border border-[#C5A880]/30 dark:border-white/10 flex items-center justify-center gap-1.5">
                               <Settings className="w-4 h-4 text-[#C5A880]" />
                               Uložiť nastavenia
                             </Button>
@@ -1458,16 +1524,16 @@ export default function Showroom() {
       {/* PREDFFAKTÚRA A QR DIALOG */}
       {selectedInvoice && (
         <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[200] flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-white/10 max-w-lg w-full rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 max-w-lg w-full rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
             
-            <div className="p-5 border-b border-white/5 bg-slate-950 flex justify-between items-center">
+            <div className="p-5 border-b border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-slate-950 flex justify-between items-center text-left">
               <div>
-                <h3 className="font-black text-white uppercase tracking-wider text-base">Zálohová Predfaktúra</h3>
-                <p className="text-[9px] text-slate-450 font-bold uppercase tracking-widest mt-1">Variabilný symbol: {selectedInvoice.variableSymbol}</p>
+                <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-wider text-base">Zálohová Predfaktúra</h3>
+                <p className="text-[9px] text-slate-500 dark:text-slate-450 font-bold uppercase tracking-widest mt-1">Variabilný symbol: {selectedInvoice.variableSymbol}</p>
               </div>
               <button 
                 onClick={() => setSelectedInvoice(null)}
-                className="p-1 rounded-xl border border-white/10 hover:bg-white/5"
+                className="p-1 rounded-xl border border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/5"
               >
                 <XCircle className="w-5 h-5 text-slate-400 hover:text-white" />
               </button>
@@ -1482,22 +1548,22 @@ export default function Showroom() {
                 </h4>
                 <div className="grid grid-cols-2 gap-4 text-xs">
                   <div>
-                    <span className="text-slate-500 font-bold uppercase tracking-wider text-[8px]">Príjemca:</span>
-                    <p className="font-extrabold text-white mt-0.5">{selectedInvoice.accountName}</p>
+                    <span className="text-slate-450 dark:text-slate-500 font-bold uppercase tracking-wider text-[8px]">Príjemca:</span>
+                    <p className="font-extrabold text-slate-800 dark:text-white mt-0.5">{selectedInvoice.accountName}</p>
                   </div>
                   <div>
-                    <span className="text-slate-500 font-bold uppercase tracking-wider text-[8px]">IBAN:</span>
-                    <p className="font-extrabold text-white mt-0.5 select-all">{selectedInvoice.iban}</p>
+                    <span className="text-slate-450 dark:text-slate-500 font-bold uppercase tracking-wider text-[8px]">IBAN:</span>
+                    <p className="font-extrabold text-slate-800 dark:text-white mt-0.5 select-all">{selectedInvoice.iban}</p>
                   </div>
                   <div>
-                    <span className="text-slate-500 font-bold uppercase tracking-wider text-[8px]">SWIFT / BIC:</span>
-                    <p className="font-extrabold text-white mt-0.5">{selectedInvoice.bic || 'SUBASKBX'}</p>
+                    <span className="text-slate-450 dark:text-slate-500 font-bold uppercase tracking-wider text-[8px]">SWIFT / BIC:</span>
+                    <p className="font-extrabold text-slate-800 dark:text-white mt-0.5">{selectedInvoice.bic || 'SUBASKBX'}</p>
                   </div>
                   <div>
-                    <span className="text-slate-500 font-bold uppercase tracking-wider text-[8px]">Variabilný symbol:</span>
-                    <p className="font-extrabold text-white mt-0.5 select-all">{selectedInvoice.variableSymbol}</p>
+                    <span className="text-slate-450 dark:text-slate-500 font-bold uppercase tracking-wider text-[8px]">Variabilný symbol:</span>
+                    <p className="font-extrabold text-slate-800 dark:text-white mt-0.5 select-all">{selectedInvoice.variableSymbol}</p>
                   </div>
-                  <div className="col-span-2 bg-slate-950 p-3 rounded-xl border border-white/5 flex justify-between items-center mt-2">
+                  <div className="col-span-2 bg-slate-50 dark:bg-slate-950 p-3 rounded-xl border border-slate-200 dark:border-white/5 flex justify-between items-center mt-2">
                     <span className="text-[#C5A880] font-black uppercase tracking-wider text-[10px]">Suma zálohy:</span>
                     <span className="text-[#C5A880] font-black text-base">{selectedInvoice.depositAmount} EUR</span>
                   </div>
@@ -1505,8 +1571,8 @@ export default function Showroom() {
               </div>
 
               {/* QR */}
-              <div className="flex flex-col items-center justify-center py-4 border-y border-white/5 space-y-3">
-                <div className="bg-white p-3.5 rounded-3xl border border-slate-800 shadow-xl">
+              <div className="flex flex-col items-center justify-center py-4 border-y border-slate-200 dark:border-white/5 space-y-3">
+                <div className="bg-white p-3.5 rounded-3xl border border-slate-350 shadow-md">
                   <img 
                     src={`https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(`SPD*1.0*ACC:${selectedInvoice.iban}*AM:${selectedInvoice.depositAmount}*CUR:EUR*VS:${selectedInvoice.variableSymbol}*MSG:Zaloha za Showroom`)}`}
                     alt="SEPA Pay by Square QR"
@@ -1514,21 +1580,21 @@ export default function Showroom() {
                   />
                 </div>
                 <div className="text-center space-y-1">
-                  <p className="text-xs font-black text-white uppercase tracking-wider">Pay by Square / SEPA QR</p>
-                  <p className="text-[10px] text-slate-550">Naskenujte v slovenskej bankovej aplikácii</p>
+                  <p className="text-xs font-black text-slate-800 dark:text-white uppercase tracking-wider">Pay by Square / SEPA QR</p>
+                  <p className="text-[10px] text-slate-500">Naskenujte v slovenskej bankovej aplikácii</p>
                 </div>
               </div>
 
-              <div className="bg-slate-950 p-4 rounded-xl border border-white/5 space-y-1">
-                <p className="text-slate-400 text-[10px]">Rezervoval: <strong className="text-white">{selectedInvoice.clientName}</strong></p>
-                <p className="text-slate-400 text-[10px]">Termín: <strong className="text-white">{selectedInvoice.startDate} až {selectedInvoice.endDate}</strong></p>
-                <p className="text-slate-400 text-[10px]">Doplatok na mieste: <strong className="text-white">{selectedInvoice.totalPrice - selectedInvoice.depositAmount} EUR</strong></p>
+              <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-white/5 space-y-1">
+                <p className="text-slate-600 dark:text-slate-400 text-[10px]">Rezervoval: <strong className="text-slate-850 dark:text-white">{selectedInvoice.clientName}</strong></p>
+                <p className="text-slate-600 dark:text-slate-400 text-[10px]">Termín: <strong className="text-slate-850 dark:text-white">{selectedInvoice.startDate} až {selectedInvoice.endDate}</strong></p>
+                <p className="text-slate-600 dark:text-slate-400 text-[10px]">Doplatok na mieste: <strong className="text-slate-850 dark:text-white">{selectedInvoice.totalPrice - selectedInvoice.depositAmount} EUR</strong></p>
               </div>
 
             </div>
 
-            <div className="p-4 border-t border-white/5 bg-slate-950 flex justify-end">
-              <Button onClick={() => setSelectedInvoice(null)} className="bg-white/10 hover:bg-white/15 text-white font-bold rounded-xl text-xs uppercase px-5 py-3">
+            <div className="p-4 border-t border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-slate-950 flex justify-end">
+              <Button onClick={() => setSelectedInvoice(null)} className="bg-slate-100 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/15 text-slate-800 dark:text-white font-bold rounded-xl text-xs uppercase px-5 py-3">
                 Zavrieť
               </Button>
             </div>
@@ -1538,16 +1604,17 @@ export default function Showroom() {
       )}
 
       {/* TEST & DEVELOPER BAR */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-slate-900 border-t border-white/10 text-white text-xs shadow-2xl">
+      {/* Renders fixed at the bottom with a high z-index, adapting layout dynamically */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-white/10 text-slate-800 dark:text-white text-xs shadow-2xl transition-colors duration-300">
         <details className="group">
           
-          <summary className="cursor-pointer py-3.5 px-6 flex justify-between items-center bg-slate-950/80 hover:bg-slate-950 transition-colors">
+          <summary className="cursor-pointer py-3.5 px-6 flex justify-between items-center bg-slate-50/95 dark:bg-slate-950/80 hover:bg-slate-100/50 dark:hover:bg-slate-950 transition-colors border-b border-slate-200 dark:border-white/5">
             <span className="font-black text-[10px] uppercase tracking-wider text-[#C5A880] flex items-center gap-2">
               <Smartphone className="w-4 h-4 animate-pulse" />
               Testovacia konzola & Simulátor emailov
             </span>
             <span className="flex items-center gap-3">
-              <span className="bg-slate-900 px-3 py-1 rounded text-[10px] text-slate-400">
+              <span className="bg-slate-200/50 dark:bg-slate-900 px-3 py-1 rounded text-[10px] text-slate-500 dark:text-slate-400">
                 Simulovaný čas: <strong className="text-[#C5A880]">{getSimulatedNow().toLocaleTimeString('sk-SK')}</strong>
               </span>
               <span className="text-[#C5A880] font-black group-open:hidden">Zobraziť panel ↑</span>
@@ -1557,11 +1624,11 @@ export default function Showroom() {
 
           <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-8 max-h-[350px] overflow-y-auto">
             
-            <div className="space-y-4">
-              <h4 className="font-bold text-xs uppercase tracking-wider text-[#C5A880] border-b border-white/5 pb-1">
+            <div className="space-y-4 text-left">
+              <h4 className="font-bold text-xs uppercase tracking-wider text-[#C5A880] border-b border-slate-200 dark:border-white/5 pb-1">
                 Ovládanie času a auto-storna
               </h4>
-              <p className="text-slate-400 leading-relaxed font-light">
+              <p className="text-slate-500 dark:text-slate-400 leading-relaxed font-light">
                 Posuňte čas o +24 hodín a otestujte automatické stornovanie schválených rezervácií pri neuhradení zálohy.
               </p>
               
@@ -1569,7 +1636,7 @@ export default function Showroom() {
                 <Button 
                   size="sm"
                   onClick={() => handleSimulateTimeJump(1)}
-                  className="bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-750 font-bold"
+                  className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-bold"
                 >
                   Posunúť +1 hodinu
                 </Button>
@@ -1584,7 +1651,7 @@ export default function Showroom() {
                   size="sm"
                   onClick={handleResetTime}
                   variant="outline"
-                  className="border-slate-700 hover:bg-slate-800 text-slate-350 font-bold"
+                  className="border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-350 font-bold"
                 >
                   Resetovať čas
                 </Button>
@@ -1592,15 +1659,15 @@ export default function Showroom() {
             </div>
 
             <div className="space-y-3 text-left">
-              <h4 className="font-bold text-xs uppercase tracking-wider text-[#C5A880] border-b border-white/5 pb-1 flex justify-between items-center">
+              <h4 className="font-bold text-xs uppercase tracking-wider text-[#C5A880] border-b border-slate-200 dark:border-white/5 pb-1 flex justify-between items-center">
                 <span>Simulovaná schránka (Odosielateľ: info@americanliving.sk)</span>
                 {emails.length > 0 && (
-                  <button onClick={() => setEmails([])} className="text-[9px] text-red-400 hover:text-red-300 font-bold">Vymazať</button>
+                  <button onClick={() => setEmails([])} className="text-[9px] text-red-650 hover:text-red-500 font-bold">Vymazať</button>
                 )}
               </h4>
 
               {emails.length === 0 ? (
-                <div className="text-center py-8 text-slate-500 italic">
+                <div className="text-center py-8 text-slate-400 dark:text-slate-500 italic">
                   V schránke nie sú žiadne maily.
                 </div>
               ) : (
@@ -1608,17 +1675,17 @@ export default function Showroom() {
                   {emails.map((email) => (
                     <div 
                       key={email.id} 
-                      className="p-3 bg-slate-950 rounded-xl border border-white/5 text-xs space-y-2"
+                      className="p-3 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-white/5 text-xs space-y-2"
                     >
                       <div className="flex justify-between items-center text-[9px] text-slate-500 font-bold">
                         <span>Odoslané: {email.sentAt}</span>
                         <span className="bg-[#C5A880]/15 text-[#E2C799] px-2 py-0.5 rounded font-black">Od: {email.from}</span>
                       </div>
-                      <div className="text-slate-300">
+                      <div className="text-slate-800 dark:text-slate-300">
                         <p className="font-extrabold text-[#C5A880] text-xs">Pre: {email.to}</p>
-                        <p className="font-black text-white text-xs mt-0.5">Predmet: {email.subject}</p>
+                        <p className="font-black text-slate-900 dark:text-white text-xs mt-0.5">Predmet: {email.subject}</p>
                       </div>
-                      <pre className="text-[10px] text-slate-400 leading-normal font-sans bg-slate-950 p-2.5 rounded border border-white/5 whitespace-pre-wrap max-h-[150px] overflow-y-auto">
+                      <pre className="text-[10px] text-slate-650 dark:text-slate-400 leading-normal font-sans bg-white dark:bg-slate-950 p-2.5 rounded border border-slate-200 dark:border-white/5 whitespace-pre-wrap max-h-[150px] overflow-y-auto">
                         {email.body}
                       </pre>
                     </div>
