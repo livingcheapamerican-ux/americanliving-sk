@@ -798,14 +798,14 @@ export default function Showroom() {
       <div className="fixed-bg-content relative z-10 pb-24 text-slate-800 dark:text-slate-100 font-sans transition-colors duration-300">
         
         {/* HERO HEADER */}
-        <div className="relative pt-16 pb-12 px-4 text-center">
+        <div className="relative pt-28 sm:pt-36 md:pt-40 lg:pt-44 pb-12 px-4 text-center">
           <div className="relative z-10 max-w-4xl mx-auto space-y-6">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#C5A880]/15 border border-[#C5A880]/30 backdrop-blur-md">
               <Layers className="w-3.5 h-3.5 text-[#C5A880]" />
               <span className="text-[10px] sm:text-xs font-black tracking-widest text-[#C5A880] dark:text-[#E2C799] uppercase">Zážitkový pobyt</span>
             </div>
             
-            <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight text-slate-900 dark:text-white drop-shadow-sm dark:drop-shadow-2xl">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight text-slate-900 dark:text-white">
               Rezidenčné Showroomy <span className="bg-gradient-to-r from-[#C5A880] via-[#E2C799] to-[#C5A880] bg-clip-text text-transparent">American Living</span>
             </h1>
             
