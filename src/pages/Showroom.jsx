@@ -1001,58 +1001,23 @@ export default function Showroom() {
                   );
                 })()}
 
-                {/* NEW: Public Background Video uploader card - read-only / trial version */}
-                <Card className="border-slate-200/40 dark:border-white/5 bg-white/12 dark:bg-slate-950/12 backdrop-blur-xl rounded-3xl overflow-hidden shadow-xl dark:shadow-2xl text-slate-800 dark:text-slate-100 mt-6 relative">
-                  <div className="absolute top-4 right-4">
-                    <span className="bg-[#C5A880]/15 text-[#E2C799] border border-[#C5A880]/30 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider">
-                      Skúšobná verzia
-                    </span>
-                  </div>
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-base sm:text-lg font-black uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
-                      <Video className="w-5 h-5 text-[#C5A880]" />
-                      Video pozadia showroomu
-                    </CardTitle>
-                    <CardDescription className="text-xs">
-                      Prispôsobenie hlavnej video vrstvy pre návštevníkov
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <p className="text-xs text-slate-500 dark:text-slate-400 font-light leading-relaxed text-left">
-                      Nahrajte vlastné MP4/WebM video (napr. spomalené zábery detí v bazéne vygenerované cez Gemini Veo) a zmeňte predvolené pozadie tohto showroomu.
-                    </p>
-                    
-                    <div className="bg-slate-50/55 dark:bg-slate-950/30 border border-slate-200 dark:border-white/5 rounded-2xl p-4 text-xs text-left space-y-3">
-                      <div className="flex items-center gap-2 text-slate-500 dark:text-slate-450">
-                        <AlertTriangle className="w-4 h-4 text-[#C5A880]" />
-                        <span>Nahrávanie je v tejto skúšobnej verzii zakázané.</span>
-                      </div>
-                      
-                      <div className="relative opacity-65 cursor-not-allowed">
-                        <label 
-                          className="flex items-center justify-center gap-2 border border-dashed border-slate-350 dark:border-white/10 rounded-xl p-4 bg-slate-100/50 dark:bg-slate-900/30 font-bold text-xs pointer-events-none"
-                        >
-                          <Upload className="w-4 h-4 text-slate-400" />
-                          <span>Vybrať a nahrať MP4/WebM video</span>
-                        </label>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
               </div>
 
               {/* RIGHT COLUMN: CALENDAR & FORM */}
               <div className="lg:col-span-5 space-y-6">
                 
                 {/* Calendar */}
-                <Card className="border-slate-200/40 dark:border-white/5 bg-white/12 dark:bg-slate-950/12 backdrop-blur-xl rounded-3xl shadow-xl">
-                  <CardHeader className="pb-3 flex flex-row items-center justify-between">
+                <Card className="border-slate-200/40 dark:border-white/5 bg-white/12 dark:bg-slate-950/12 backdrop-blur-xl rounded-3xl shadow-xl relative overflow-hidden">
+                  <div className="absolute top-4 right-4">
+                    <span className="bg-[#C5A880]/15 text-[#E2C799] border border-[#C5A880]/30 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider">
+                      Skúšobná verzia
+                    </span>
+                  </div>
+                  <CardHeader className="pb-3 flex flex-row items-center justify-between pr-36">
                     <div>
                       <CardTitle className="text-base sm:text-lg font-black uppercase tracking-wider text-slate-900 dark:text-white">Dostupnosť & Termíny</CardTitle>
-                      <CardDescription className="text-[10px] sm:text-xs">Označte požadované dátumy pobytu</CardDescription>
+                      <CardDescription className="text-[10px] sm:text-xs">Zobrazenie obsadenosti predvádzacieho showroomu</CardDescription>
                     </div>
-                    <CalendarIcon className="w-5 h-5 text-[#C5A880]" />
                   </CardHeader>
                   <CardContent className="pt-2">
                     
@@ -1095,26 +1060,21 @@ export default function Showroom() {
                             {emptyCells.map((_, i) => <div key={`empty-${i}`} />)}
                             {days.map((day) => {
                               const isBooked = isDateBooked(day, selectedLoc);
-                              const isSelected = isDateSelectedRange(day);
                               const isToday = formatDateString(day) === formatDateString(getSimulatedNow());
                               
                               return (
                                 <button
                                   key={day.toISOString()}
                                   type="button"
-                                  disabled={isBooked}
-                                  onClick={() => handleDateClick(day, selectedLoc)}
-                                  className={`aspect-square rounded-xl flex flex-col items-center justify-center relative transition-all text-xs font-bold border ${
+                                  onClick={() => toast.info("Toto je skúšobná verzia showroomu. Výber termínov je zatiaľ vypnutý.")}
+                                  className={`aspect-square rounded-xl flex flex-col items-center justify-center relative transition-all text-xs font-bold border cursor-not-allowed ${
                                     isBooked 
-                                      ? 'bg-red-500/10 text-red-650 dark:text-red-500 border-red-500/20 cursor-not-allowed' 
-                                      : isSelected 
-                                        ? 'bg-[#C5A880] text-slate-950 border-[#C5A880] shadow-[0_0_15px_rgba(197,168,128,0.4)] scale-105' 
-                                        : 'bg-slate-50/50 dark:bg-slate-950/20 border-slate-200/40 dark:border-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-slate-350'
-                                  } ${isToday ? 'border-blue-500' : ''}`}
+                                      ? 'bg-red-500/10 text-red-650 dark:text-red-500 border-red-500/20' 
+                                      : 'bg-slate-50/50 dark:bg-slate-950/20 border-slate-200/40 dark:border-white/5 hover:bg-slate-100/5 dark:hover:bg-white/5 text-slate-500 dark:text-slate-400'
+                                  } ${isToday ? 'border-[#C5A880]/40' : ''}`}
                                 >
                                   <span>{day.getDate()}</span>
                                   {isBooked && <span className="w-1.5 h-1.5 bg-red-500 rounded-full mt-0.5" />}
-                                  {isSelected && !isBooked && <span className="w-1.5 h-1.5 bg-slate-950 rounded-full mt-0.5" />}
                                 </button>
                               );
                             })}
@@ -1125,8 +1085,8 @@ export default function Showroom() {
 
                     <div className="flex gap-4 justify-center items-center mt-5 text-[9px] text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest border-t border-slate-200/60 dark:border-white/5 pt-4">
                       <div className="flex items-center gap-1.5">
-                        <span className="w-2.5 h-2.5 rounded bg-[#C5A880]" />
-                        <span>Vybraté</span>
+                        <span className="w-2.5 h-2.5 rounded bg-slate-200/50 border border-slate-300/30" />
+                        <span>Voľné</span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <span className="w-2.5 h-2.5 rounded bg-red-500/20 border border-red-500/30" />
@@ -1138,26 +1098,29 @@ export default function Showroom() {
                 </Card>
 
                 {/* Booking Form */}
-                <Card className="border-slate-200/40 dark:border-white/5 bg-white/12 dark:bg-slate-950/12 backdrop-blur-xl rounded-3xl shadow-xl">
-                  <CardHeader>
+                <Card className="border-slate-200/40 dark:border-white/5 bg-white/12 dark:bg-slate-950/12 backdrop-blur-xl rounded-3xl shadow-xl relative overflow-hidden">
+                  <div className="absolute top-4 right-4">
+                    <span className="bg-[#C5A880]/15 text-[#E2C799] border border-[#C5A880]/30 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider">
+                      Skúšobná verzia
+                    </span>
+                  </div>
+                  <CardHeader className="pr-36">
                     <CardTitle className="text-base sm:text-lg font-black uppercase tracking-wider text-slate-900 dark:text-white">Rezervačný dopyt</CardTitle>
                     <CardDescription className="text-xs">
-                      {startDate && endDate 
-                        ? `Zvolený termín: ${formatDateString(startDate)} až ${formatDateString(endDate)}` 
-                        : 'Vyberte dni v kalendári.'}
+                      Rezervácie sú v tejto verzii zatiaľ vypnuté
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <form onSubmit={handleClientBookingSubmit} className="space-y-4 text-left">
+                    <form onSubmit={(e) => { e.preventDefault(); }} className="space-y-4 text-left">
                       <div>
                         <label className="block text-[10px] font-black uppercase tracking-widest text-[#C5A880] mb-1">Meno a priezvisko *</label>
                         <input 
                           type="text" 
-                          required
+                          disabled
                           value={clientName}
                           onChange={(e) => setClientName(e.target.value)}
                           placeholder="napr. Ján Kováč"
-                          className="w-full bg-white/10 dark:bg-slate-950/20 border border-slate-300/30 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880] transition-colors backdrop-blur-md"
+                          className="w-full bg-slate-200/10 dark:bg-slate-950/40 border border-slate-300/20 dark:border-white/5 rounded-xl px-4 py-3 text-sm text-slate-450 dark:text-slate-500 cursor-not-allowed focus:outline-none backdrop-blur-md"
                         />
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1165,22 +1128,22 @@ export default function Showroom() {
                           <label className="block text-[10px] font-black uppercase tracking-widest text-[#C5A880] mb-1">E-mail *</label>
                           <input 
                             type="email" 
-                            required
+                            disabled
                             value={clientEmail}
                             onChange={(e) => setClientEmail(e.target.value)}
                             placeholder="jan.kovac@example.com"
-                            className="w-full bg-white/10 dark:bg-slate-950/20 border border-slate-300/30 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880] transition-colors backdrop-blur-md"
+                            className="w-full bg-slate-200/10 dark:bg-slate-950/40 border border-slate-300/20 dark:border-white/5 rounded-xl px-4 py-3 text-sm text-slate-450 dark:text-slate-500 cursor-not-allowed focus:outline-none backdrop-blur-md"
                           />
                         </div>
                         <div>
                           <label className="block text-[10px] font-black uppercase tracking-widest text-[#C5A880] mb-1">Telefón *</label>
                           <input 
                             type="tel" 
-                            required
+                            disabled
                             value={clientPhone}
                             onChange={(e) => setClientPhone(e.target.value)}
                             placeholder="+421 900 000 000"
-                            className="w-full bg-white/10 dark:bg-slate-950/20 border border-slate-300/30 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880] transition-colors backdrop-blur-md"
+                            className="w-full bg-slate-200/10 dark:bg-slate-950/40 border border-slate-300/20 dark:border-white/5 rounded-xl px-4 py-3 text-sm text-slate-450 dark:text-slate-500 cursor-not-allowed focus:outline-none backdrop-blur-md"
                           />
                         </div>
                       </div>
@@ -1188,45 +1151,22 @@ export default function Showroom() {
                         <label className="block text-[10px] font-black uppercase tracking-widest text-[#C5A880] mb-1">Poznámka k dopytu</label>
                         <textarea 
                           rows="2"
+                          disabled
                           value={clientNote}
                           onChange={(e) => setClientNote(e.target.value)}
                           placeholder="Požiadavky alebo doplňujúce otázky..."
-                          className="w-full bg-white/10 dark:bg-slate-950/20 border border-slate-300/30 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880] transition-colors resize-none backdrop-blur-md"
+                          className="w-full bg-slate-200/10 dark:bg-slate-950/40 border border-slate-300/20 dark:border-white/5 rounded-xl px-4 py-3 text-sm text-slate-450 dark:text-slate-500 cursor-not-allowed focus:outline-none resize-none backdrop-blur-md"
                         />
                       </div>
 
-                      {startDate && endDate && (
-                        <div className="bg-[#C5A880]/10 border border-[#C5A880]/20 rounded-xl p-4 text-xs space-y-1.5">
-                          <div className="flex justify-between">
-                            <span className="text-slate-500 dark:text-slate-400">Počet nocí:</span>
-                            <span className="font-bold text-slate-800 dark:text-white">{Math.ceil(Math.abs(endDate - startDate) / (1000 * 60 * 60 * 24))} nocí</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-slate-500 dark:text-slate-400">Cena za noc:</span>
-                            <span className="font-bold text-slate-800 dark:text-white">{properties[selectedLoc].price} EUR</span>
-                          </div>
-                          <div className="flex justify-between border-t border-[#C5A880]/30 pt-2 text-sm text-slate-700 dark:text-slate-200">
-                            <span className="font-bold">Celkom:</span>
-                            <span className="font-black text-[#C5A880]">
-                              {Math.ceil(Math.abs(endDate - startDate) / (1000 * 60 * 60 * 24)) * properties[selectedLoc].price} EUR
-                            </span>
-                          </div>
-                          <div className="flex justify-between text-slate-450 dark:text-slate-500 mt-1">
-                            <span>Záloha na platbu ({properties[selectedLoc].prepayPercent}%):</span>
-                            <span className="font-bold">
-                              {((Math.ceil(Math.abs(endDate - startDate) / (1000 * 60 * 60 * 24)) * properties[selectedLoc].price * properties[selectedLoc].prepayPercent) / 100).toFixed(2)} EUR
-                            </span>
-                          </div>
-                        </div>
-                      )}
-
                       <Button 
-                        type="submit" 
-                        disabled={!startDate || !endDate}
-                        className="w-full bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-black text-xs uppercase tracking-wider py-4 rounded-xl shadow-md border border-red-500/30 transition-all flex items-center justify-center gap-1.5"
+                        type="button"
+                        disabled
+                        onClick={() => toast.info("Rezervácie sú v tejto verzii vypnuté.")}
+                        className="w-full bg-slate-300/20 dark:bg-white/5 text-slate-400 dark:text-slate-500 font-bold text-xs uppercase tracking-wider py-4 rounded-xl cursor-not-allowed border border-transparent transition-all flex items-center justify-center gap-1.5"
                       >
-                        <CalendarIcon className="w-4 h-4" />
-                        <span>Odoslať dopyt na schválenie</span>
+                        <CalendarIcon className="w-4 h-4 text-slate-500" />
+                        <span>Odosielanie dopytov je vypnuté</span>
                       </Button>
                     </form>
                   </CardContent>
