@@ -130,8 +130,8 @@ function ShowroomBackgroundVideo() {
         className="w-full h-full object-cover transition-all duration-1000 ease-in-out"
         style={{ filter: dark ? 'brightness(0.35) contrast(1.1)' : 'brightness(0.95) contrast(1.02)' }}
       >
-        <source src="https://player.vimeo.com/external/434045526.sd.mp4?s=236a2c3d3f29c7e1c1b1c3b3b3b3b3b3&profile_id=164" type="video/mp4" />
-        <source src="https://assets.mixkit.co/videos/preview/mixkit-swimming-pool-in-a-sunny-day-4561-large.mp4" type="video/mp4" />
+        <source src="https://videos.pexels.com/video-files/853889/853889-hd_1920_1080_25fps.mp4" type="video/mp4" />
+        <source src="https://videos.pexels.com/video-files/3209828/3209828-hd_1920_1080_25fps.mp4" type="video/mp4" />
         <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4" />
       </video>
     </div>
@@ -716,7 +716,7 @@ export default function Showroom() {
                 className={`rounded-xl px-7 py-6 font-bold text-xs sm:text-sm uppercase tracking-wider transition-all border ${
                   activeTab === 'client' 
                     ? 'bg-[#C5A880] hover:bg-[#C5A880]/90 text-slate-950 border-[#C5A880] shadow-[0_4px_20px_rgba(197,168,128,0.25)]' 
-                    : 'bg-white/40 dark:bg-white/5 hover:bg-white/60 dark:hover:bg-white/10 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-white/10 backdrop-blur-md'
+                    : 'bg-white/25 dark:bg-white/5 hover:bg-white/40 dark:hover:bg-white/10 text-slate-800 dark:text-slate-200 border-slate-200/40 dark:border-white/10 backdrop-blur-md'
                 }`}
               >
                 <CalendarIcon className="w-4 h-4 mr-2" />
@@ -727,7 +727,7 @@ export default function Showroom() {
                 className={`rounded-xl px-7 py-6 font-bold text-xs sm:text-sm uppercase tracking-wider transition-all border ${
                   activeTab === 'partner' 
                     ? 'bg-[#C5A880] hover:bg-[#C5A880]/90 text-slate-950 border-[#C5A880] shadow-[0_4px_20px_rgba(197,168,128,0.25)]' 
-                    : 'bg-white/40 dark:bg-white/5 hover:bg-white/60 dark:hover:bg-white/10 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-white/10 backdrop-blur-md'
+                    : 'bg-white/25 dark:bg-white/5 hover:bg-white/40 dark:hover:bg-white/10 text-slate-800 dark:text-slate-200 border-slate-200/40 dark:border-white/10 backdrop-blur-md'
                 }`}
               >
                 <ShieldCheck className="w-4 h-4 mr-2" />
@@ -760,7 +760,7 @@ export default function Showroom() {
                       className={`flex flex-col p-6 rounded-3xl border text-left transition-all duration-300 relative overflow-hidden backdrop-blur-md ${
                         selectedLoc === prop.id 
                           ? 'border-[#C5A880] bg-white dark:bg-slate-900/60 shadow-[0_8px_30px_rgba(197,168,128,0.15)] scale-[1.01]' 
-                          : 'border-slate-200/50 dark:border-white/5 bg-white/40 dark:bg-slate-950/40 hover:bg-white/65 dark:hover:bg-slate-900/40 hover:border-slate-300 dark:hover:border-white/10'
+                          : 'border-slate-200/30 dark:border-white/5 bg-white/20 dark:bg-slate-950/20 hover:bg-white/40 dark:hover:bg-slate-900/30 hover:border-slate-300 dark:hover:border-white/10'
                       }`}
                     >
                       <div className="flex items-center justify-between w-full mb-3">
@@ -785,7 +785,7 @@ export default function Showroom() {
                 {(() => {
                   const prop = properties[selectedLoc];
                   return (
-                    <Card className="border-slate-200 dark:border-white/10 bg-white/70 dark:bg-slate-900/45 backdrop-blur-xl rounded-3xl overflow-hidden shadow-xl dark:shadow-2xl text-slate-800 dark:text-slate-100">
+                    <Card className="border-slate-200 dark:border-white/10 bg-white/35 dark:bg-slate-950/25 backdrop-blur-xl rounded-3xl overflow-hidden shadow-xl dark:shadow-2xl text-slate-800 dark:text-slate-100">
                       
                       {/* Base44 House Photo Gallery (Layered Photo Slider) */}
                       <div className="relative aspect-[16/10] overflow-hidden bg-slate-900 border-b border-slate-200 dark:border-white/10 group">
@@ -930,7 +930,7 @@ export default function Showroom() {
               <div className="lg:col-span-5 space-y-6">
                 
                 {/* Calendar */}
-                <Card className="border-slate-200 dark:border-white/10 bg-white/70 dark:bg-slate-900/45 backdrop-blur-xl rounded-3xl shadow-xl">
+                <Card className="border-slate-200 dark:border-white/10 bg-white/35 dark:bg-slate-950/25 backdrop-blur-xl rounded-3xl shadow-xl">
                   <CardHeader className="pb-3 flex flex-row items-center justify-between">
                     <div>
                       <CardTitle className="text-base sm:text-lg font-black uppercase tracking-wider text-slate-900 dark:text-white">Dostupnosť & Termíny</CardTitle>
@@ -1022,7 +1022,7 @@ export default function Showroom() {
                 </Card>
 
                 {/* Booking Form */}
-                <Card className="border-slate-200 dark:border-white/10 bg-white/70 dark:bg-slate-900/45 backdrop-blur-xl rounded-3xl shadow-xl">
+                <Card className="border-slate-200 dark:border-white/10 bg-white/35 dark:bg-slate-950/25 backdrop-blur-xl rounded-3xl shadow-xl">
                   <CardHeader>
                     <CardTitle className="text-base sm:text-lg font-black uppercase tracking-wider text-slate-900 dark:text-white">Rezervačný dopyt</CardTitle>
                     <CardDescription className="text-xs">
@@ -1126,7 +1126,7 @@ export default function Showroom() {
             <div className="max-w-4xl mx-auto">
               
               {!partnerLoggedIn ? (
-                <Card className="border-slate-200 dark:border-white/10 bg-white/70 dark:bg-slate-900/40 backdrop-blur-xl rounded-3xl shadow-xl p-6 sm:p-10 text-slate-800 dark:text-slate-100">
+                <Card className="border-slate-200 dark:border-white/10 bg-white/35 dark:bg-slate-950/25 backdrop-blur-xl rounded-3xl shadow-xl p-6 sm:p-10 text-slate-800 dark:text-slate-100">
                   <div className="text-center mb-8 max-w-md mx-auto">
                     <ShieldCheck className="w-12 h-12 text-[#C5A880] mx-auto mb-3" />
                     <h2 className="text-2xl font-black text-slate-900 dark:text-white uppercase tracking-wider">Portál pre partnerov</h2>
@@ -1235,7 +1235,7 @@ export default function Showroom() {
                 <div className="space-y-6">
                   
                   {/* Header info bar */}
-                  <div className="flex justify-between items-center bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl p-6 rounded-3xl border border-slate-200 dark:border-white/10 shadow-md dark:shadow-xl flex-wrap gap-4 text-left">
+                  <div className="flex justify-between items-center bg-white/35 dark:bg-slate-950/25 backdrop-blur-xl p-6 rounded-3xl border border-slate-200 dark:border-white/10 shadow-md dark:shadow-xl flex-wrap gap-4 text-left">
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 rounded-xl bg-[#C5A880]/20 flex items-center justify-center border border-[#C5A880]/30 shadow-inner">
                         <ShieldCheck className="w-6 h-6 text-[#C5A880]" />
@@ -1261,7 +1261,7 @@ export default function Showroom() {
                     {/* Left side: Reservation Request Manager */}
                     <div className="lg:col-span-7 space-y-6">
                       
-                      <Card className="border-slate-200 dark:border-white/10 bg-white/70 dark:bg-slate-900/40 backdrop-blur-xl rounded-3xl shadow-xl">
+                      <Card className="border-slate-200 dark:border-white/10 bg-white/35 dark:bg-slate-950/25 backdrop-blur-xl rounded-3xl shadow-xl">
                         <CardHeader className="pb-3 border-b border-slate-200 dark:border-white/5">
                           <CardTitle className="text-base sm:text-lg font-black uppercase tracking-wider text-slate-900 dark:text-white">Klientske rezervácie</CardTitle>
                           <CardDescription className="text-xs">Spravujte dopyty, prezerajte platby a zálohy.</CardDescription>
@@ -1391,7 +1391,7 @@ export default function Showroom() {
                     {/* Right side: Property Settings Form */}
                     <div className="lg:col-span-5 space-y-6">
                       
-                      <Card className="border-slate-200 dark:border-white/10 bg-white/70 dark:bg-slate-900/40 backdrop-blur-xl rounded-3xl shadow-xl">
+                      <Card className="border-slate-200 dark:border-white/10 bg-white/35 dark:bg-slate-950/25 backdrop-blur-xl rounded-3xl shadow-xl">
                         <CardHeader className="pb-3 border-b border-slate-200 dark:border-white/5">
                           <CardTitle className="text-base sm:text-lg font-black uppercase tracking-wider text-slate-900 dark:text-white">Nastavenia showroomu</CardTitle>
                           <CardDescription className="text-xs">Konfigurácia cien, storno a obchodných podmienok.</CardDescription>
