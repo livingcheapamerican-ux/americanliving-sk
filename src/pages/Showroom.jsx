@@ -130,8 +130,8 @@ function ShowroomBackgroundVideo() {
         className="w-full h-full object-cover transition-all duration-1000 ease-in-out"
         style={{ filter: dark ? 'brightness(0.35) contrast(1.1)' : 'brightness(0.95) contrast(1.02)' }}
       >
-        <source src="https://videos.pexels.com/video-files/853889/853889-hd_1920_1080_25fps.mp4" type="video/mp4" />
         <source src="https://videos.pexels.com/video-files/3209828/3209828-hd_1920_1080_25fps.mp4" type="video/mp4" />
+        <source src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Backflip_into_pool_from_3_metres.webm" type="video/webm" />
         <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4" />
       </video>
     </div>
@@ -707,7 +707,7 @@ export default function Showroom() {
             </h1>
             
             <p className="text-sm sm:text-lg text-slate-650 dark:text-slate-300 max-w-2xl mx-auto font-light leading-relaxed drop-shadow-sm">
-              Pozrite si fotky našich domov z base44 archívu, vyberte si termín v kalendári a vyskúšajte si celoročné bývanie s bazénom a saunou na vlastnej koži.
+              Vyberte si termín v kalendári a vyskúšajte si celoročné bývanie s bazénom a saunou na vlastnej koži.
             </p>
 
             <div className="flex justify-center gap-4 flex-wrap">
@@ -716,7 +716,7 @@ export default function Showroom() {
                 className={`rounded-xl px-7 py-6 font-bold text-xs sm:text-sm uppercase tracking-wider transition-all border ${
                   activeTab === 'client' 
                     ? 'bg-[#C5A880] hover:bg-[#C5A880]/90 text-slate-950 border-[#C5A880] shadow-[0_4px_20px_rgba(197,168,128,0.25)]' 
-                    : 'bg-white/25 dark:bg-white/5 hover:bg-white/40 dark:hover:bg-white/10 text-slate-800 dark:text-slate-200 border-slate-200/40 dark:border-white/10 backdrop-blur-md'
+                    : 'bg-white/10 dark:bg-white/5 hover:bg-white/20 dark:hover:bg-white/10 text-slate-800 dark:text-slate-200 border-slate-200/20 dark:border-white/10 backdrop-blur-md'
                 }`}
               >
                 <CalendarIcon className="w-4 h-4 mr-2" />
@@ -727,7 +727,7 @@ export default function Showroom() {
                 className={`rounded-xl px-7 py-6 font-bold text-xs sm:text-sm uppercase tracking-wider transition-all border ${
                   activeTab === 'partner' 
                     ? 'bg-[#C5A880] hover:bg-[#C5A880]/90 text-slate-950 border-[#C5A880] shadow-[0_4px_20px_rgba(197,168,128,0.25)]' 
-                    : 'bg-white/25 dark:bg-white/5 hover:bg-white/40 dark:hover:bg-white/10 text-slate-800 dark:text-slate-200 border-slate-200/40 dark:border-white/10 backdrop-blur-md'
+                    : 'bg-white/10 dark:bg-white/5 hover:bg-white/20 dark:hover:bg-white/10 text-slate-800 dark:text-slate-200 border-slate-200/20 dark:border-white/10 backdrop-blur-md'
                 }`}
               >
                 <ShieldCheck className="w-4 h-4 mr-2" />
@@ -759,8 +759,8 @@ export default function Showroom() {
                       }}
                       className={`flex flex-col p-6 rounded-3xl border text-left transition-all duration-300 relative overflow-hidden backdrop-blur-md ${
                         selectedLoc === prop.id 
-                          ? 'border-[#C5A880] bg-white dark:bg-slate-900/60 shadow-[0_8px_30px_rgba(197,168,128,0.15)] scale-[1.01]' 
-                          : 'border-slate-200/30 dark:border-white/5 bg-white/20 dark:bg-slate-950/20 hover:bg-white/40 dark:hover:bg-slate-900/30 hover:border-slate-300 dark:hover:border-white/10'
+                          ? 'border-[#C5A880] bg-white/25 dark:bg-slate-950/30 shadow-[0_8px_30px_rgba(197,168,128,0.15)] scale-[1.01]' 
+                          : 'border-slate-200/20 dark:border-white/5 bg-white/8 dark:bg-slate-950/8 hover:bg-white/20 dark:hover:bg-slate-900/15 hover:border-slate-300/40 dark:hover:border-white/10'
                       }`}
                     >
                       <div className="flex items-center justify-between w-full mb-3">
@@ -785,7 +785,7 @@ export default function Showroom() {
                 {(() => {
                   const prop = properties[selectedLoc];
                   return (
-                    <Card className="border-slate-200 dark:border-white/10 bg-white/35 dark:bg-slate-950/25 backdrop-blur-xl rounded-3xl overflow-hidden shadow-xl dark:shadow-2xl text-slate-800 dark:text-slate-100">
+                    <Card className="border-slate-200/40 dark:border-white/5 bg-white/12 dark:bg-slate-950/12 backdrop-blur-xl rounded-3xl overflow-hidden shadow-xl dark:shadow-2xl text-slate-800 dark:text-slate-100">
                       
                       {/* Base44 House Photo Gallery (Layered Photo Slider) */}
                       <div className="relative aspect-[16/10] overflow-hidden bg-slate-900 border-b border-slate-200 dark:border-white/10 group">
@@ -930,7 +930,7 @@ export default function Showroom() {
               <div className="lg:col-span-5 space-y-6">
                 
                 {/* Calendar */}
-                <Card className="border-slate-200 dark:border-white/10 bg-white/35 dark:bg-slate-950/25 backdrop-blur-xl rounded-3xl shadow-xl">
+                <Card className="border-slate-200/40 dark:border-white/5 bg-white/12 dark:bg-slate-950/12 backdrop-blur-xl rounded-3xl shadow-xl">
                   <CardHeader className="pb-3 flex flex-row items-center justify-between">
                     <div>
                       <CardTitle className="text-base sm:text-lg font-black uppercase tracking-wider text-slate-900 dark:text-white">Dostupnosť & Termíny</CardTitle>
@@ -1022,7 +1022,7 @@ export default function Showroom() {
                 </Card>
 
                 {/* Booking Form */}
-                <Card className="border-slate-200 dark:border-white/10 bg-white/35 dark:bg-slate-950/25 backdrop-blur-xl rounded-3xl shadow-xl">
+                <Card className="border-slate-200/40 dark:border-white/5 bg-white/12 dark:bg-slate-950/12 backdrop-blur-xl rounded-3xl shadow-xl">
                   <CardHeader>
                     <CardTitle className="text-base sm:text-lg font-black uppercase tracking-wider text-slate-900 dark:text-white">Rezervačný dopyt</CardTitle>
                     <CardDescription className="text-xs">
@@ -1041,7 +1041,7 @@ export default function Showroom() {
                           value={clientName}
                           onChange={(e) => setClientName(e.target.value)}
                           placeholder="napr. Ján Kováč"
-                          className="w-full bg-white dark:bg-slate-950/65 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880] transition-colors"
+                          className="w-full bg-white/10 dark:bg-slate-950/20 border border-slate-300/30 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880] transition-colors backdrop-blur-md"
                         />
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1053,7 +1053,7 @@ export default function Showroom() {
                             value={clientEmail}
                             onChange={(e) => setClientEmail(e.target.value)}
                             placeholder="jan.kovac@example.com"
-                            className="w-full bg-white dark:bg-slate-950/65 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880] transition-colors"
+                            className="w-full bg-white/10 dark:bg-slate-950/20 border border-slate-300/30 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880] transition-colors backdrop-blur-md"
                           />
                         </div>
                         <div>
@@ -1064,7 +1064,7 @@ export default function Showroom() {
                             value={clientPhone}
                             onChange={(e) => setClientPhone(e.target.value)}
                             placeholder="+421 900 000 000"
-                            className="w-full bg-white dark:bg-slate-950/65 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880] transition-colors"
+                            className="w-full bg-white/10 dark:bg-slate-950/20 border border-slate-300/30 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880] transition-colors backdrop-blur-md"
                           />
                         </div>
                       </div>
@@ -1075,7 +1075,7 @@ export default function Showroom() {
                           value={clientNote}
                           onChange={(e) => setClientNote(e.target.value)}
                           placeholder="Požiadavky alebo doplňujúce otázky..."
-                          className="w-full bg-white dark:bg-slate-950/65 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880] transition-colors resize-none"
+                          className="w-full bg-white/10 dark:bg-slate-950/20 border border-slate-300/30 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880] transition-colors resize-none backdrop-blur-md"
                         />
                       </div>
 
@@ -1126,7 +1126,7 @@ export default function Showroom() {
             <div className="max-w-4xl mx-auto">
               
               {!partnerLoggedIn ? (
-                <Card className="border-slate-200 dark:border-white/10 bg-white/35 dark:bg-slate-950/25 backdrop-blur-xl rounded-3xl shadow-xl p-6 sm:p-10 text-slate-800 dark:text-slate-100">
+                <Card className="border-slate-200/40 dark:border-white/5 bg-white/12 dark:bg-slate-950/12 backdrop-blur-xl rounded-3xl shadow-xl p-6 sm:p-10 text-slate-800 dark:text-slate-100">
                   <div className="text-center mb-8 max-w-md mx-auto">
                     <ShieldCheck className="w-12 h-12 text-[#C5A880] mx-auto mb-3" />
                     <h2 className="text-2xl font-black text-slate-900 dark:text-white uppercase tracking-wider">Portál pre partnerov</h2>
@@ -1148,7 +1148,7 @@ export default function Showroom() {
                             value={pEmail}
                             onChange={(e) => setPEmail(e.target.value)}
                             placeholder="partner@americanliving.sk"
-                            className="w-full bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880]"
+                            className="w-full bg-white/10 dark:bg-slate-950/20 border border-slate-300/30 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880] backdrop-blur-sm"
                           />
                         </div>
                         <div>
@@ -1159,7 +1159,7 @@ export default function Showroom() {
                             value={pPassword}
                             onChange={(e) => setPPassword(e.target.value)}
                             placeholder="Heslo"
-                            className="w-full bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880]"
+                            className="w-full bg-white/10 dark:bg-slate-950/20 border border-slate-300/30 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880] backdrop-blur-sm"
                           />
                         </div>
                         <Button type="submit" className="w-full bg-[#C5A880] text-slate-950 font-black text-xs uppercase tracking-wider py-3.5 rounded-xl hover:bg-[#C5A880]/90">
@@ -1186,7 +1186,7 @@ export default function Showroom() {
                             value={pName}
                             onChange={(e) => setPName(e.target.value)}
                             placeholder="napr. Spišská výstavba s.r.o."
-                            className="w-full bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C5A880]"
+                            className="w-full bg-white/10 dark:bg-slate-950/20 border border-slate-300/30 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C5A880] backdrop-blur-sm"
                           />
                         </div>
                         <div>
@@ -1197,7 +1197,7 @@ export default function Showroom() {
                             value={pEmail}
                             onChange={(e) => setPEmail(e.target.value)}
                             placeholder="email@partner.sk"
-                            className="w-full bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C5A880]"
+                            className="w-full bg-white/10 dark:bg-slate-950/20 border border-slate-300/30 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C5A880] backdrop-blur-sm"
                           />
                         </div>
                         <div>
@@ -1208,7 +1208,7 @@ export default function Showroom() {
                             value={pPassword}
                             onChange={(e) => setPPassword(e.target.value)}
                             placeholder="Heslo"
-                            className="w-full bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C5A880]"
+                            className="w-full bg-white/10 dark:bg-slate-950/20 border border-slate-300/30 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C5A880] backdrop-blur-sm"
                           />
                         </div>
                         <div>
@@ -1216,7 +1216,7 @@ export default function Showroom() {
                           <select 
                             value={pProperty} 
                             onChange={(e) => setPProperty(e.target.value)}
-                            className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880]"
+                            className="w-full bg-white/10 dark:bg-slate-950/20 border border-slate-300/30 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880] backdrop-blur-sm"
                           >
                             <option value="komarno">Showroom Komárno</option>
                             <option value="levoca">Showroom Levoča</option>
@@ -1235,7 +1235,7 @@ export default function Showroom() {
                 <div className="space-y-6">
                   
                   {/* Header info bar */}
-                  <div className="flex justify-between items-center bg-white/35 dark:bg-slate-950/25 backdrop-blur-xl p-6 rounded-3xl border border-slate-200 dark:border-white/10 shadow-md dark:shadow-xl flex-wrap gap-4 text-left">
+                  <div className="flex justify-between items-center bg-white/12 dark:bg-slate-950/12 backdrop-blur-xl p-6 rounded-3xl border border-slate-200/40 dark:border-white/5 shadow-md dark:shadow-xl flex-wrap gap-4 text-left">
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 rounded-xl bg-[#C5A880]/20 flex items-center justify-center border border-[#C5A880]/30 shadow-inner">
                         <ShieldCheck className="w-6 h-6 text-[#C5A880]" />
@@ -1261,7 +1261,7 @@ export default function Showroom() {
                     {/* Left side: Reservation Request Manager */}
                     <div className="lg:col-span-7 space-y-6">
                       
-                      <Card className="border-slate-200 dark:border-white/10 bg-white/35 dark:bg-slate-950/25 backdrop-blur-xl rounded-3xl shadow-xl">
+                      <Card className="border-slate-200/40 dark:border-white/5 bg-white/12 dark:bg-slate-950/12 backdrop-blur-xl rounded-3xl shadow-xl">
                         <CardHeader className="pb-3 border-b border-slate-200 dark:border-white/5">
                           <CardTitle className="text-base sm:text-lg font-black uppercase tracking-wider text-slate-900 dark:text-white">Klientske rezervácie</CardTitle>
                           <CardDescription className="text-xs">Spravujte dopyty, prezerajte platby a zálohy.</CardDescription>
@@ -1391,7 +1391,7 @@ export default function Showroom() {
                     {/* Right side: Property Settings Form */}
                     <div className="lg:col-span-5 space-y-6">
                       
-                      <Card className="border-slate-200 dark:border-white/10 bg-white/35 dark:bg-slate-950/25 backdrop-blur-xl rounded-3xl shadow-xl">
+                      <Card className="border-slate-200/40 dark:border-white/5 bg-white/12 dark:bg-slate-950/12 backdrop-blur-xl rounded-3xl shadow-xl">
                         <CardHeader className="pb-3 border-b border-slate-200 dark:border-white/5">
                           <CardTitle className="text-base sm:text-lg font-black uppercase tracking-wider text-slate-900 dark:text-white">Nastavenia showroomu</CardTitle>
                           <CardDescription className="text-xs">Konfigurácia cien, storno a obchodných podmienok.</CardDescription>
@@ -1412,7 +1412,7 @@ export default function Showroom() {
                                   required
                                   value={editAccName}
                                   onChange={(e) => setEditAccName(e.target.value)}
-                                  className="w-full bg-white dark:bg-slate-950 border border-slate-350 dark:border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#C5A880] text-slate-800 dark:text-white"
+                                  className="w-full bg-white/10 dark:bg-slate-950/20 border border-slate-300/30 dark:border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#C5A880] text-slate-800 dark:text-white backdrop-blur-sm"
                                 />
                               </div>
                               <div>
@@ -1422,7 +1422,7 @@ export default function Showroom() {
                                   required
                                   value={editIban}
                                   onChange={(e) => setEditIban(e.target.value)}
-                                  className="w-full bg-white dark:bg-slate-950 border border-slate-350 dark:border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#C5A880] text-slate-800 dark:text-white"
+                                  className="w-full bg-white/10 dark:bg-slate-950/20 border border-slate-300/30 dark:border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#C5A880] text-slate-800 dark:text-white backdrop-blur-sm"
                                 />
                               </div>
                               <div className="grid grid-cols-2 gap-3">
@@ -1451,12 +1451,12 @@ export default function Showroom() {
                             </div>
 
                             {/* Storno */}
-                            <div className="bg-slate-50 dark:bg-slate-950/60 p-4 rounded-2xl border border-slate-200 dark:border-white/5 space-y-3 text-xs">
+                            <div className="bg-white/5 dark:bg-slate-950/15 p-4 rounded-2xl border border-slate-200/40 dark:border-white/5 space-y-3 text-xs">
                               <h4 className="text-[10px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-350">Stornovanie rezervácií</h4>
                               <div className="grid grid-cols-2 gap-3">
                                 <div>
                                   <label className="block text-[9px] font-black uppercase tracking-widest text-slate-450 dark:text-slate-500 mb-1">Bezplatné storno do</label>
-                                  <div className="flex items-center gap-1.5 bg-white dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl px-3 py-2">
+                                  <div className="flex items-center gap-1.5 bg-white/10 dark:bg-slate-950/20 border border-slate-300/30 dark:border-white/10 rounded-xl px-3 py-2">
                                     <input 
                                       type="number"
                                       min="0"
@@ -1469,7 +1469,7 @@ export default function Showroom() {
                                 </div>
                                 <div>
                                   <label className="block text-[9px] font-black uppercase tracking-widest text-slate-450 dark:text-slate-500 mb-1">Vrátená suma zálohy</label>
-                                  <div className="flex items-center gap-1.5 bg-white dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl px-3 py-2">
+                                  <div className="flex items-center gap-1.5 bg-white/10 dark:bg-slate-950/20 border border-slate-300/30 dark:border-white/10 rounded-xl px-3 py-2">
                                     <input 
                                       type="number"
                                       min="0"
@@ -1491,7 +1491,7 @@ export default function Showroom() {
                                 rows="3"
                                 value={editVop}
                                 onChange={(e) => setEditVop(e.target.value)}
-                                className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#C5A880] resize-none text-slate-800 dark:text-white font-light leading-normal"
+                                className="w-full bg-white/10 dark:bg-slate-950/20 border border-slate-300/30 dark:border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#C5A880] resize-none text-slate-800 dark:text-white font-light leading-normal backdrop-blur-sm"
                               />
                             </div>
 
@@ -1504,7 +1504,7 @@ export default function Showroom() {
                                   required
                                   value={editPrice}
                                   onChange={(e) => setEditPrice(e.target.value)}
-                                  className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl px-3 py-2.5 text-xs text-slate-800 dark:text-white focus:outline-none"
+                                  className="w-full bg-white/10 dark:bg-slate-950/20 border border-slate-300/30 dark:border-white/10 rounded-xl px-3 py-2.5 text-xs text-slate-800 dark:text-white focus:outline-none backdrop-blur-sm"
                                 />
                               </div>
                               <div>
@@ -1513,7 +1513,7 @@ export default function Showroom() {
                                   type="text" 
                                   value={editVideo}
                                   onChange={(e) => setEditVideo(e.target.value)}
-                                  className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl px-3 py-2.5 text-xs text-slate-800 dark:text-white focus:outline-none"
+                                  className="w-full bg-white/10 dark:bg-slate-950/20 border border-slate-300/30 dark:border-white/10 rounded-xl px-3 py-2.5 text-xs text-slate-800 dark:text-white focus:outline-none backdrop-blur-sm"
                                 />
                               </div>
                             </div>
@@ -1523,7 +1523,7 @@ export default function Showroom() {
                                 rows="2"
                                 value={editDesc}
                                 onChange={(e) => setEditDesc(e.target.value)}
-                                className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-white focus:outline-none resize-none"
+                                className="w-full bg-white/10 dark:bg-slate-950/20 border border-slate-300/30 dark:border-white/10 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-white focus:outline-none resize-none backdrop-blur-sm"
                               />
                             </div>
 
