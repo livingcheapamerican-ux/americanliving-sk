@@ -227,29 +227,105 @@ export default function StiahniteSiNasKatalog() {
     setSubmitting(true);
     try {
       // 0. Save lead to database table "Dopyt"
-      await base44.entities.Dopyt.create({
+      const novyDopyt = await base44.entities.Dopyt.create({
         meno: name,
         email: email,
         telefon: phone || '',
         typ_dopytu: 'katalog',
         poznamka: 'Stiahnutie katalógu (Landing Page)',
         konfiguracny_kod: 'Prosto House Katalóg'
-      }).catch(e => console.warn("Saving lead to database failed:", e));
+      });
 
-      // 1. Send e-mail to super admin or default inbox
-      await base44.integrations.Core.SendEmail({
+      const downloadLink = pdfConfig?.metaPixelId || "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/KatalogProstoHouse.pdf";
+
+      // 1. Send welcoming e-mail to client with direct PDF download link (using Resend API on backend)
+      const welcomeSubject = `🏡 Váš katalóg drevodomov American Living & Prosto House`;
+      const welcomeHtml = `
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333; line-height: 1.6;">
+          <h2 style="color: #c5a880; border-bottom: 2px solid #c5a880; padding-bottom: 10px;">Dobrý deň, pán/pani ${name},</h2>
+          <p>Ďakujeme za Váš záujem o naše moderné drevodomy. V nižšie uvedenom odkaze nájdete kompletný katalóg pre rok 2026:</p>
+          <p style="margin: 25px 0; text-align: center;">
+            <a href="${downloadLink}" 
+               style="background-color: #c5a880; color: #0f172a; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; box-shadow: 0 4px 6px rgba(197, 168, 128, 0.2);">
+              📥 STIAHNUŤ KATALÓG (PDF)
+            </a>
+          </p>
+          <p style="font-size: 11px; color: #666;">
+            Ak Vám tlačidlo vyššie nefunguje, skopírujte prosím tento odkaz do prehliadača:<br>
+            <a href="${downloadLink}" style="color: #c5a880;">${downloadLink}</a>
+          </p>
+          <p style="margin-top: 30px;">
+            Spoznajte unikátnu technológiu prefabrikovaných a modulárnych drevostavieb, kompletné cenníky a technické detaily.
+          </p>
+          <p style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
+            Ak máte akékoľvek doplňujúce otázky ohľadom našej technológie, konfigurátora alebo financovania, neváhajte nás kontaktovať.
+          </p>
+          <p style="margin-top: 25px; font-weight: bold;">
+            S pozdravom,<br>
+            Tím American Living s.r.o.
+          </p>
+        </div>
+      `;
+
+      await base44.functions.invoke('sendEmailResend', {
+        to: email,
+        subject: welcomeSubject,
+        html: welcomeHtml
+      }).catch(e => console.warn("Client welcome email failed:", e));
+
+      // 2. Send admin notification email (using Resend API on backend)
+      const adminSubject = `📥 Nový záujemca o stiahnutie katalógu - ${name}`;
+      const adminHtml = `
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333; line-height: 1.6;">
+          <h2 style="color: #4F46E5; border-bottom: 2px solid #4F46E5; padding-bottom: 10px;">📥 Nové stiahnutie katalógu</h2>
+          <p>Na webovej stránke <strong>American Living</strong> pribudol nový dopyt:</p>
+          <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+            <tr style="border-bottom: 1px solid #eee;">
+              <td style="padding: 8px 0; font-weight: bold; width: 150px;">Meno:</td>
+              <td style="padding: 8px 0;">${name}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #eee;">
+              <td style="padding: 8px 0; font-weight: bold;">E-mail:</td>
+              <td style="padding: 8px 0;"><a href="mailto:${email}">${email}</a></td>
+            </tr>
+            <tr style="border-bottom: 1px solid #eee;">
+              <td style="padding: 8px 0; font-weight: bold;">Telefón:</td>
+              <td style="padding: 8px 0;">${phone || 'neuvedené'}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #eee;">
+              <td style="padding: 8px 0; font-weight: bold;">Dopytovaný katalóg:</td>
+              <td style="padding: 8px 0;">Prosto House PDF</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #eee;">
+              <td style="padding: 8px 0; font-weight: bold;">Dátum a čas:</td>
+              <td style="padding: 8px 0;">${new Date().toLocaleString('sk-SK')}</td>
+            </tr>
+          </table>
+          <p style="margin-top: 25px;">Záznam bol automaticky vytvorený v CRM pod ID dopytu: ${novyDopyt?.id || 'neuvedené'}.</p>
+        </div>
+      `;
+
+      await base44.functions.invoke('sendEmailResend', {
         to: 'info@americanliving.sk',
-        subject: `📥 Nový záujemca o stiahnutie katalógu - ${name}`,
-        body: `Dobrý deň,\n\nNa stránke American Living pribudol nový dopyt o stiahnutie katalógu:\n\nMeno: ${name}\nE-mail: ${email}\nTelefón: ${phone || 'neuvedené'}\nKatalóg: Prosto House\nDátum: ${new Date().toLocaleString('sk-SK')}\n\nS pozdravom,\nAmerican Living Automation`
+        cc: 'info.americanliving@gmail.com',
+        subject: adminSubject,
+        html: adminHtml
       }).catch(e => console.warn("Admin notification email failed:", e));
 
-      // 2. Send welcoming e-mail to client with direct PDF download link
-      const downloadLink = pdfConfig?.metaPixelId || "https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/KatalogProstoHouse.pdf";
-      await base44.integrations.Core.SendEmail({
-        to: email,
-        subject: `🏡 Váš katalóg drevodomov American Living & Prosto House`,
-        body: `Dobrý deň, pán/pani ${name},\n\nĎakujeme za Váš záujem o naše moderné drevodomy. V prílohe Vám posielame odkaz na stiahnutie kompletného katalógu:\n\n👉 Odkaz na stiahnutie: ${downloadLink}\n\nAk máte akékoľvek doplňujúce otázky ohľadom našej technológie, konfigurátora alebo financovania, neváhajte nás kontaktovať.\n\nS pozdravom,\nTím American Living s.r.o.`
-      }).catch(e => console.warn("Client welcome email failed:", e));
+      // 3. Notify CRM and salespersons / Slack webhook
+      await base44.functions.invoke('notifikujNovyDopyt', {
+        dopyt: {
+          id: novyDopyt.id,
+          klient_meno: name,
+          klient_email: email,
+          klient_telefon: phone || '',
+          klient_adresa: '',
+          typ_dopytu: 'katalog',
+          poznamka: 'Používateľ si stiahol katalóg drevodomov cez pristávaciu stránku.',
+          dom_nazov: 'Katalóg - Prosto House',
+          dom_id: null
+        }
+      }).catch(e => console.warn("CRM notification trigger failed:", e));
 
       // Trigger file download in browser via blob fetch to force direct download
       try {
