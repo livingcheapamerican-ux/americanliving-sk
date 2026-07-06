@@ -68,10 +68,8 @@ function CatalogBackgroundVideo({ customVideoUrl }) {
         playsInline
         preload="auto"
         className="w-full h-full object-cover transition-all duration-1000 ease-in-out"
-        style={{ filter: dark ? 'brightness(0.35) contrast(1.1)' : 'brightness(0.85) contrast(0.95)' }}
+        style={{ filter: dark ? 'brightness(0.45) contrast(1.05)' : 'brightness(1.0) contrast(1.0)' }}
       />
-      {/* Soft overlay gradient for better text readability */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-white/50 to-white/80 dark:from-black/40 dark:via-black/60 dark:to-black/90 pointer-events-none" />
     </div>
   );
 }
@@ -90,6 +88,8 @@ export default function StiahniteSiNasKatalog() {
   // Admin upload/config states
   const [uploadingPdf, setUploadingPdf] = useState(false);
   const [uploadingBgVideo, setUploadingBgVideo] = useState(false);
+  const [justSavedPdf, setJustSavedPdf] = useState(false);
+  const [justSavedVideo, setJustSavedVideo] = useState(false);
 
   // Fetch db configuration and user
   const { data: user } = useQuery({
@@ -147,6 +147,8 @@ export default function StiahniteSiNasKatalog() {
           await base44.entities.AppConfiguration.create({ config_key: 'catalog_pdf_prosto_house', metaPixelId: file_url });
         }
         refetchAppConfigs();
+        setJustSavedPdf(true);
+        setTimeout(() => setJustSavedPdf(false), 5000);
         toast.success("PDF katalóg bol úspešne nahraný!", { id: toastId });
       }
     } catch (err) {
@@ -172,6 +174,8 @@ export default function StiahniteSiNasKatalog() {
           await base44.entities.AppConfiguration.create({ config_key: 'catalog_bg_video', metaPixelId: file_url });
         }
         refetchAppConfigs();
+        setJustSavedVideo(true);
+        setTimeout(() => setJustSavedVideo(false), 5000);
         toast.success("Video pozadia úspešne zmenené!", { id: toastId });
       }
     } catch (err) {
@@ -262,7 +266,14 @@ export default function StiahniteSiNasKatalog() {
   };
 
   return (
-    <div className="min-h-screen -mt-10 sm:-mt-12 md:-mt-14 lg:-mt-16 xl:-mt-20 overflow-x-hidden relative flex flex-col justify-between">
+    <div className="catalog-download-page min-h-screen -mt-10 sm:-mt-12 md:-mt-14 lg:-mt-16 xl:-mt-20 overflow-x-hidden relative flex flex-col justify-between">
+      <style>{`
+        body:has(.catalog-download-page) main,
+        body:has(.catalog-download-page) main > div {
+          background-color: transparent !important;
+        }
+      `}</style>
+      
       {/* Premium Video Background Loop */}
       <CatalogBackgroundVideo customVideoUrl={bgVideoConfig?.metaPixelId} />
 
@@ -270,7 +281,7 @@ export default function StiahniteSiNasKatalog() {
       <div className="relative z-10 w-full max-w-6xl mx-auto px-4 pt-32 pb-20 flex-grow grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
         
         {/* LEFT COLUMN: BRAND DETAILS & PREVIEW PHOTOS */}
-        <div className="lg:col-span-7 text-left space-y-6">
+        <div className="lg:col-span-7 text-left space-y-6 bg-white/70 dark:bg-slate-950/65 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-white/20 dark:border-white/5 shadow-xl">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#C5A880]/15 border border-[#C5A880]/30 backdrop-blur-md">
             <Sparkles className="w-3.5 h-3.5 text-[#C5A880]" />
             <span className="text-[10px] sm:text-xs font-black tracking-widest text-[#C5A880] dark:text-[#E2C799] uppercase">Stiahnutie dokumentov</span>
@@ -328,7 +339,7 @@ export default function StiahniteSiNasKatalog() {
 
         {/* RIGHT COLUMN: DOWNLOAD ZONE & FORM */}
         <div className="lg:col-span-5 w-full">
-          <Card className="border-slate-200/40 dark:border-white/5 bg-white/12 dark:bg-slate-950/12 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden text-slate-800 dark:text-slate-100">
+          <Card className="border-slate-200/40 dark:border-white/5 bg-white/75 dark:bg-slate-950/70 backdrop-blur-md rounded-3xl shadow-2xl overflow-hidden text-slate-800 dark:text-slate-100">
             {/* Header selection tab */}
             <div className="grid grid-cols-2 border-b border-slate-200/45 dark:border-white/5">
               <button
@@ -535,7 +546,7 @@ export default function StiahniteSiNasKatalog() {
       {isAdmin && (
         <div className="relative z-20 w-full bg-slate-100/90 dark:bg-slate-950/90 border-t border-slate-200 dark:border-white/5 py-8 backdrop-blur-lg">
           <div className="container mx-auto px-4 max-w-4xl">
-            <div className="flex items-center gap-2.5 mb-6">
+            <div className="flex items-center gap-2.5 mb-4">
               <div className="p-2 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
                 <Layers className="w-5 h-5 text-yellow-500" />
               </div>
@@ -543,6 +554,14 @@ export default function StiahniteSiNasKatalog() {
                 <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">Super-Admin Administrácia katalógov</h3>
                 <p className="text-[10px] text-slate-500 dark:text-slate-400">Správa PDF súborov a video slučky v pozadí pre túto Landing Page</p>
               </div>
+            </div>
+
+            {/* Informational Box explaining autosaving */}
+            <div className="bg-green-500/10 border border-green-500/20 rounded-2xl p-4 mb-6 text-xs text-green-700 dark:text-green-400 font-medium text-left flex items-start gap-2.5">
+              <span className="text-lg">💡</span>
+              <p className="leading-relaxed">
+                <strong>Zmeny sa ukladajú automaticky:</strong> Všetky súbory (PDF katalóg aj video) nahrané cez toto administračné rozhranie sa ukladajú priamo do databázy a sú okamžite aktívne. Nie je potrebné stláčať žiadne dodatočné tlačidlo na uloženie zmien.
+              </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -572,6 +591,12 @@ export default function StiahniteSiNasKatalog() {
                     <span>Používa sa prednastavený systémový súbor Prosto House.</span>
                   )}
                 </div>
+
+                {justSavedPdf && (
+                  <div className="text-[10px] font-black text-green-700 dark:text-green-400 bg-green-500/10 border border-green-500/20 px-3 py-1.5 rounded-xl text-center animate-pulse">
+                    ✅ Úspešne uložené v databáze!
+                  </div>
+                )}
 
                 <label className="flex items-center justify-center gap-2 border border-dashed border-slate-350 dark:border-white/10 rounded-xl p-3 bg-white/40 dark:bg-white/5 font-bold text-xs cursor-pointer hover:border-[#C5A880] transition-colors text-slate-700 dark:text-slate-300">
                   {uploadingPdf ? (
@@ -616,6 +641,12 @@ export default function StiahniteSiNasKatalog() {
                     <span>Používa sa predvolené video (slnečný drevodom v prírode).</span>
                   )}
                 </div>
+
+                {justSavedVideo && (
+                  <div className="text-[10px] font-black text-green-700 dark:text-green-400 bg-green-500/10 border border-green-500/20 px-3 py-1.5 rounded-xl text-center animate-pulse">
+                    ✅ Úspešne uložené v databáze!
+                  </div>
+                )}
 
                 <label className="flex items-center justify-center gap-2 border border-dashed border-slate-350 dark:border-white/10 rounded-xl p-3 bg-white/40 dark:bg-white/5 font-bold text-xs cursor-pointer hover:border-[#C5A880] transition-colors text-slate-700 dark:text-slate-300">
                   {uploadingBgVideo ? (
