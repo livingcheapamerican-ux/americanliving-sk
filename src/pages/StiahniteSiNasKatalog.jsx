@@ -239,14 +239,30 @@ export default function StiahniteSiNasKatalog() {
         body: `Dobrý deň, pán/pani ${name},\n\nĎakujeme za Váš záujem o naše moderné drevodomy. V prílohe Vám posielame odkaz na stiahnutie kompletného katalógu:\n\n👉 Odkaz na stiahnutie: ${downloadLink}\n\nAk máte akékoľvek doplňujúce otázky ohľadom našej technológie, konfigurátora alebo financovania, neváhajte nás kontaktovať.\n\nS pozdravom,\nTím American Living s.r.o.`
       }).catch(e => console.warn("Client welcome email failed:", e));
 
-      // Trigger file download in browser
-      const link = document.createElement('a');
-      link.href = downloadLink;
-      link.target = '_blank';
-      link.download = 'Katalog_ProstoHouse.pdf';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      // Trigger file download in browser via blob fetch to force direct download
+      try {
+        const response = await fetch(downloadLink);
+        if (!response.ok) throw new Error("Fetch failed");
+        const blob = await response.blob();
+        const blobUrl = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = 'Katalog_ProstoHouse.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(blobUrl);
+      } catch (fetchErr) {
+        console.warn("Direct blob download failed, falling back to window location:", fetchErr);
+        // Fallback: trigger download in new window/tab if fetch fails (e.g. CORS)
+        const link = document.createElement('a');
+        link.href = downloadLink;
+        link.target = '_blank';
+        link.download = 'Katalog_ProstoHouse.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
 
       // Trigger confetti and success state
       confetti({
