@@ -138,6 +138,7 @@ import TestAnalyzaKonfiguratora from './pages/TestAnalyzaKonfiguratora';
 import ZasadyOchranyOsobnychUdajov from './pages/ZasadyOchranyOsobnychUdajov';
 import ZasadyPouzivaniaCookies from './pages/ZasadyPouzivaniaCookies';
 import Showroom from './pages/Showroom';
+import StiahniteSiNasKatalog from './pages/StiahniteSiNasKatalog';
 import __Layout from './Layout.jsx';
 
 
@@ -233,6 +234,7 @@ export const PAGES = {
     "ZasadyOchranyOsobnychUdajov": ZasadyOchranyOsobnychUdajov,
     "ZasadyPouzivaniaCookies": ZasadyPouzivaniaCookies,
     "Showroom": Showroom,
+    "StiahniteSiNasKatalog": StiahniteSiNasKatalog,
 }
 
 export const pagesConfig = {
