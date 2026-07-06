@@ -226,6 +226,16 @@ export default function StiahniteSiNasKatalog() {
     }
     setSubmitting(true);
     try {
+      // 0. Save lead to database table "Dopyt"
+      await base44.entities.Dopyt.create({
+        meno: name,
+        email: email,
+        telefon: phone || '',
+        typ_dopytu: 'katalog',
+        poznamka: 'Stiahnutie katalógu (Landing Page)',
+        konfiguracny_kod: 'Prosto House Katalóg'
+      }).catch(e => console.warn("Saving lead to database failed:", e));
+
       // 1. Send e-mail to super admin or default inbox
       await base44.integrations.Core.SendEmail({
         to: 'info@americanliving.sk',
@@ -284,7 +294,7 @@ export default function StiahniteSiNasKatalog() {
   };
 
   return (
-    <div className="catalog-download-page min-h-screen -mt-10 sm:-mt-12 md:-mt-14 lg:-mt-16 xl:-mt-20 overflow-x-hidden relative flex flex-col justify-between">
+    <div id="catalog-download-page" className="catalog-download-page min-h-screen -mt-10 sm:-mt-12 md:-mt-14 lg:-mt-16 xl:-mt-20 overflow-x-hidden relative flex flex-col justify-between">
       <style>{`
         body:has(.catalog-download-page) main,
         body:has(.catalog-download-page) main > div {
@@ -436,7 +446,7 @@ export default function StiahniteSiNasKatalog() {
                   </p>
                 </div>
 
-                <form onSubmit={handleLeadSubmit} className="space-y-4 text-left">
+                <form id="catalog-download-form" onSubmit={handleLeadSubmit} className="space-y-4 text-left">
                   <div>
                     <label className="block text-[10px] font-black uppercase tracking-widest text-[#C5A880] mb-1.5">{t('fieldName')} *</label>
                     <div className="relative">

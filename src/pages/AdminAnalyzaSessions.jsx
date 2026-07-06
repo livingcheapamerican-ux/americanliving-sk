@@ -114,8 +114,45 @@ function ClickMapModal({ session, onClose }) {
 
   // Pre vizualizáciu wireframu určíme sekcie podľa page_url
   const renderWireframeSections = () => {
+    const isDownloadCatalog = clickMapPage.toLowerCase().includes("stiahnite-si-nas-katalog") || clickMapPage.toLowerCase().includes("stiahnutie");
     const isConfigurator = clickMapPage.toLowerCase().includes("konfigurator");
-    const isCatalog = clickMapPage.toLowerCase().includes("katalog");
+    const isCatalog = !isDownloadCatalog && clickMapPage.toLowerCase().includes("katalog");
+
+    if (isDownloadCatalog) {
+      return (
+        <div className="w-full min-h-[600px] flex flex-col gap-4 p-4 text-white">
+          <div className="border border-white/10 rounded-lg p-3 bg-slate-900/50 flex items-center justify-between">
+            <div className="font-bold text-sm">📥 Stiahnutie katalógu (Landing Page)</div>
+            <div className="text-xs bg-red-500/20 text-red-400 px-2 py-0.5 rounded border border-red-500/30">Aktívny na stiahnutie</div>
+          </div>
+          <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4">
+            <div className="lg:col-span-7 border border-white/10 rounded-lg bg-slate-900/40 p-4 flex flex-col gap-4 min-h-[300px]">
+              <div className="text-slate-500 text-[10px] font-bold">ĽAVÝ PANEL (TEXTY & PREVIEW)</div>
+              <h2 className="text-sm font-black text-slate-200">Stiahnite si náš katalóg drevodomov</h2>
+              <p className="text-[10px] text-slate-400">Spoznajte unikátnu technológiu prefabrikovaných a modulárnych drevostavieb...</p>
+              <div className="grid grid-cols-3 gap-2 mt-2">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="aspect-[4/3] bg-slate-950/60 rounded border border-white/5 flex items-center justify-center text-[8px] text-slate-500 font-bold">Barn House {i}</div>
+                ))}
+              </div>
+            </div>
+            <div className="lg:col-span-5 border border-white/10 rounded-lg bg-slate-900/50 p-4 flex flex-col gap-3">
+              <div className="text-slate-400 text-[10px] font-bold border-b border-white/10 pb-1">STIAHNUTIE PROSTO HOUSE KATALÓGU</div>
+              <div className="space-y-2 text-[10px]">
+                <div className="p-2 bg-white/5 rounded border border-white/5 text-slate-450">Meno a priezvisko *</div>
+                <div className="p-2 bg-white/5 rounded border border-white/5 text-slate-455">E-mailová adresa *</div>
+                <div className="p-2 bg-white/5 rounded border border-white/5 text-slate-455">Telefónne číslo (nepovinné)</div>
+                <div className="flex items-center gap-1.5 text-[8px] text-slate-500 mt-1">
+                  <div className="w-2.5 h-2.5 bg-white/10 border border-white/20 rounded" />
+                  <span>Súhlasím so spracovaním...</span>
+                </div>
+                <div className="w-full py-2 bg-red-650 rounded text-center text-white font-bold mt-3 text-[10px]">Odoslať a stiahnuť katalóg</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
 
     if (isConfigurator) {
       return (
@@ -643,7 +680,8 @@ export default function AdminAnalyzaSessions() {
       'konvertoval': 'bg-yellow-100 text-yellow-800',
       'configurator_user': 'bg-indigo-100 text-indigo-800',
       'pouzivatel_konfiguratora': 'bg-indigo-100 text-indigo-800',
-      'vracajuci_sa': 'bg-teal-100 text-teal-800'
+      'vracajuci_sa': 'bg-teal-100 text-teal-800',
+      'stiahol_katalog': 'bg-pink-100 text-pink-800 border border-pink-200'
     };
     return colors[tag] || 'bg-gray-100 text-gray-800';
   };
@@ -1333,6 +1371,7 @@ export default function AdminAnalyzaSessions() {
                 <option value="velmi_zaujaty">🔥 Veľmi zaujatý</option>
                 <option value="vracajuci_sa">🔄 Vracajúci sa</option>
                 <option value="konvertoval">⭐ Konvertoval</option>
+                <option value="stiahol_katalog">📥 Stiahnutie katalógu</option>
                 <option value="pouzivatel_konfiguratora">🏠 Konfigurátor</option>
               </select>
             </div>

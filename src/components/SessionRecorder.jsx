@@ -35,7 +35,8 @@ const PAGE_NAMES_MAP = {
   '/Kontakt': 'Kontakt', '/ONas': 'O nás', '/Blog': 'Blog', '/BlogDetail': 'Blog – článok',
   '/FAQ': 'Často kladené otázky', '/OdporucanieDomov': 'AI Odporúčania domov',
   '/DotaciaAmericana': 'Dotácia Americana', '/GaleriaRealizacii': 'Galéria realizácií',
-  '/MojeKonto': 'Moje konto', '/MojaPonuka': 'Moja ponuka'
+  '/MojeKonto': 'Moje konto', '/MojaPonuka': 'Moja ponuka',
+  '/stiahnite-si-nas-katalog': 'Stiahnutie katalógu'
 };
 
 const getDeviceInfo = () => {
@@ -182,6 +183,7 @@ export default function SessionRecorder() {
       if (!tags.includes('vracajuci_sa')) tags.push('vracajuci_sa');
     }
     if (formInteractionsRef.current.some(f => f.completed)) tags.push('konvertoval');
+    if (formInteractionsRef.current.some(f => f.form_id === 'catalog-download-form' && f.completed)) tags.push('stiahol_katalog');
     if (configuratorInteractionsRef.current.length > 5) tags.push('pouzivatel_konfiguratora');
     if (rageClicksRef.current.length > 0) tags.push('frustrovany_rage_clicks');
 
