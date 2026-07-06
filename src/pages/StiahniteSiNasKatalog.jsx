@@ -25,6 +25,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { toast } from 'sonner';
 import confetti from 'canvas-confetti';
+import { useLanguage } from '../components/LanguageContext';
 
 // Default photos array fallback for Prosto House
 const DEFAULT_PROSTO_HOUSE_PHOTOS = [
@@ -75,6 +76,7 @@ function CatalogBackgroundVideo({ customVideoUrl }) {
 }
 
 export default function StiahniteSiNasKatalog() {
+  const { t } = useLanguage();
   const [activeCatalog, setActiveCatalog] = useState('prosto-house');
   
   // Lead form inputs
@@ -300,22 +302,22 @@ export default function StiahniteSiNasKatalog() {
         <div className="lg:col-span-7 text-left space-y-6 bg-white/70 dark:bg-slate-950/65 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-white/20 dark:border-white/5 shadow-xl">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#C5A880]/15 border border-[#C5A880]/30 backdrop-blur-md">
             <Sparkles className="w-3.5 h-3.5 text-[#C5A880]" />
-            <span className="text-[10px] sm:text-xs font-black tracking-widest text-[#C5A880] dark:text-[#E2C799] uppercase">Stiahnutie dokumentov</span>
+            <span className="text-[10px] sm:text-xs font-black tracking-widest text-[#C5A880] dark:text-[#E2C799] uppercase">{t('downloadProstoHouseTitle')}</span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight text-slate-900 dark:text-white">
-            Stiahnite si náš <span className="bg-gradient-to-r from-[#C5A880] via-[#E2C799] to-[#C5A880] bg-clip-text text-transparent">katalóg</span> drevodomov
+            {t('downloadCatalogTitle')}
           </h1>
 
           <p className="text-sm sm:text-base text-slate-700 dark:text-slate-200 font-light leading-relaxed max-w-xl">
-            Spoznajte unikátnu technológiu prefabrikovaných a modulárnych drevostavieb, kompletné cenníky a technické detaily, ktoré Vám pomôžu pri rozhodovaní o novom bývaní.
+            {t('downloadCatalogSubtitle')}
           </p>
 
           {/* Dynamic Grid Teaser - showcases Prosto House models from database */}
           <div className="space-y-4 pt-4">
             <h4 className="text-xs font-black uppercase tracking-widest text-[#C5A880] flex items-center gap-2">
               <ImageIcon className="w-4 h-4" />
-              Ochutnávka z katalógu Prosto House
+              {t('catalogTeaserTitle')}
             </h4>
             
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -384,7 +386,7 @@ export default function StiahniteSiNasKatalog() {
               >
                 Tiny House
                 <span className="absolute top-1.5 right-1.5 bg-[#C5A880]/15 text-[#E2C799] border border-[#C5A880]/30 px-1.5 py-0.5 rounded-full text-[7px] font-black tracking-widest uppercase">
-                  Už čoskoro
+                  {t('soonSoon')}
                 </span>
               </button>
             </div>
@@ -397,20 +399,20 @@ export default function StiahniteSiNasKatalog() {
                 </div>
                 
                 <div className="space-y-2">
-                  <h3 className="text-xl font-black uppercase tracking-wider text-slate-900 dark:text-white">Katalóg stiahnutý!</h3>
+                  <h3 className="text-xl font-black uppercase tracking-wider text-slate-900 dark:text-white">{t('thanksTitle')}</h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400 font-light leading-relaxed">
-                    Sťahovanie PDF katalógu sa spustilo automaticky vo vašom prehliadači. Kompletný odkaz a ďalšie podrobnosti sme Vám odoslali aj na zadaný e-mail.
+                    {t('thanksDescription')}
                   </p>
                 </div>
 
                 <div className="bg-slate-50/55 dark:bg-slate-950/30 border border-slate-200 dark:border-white/5 rounded-2xl p-4 text-xs font-light text-left space-y-2.5">
                   <div className="flex gap-2 items-center">
                     <div className="w-2 h-2 rounded-full bg-green-500" />
-                    <span>Email odoslaný na: <span className="font-bold">{email}</span></span>
+                    <span>Email: <span className="font-bold">{email}</span></span>
                   </div>
                   <div className="flex gap-2 items-center">
                     <div className="w-2 h-2 rounded-full bg-green-500" />
-                    <span>Názov súboru: <span className="font-bold">Katalog_ProstoHouse.pdf</span></span>
+                    <span>Katalóg: <span className="font-bold">Prosto House PDF</span></span>
                   </div>
                 </div>
 
@@ -418,7 +420,7 @@ export default function StiahniteSiNasKatalog() {
                   onClick={() => setSuccess(false)}
                   className="w-full bg-gradient-to-r from-[#C5A880] to-[#E2C799] hover:from-[#C5A880]/90 hover:to-[#E2C799]/90 text-slate-950 font-black text-xs uppercase tracking-wider py-4 rounded-xl shadow-md border-none transition-all"
                 >
-                  Stiahnuť znova
+                  {t('downloadAgain')}
                 </Button>
               </div>
             ) : activeCatalog === 'prosto-house' ? (
@@ -427,16 +429,16 @@ export default function StiahniteSiNasKatalog() {
                 <div className="text-left space-y-2">
                   <h3 className="text-lg font-black uppercase tracking-wider text-slate-950 dark:text-white flex items-center gap-2">
                     <FileText className="w-5 h-5 text-[#C5A880]" />
-                    Stiahnutie Prosto House Katalógu
+                    {t('downloadProstoHouseTitle')}
                   </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400 font-light leading-relaxed">
-                    Ak chcete získať okamžitý odkaz a začať sťahovať PDF dokument, vyplňte prosím nasledujúce informácie.
+                    {t('downloadInstructions')}
                   </p>
                 </div>
 
                 <form onSubmit={handleLeadSubmit} className="space-y-4 text-left">
                   <div>
-                    <label className="block text-[10px] font-black uppercase tracking-widest text-[#C5A880] mb-1.5">Meno a priezvisko *</label>
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-[#C5A880] mb-1.5">{t('fieldName')} *</label>
                     <div className="relative">
                       <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
                         <User className="w-4 h-4" />
@@ -446,14 +448,14 @@ export default function StiahniteSiNasKatalog() {
                         required
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        placeholder="napr. Ján Kováč"
+                        placeholder="Name"
                         className="w-full bg-white/10 dark:bg-slate-950/20 border border-slate-350/40 dark:border-white/10 rounded-xl pl-9 pr-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880] transition-colors backdrop-blur-md"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-black uppercase tracking-widest text-[#C5A880] mb-1.5">E-mailová adresa *</label>
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-[#C5A880] mb-1.5">{t('fieldEmail')} *</label>
                     <div className="relative">
                       <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
                         <Mail className="w-4 h-4" />
@@ -463,14 +465,14 @@ export default function StiahniteSiNasKatalog() {
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder="jan.kovac@example.com"
+                        placeholder="Email"
                         className="w-full bg-white/10 dark:bg-slate-950/20 border border-slate-350/40 dark:border-white/10 rounded-xl pl-9 pr-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880] transition-colors backdrop-blur-md"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-black uppercase tracking-widest text-[#C5A880] mb-1.5">Telefónne číslo (nepovinné)</label>
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-[#C5A880] mb-1.5">{t('fieldPhone')}</label>
                     <div className="relative">
                       <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
                         <Smartphone className="w-4 h-4" />
@@ -479,7 +481,7 @@ export default function StiahniteSiNasKatalog() {
                         type="tel" 
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        placeholder="+421 900 000 000"
+                        placeholder="+421..."
                         className="w-full bg-white/10 dark:bg-slate-950/20 border border-slate-350/40 dark:border-white/10 rounded-xl pl-9 pr-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880] transition-colors backdrop-blur-md"
                       />
                     </div>
@@ -495,7 +497,7 @@ export default function StiahniteSiNasKatalog() {
                       className="mt-1 accent-[#C5A880] rounded cursor-pointer"
                     />
                     <label htmlFor="gdpr" className="text-[10px] text-slate-500 dark:text-slate-400 font-light leading-relaxed cursor-pointer select-none">
-                      Súhlasím so spracovaním osobných údajov za účelom odoslania katalógu a súvisiacich informácií o drevodomoch. *
+                      {t('gdprConsent')} *
                     </label>
                   </div>
 
@@ -507,12 +509,12 @@ export default function StiahniteSiNasKatalog() {
                     {submitting ? (
                       <>
                         <Loader2 className="w-4 h-4 animate-spin" />
-                        <span>Generujem odkaz...</span>
+                        <span>Generujem...</span>
                       </>
                     ) : (
                       <>
                         <Download className="w-4 h-4" />
-                        <span>Odoslať a stiahnuť katalóg</span>
+                        <span>{t('submitButton')}</span>
                       </>
                     )}
                   </Button>
@@ -526,29 +528,29 @@ export default function StiahniteSiNasKatalog() {
                 </div>
                 
                 <div className="space-y-2 max-w-sm">
-                  <h3 className="text-lg font-black uppercase tracking-wider text-slate-950 dark:text-white">Tiny House Katalóg</h3>
+                  <h3 className="text-lg font-black uppercase tracking-wider text-slate-950 dark:text-white">{t('tinyHouseTitle')}</h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400 font-light leading-relaxed">
-                    Momentálne pripravujeme kompletnú novú ponuku minimalistických celoročných mobilných Tiny House domov. 
+                    {t('tinyHouseDescription')}
                   </p>
                 </div>
 
                 <div className="bg-white/5 border border-slate-200/30 dark:border-white/5 rounded-2xl p-4 text-[11px] font-medium text-slate-500 dark:text-slate-400 max-w-sm leading-relaxed">
-                  Zanechajte nám svoj e-mail a my Vám pošleme katalóg ako prvým hneď, ako ho naši dizajnéri dokončia.
+                  {t('tinyHouseFormInstructions')}
                 </div>
 
                 <div className="w-full max-w-sm flex gap-2">
                   <input 
                     type="email" 
-                    placeholder="Váš e-mail" 
+                    placeholder="Email" 
                     className="flex-grow bg-white/10 dark:bg-slate-950/20 border border-slate-350/40 dark:border-white/10 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-[#C5A880] transition-colors"
                   />
                   <Button 
                     onClick={() => {
-                      toast.success("Ďakujeme! Váš e-mail bol uložený do zoznamu čakateľov.");
+                      toast.success(t('waitingListSuccess'));
                     }}
                     className="bg-[#C5A880] hover:bg-[#C5A880]/90 text-slate-950 font-bold text-xs uppercase px-4 rounded-xl"
                   >
-                    Upozorniť ma
+                    {t('notifyMe')}
                   </Button>
                 </div>
               </div>
