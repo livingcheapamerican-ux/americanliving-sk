@@ -2,6 +2,7 @@ export default {
   "home": "Home",
   "dotacia": "GRANT",
   "catalog": "House Catalog",
+  "downloadCatalog": "Download our catalog",
   "gallery": "Realization Gallery",
   "configurator": "Configurator",
   "aiRecommendations": "AI Recommendations",

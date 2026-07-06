@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Home, Grid3x3, Phone, Info, Menu, X, Mail, Settings, FileText, Image, Brain, Upload, ChevronDown, Sparkles, Languages, FileText as BlogIcon, Activity, Zap, Users, Gift, MapPinned, MessageCircle, Sun, Moon, Calendar } from "lucide-react";
+import { Home, Grid3x3, Phone, Info, Menu, X, Mail, Settings, FileText, Image, Brain, Upload, ChevronDown, Sparkles, Languages, FileText as BlogIcon, Activity, Zap, Users, Gift, MapPinned, MessageCircle, Sun, Moon, Calendar, Download } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { AVAILABLE_LANGUAGES } from "./components/LanguageContext";
 import { Button } from "@/components/ui/button";
@@ -185,6 +185,7 @@ function LayoutContent({ children }) {
     ...(isAdmin ? [{ name: '💰 ' + t('adminPriceList'), path: createPageUrl("AdminCennik"), icon: Grid3x3 }] : []),
     ...(isAdmin ? [{ name: '🗺️ ' + t('grantCampaign'), path: createPageUrl("GrantovaKampan"), icon: MapPinned }] : []),
     { name: t('catalog'), path: createPageUrl("Katalog"), icon: Grid3x3 },
+    { name: t('downloadCatalog'), path: createPageUrl("StiahniteSiNasKatalog"), icon: Download },
     { name: t('aiRecommendations'), path: createPageUrl("OdporucanieDomov"), icon: Sparkles },
     { name: t('about'), path: createPageUrl("ONas"), icon: Info },
     { name: t('blog'), path: createPageUrl("Blog"), icon: BlogIcon },

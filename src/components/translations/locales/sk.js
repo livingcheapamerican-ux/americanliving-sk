@@ -4,6 +4,7 @@ export default {
   "showroom": "Showroom",
   "showroomCTA": "Vyskúšať pred kúpou",
   "catalog": "Katalóg domov",
+  "downloadCatalog": "Stiahnite si náš katalóg",
   "gallery": "Galéria realizácií",
   "configurator": "Konfigurátor",
   "aiRecommendations": "AI Odporúčania",
