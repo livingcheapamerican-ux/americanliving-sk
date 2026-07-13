@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { TrendingUp, TrendingDown, FileText, CheckCircle, XCircle, Clock, Mail, DollarSign, Home, Calendar } from "lucide-react";
+import DopytyPodlaTypuDomu from "@/components/admin/DopytyPodlaTypuDomu";
 
 export default function AdminAnalytikaCenovychPonuk() {
   const [obdobie, setObdobie] = useState("30"); // dní
@@ -217,6 +218,9 @@ export default function AdminAnalytikaCenovychPonuk() {
             </div>
           </Card>
         </div>
+
+        {/* Dopyty podľa typu domu */}
+        <DopytyPodlaTypuDomu />
 
         {/* Charts Row */}
         <div className="grid md:grid-cols-2 gap-6 mb-8">
