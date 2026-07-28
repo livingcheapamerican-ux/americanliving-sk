@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { Building2, Loader2, SearchX, Plus, KeyRound, Tag } from "lucide-react";
+import { Building2, Loader2, SearchX, Plus, KeyRound, Tag, Calculator } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import AISearchBar from "@/components/realestate/AISearchBar";
@@ -224,11 +224,18 @@ Ak nič nevyhovuje presne, vyber 2-3 najbližšie alternatívy a v zhrnutí vysv
             aiSummary={aiResult?.summary}
           />
 
-          <Link to="/pridat-inzerat" className="inline-block">
-            <Button variant="outline" className="border-purple-500/40 bg-purple-500/10 text-purple-200 hover:bg-purple-500/20 hover:text-white text-xs rounded-xl">
-              <Plus className="w-3.5 h-3.5 mr-1" /> Predávate alebo prenajímate? Pridajte inzerát zadarmo
-            </Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-2 justify-center items-center">
+            <Link to="/odhad-ceny">
+              <Button variant="outline" className="w-full border-emerald-500/40 bg-emerald-500/10 text-emerald-200 hover:bg-emerald-500/20 hover:text-white text-xs rounded-xl">
+                <Calculator className="w-3.5 h-3.5 mr-1" /> Zistite hodnotu svojej nehnuteľnosti zadarmo
+              </Button>
+            </Link>
+            <Link to="/pridat-inzerat">
+              <Button variant="outline" className="w-full border-purple-500/40 bg-purple-500/10 text-purple-200 hover:bg-purple-500/20 hover:text-white text-xs rounded-xl">
+                <Plus className="w-3.5 h-3.5 mr-1" /> Predávate alebo prenajímate? Pridajte inzerát zadarmo
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 

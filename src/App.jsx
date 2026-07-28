@@ -58,6 +58,11 @@ const AdminInzeratyPage = () => {
   return <LazyComp />;
 };
 
+const OdhadCenyPage = () => {
+  const LazyComp = getLazyPage('OdhadCeny');
+  return <LazyComp />;
+};
+
 const LayoutRoute = () => Layout ?
   <Layout><Outlet /></Layout>
   : <Outlet />;
@@ -110,6 +115,7 @@ const AuthenticatedApp = () => {
             </React.Fragment>
           );
         })}
+        <Route path="/odhad-ceny" element={<OdhadCenyPage />} />
         <Route path="/pridat-inzerat" element={<PridatInzeratPage />} />
         <Route path="/admin-inzeraty" element={<AdminInzeratyPage />} />
         <Route path="/lokalita/:slug" element={<LokaciaDetail />} />
