@@ -187,6 +187,7 @@ function LayoutContent({ children }) {
     { name: t('catalog'), path: createPageUrl("Katalog"), icon: Grid3x3 },
     { name: t('downloadCatalog'), path: createPageUrl("StiahniteSiNasKatalog"), icon: Download },
     { name: t('aiRecommendations'), path: createPageUrl("OdporucanieDomov"), icon: Sparkles },
+    { name: '✨ Realitný Portál AI', path: createPageUrl("RealEstatePortal"), icon: Sparkles },
     { name: t('about'), path: createPageUrl("ONas"), icon: Info },
     { name: t('blog'), path: createPageUrl("Blog"), icon: BlogIcon },
     { name: t('contact'), path: createPageUrl("Kontakt"), icon: Phone },
