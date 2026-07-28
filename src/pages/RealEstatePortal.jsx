@@ -5,6 +5,8 @@ import { Building2, Loader2, SearchX } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import AISearchBar from "@/components/realestate/AISearchBar";
+import FilterBar from "@/components/realestate/FilterBar";
+import CoverageMap from "@/components/realestate/CoverageMap";
 import PropertyCard from "@/components/realestate/PropertyCard";
 import LeadModal from "@/components/realestate/LeadModal";
 import MortgageCalculator from "@/components/realestate/MortgageCalculator";
@@ -14,6 +16,7 @@ export default function RealEstatePortal() {
   const [searching, setSearching] = useState(false);
   const [aiResult, setAiResult] = useState(null); // { ids, reasons: {id: reason}, summary }
   const [leadDom, setLeadDom] = useState(null);
+  const [filters, setFilters] = useState({ typ: "all", maxCena: "all", minIzby: "all" });
   const [calcPrice, setCalcPrice] = useState(89000);
 
   const { data: domy = [], isLoading } = useQuery({
@@ -110,12 +113,18 @@ Ak žiadny dom nevyhovuje presne, vyber 2-3 najbližšie alternatívy a v zhrnut
   };
 
   const displayedDomy = useMemo(() => {
-    if (!aiResult) return domy;
-    const order = new Map(aiResult.ids.map((id, i) => [id, i]));
-    return domy
-      .filter(d => order.has(d.id))
-      .sort((a, b) => order.get(a.id) - order.get(b.id));
-  }, [domy, aiResult]);
+    let list = domy;
+    if (aiResult) {
+      const order = new Map(aiResult.ids.map((id, i) => [id, i]));
+      list = domy
+        .filter(d => order.has(d.id))
+        .sort((a, b) => order.get(a.id) - order.get(b.id));
+    }
+    if (filters.typ !== "all") list = list.filter(d => d.typ_domu === filters.typ);
+    if (filters.maxCena !== "all") list = list.filter(d => d.zakladna_cena <= Number(filters.maxCena));
+    if (filters.minIzby !== "all") list = list.filter(d => (d.pocet_izieb || 0) >= Number(filters.minIzby));
+    return list;
+  }, [domy, aiResult, filters]);
 
   const handleInterest = (dom) => {
     setLeadDom(dom);
@@ -154,6 +163,7 @@ Ak žiadny dom nevyhovuje presne, vyber 2-3 najbližšie alternatívy a v zhrnut
       {/* ZOZNAM NEHNUTEĽNOSTÍ */}
       <main className="max-w-7xl mx-auto px-4 py-10 space-y-12">
         <div className="space-y-6">
+          <FilterBar filters={filters} onChange={setFilters} />
           <div className="flex items-center justify-between flex-wrap gap-2">
             <div>
               <h2 className="text-xl font-bold text-white flex items-center gap-2">
@@ -203,6 +213,9 @@ Ak žiadny dom nevyhovuje presne, vyber 2-3 najbližšie alternatívy a v zhrnut
             </div>
           )}
         </div>
+
+        {/* MAPA POKRYTIA */}
+        <CoverageMap />
 
         {/* HYPOTEKÁRNA KALKULAČKA */}
         <MortgageCalculator price={calcPrice} onPriceChange={setCalcPrice} />
