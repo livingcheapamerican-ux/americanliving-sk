@@ -106,8 +106,8 @@ Deno.serve(async (req) => {
 
     // ── Product Schema JSON-LD (rozšírená verzia) ──────────────────────────
     const canonicalUrl = dom.slug
-      ? `https://www.americanliving.sk/DetailDomu?slug=${dom.slug}`
-      : `https://www.americanliving.sk/DetailDomu?id=${domId}`;
+      ? `https://americanliving.sk/detail-domu?slug=${dom.slug}`
+      : `https://americanliving.sk/detail-domu?id=${domId}`;
 
     const additionalProps = [
       dom.zastavana_plocha && { "@type": "PropertyValue", name: "Zastavaná plocha", value: `${dom.zastavana_plocha} m²`, unitText: "m²" },
@@ -129,7 +129,7 @@ Deno.serve(async (req) => {
       brand: { "@type": "Brand", name: dom.vyrobca },
       manufacturer: {
         "@type": "Organization",
-        "@id": "https://www.americanliving.sk/#organization",
+        "@id": "https://americanliving.sk/#organization",
         name: "American Living"
       },
       offers: {
@@ -142,7 +142,7 @@ Deno.serve(async (req) => {
         itemCondition: "https://schema.org/NewCondition",
         seller: {
           "@type": "Organization",
-          "@id": "https://www.americanliving.sk/#organization",
+          "@id": "https://americanliving.sk/#organization",
           name: "American Living"
         },
         shippingDetails: {
@@ -154,7 +154,18 @@ Deno.serve(async (req) => {
           },
           deliveryTime: {
             "@type": "ShippingDeliveryTime",
-            handlingTime: { "@type": "QuantitativeValue", minValue: 60, maxValue: 120, unitCode: "DAY" }
+            handlingTime: {
+              "@type": "QuantitativeValue",
+              minValue: 1,
+              maxValue: 3,
+              unitCode: "DAY"
+            },
+            transitTime: {
+              "@type": "QuantitativeValue",
+              minValue: 5,
+              maxValue: 14,
+              unitCode: "DAY"
+            }
           }
         }
       },

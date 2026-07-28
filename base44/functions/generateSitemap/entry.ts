@@ -104,17 +104,13 @@ Deno.serve(async (req) => {
       });
     }
     
-    // Statické stránky
+    // Statické stránky (iba kanonické a 200 OK)
     const staticPages = [
       { url: '/', priority: '1.0', changefreq: 'daily' },
       { url: '/katalog', priority: '1.0', changefreq: 'daily' },
-      { url: '/katalog-ticab-house', priority: '0.95', changefreq: 'daily' },
-      { url: '/katalog-prosto-house', priority: '0.95', changefreq: 'daily' },
-      { url: '/katalog-domki-z-gor', priority: '0.95', changefreq: 'daily' },
       { url: '/katalog-modularne-domy', priority: '0.95', changefreq: 'daily' },
       { url: '/katalog-montovane-domy', priority: '0.95', changefreq: 'daily' },
       { url: '/katalog-mobilne-domy', priority: '0.95', changefreq: 'daily' },
-      { url: '/katalog-rodinne-domy', priority: '0.95', changefreq: 'daily' },
       { url: '/o-nas', priority: '0.8', changefreq: 'monthly' },
       { url: '/kontakt', priority: '0.8', changefreq: 'monthly' },
       { url: '/ako-to-funguje', priority: '0.7', changefreq: 'monthly' },
@@ -123,15 +119,21 @@ Deno.serve(async (req) => {
       { url: '/odporucanie-domov', priority: '0.8', changefreq: 'weekly' }
     ];
     
-    // Noindex prefixes to exclude
-    const noindexPrefixes = ['/AIMarketingInsights', '/AdminCennik', '/AutoSEOTrigger', '/AdminAnalyzaSessions', '/Admin', '/Test', '/Auto', '/Regeneruj', '/Marketing', '/SEODashboard', '/SEOEditor', '/SocialMediaDashboard', '/SrovnaniDomu', '/GrantovaKampan'];
+    // Noindex prefixes to exclude (zarovnané s klientskym layoutom)
+    const noindexPrefixes = [
+      '/AIMarketingInsights', '/AdminCennik', '/AutoSEOTrigger', 
+      '/AdminAnalyzaSessions', '/Admin', '/Test', '/Auto', 
+      '/Regeneruj', '/Marketing', '/SEODashboard', '/SEOEditor', 
+      '/SocialMediaDashboard', '/SrovnaniDomu', '/GrantovaKampan',
+      '/MojeKonto', '/MojaPonuka', '/AdminMojeKonto'
+    ];
 
     let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
     xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n';
     
     // Statické stránky (s filtrom noindex)
     for (const page of staticPages) {
-      const isNoindex = noindexPrefixes.some(prefix => page.url.startsWith(prefix));
+      const isNoindex = noindexPrefixes.some(prefix => page.url.toLowerCase().startsWith(prefix.toLowerCase()));
       if (isNoindex) continue;
       xml += `  <url>\n`;
       xml += `    <loc>${baseUrl}${page.url}</loc>\n`;
@@ -141,11 +143,11 @@ Deno.serve(async (req) => {
       xml += `  </url>\n`;
     }
     
-    // Domy – vrátane všetkých obrázkov z galérií
+    // Domy – vrátane všetkých obrázkov z galérií (slug strictly lowercase)
     for (const dom of domy) {
       if (!dom.verejny) continue;
       const domUrl = dom.slug
-        ? `${baseUrl}/detail-domu?slug=${dom.slug}`
+        ? `${baseUrl}/detail-domu?slug=${dom.slug.toLowerCase()}`
         : `${baseUrl}/detail-domu?id=${dom.id}`;
       
       xml += `  <url>\n`;
@@ -171,21 +173,21 @@ Deno.serve(async (req) => {
       xml += `  </url>\n`;
     }
 
-    // Lokality
+    // Lokality (slug strictly lowercase)
     for (const lok of lokality) {
       if (!lok.slug) continue;
       xml += `  <url>\n`;
-      xml += `    <loc>${baseUrl}/lokalita/${lok.slug}</loc>\n`;
+      xml += `    <loc>${baseUrl}/lokalita/${lok.slug.toLowerCase()}</loc>\n`;
       xml += `    <changefreq>weekly</changefreq>\n`;
       xml += `    <priority>0.9</priority>\n`;
       xml += `    <lastmod>${lok.updated_date?.split('T')[0] || new Date().toISOString().split('T')[0]}</lastmod>\n`;
       xml += `  </url>\n`;
     }
 
-    // Blogy
+    // Blogy (slug strictly lowercase)
     for (const blog of blogs) {
-      const blogPath = `/blog/${blog.slug}`;
-      const isNoindex = noindexPrefixes.some(prefix => blogPath.startsWith(prefix));
+      const blogPath = `/blog/${blog.slug.toLowerCase()}`;
+      const isNoindex = noindexPrefixes.some(prefix => blogPath.toLowerCase().startsWith(prefix.toLowerCase()));
       if (isNoindex) continue;
       
       xml += `  <url>\n`;

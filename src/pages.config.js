@@ -137,12 +137,14 @@ import SrovnaniDomu from './pages/SrovnaniDomu';
 import TestAnalyzaKonfiguratora from './pages/TestAnalyzaKonfiguratora';
 import ZasadyOchranyOsobnychUdajov from './pages/ZasadyOchranyOsobnychUdajov';
 import ZasadyPouzivaniaCookies from './pages/ZasadyPouzivaniaCookies';
+import RealEstatePortal from './pages/RealEstatePortal';
 import Showroom from './pages/Showroom';
 import StiahniteSiNasKatalog from './pages/StiahniteSiNasKatalog';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "RealEstatePortal": RealEstatePortal,
     "AIMarketingInsights": AIMarketingInsights,
     "AdminABTesting": AdminABTesting,
     "AdminAnalytikaCenovychPonuk": AdminAnalytikaCenovychPonuk,

@@ -1,5 +1,5 @@
 Deno.serve(async (req) => {
-  const baseUrl = 'https://www.americanliving.sk';
+  const baseUrl = 'https://americanliving.sk';
   
   const robotsTxt = `# robots.txt pre americanliving.sk
 User-agent: *

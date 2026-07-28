@@ -160,8 +160,8 @@ export default function DetailDomu() {
         },
         "deliveryTime": {
           "@type": "ShippingDeliveryTime",
-          "handlingTime": { "@type": "QuantitativeValue", "minValue": 60, "maxValue": 120, "unitCode": "DAY" },
-          "transitTime": { "@type": "QuantitativeValue", "minValue": 1, "maxValue": 5, "unitCode": "DAY" }
+          "handlingTime": { "@type": "QuantitativeValue", "minValue": 1, "maxValue": 3, "unitCode": "DAY" },
+          "transitTime": { "@type": "QuantitativeValue", "minValue": 5, "maxValue": 14, "unitCode": "DAY" }
         }
       };
     }
