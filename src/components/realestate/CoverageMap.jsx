@@ -6,6 +6,7 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { MapPinned } from "lucide-react";
+import MapListingPopup from "./MapListingPopup";
 
 // Súradnice slovenských miest pre mapu pokrytia
 export const CITY_COORDS = {
@@ -56,7 +57,25 @@ const makePin = (color) => L.divIcon({
 });
 
 const cityPin = makePin("#f59e0b");
-const listingPin = makePin("#a855f7");
+
+// Farby a názvy podľa typu nehnuteľnosti
+export const TYPE_STYLES = {
+  byt: { label: "Byty", color: "#38bdf8" },
+  rodinny_dom: { label: "Rodinné domy", color: "#a855f7" },
+  pozemok: { label: "Pozemky", color: "#22c55e" },
+  chata: { label: "Chaty", color: "#fb923c" },
+  komercny: { label: "Komerčné", color: "#eab308" },
+  iny: { label: "Iné", color: "#94a3b8" },
+};
+
+const typeStyle = (kategoria) => TYPE_STYLES[kategoria] || TYPE_STYLES.iny;
+
+const listingPins = {};
+const getListingPin = (kategoria) => {
+  const { color } = typeStyle(kategoria);
+  if (!listingPins[color]) listingPins[color] = makePin(color);
+  return listingPins[color];
+};
 
 // Nájde súradnice podľa názvu mesta (tolerantné na diakritiku a veľkosť písmen)
 const findCoords = (mesto) => {
@@ -77,7 +96,7 @@ export default function CoverageMap({ listings = [], onListingInterest }) {
     .filter((l) => l.coords);
 
   // Inzeráty s malým posunom, aby sa neprekrývali s pinom mesta
-  const listingPins = listings
+  const markers = listings
     .map((l, i) => {
       const coords = findCoords(l.mesto);
       return coords ? { ...l, coords: [coords[0] + 0.015 + (i % 3) * 0.01, coords[1] + 0.015 + (i % 5) * 0.01] } : null;
@@ -91,10 +110,18 @@ export default function CoverageMap({ listings = [], onListingInterest }) {
           <MapPinned className="w-5 h-5 text-amber-400" />
           Realitná mapa – domy aj inzeráty
         </h2>
-        <p className="text-xs text-slate-400 mt-0.5">
-          <span className="text-amber-400 font-bold">●</span> mestá, kde staviame nové domy &nbsp;·&nbsp;
-          <span className="text-purple-400 font-bold">●</span> nehnuteľnosti na predaj a prenájom
-        </p>
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-400 mt-1">
+          <span className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block" />
+            Mestá, kde staviame
+          </span>
+          {Object.entries(TYPE_STYLES).map(([key, s]) => (
+            <span key={key} className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full inline-block" style={{ background: s.color }} />
+              {s.label}
+            </span>
+          ))}
+        </div>
       </div>
       <div className="rounded-2xl overflow-hidden border border-slate-800 relative z-0">
         <MapContainer
@@ -122,23 +149,15 @@ export default function CoverageMap({ listings = [], onListingInterest }) {
               </Popup>
             </Marker>
           ))}
-          {listingPins.map((l) => (
-            <Marker key={l.id} position={l.coords} icon={listingPin}>
+          {markers.map((l) => (
+            <Marker key={l.id} position={l.coords} icon={getListingPin(l.kategoria)}>
               <Popup>
-                <div style={{ minWidth: 170 }}>
-                  <strong>{l.nazov}</strong>
-                  <p style={{ margin: "4px 0", fontSize: 12 }}>
-                    {l.typ_ponuky === "prenajom" ? "Prenájom" : "Predaj"} · {l.mesto} · {Math.round(l.cena).toLocaleString("sk-SK")} €{l.typ_ponuky === "prenajom" ? "/mes." : ""}
-                  </p>
-                  {onListingInterest && (
-                    <button
-                      onClick={() => onListingInterest(l)}
-                      style={{ color: "#7e22ce", fontWeight: 700, fontSize: 12, background: "none", border: "none", padding: 0, cursor: "pointer" }}
-                    >
-                      Mám záujem →
-                    </button>
-                  )}
-                </div>
+                <MapListingPopup
+                  listing={l}
+                  typeLabel={typeStyle(l.kategoria).label}
+                  color={typeStyle(l.kategoria).color}
+                  onInterest={onListingInterest}
+                />
               </Popup>
             </Marker>
           ))}
