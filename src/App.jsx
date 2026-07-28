@@ -63,6 +63,11 @@ const OdhadCenyPage = () => {
   return <LazyComp />;
 };
 
+const MojeInzeratyPage = () => {
+  const LazyComp = getLazyPage('MojeInzeraty');
+  return <LazyComp />;
+};
+
 const LayoutRoute = () => Layout ?
   <Layout><Outlet /></Layout>
   : <Outlet />;
@@ -116,6 +121,7 @@ const AuthenticatedApp = () => {
           );
         })}
         <Route path="/odhad-ceny" element={<OdhadCenyPage />} />
+        <Route path="/moje-inzeraty" element={<MojeInzeratyPage />} />
         <Route path="/pridat-inzerat" element={<PridatInzeratPage />} />
         <Route path="/admin-inzeraty" element={<AdminInzeratyPage />} />
         <Route path="/lokalita/:slug" element={<LokaciaDetail />} />

@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import PhotoUploader from "@/components/realestate/PhotoUploader";
+import RentalFields from "@/components/realestate/RentalFields";
 
 const KATEGORIE = [
   ["byt", "Byt"],
@@ -25,6 +26,7 @@ export default function PridatInzerat() {
     nazov: "", typ_ponuky: "predaj", kategoria: "byt", mesto: "", adresa: "",
     plocha: "", pocet_izieb: "", cena: "", popis: "",
     kontakt_meno: "", kontakt_email: "", kontakt_telefon: "", zdroj: "majitel",
+    depozit: "", energie_v_cene: false, min_doba_najmu: "1_rok", volne_od: "", podmienky_prenajmu: "",
   });
   const [fotky, setFotky] = useState([]);
   const [aiPopisPending, setAiPopisPending] = useState(false);
@@ -94,6 +96,13 @@ Doterajší popis od majiteľa (rozviň ho): ${form.popis || "žiadny"}`,
         kontakt_email: form.kontakt_email,
         kontakt_telefon: form.kontakt_telefon,
         zdroj: form.zdroj,
+        ...(form.typ_ponuky === "prenajom" ? {
+          depozit: form.depozit ? Number(form.depozit) : undefined,
+          energie_v_cene: form.energie_v_cene,
+          min_doba_najmu: form.min_doba_najmu,
+          volne_od: form.volne_od || undefined,
+          podmienky_prenajmu: form.podmienky_prenajmu || undefined,
+        } : {}),
         status: "cakajuci",
         ai_popis_generovany: aiPopisPouzity,
         ai_cena_odhad_min: aiOdhad?.odhad_min,
@@ -190,6 +199,10 @@ Doterajší popis od majiteľa (rozviň ho): ${form.popis || "žiadny"}`,
                 <input type="number" min="1" required placeholder="185000" value={form.cena} onChange={set("cena")} className={inputCls} />
               </div>
             </div>
+
+            {form.typ_ponuky === "prenajom" && (
+              <RentalFields form={form} onChange={setForm} />
+            )}
 
             {/* AI odhad ceny */}
             <div className="bg-slate-950 border border-purple-500/20 rounded-2xl p-3 space-y-2">

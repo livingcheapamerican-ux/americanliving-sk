@@ -1,8 +1,8 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { Building2, Loader2, SearchX, Plus, KeyRound, Tag, Calculator } from "lucide-react";
+import { Building2, Loader2, SearchX, Plus, KeyRound, Tag, Calculator, Scale, LayoutDashboard } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import AISearchBar from "@/components/realestate/AISearchBar";
@@ -13,6 +13,10 @@ import ListingCard from "@/components/realestate/ListingCard";
 import LeadModal from "@/components/realestate/LeadModal";
 import ListingLeadModal from "@/components/realestate/ListingLeadModal";
 import MortgageCalculator from "@/components/realestate/MortgageCalculator";
+import CompareSelect from "@/components/realestate/CompareSelect";
+import CompareTable from "@/components/realestate/CompareTable";
+
+const MAX_COMPARE = 4;
 
 const TABS = [
   { id: "domy", label: "🏡 Nové domy American Living", icon: Building2 },
@@ -29,6 +33,8 @@ export default function RealEstatePortal() {
   const [leadListing, setLeadListing] = useState(null);
   const [filters, setFilters] = useState({ typ: "all", maxCena: "all", minIzby: "all" });
   const [calcPrice, setCalcPrice] = useState(89000);
+  const [compareIds, setCompareIds] = useState([]);
+  const [showCompare, setShowCompare] = useState(false);
 
   const { data: domy = [], isLoading } = useQuery({
     queryKey: ['realestate-domy'],
@@ -167,6 +173,43 @@ Ak nič nevyhovuje presne, vyber 2-3 najbližšie alternatívy a v zhrnutí vysv
     return listings.filter(l => l.typ_ponuky === (tab === "prenajom" ? "prenajom" : "predaj"));
   }, [listings, aiOrder, tab]);
 
+  // Počítanie zobrazení inzerátov – raz za návštevu pre každý inzerát
+  useEffect(() => {
+    if (listings.length === 0) return;
+    let uzPocitane = [];
+    try {
+      uzPocitane = JSON.parse(sessionStorage.getItem("videne_inzeraty") || "[]");
+    } catch (e) {
+      uzPocitane = [];
+    }
+    const nove = listings.filter((l) => !uzPocitane.includes(l.id));
+    if (nove.length === 0) return;
+
+    base44.entities.Nehnutelnost.bulkUpdate(
+      nove.map((l) => ({ id: l.id, pocet_zobrazeni: (l.pocet_zobrazeni || 0) + 1 }))
+    );
+    try {
+      sessionStorage.setItem("videne_inzeraty", JSON.stringify([...uzPocitane, ...nove.map((l) => l.id)]));
+    } catch (e) {
+      // sessionStorage nedostupné – zobrazenia sa spočítajú znova pri ďalšom načítaní
+    }
+  }, [listings]);
+
+  const toggleCompare = (id) => {
+    setCompareIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : prev.length >= MAX_COMPARE ? prev : [...prev, id]
+    );
+  };
+
+  const compareItems = useMemo(() => {
+    return compareIds.map((id) => {
+      const dom = domy.find((d) => d.id === id);
+      if (dom) return { ...dom, __kind: "dom" };
+      const listing = listings.find((l) => l.id === id);
+      return listing ? { ...listing, __kind: "listing" } : null;
+    }).filter(Boolean);
+  }, [compareIds, domy, listings]);
+
   const handleInterest = (dom) => {
     setLeadDom(dom);
     if (dom.zakladna_cena) setCalcPrice(Math.round(dom.zakladna_cena));
@@ -191,7 +234,9 @@ Ak nič nevyhovuje presne, vyber 2-3 najbližšie alternatívy a v zhrnutí vysv
     ) : (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {items.map((l) => (
-          <ListingCard key={l.id} listing={l} aiReason={aiResult?.reasons[l.id]} onInterest={handleListingInterest} />
+          <CompareSelect key={l.id} selected={compareIds.includes(l.id)} disabled={compareIds.length >= MAX_COMPARE} onToggle={() => toggleCompare(l.id)}>
+            <ListingCard listing={l} aiReason={aiResult?.reasons[l.id]} onInterest={handleListingInterest} />
+          </CompareSelect>
         ))}
       </div>
     )
@@ -233,6 +278,11 @@ Ak nič nevyhovuje presne, vyber 2-3 najbližšie alternatívy a v zhrnutí vysv
             <Link to="/pridat-inzerat">
               <Button variant="outline" className="w-full border-purple-500/40 bg-purple-500/10 text-purple-200 hover:bg-purple-500/20 hover:text-white text-xs rounded-xl">
                 <Plus className="w-3.5 h-3.5 mr-1" /> Predávate alebo prenajímate? Pridajte inzerát zadarmo
+              </Button>
+            </Link>
+            <Link to="/moje-inzeraty">
+              <Button variant="outline" className="w-full border-slate-600 bg-slate-800/40 text-slate-300 hover:bg-slate-800 hover:text-white text-xs rounded-xl">
+                <LayoutDashboard className="w-3.5 h-3.5 mr-1" /> Moje inzeráty
               </Button>
             </Link>
           </div>
@@ -286,7 +336,9 @@ Ak nič nevyhovuje presne, vyber 2-3 najbližšie alternatívy a v zhrnutí vysv
                       <h3 className="text-sm font-bold text-amber-300">🏡 Nové domy American Living ({displayedDomy.length})</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         {displayedDomy.map((dom) => (
-                          <PropertyCard key={dom.id} dom={dom} aiReason={aiResult.reasons[dom.id]} onInterest={handleInterest} />
+                          <CompareSelect key={dom.id} selected={compareIds.includes(dom.id)} disabled={compareIds.length >= MAX_COMPARE} onToggle={() => toggleCompare(dom.id)}>
+                            <PropertyCard dom={dom} aiReason={aiResult.reasons[dom.id]} onInterest={handleInterest} />
+                          </CompareSelect>
                         ))}
                       </div>
                     </div>
@@ -296,7 +348,9 @@ Ak nič nevyhovuje presne, vyber 2-3 najbližšie alternatívy a v zhrnutí vysv
                       <h3 className="text-sm font-bold text-purple-300">🏷️ Inzeráty – predaj a prenájom ({displayedListings.length})</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         {displayedListings.map((l) => (
-                          <ListingCard key={l.id} listing={l} aiReason={aiResult.reasons[l.id]} onInterest={handleListingInterest} />
+                          <CompareSelect key={l.id} selected={compareIds.includes(l.id)} disabled={compareIds.length >= MAX_COMPARE} onToggle={() => toggleCompare(l.id)}>
+                            <ListingCard listing={l} aiReason={aiResult.reasons[l.id]} onInterest={handleListingInterest} />
+                          </CompareSelect>
                         ))}
                       </div>
                     </div>
@@ -328,7 +382,9 @@ Ak nič nevyhovuje presne, vyber 2-3 najbližšie alternatívy a v zhrnutí vysv
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   {displayedDomy.map((dom) => (
-                    <PropertyCard key={dom.id} dom={dom} onInterest={handleInterest} />
+                    <CompareSelect key={dom.id} selected={compareIds.includes(dom.id)} disabled={compareIds.length >= MAX_COMPARE} onToggle={() => toggleCompare(dom.id)}>
+                      <PropertyCard dom={dom} onInterest={handleInterest} />
+                    </CompareSelect>
                   ))}
                 </div>
               )}
@@ -366,7 +422,37 @@ Ak nič nevyhovuje presne, vyber 2-3 najbližšie alternatívy a v zhrnutí vysv
         <MortgageCalculator price={calcPrice} onPriceChange={setCalcPrice} />
       </main>
 
+      {/* LIŠTA POROVNANIA */}
+      {compareIds.length > 0 && !showCompare && (
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[140] bg-slate-900 border border-amber-500/40 rounded-2xl shadow-2xl px-4 py-3 flex items-center gap-3 max-w-[95vw]">
+          <span className="text-xs text-slate-300 font-mono">
+            Vybrané na porovnanie: <strong className="text-amber-400">{compareIds.length}</strong> / {MAX_COMPARE}
+          </span>
+          <Button
+            onClick={() => setShowCompare(true)}
+            disabled={compareIds.length < 2}
+            className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs rounded-xl disabled:opacity-50"
+          >
+            <Scale className="w-3.5 h-3.5 mr-1" /> {compareIds.length < 2 ? "Vyberte aspoň 2" : "Porovnať"}
+          </Button>
+          <button onClick={() => setCompareIds([])} className="text-xs text-slate-400 hover:text-white font-mono">
+            Zrušiť
+          </button>
+        </div>
+      )}
+
       {/* MODÁLNE OKNÁ */}
+      {showCompare && compareItems.length >= 2 && (
+        <CompareTable
+          items={compareItems}
+          onRemove={(id) => {
+            const zvysok = compareIds.filter((x) => x !== id);
+            setCompareIds(zvysok);
+            if (zvysok.length < 2) setShowCompare(false);
+          }}
+          onClose={() => setShowCompare(false)}
+        />
+      )}
       {leadDom && <LeadModal dom={leadDom} onClose={() => setLeadDom(null)} />}
       {leadListing && <ListingLeadModal listing={leadListing} onClose={() => setLeadListing(null)} />}
     </div>

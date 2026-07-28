@@ -64,6 +64,14 @@ export default function ListingCard({ listing, aiReason, onInterest }) {
             <div><Bed className="w-3 h-3 mx-auto text-slate-500 mb-0.5" />{listing.pocet_izieb ? `${listing.pocet_izieb} izby` : "–"}</div>
           </div>
 
+          {jePrenajom && (listing.depozit || listing.energie_v_cene) && (
+            <p className="text-[10px] text-sky-300 bg-sky-500/10 border border-sky-500/20 rounded-lg px-2.5 py-1.5 font-mono">
+              {listing.depozit ? `Depozit ${Math.round(listing.depozit).toLocaleString("sk-SK")} €` : ""}
+              {listing.depozit && listing.energie_v_cene ? " · " : ""}
+              {listing.energie_v_cene ? "Energie v cene" : ""}
+            </p>
+          )}
+
           {listing.popis && (
             <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">{listing.popis}</p>
           )}

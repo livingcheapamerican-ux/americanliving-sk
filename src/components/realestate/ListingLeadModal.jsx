@@ -17,6 +17,7 @@ export default function ListingLeadModal({ listing, onClose }) {
         email: form.email,
         telefon: form.phone,
         typ_dopytu: "vseobecny",
+        nehnutelnost_id: listing.id,
         poznamka: `Realitný Portál AI – záujem o inzerát "${listing.nazov}" (${jePrenajom ? "prenájom" : "predaj"}, ${listing.mesto}, ${Math.round(listing.cena).toLocaleString("sk-SK")} €). Kontakt inzerenta: ${listing.kontakt_meno}, ${listing.kontakt_telefon}. ${form.note || ""}`.trim(),
       });
 

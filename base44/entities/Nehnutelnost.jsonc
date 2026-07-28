@@ -33,7 +33,37 @@
     },
     "cena": {
       "type": "number",
-      "description": "Cena v EUR (pri pren\u00e1jme mesa\u010dne)"
+      "description": "Predajn\u00e1 cena v EUR, pri pren\u00e1jme mesa\u010dn\u00e1 cena n\u00e1jmu v EUR"
+    },
+    "depozit": {
+      "type": "number",
+      "description": "Depozit / kaucia v EUR (len pri pren\u00e1jme)"
+    },
+    "energie_v_cene": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u010ci s\u00fa energie a poplatky zahrnut\u00e9 v cene n\u00e1jmu"
+    },
+    "min_doba_najmu": {
+      "type": "string",
+      "enum": [
+        "bez_obmedzenia",
+        "3_mesiace",
+        "6_mesiacov",
+        "1_rok",
+        "2_roky"
+      ],
+      "default": "1_rok",
+      "description": "Minim\u00e1lna doba pren\u00e1jmu"
+    },
+    "volne_od": {
+      "type": "string",
+      "format": "date",
+      "description": "D\u00e1tum, odkedy je nehnute\u013enos\u0165 vo\u013en\u00e1"
+    },
+    "podmienky_prenajmu": {
+      "type": "string",
+      "description": "\u010eal\u0161ie podmienky pren\u00e1jmu (zvierat\u00e1, faj\u010denie, po\u010det os\u00f4b a pod.)"
     },
     "mesto": {
       "type": "string",
@@ -89,6 +119,11 @@
       ],
       "default": "cakajuci",
       "description": "Stav moder\u00e1cie"
+    },
+    "pocet_zobrazeni": {
+      "type": "number",
+      "default": 0,
+      "description": "Po\u010det zobrazen\u00ed inzer\u00e1tu v port\u00e1li"
     },
     "ai_popis_generovany": {
       "type": "boolean",

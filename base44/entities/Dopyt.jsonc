@@ -28,6 +28,10 @@
       "type": "string",
       "description": "ID domu, ak sa t\u00fdka konkr\u00e9tneho modelu"
     },
+    "nehnutelnost_id": {
+      "type": "string",
+      "description": "ID inzer\u00e1tu nehnute\u013enosti, ak sa dopyt t\u00fdka inzer\u00e1tu"
+    },
     "konfiguracny_kod": {
       "type": "string",
       "description": "K\u00f3d z konfigur\u00e1tora"
