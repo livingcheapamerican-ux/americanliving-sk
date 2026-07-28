@@ -1,0 +1,116 @@
+{
+  "name": "Nehnutelnost",
+  "type": "object",
+  "properties": {
+    "nazov": {
+      "type": "string",
+      "description": "N\u00e1zov inzer\u00e1tu"
+    },
+    "typ_ponuky": {
+      "type": "string",
+      "enum": [
+        "predaj",
+        "prenajom"
+      ],
+      "description": "Predaj alebo pren\u00e1jom"
+    },
+    "kategoria": {
+      "type": "string",
+      "enum": [
+        "byt",
+        "rodinny_dom",
+        "pozemok",
+        "chata",
+        "komercny",
+        "iny"
+      ],
+      "default": "byt",
+      "description": "Kateg\u00f3ria nehnute\u013enosti"
+    },
+    "popis": {
+      "type": "string",
+      "description": "Popis nehnute\u013enosti"
+    },
+    "cena": {
+      "type": "number",
+      "description": "Cena v EUR (pri pren\u00e1jme mesa\u010dne)"
+    },
+    "mesto": {
+      "type": "string",
+      "description": "Mesto / lokalita"
+    },
+    "adresa": {
+      "type": "string",
+      "description": "Ulica / \u010das\u0165 mesta (volite\u013en\u00e9)"
+    },
+    "plocha": {
+      "type": "number",
+      "description": "Plocha v m\u00b2"
+    },
+    "pocet_izieb": {
+      "type": "number",
+      "description": "Po\u010det izieb"
+    },
+    "fotky": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "URL fotiek"
+    },
+    "kontakt_meno": {
+      "type": "string",
+      "description": "Meno inzerenta"
+    },
+    "kontakt_email": {
+      "type": "string",
+      "format": "email",
+      "description": "Email inzerenta"
+    },
+    "kontakt_telefon": {
+      "type": "string",
+      "description": "Telef\u00f3n inzerenta"
+    },
+    "zdroj": {
+      "type": "string",
+      "enum": [
+        "majitel",
+        "agent"
+      ],
+      "default": "majitel",
+      "description": "Kto inzeruje"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "cakajuci",
+        "schvaleny",
+        "zamietnuty"
+      ],
+      "default": "cakajuci",
+      "description": "Stav moder\u00e1cie"
+    },
+    "ai_popis_generovany": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u010ci bol popis vygenerovan\u00fd AI"
+    },
+    "ai_cena_odhad_min": {
+      "type": "number",
+      "description": "AI odhad ceny - spodn\u00e1 hranica"
+    },
+    "ai_cena_odhad_max": {
+      "type": "number",
+      "description": "AI odhad ceny - horn\u00e1 hranica"
+    }
+  },
+  "required": [
+    "nazov",
+    "typ_ponuky",
+    "cena",
+    "mesto",
+    "kontakt_meno",
+    "kontakt_email",
+    "kontakt_telefon"
+  ]
+}
