@@ -2,82 +2,70 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Calendar, Sparkles } from "lucide-react";
+import { ArrowRight, Calendar, MapPin, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 
 const LOCATIONS = [
-  { n: 1, city: "Komárno", status: "staviame", text: "Celoročný modulárny Barn House s krásnym bazénom a saunou v prírode." },
-  { n: 2, city: "Okolie Levoče", status: "pripravujeme", text: "Ekologický montovaný rodinný dom v lone spišskej prírody." }
+  { city: "Komárno", status: "staviame", text: "Celoročný modulárny Barn House s bazénom a saunou v prírode." },
+  { city: "Okolie Levoče", status: "pripravujeme", text: "Ekologický montovaný rodinný dom v lone spišskej prírody." }
 ];
+
+const SHOWROOM_IMG = "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=900&q=75";
 
 export default function ShowroomChapter() {
   return (
-    <section className="py-16 sm:py-28 relative overflow-hidden border-b border-white/5">
-      <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-[#9E2A2B]/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-[#C5A880]/10 rounded-full blur-[120px] pointer-events-none" />
-
-      <div className="container mx-auto px-4 relative z-10">
+    <section className="py-14 sm:py-20 bg-[#EFE9DF]">
+      <div className="container mx-auto px-4">
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.7 }}
-          className="max-w-6xl mx-auto flex flex-col lg:flex-row items-start gap-10 lg:gap-16"
+          transition={{ duration: 0.6 }}
+          className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center"
         >
-          <div className="flex-1 text-left space-y-5">
-            <span className="font-['Fraunces'] text-5xl sm:text-7xl text-[#E2C799] leading-none block">05</span>
-            <p className="text-xs uppercase tracking-[0.25em] text-slate-400">Kapitola</p>
-            <h2 className="font-['Fraunces'] text-3xl sm:text-5xl text-[#F3EFE6] leading-tight uppercase">
-              Vyskúšajte bývanie skôr, <span className="text-[#C5A880]">než ho kúpite</span>
+          <div className="space-y-5">
+            <p className="text-[11px] uppercase tracking-[0.25em] text-[#9E2A2B] font-bold">Showroom</p>
+            <h2 className="font-['Sora'] text-2xl sm:text-4xl font-bold text-[#2C3A33] leading-tight">
+              Vyskúšajte bývanie skôr, než ho kúpite
             </h2>
-            <p className="text-sm sm:text-base text-slate-400 font-light leading-relaxed max-w-xl">
+            <p className="text-sm sm:text-base text-[#6B7A72] leading-relaxed max-w-xl">
               Kúpa domu je životné rozhodnutie. Staviame zážitkové showroom domy, ktoré si prenajmete na víkend – zažijete ticho, vôňu dreva aj tepelnú pohodu na vlastnej koži.
             </p>
 
-            <div className="border-l-2 border-[#C5A880]/50 pl-5 py-1 text-sm text-slate-300 space-y-2 max-w-xl">
-              <p className="font-bold text-[#E2C799] flex items-center gap-2 uppercase tracking-wider text-xs">
+            <div className="rounded-2xl bg-white border border-[#E0D8CA] p-5 shadow-[0_10px_30px_rgba(44,58,51,0.06)]">
+              <p className="font-bold text-[#2C3A33] flex items-center gap-2 text-sm mb-1.5">
                 <Sparkles className="w-4 h-4 text-[#C5A880]" />
                 Garancia vrátenia peňazí
               </p>
-              <p className="font-light text-slate-400">
+              <p className="text-sm text-[#6B7A72] leading-relaxed">
                 Ak si po pobyte vyberiete ktorýkoľvek dom z katalógu, celú sumu za prenájom vám odpočítame z kúpnej ceny.
               </p>
             </div>
 
-            <div className="pt-2 flex flex-wrap gap-3">
-              <Link to={createPageUrl("Showroom")}>
-                <Button size="lg" className="bg-[#C5A880] hover:bg-[#E2C799] text-slate-950 font-black text-sm sm:text-base px-7 py-6 rounded-xl transition-all flex items-center gap-2 group">
-                  <Calendar className="w-5 h-5 group-hover:rotate-6 transition-transform" />
-                  <span>Rezervovať showroom dom</span>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </Link>
-            </div>
-          </div>
-
-          <div className="w-full lg:w-96 shrink-0 text-left">
-            <h3 className="font-bold text-[11px] uppercase tracking-[0.25em] text-[#C5A880] mb-5">Pripravované lokality</h3>
-            <div className="space-y-4">
+            <div className="space-y-2.5">
               {LOCATIONS.map((loc) => (
-                <div key={loc.n} className="p-5 rounded-2xl bg-white/[0.04] backdrop-blur-md border border-white/10 flex gap-4 items-start hover:border-[#C5A880]/40 transition-colors">
-                  <div className="w-10 h-10 rounded-xl bg-[#C5A880]/10 border border-[#C5A880]/25 flex items-center justify-center text-[#C5A880] shrink-0 font-['Fraunces'] text-lg">
-                    {loc.n}
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex justify-between items-center gap-2 w-full">
-                      <h4 className="font-bold text-sm text-[#F3EFE6]">{loc.city}</h4>
-                      <Badge className="bg-[#C5A880]/15 text-[#E2C799] text-[9px] border border-[#C5A880]/25 py-0.5 px-2">{loc.status}</Badge>
-                    </div>
-                    <p className="text-xs text-slate-400 font-light mt-1.5 leading-relaxed">{loc.text}</p>
-                    <p className="text-[10px] text-slate-500 mt-2 font-medium">Partner: American Living s.r.o.</p>
+                <div key={loc.city} className="flex items-start gap-3">
+                  <MapPin className="w-4 h-4 text-[#9E2A2B] mt-1 shrink-0" />
+                  <div>
+                    <p className="text-sm font-bold text-[#2C3A33]">{loc.city} <span className="font-normal text-[#6B7A72]">({loc.status})</span></p>
+                    <p className="text-xs text-[#6B7A72] leading-relaxed">{loc.text}</p>
                   </div>
                 </div>
               ))}
             </div>
-            <p className="mt-4 pt-4 border-t border-white/5 text-[10px] text-slate-500 text-center font-medium">
-              Domy vlastnia a spravujú licencovaní partneri.
-            </p>
+
+            <Link to={createPageUrl("Showroom")} className="inline-block">
+              <Button size="lg" className="bg-[#9E2A2B] hover:bg-[#802021] text-white font-bold text-sm px-7 py-6 rounded-xl flex items-center gap-2 group">
+                <Calendar className="w-4 h-4" />
+                <span>Rezervovať showroom dom</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
+            <p className="text-[11px] text-[#8B948E]">Domy vlastnia a spravujú licencovaní partneri.</p>
+          </div>
+
+          <div className="rounded-3xl overflow-hidden border border-[#E0D8CA] shadow-[0_18px_40px_rgba(44,58,51,0.08)] aspect-[4/3]">
+            <img src={SHOWROOM_IMG} alt="Showroom dom" className="w-full h-full object-cover" loading="lazy" />
           </div>
         </motion.div>
       </div>

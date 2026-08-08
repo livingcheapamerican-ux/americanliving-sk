@@ -279,7 +279,7 @@ function LayoutContent({ children }) {
 
       {/* Header - Floating Pill Design */}
       <header 
-        className={`${location.pathname === '/' ? 'dark ' : ''}fixed left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'top-4' : 'top-0 sm:top-6'} px-2 sm:px-6`}
+        className={`fixed left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'top-4' : 'top-0 sm:top-6'} px-2 sm:px-6`}
       >
         <div className={`mx-auto max-w-7xl transition-all duration-500 ${(scrolled && !mobileMenuOpen) ? 'bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 border border-slate-200 dark:border-white/10 rounded-full py-2 px-4' : (mobileMenuOpen ? 'bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-3xl p-4 shadow-2xl mt-2' : 'bg-transparent py-4 px-4')}`}>
           <div className="flex items-center justify-between gap-1 sm:gap-2">
