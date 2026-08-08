@@ -17,6 +17,9 @@ import HeroSettingsManager from "../components/admin/HeroSettingsManager";
 import { useLanguage } from "../components/LanguageContext";
 import ServiceDetailModal from "../components/ServiceDetailModal";
 import { optimizeImageUrl } from "../components/ImageWithWatermark";
+import Chapter from "../components/home/Chapter";
+import ChapterHeading from "../components/home/ChapterHeading";
+import ShowroomChapter from "../components/home/ShowroomChapter";
 
 const sliderT = {
   sk: { viz: "Vizualizácia", real: "Realizácia" },
@@ -132,7 +135,7 @@ function ImageComparisonSlider({ beforeImage, afterImage, language }) {
         className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize z-20 flex items-center justify-center pointer-events-none"
         style={{ left: `${sliderPosition}%`, transform: 'translateX(-50%)' }}
       >
-        <div className="w-8 h-8 rounded-full bg-white dark:bg-slate-900 border border-[#C5A880] text-slate-800 dark:text-white flex items-center justify-center shadow-lg transition-transform hover:scale-110">
+        <div className="w-8 h-8 rounded-full bg-white/[0.04] backdrop-blur-md border border-[#C5A880] text-slate-800 dark:text-white flex items-center justify-center shadow-lg transition-transform hover:scale-110">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M8 9l-4 3 4 3m8-6l4 3-4 3" />
           </svg>
@@ -304,31 +307,10 @@ const headlineWord = {
 // with an infinite, slow Ken Burns zoom/pan animation, overlayed with soft gradient masks
 // to ensure perfect contrast and legibility for text content in both light and dark modes.
 function NaturePhotoBackground() {
-  const isDark = document.documentElement.classList.contains('dark');
-  const [dark, setDark] = React.useState(isDark);
-
-  React.useEffect(() => {
-    // Listen for dark mode toggle on root element
-    const observer = new MutationObserver(() => {
-      setDark(document.documentElement.classList.contains('dark'));
-    });
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-    return () => observer.disconnect();
-  }, []);
-
-  // Premium, atmospheric landscape photos of misty forests/hills at sunrise
-  const lightImage = "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1920&q=80"; // Gorgeous misty hills & forest at sunrise (golden/green tones)
-  const darkImage = "https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=1920&q=80";  // Deep misty pine forest (dark green, gold light rays)
-
   return (
-    <div className="fixed inset-0 w-full h-full overflow-hidden bg-[#FAF8F5] dark:bg-[#050508] z-0 pointer-events-none select-none">
-      {/* Background Image with slow Ken Burns effect */}
-      <img
-        src={dark ? darkImage : lightImage}
-        alt="Nature background"
-        className="w-full h-full object-cover animate-ken-burns transition-all duration-1000 ease-in-out scale-105"
-        style={{ filter: dark ? 'brightness(0.35) contrast(1.1)' : 'brightness(0.95) contrast(1.02)' }}
-      />
+    <div className="fixed inset-0 w-full h-full overflow-hidden bg-[#0A0A0C] z-0 pointer-events-none select-none">
+      <div className="absolute top-[-20%] left-[-10%] w-[700px] h-[700px] bg-[#C5A880]/5 rounded-full blur-[180px]" />
+      <div className="absolute bottom-[-20%] right-[-10%] w-[700px] h-[700px] bg-[#9E2A2B]/10 rounded-full blur-[180px]" />
     </div>
   );
 }
@@ -852,7 +834,7 @@ export default function Domov() {
     : lcpImage;
 
   return (
-    <div className="min-h-screen -mt-10 sm:-mt-12 md:-mt-14 lg:-mt-16 xl:-mt-20 overflow-x-hidden relative">
+    <div className="dark cinematic min-h-screen -mt-10 sm:-mt-12 md:-mt-14 lg:-mt-16 xl:-mt-20 overflow-x-hidden relative bg-[#0A0A0C] text-[#E8E2D6]">
       <NaturePhotoBackground />
       <div className="fixed-bg-content relative z-10">
         <Helmet>
@@ -929,267 +911,186 @@ export default function Domov() {
 
 
 
-      {/* Hero Section */}
-      <section className="hero-section relative min-h-[90vh] lg:min-h-screen overflow-hidden bg-transparent pt-20 lg:pt-28 pb-12 flex items-center transition-colors duration-300">
-        {/* Blueprint architectural grid lines - Uses CSS variable defined in index.css */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--grid-color)_1px,transparent_1px),linear-gradient(to_bottom,var(--grid-color)_1px,transparent_1px)] bg-[size:5rem_5rem] pointer-events-none" />
-        
-        {/* Subtle blurred background image for depth */}
-        <div className="absolute inset-0 bg-[url('https://base44.app/api/apps/6916d89a485af231beb54c71/files/public/6916d89a485af231beb54c71/cbd41c122_Barnbazen.jpeg')] bg-cover bg-center opacity-[0.05] dark:opacity-[0.09] blur-[1px] pointer-events-none mix-blend-overlay" />
-
-        {/* Ambient background glows - Rich premium gradients */}
-        <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] bg-[#C5A880]/10 dark:bg-red-600/15 rounded-full blur-[180px] pointer-events-none" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] bg-[#C5A880]/10 dark:bg-[#C5A880]/15 rounded-full blur-[180px] pointer-events-none" />
-        <div className="absolute top-[30%] left-[35%] w-[500px] h-[500px] bg-[#C5A880]/5 dark:bg-slate-900/30 rounded-full blur-[150px] pointer-events-none" />
+      {/* Hero Section - Cinematic full-bleed */}
+      <section className="hero-section relative min-h-[92vh] lg:min-h-screen overflow-hidden bg-[#0A0A0C] pt-24 lg:pt-32 pb-10 sm:pb-14 flex items-end">
+        {/* Full-bleed photo of the selected house & facade */}
+        <div className="absolute inset-0">
+          <AnimatePresence>
+            <motion.img
+              key={`${selectedHouseId}-${selectedFacade}`}
+              src={selectedFacadeImage}
+              alt={currentHouseData.name}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.7 }}
+              className="absolute inset-0 w-full h-full object-cover"
+              loading="eager"
+            />
+          </AnimatePresence>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0C] via-[#0A0A0C]/35 to-[#0A0A0C]/50 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0C]/85 via-[#0A0A0C]/10 to-[#0A0A0C]/55 pointer-events-none" />
+        </div>
 
         <div className="relative z-10 container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            
-            {/* Left Column: Copywriting & CTAs */}
-            <div className="lg:col-span-6 flex flex-col text-left min-w-0 w-full">
-              {/* Logo & Small Badge */}
-              <div className="flex items-center gap-3 mb-6 flex-wrap">
-                <motion.img 
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-end">
+
+            {/* Left: cinematic headline */}
+            <div className="lg:col-span-7 min-w-0 w-full">
+              <div className="flex items-center gap-3 mb-5 flex-wrap">
+                <motion.img
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.6 }}
-                  src={LOGO_URL} 
-                  alt="American Living" 
-                  className="h-10 sm:h-14 w-auto drop-shadow-lg rounded-full"
-                  width={56}
-                  height={56}
+                  src={LOGO_URL}
+                  alt="American Living"
+                  className="h-10 sm:h-12 w-auto rounded-full drop-shadow-lg"
+                  width={48}
+                  height={48}
                   loading="eager"
                 />
                 <motion.div
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.6, delay: 0.1 }}
-                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#C5A880]/10 dark:bg-white/5 border border-[#C5A880]/30 dark:border-white/10 text-xs font-semibold text-slate-700 dark:text-slate-300"
+                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#C5A880]/40 bg-black/40 backdrop-blur-sm text-xs font-semibold text-[#E8E2D6]"
                 >
                   <span className="w-2 h-2 rounded-full bg-[#C5A880] animate-pulse"></span>
                   <span>{t('heroBadgeText')}</span>
                 </motion.div>
               </div>
 
-              {/* Main Headline */}
-              <motion.h1 
+              <motion.h1
                 variants={headlineContainer}
                 initial="hidden"
                 animate="visible"
-                className="text-3xl sm:text-5xl md:text-6xl font-black text-slate-900 dark:text-white mb-6 leading-[1.1] tracking-tight"
-                style={{ textShadow: '2px 2px 10px rgba(0,0,0,0.05)' }}
+                className="font-['Fraunces'] text-4xl sm:text-6xl lg:text-7xl font-semibold text-[#F3EFE6] mb-5 leading-[1.06] tracking-tight"
+                style={{ textShadow: '0 4px 30px rgba(0,0,0,0.65)' }}
               >
+                <span className="text-[#C5A880]">„</span>
                 {(t('heroTitleFirst')?.split(" ") || []).map((word, idx) => (
                   <motion.span key={`first-${idx}`} variants={headlineWord} className="inline-block mr-2">
                     {word}
                   </motion.span>
                 ))}
                 {" "}
-                <span className="bg-gradient-to-r from-[#C5A880] via-[#E2C799] to-[#C5A880] bg-clip-text text-transparent block sm:inline">
+                <span className="bg-gradient-to-r from-[#C5A880] via-[#E2C799] to-[#C5A880] bg-clip-text text-transparent">
                   {(t('heroTitleSecond')?.split(" ") || []).map((word, idx) => (
                     <motion.span key={`second-${idx}`} variants={headlineWord} className="inline-block mr-2">
                       {word}
                     </motion.span>
                   ))}
                 </span>
+                <span className="text-[#C5A880]">“</span>
               </motion.h1>
 
-              {/* Subheadline */}
-              <motion.p 
+              <motion.p
                 initial={{ opacity: 0, y: 25 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
-                className="text-base sm:text-xl text-slate-800 dark:text-slate-200 mb-8 leading-relaxed font-normal max-w-2xl bg-white/90 dark:bg-slate-900/90 border border-slate-200/85 dark:border-white/10 px-6 py-4 sm:py-5 rounded-2xl shadow-md backdrop-blur-md"
+                className="text-sm sm:text-lg text-slate-300 mb-6 leading-relaxed font-light max-w-xl"
+                style={{ textShadow: '0 2px 12px rgba(0,0,0,0.7)' }}
               >
-                {t('heroDescription')}
+                „{t('heroDescription')}“
               </motion.p>
+            </div>
 
-              {/* CTAs */}
-              <motion.div 
+            {/* Right: interactive model / facade panel + CTAs */}
+            <div className="lg:col-span-5 w-full">
+              <motion.div
                 initial={{ opacity: 0, y: 25 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
-                className="flex flex-col sm:flex-row flex-wrap gap-4 mb-10 w-full max-w-xl"
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="bg-black/45 backdrop-blur-md border border-white/10 rounded-2xl p-4 sm:p-5"
               >
-                <Link to={createPageUrl("Katalog")} className="w-full sm:w-auto">
-                  <Button size="lg" className="relative w-full sm:w-auto bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-black text-lg px-8 py-7 shadow-[0_0_30px_rgba(220,38,38,0.4)] border border-red-500/50 transition-all rounded-2xl flex items-center justify-center gap-2 group">
-                    <Home className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-                    <span>{t('viewCatalogButton')}</span>
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("Showroom")} className="w-full sm:w-auto">
-                  <Button size="lg" className="relative w-full sm:w-auto bg-gradient-to-r from-[#C5A880] to-[#bca076] hover:from-[#bca076] hover:to-[#C5A880] text-slate-950 font-black text-lg px-8 py-7 shadow-[0_0_30px_rgba(197,168,128,0.3)] border border-[#C5A880]/50 transition-all rounded-2xl flex items-center justify-center gap-2 group">
-                    <Calendar className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                    <span>{t('showroom')}</span>
-                  </Button>
-                </Link>
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))}
-                  className="w-full sm:w-auto bg-white/70 dark:bg-white/5 hover:bg-[#C5A880]/10 dark:hover:bg-[#C5A880]/15 hover:border-[#C5A880]/50 text-slate-800 dark:text-white border border-slate-200 dark:border-white/15 font-bold text-base px-8 py-7 rounded-2xl transition-all flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(197,168,128,0.15)] backdrop-blur-sm shadow-sm"
-                >
-                  <MessageCircle className="w-5 h-5" />
-                  <span>{t('consultationWithKexo')}</span>
-                </Button>
-              </motion.div>
-
-              {/* Interactive Quick House Switcher with Real Images */}
-              <div className="pt-6 border-t border-white/10 max-w-xl">
-                <div className="mb-4">
-                  <span className="inline-block bg-white/90 dark:bg-slate-900/90 border border-slate-200/85 dark:border-white/10 px-3.5 py-1.5 rounded-xl shadow-sm text-slate-700 dark:text-slate-300 text-[10px] sm:text-xs font-bold uppercase tracking-wider backdrop-blur-md">
-                    {t('clickToSeeMostLucrativeModels')}
-                  </span>
-                </div>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.8 }}
-                  className="flex overflow-x-auto gap-3 pb-3 pt-1 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-805 scroll-smooth snap-x"
-                >
+                <p className="text-[10px] uppercase tracking-[0.2em] text-[#C5A880] font-bold mb-2.5">{t('clickToSeeMostLucrativeModels')}</p>
+                <div className="flex overflow-x-auto gap-2 pb-1 snap-x scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                   {switcherHouses.map((house) => (
                     <button
                       key={house.id}
                       type="button"
                       onClick={() => {
                         setSelectedHouseId(house.id);
-                        // Reset facade to anthracite to avoid missing configurations
                         setSelectedFacade("anthracite");
                       }}
-                      className={`snap-start flex-shrink-0 w-28 h-20 sm:w-36 sm:h-24 group p-2.5 rounded-xl border text-left transition-all duration-300 relative overflow-hidden flex flex-col justify-end ${
-                        selectedHouseId === house.id 
-                          ? 'border-[#C5A880] ring-1 ring-[#C5A880]/50 bg-white/95 dark:bg-slate-900/90 shadow-[0_4px_12px_rgba(197,168,128,0.15)] dark:shadow-[0_0_15px_rgba(197,168,128,0.2)] scale-[1.02]' 
-                          : 'border-slate-200 dark:border-white/10 bg-white/75 dark:bg-slate-955/60 hover:bg-slate-50 dark:hover:bg-slate-900/40 hover:border-slate-300 dark:hover:border-white/20 hover:scale-[1.02] backdrop-blur-sm shadow-sm dark:shadow-none'
+                      className={`snap-start flex-shrink-0 px-3.5 py-2 rounded-lg border text-xs font-bold transition-all ${
+                        selectedHouseId === house.id
+                          ? 'border-[#C5A880] text-[#E2C799] bg-[#C5A880]/10'
+                          : 'border-white/15 text-slate-300 hover:border-[#C5A880]/50 hover:text-white bg-black/30'
                       }`}
                     >
-                      {/* Background image overlay - increased opacity and dark overlay for text legibility, no more pale wash-out */}
-                      <div className="absolute inset-0 z-0 opacity-70 group-hover:opacity-90 transition-opacity duration-300">
-                        <img src={optimizeImageUrl(house.img, 300)} alt={house.name} className="w-full h-full object-cover" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/5 dark:from-slate-950/85 dark:via-slate-950/45 dark:to-transparent" />
-                      </div>
-                      <div className="relative z-10">
-                        <p className={`text-[10px] sm:text-xs font-black transition-colors duration-300 text-white ${selectedHouseId === house.id ? 'text-[#E2C799]' : ''}`}>{house.name}</p>
-                        <p className="text-[8px] sm:text-[9px] text-slate-200 dark:text-slate-350 mt-0.5 leading-tight font-medium line-clamp-1">{house.desc}</p>
-                      </div>
+                      {house.name}
                     </button>
                   ))}
-                </motion.div>
-              </div>
-            </div>
-
-            {/* Right Column: Interactive Lookbook (Color Swapper) & Floating Tags */}
-            <div className="lg:col-span-6 relative">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                className="relative bg-gradient-to-br from-white/95 to-slate-50/55 dark:from-slate-900/50 dark:to-slate-950/70 backdrop-blur-2xl border border-slate-200 dark:border-white/15 rounded-3xl p-4 sm:p-6 shadow-[0_20px_50px_rgba(197,168,128,0.06)] dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)] overflow-hidden group transition-colors duration-300"
-              >
-                {/* Lookbook main image wrapper */}
-                <div className="aspect-[4/3] rounded-2xl overflow-hidden relative border border-slate-250 dark:border-white/5 bg-slate-950">
-                  <AnimatePresence>
-                    <motion.img 
-                      key={`${selectedHouseId}-${selectedFacade}`}
-                      src={selectedFacadeImage} 
-                      alt={currentHouseData.name}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.4 }}
-                      className="absolute inset-0 w-full h-full object-cover" 
-                      loading="eager"
-                    />
-                  </AnimatePresence>
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
-                  
-                  {/* Floating Brand Badge */}
-                  <div className="absolute top-4 right-4 z-20">
-                    {getManufacturerBadge(currentHouseData.manufacturer)}
-                  </div>
-                  
-                  {/* Floating stats tag 1 (top-left) - Dynamic delivery time based on manufacturer */}
-                  <motion.div 
-                    animate={{ y: [0, -5, 0] }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute top-4 left-4 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border border-slate-200 dark:border-white/15 rounded-xl px-3.5 py-2 flex items-center gap-2 shadow-[0_8px_32px_rgba(0,0,0,0.15)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)] z-20 transition-colors duration-300"
-                  >
-                    <div className="w-8 h-8 rounded-lg bg-[#C5A880]/20 flex items-center justify-center border border-[#C5A880]/30">
-                       <Clock className="w-4 h-4 text-[#C5A880]" />
-                    </div>
-                    <div>
-                      <p className="text-[9px] text-slate-505 dark:text-slate-400 font-semibold uppercase tracking-wider">
-                        {currentHouseData.manufacturer?.toLowerCase().includes("ticab") ? t('factoryProduction') : t('turnkeyDelivery')}
-                      </p>
-                      <p className="text-xs font-black text-slate-800 dark:text-white">
-                        {currentHouseData.manufacturer?.toLowerCase().includes("ticab") ? t('sixWeeks') : t('upToTwelveWeeks')}
-                      </p>
-                    </div>
-                  </motion.div>
-
-                  {/* Floating stats tag 2 (bottom-right) */}
-                  <motion.div 
-                    animate={{ y: [0, 5, 0] }}
-                    transition={{ duration: 4, delay: 2, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute bottom-4 right-4 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border border-slate-250 dark:border-white/15 rounded-xl px-3.5 py-2 flex items-center gap-2 shadow-[0_8px_32px_rgba(0,0,0,0.15)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)] z-20 transition-colors duration-300"
-                  >
-                    <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center border border-emerald-500/35">
-                      <Star className="w-4 h-4 text-emerald-400 animate-pulse" />
-                    </div>
-                    <div>
-                      <p className="text-[9px] text-slate-505 dark:text-slate-400 font-semibold uppercase tracking-wider">{t('builtArea')}</p>
-                      <p className="text-xs font-black text-emerald-400">{currentHouseData.area} m²</p>
-                    </div>
-                  </motion.div>
                 </div>
 
-                {/* Lookbook info & controls */}
-                <div className="mt-4 sm:mt-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div>
-                      <h3 className="text-base sm:text-xl font-bold text-slate-800 dark:text-white leading-tight">{currentHouseData.name}</h3>
-                      <div className="text-xs text-slate-500 dark:text-slate-400 mt-1.5 font-medium flex items-center gap-1.5 flex-wrap">
-                        <span>{currentHouseData.rooms} {t('roomsLabel')}</span>
-                        <span>•</span>
-                        {getManufacturerBadge(currentHouseData.manufacturer)}
-                        <span>•</span>
-                        <span><strong className="text-slate-800 dark:text-white">{t('from')} {currentHouseData.price.toLocaleString()} €</strong></span>
-                      </div>
+                {hasMultipleFacades && (
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    {facadeOptions.map((opt) => (
+                      <button
+                        key={opt.id}
+                        type="button"
+                        onClick={() => setSelectedFacade(opt.id)}
+                        className={`px-3.5 py-2 rounded-lg border text-xs font-semibold transition-all ${
+                          selectedFacade === opt.id
+                            ? 'border-[#C5A880] text-[#E2C799] bg-[#C5A880]/10'
+                            : 'border-white/15 text-slate-300 hover:border-[#C5A880]/50 hover:text-white bg-black/30'
+                        }`}
+                      >
+                        {opt.name}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                <div className="flex items-end justify-between gap-4 mt-5 pt-4 border-t border-white/10 flex-wrap">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap mb-1.5">
+                      <h3 className="text-base font-bold text-white leading-tight">{currentHouseData.name}</h3>
+                      {getManufacturerBadge(currentHouseData.manufacturer)}
                     </div>
-                    <Link to={`${createPageUrl("DetailDomu")}?id=${currentHouseData.id}`}>
-                      <Button variant="ghost" size="sm" className="text-xs text-[#C5A880] hover:text-[#C5A880]/80 p-0 hover:bg-transparent flex items-center gap-1 font-black transition-colors duration-300">
-                        <span>{t('configure')}</span>
-                        <ChevronRight className="w-4 h-4" />
-                      </Button>
+                    <p className="text-xs text-slate-400">
+                      {currentHouseData.rooms} {t('roomsLabel')} • {currentHouseData.area} m² • {currentHouseData.manufacturer?.toLowerCase().includes("ticab") ? `${t('factoryProduction')}: ${t('sixWeeks')}` : `${t('turnkeyDelivery')}: ${t('upToTwelveWeeks')}`}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[10px] uppercase tracking-widest text-slate-400 mb-0.5">{t('from')}</p>
+                    <p className="font-['Fraunces'] text-2xl sm:text-3xl font-semibold text-[#E2C799] leading-none">{currentHouseData.price.toLocaleString('sk-SK')} €</p>
+                    <Link to={`${createPageUrl("DetailDomu")}?id=${currentHouseData.id}`} className="inline-flex items-center gap-1 text-xs font-bold text-[#C5A880] hover:text-[#E2C799] mt-1.5 transition-colors">
+                      <span>{t('configure')}</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
                     </Link>
                   </div>
-
-                  {/* Facade switcher controls with live thumbnails */}
-                  {hasMultipleFacades && (
-                    <div className="flex flex-col sm:flex-row gap-2">
-                      {facadeOptions.map((opt) => (
-                        <button
-                          key={opt.id}
-                          type="button"
-                          onClick={() => setSelectedFacade(opt.id)}
-                          className={`flex-1 p-2 rounded-xl border text-left transition-all duration-300 flex items-center gap-2.5 hover:scale-[1.02] ${
-                            selectedFacade === opt.id 
-                              ? 'bg-[#C5A880]/10 border-[#C5A880] text-[#C5A880] dark:text-white shadow-[0_0_15px_rgba(197,168,128,0.1)]' 
-                              : 'bg-slate-100 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-white/10 hover:border-slate-300 dark:hover:border-white/15'
-                          }`}
-                        >
-                          <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 border border-slate-200 dark:border-white/10 bg-slate-950 transition-all duration-300">
-                            <img src={optimizeImageUrl(opt.img, 120)} alt={opt.name} className="w-full h-full object-cover" />
-                          </div>
-                          <div className="min-w-0">
-                            <p className={`text-[11px] leading-tight font-black transition-colors duration-300 ${selectedFacade === opt.id ? 'text-[#C5A880]' : 'text-slate-800 dark:text-slate-200'}`}>{opt.name}</p>
-                            <p className="text-[9px] leading-tight text-slate-505 dark:text-slate-400 mt-0.5 truncate">{opt.desc}</p>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  )}
                 </div>
+              </motion.div>
+
+              {/* CTAs */}
+              <motion.div
+                initial={{ opacity: 0, y: 25 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+                className="flex flex-col sm:flex-row gap-3 mt-4"
+              >
+                <Link to={createPageUrl("Katalog")} className="flex-1">
+                  <Button size="lg" className="w-full bg-transparent hover:bg-[#C5A880]/10 text-[#E8E2D6] border border-[#C5A880]/60 font-bold text-sm px-5 py-6 rounded-xl transition-all flex items-center justify-center gap-2">
+                    <Home className="w-4 h-4 text-[#C5A880]" />
+                    <span>{t('viewCatalogButton')}</span>
+                  </Button>
+                </Link>
+                <Link to={createPageUrl("Showroom")} className="flex-1">
+                  <Button size="lg" className="w-full bg-transparent hover:bg-[#C5A880]/10 text-[#E8E2D6] border border-[#C5A880]/60 font-bold text-sm px-5 py-6 rounded-xl transition-all flex items-center justify-center gap-2">
+                    <Calendar className="w-4 h-4 text-[#C5A880]" />
+                    <span>{t('showroom')}</span>
+                  </Button>
+                </Link>
+                <Button
+                  size="lg"
+                  onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))}
+                  className="flex-1 bg-[#9E2A2B] hover:bg-[#b13536] text-white font-bold text-sm px-5 py-6 rounded-xl border border-[#9E2A2B]/60 transition-all flex items-center justify-center gap-2"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  <span>{t('consultationWithKexo')}</span>
+                </Button>
               </motion.div>
             </div>
 
@@ -1198,87 +1099,58 @@ export default function Domov() {
       </section>
 
       {/* Trust Grid: Tri hlavné záruky a predajné argumenty */}
-      <section className="py-8 sm:py-12 bg-slate-50 dark:bg-[#07070a] relative border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
-        <div className="container mx-auto px-4">
-          <motion.div 
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto"
+      <section className="py-16 sm:py-28 relative border-b border-white/5">
+        {/* Vertical gold chapter line */}
+        <div className="hidden lg:block absolute left-1/2 top-12 bottom-12 w-px bg-gradient-to-b from-transparent via-[#C5A880]/40 to-transparent pointer-events-none" />
+        <div className="container mx-auto px-4 space-y-16 sm:space-y-28">
+
+          {/* Kapitola 01: Súkromný Grant */}
+          <Chapter
+            number="01"
+            title={t('trustGrantTitle')}
+            text={t('trustGrantDesc')}
+            image="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=900&q=75"
           >
-            
-            {/* Stĺpec 1: Súkromný Grant */}
-            <motion.div 
-              variants={staggerItem}
-              className="bg-gradient-to-br from-white to-slate-50/50 dark:from-slate-900/60 dark:to-slate-950/60 border border-slate-200 dark:border-emerald-500/20 hover:border-emerald-500/40 rounded-2xl p-6 transition-all duration-300 relative overflow-hidden group shadow-md dark:shadow-lg"
-            >
-              <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-2xl group-hover:bg-emerald-500/10 transition-all pointer-events-none" />
-              <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center mb-4">
-                <Gift className="w-6 h-6 text-emerald-400 animate-pulse" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-2">
-                {t('trustGrantTitle')}
-              </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-light">
-                {t('trustGrantDesc')}
-              </p>
-              <Link to={createPageUrl("DotaciaAmericana")} className="mt-4 inline-flex items-center gap-1 text-xs text-emerald-600 dark:text-emerald-400 hover:text-[#C5A880] transition-colors font-bold">
-                <span>{t('trustGrantLink')}</span>
-                <ArrowRight className="w-3 h-3" />
-              </Link>
-            </motion.div>
+            <Link to={createPageUrl("DotaciaAmericana")} className="inline-flex items-center gap-2 text-sm text-[#C5A880] hover:text-[#E2C799] transition-colors font-bold">
+              <span>{t('trustGrantLink')}</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </Chapter>
 
-            {/* Stĺpec 2: 100% Financovanie */}
-            <motion.div 
-              variants={staggerItem}
-              className="bg-gradient-to-br from-white to-slate-50/50 dark:from-slate-900/60 dark:to-slate-950/60 border border-slate-200 dark:border-[#C5A880]/20 hover:border-[#C5A880]/40 rounded-2xl p-6 transition-all duration-300 relative overflow-hidden group shadow-md dark:shadow-lg"
+          {/* Kapitola 02: 100% Financovanie */}
+          <Chapter
+            number="02"
+            reverse
+            title={t('trustFinanceTitle')}
+            text={t('trustFinanceDesc')}
+            image="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=900&q=75"
+          >
+            <button
+              onClick={() => {
+                window.dispatchEvent(new CustomEvent('openChatbotWithContext', {
+                  detail: { message: "Chcem zistiť viac o modeli 100% financovania bez našetrených úspor." }
+                }));
+              }}
+              className="inline-flex items-center gap-2 text-sm text-[#C5A880] hover:text-[#E2C799] transition-colors font-bold"
             >
-              <div className="absolute top-0 right-0 w-24 h-24 bg-[#C5A880]/5 rounded-full blur-2xl group-hover:bg-[#C5A880]/10 transition-all pointer-events-none" />
-              <div className="w-12 h-12 rounded-xl bg-[#C5A880]/10 border border-[#C5A880]/25 flex items-center justify-center mb-4">
-                <Euro className="w-6 h-6 text-[#C5A880]" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-2">
-                {t('trustFinanceTitle')}
-              </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-light">
-                {t('trustFinanceDesc')}
-              </p>
-              <button 
-                onClick={() => {
-                  window.dispatchEvent(new CustomEvent('openChatbotWithContext', {
-                    detail: { message: "Chcem zistiť viac o modeli 100% financovania bez našetrených úspor." }
-                  }));
-                }}
-                className="mt-4 inline-flex items-center gap-1 text-[#C5A880] hover:text-[#C5A880]/80 transition-colors font-bold text-xs"
-              >
-                <span>{t('trustFinanceButton')}</span>
-                <ArrowRight className="w-3 h-3" />
-              </button>
-            </motion.div>
+              <span>{t('trustFinanceButton')}</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </Chapter>
 
-            {/* Stĺpec 3: Garancia Výstavby */}
-            <motion.div 
-              variants={staggerItem}
-              className="bg-gradient-to-br from-white to-slate-50/50 dark:from-slate-900/60 dark:to-slate-950/60 border border-slate-200 dark:border-red-500/20 hover:border-[#C5A880]/50 dark:hover:border-red-500/40 rounded-2xl p-6 transition-all duration-300 relative overflow-hidden group shadow-md dark:shadow-lg"
-            >
-              <div className="absolute top-0 right-0 w-24 h-24 bg-[#C5A880]/5 dark:bg-red-500/5 rounded-full blur-2xl group-hover:bg-[#C5A880]/10 dark:group-hover:bg-red-500/10 transition-all pointer-events-none" />
-              <div className="w-12 h-12 rounded-xl bg-[#C5A880]/15 dark:bg-red-500/10 border border-[#C5A880]/30 dark:border-red-500/25 flex items-center justify-center mb-4">
-                <Clock className="w-6 h-6 text-[#C5A880] dark:text-red-400" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-2">
-                {t('trustBuildTitle')}
-              </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-light">
-                {t('trustBuildDesc')}
-              </p>
-              <Link to={createPageUrl("AkoToFunguje")} className="mt-4 inline-flex items-center gap-1 text-xs text-[#C5A880] dark:text-red-400 hover:text-[#b0926a] dark:hover:text-[#C5A880] transition-colors font-bold">
-                <span>{t('trustBuildLink')}</span>
-                <ArrowRight className="w-3 h-3" />
-              </Link>
-            </motion.div>
+          {/* Kapitola 03: Rýchle odovzdanie */}
+          <Chapter
+            number="03"
+            title={t('trustBuildTitle')}
+            text={t('trustBuildDesc')}
+            image="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=900&q=75"
+          >
+            <Link to={createPageUrl("AkoToFunguje")} className="inline-flex items-center gap-2 text-sm text-[#C5A880] hover:text-[#E2C799] transition-colors font-bold">
+              <span>{t('trustBuildLink')}</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </Chapter>
 
-          </motion.div>
         </div>
       </section>
 
@@ -1297,13 +1169,15 @@ export default function Domov() {
                     <span className="w-2 h-2 bg-green-400 rounded-full"></span>
                     <span>{t('kexoAiAssistantBadge')}</span>
                   </div>
+                 <span className="font-['Fraunces'] text-5xl sm:text-6xl text-[#E2C799] leading-none block mb-2">04</span>
+                 <p className="text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">Kapitola</p>
                  <h2 className="text-2xl sm:text-4xl font-black text-slate-800 dark:text-white mb-4 sm:mb-6 leading-tight tracking-tight">
-                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C5A880] via-slate-800 dark:via-white to-[#C5A880]">
+                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C5A880] via-[#F3EFE6] to-[#C5A880]">
                      {t('consultWithKexoTitle')}
                    </span>
                    {" "}{t('consultWithKexoSub')}
                  </h2>
-                 <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed font-light mb-6 sm:mb-8">
+                 <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-light mb-6 sm:mb-8">
                    {t('kexoDescription')}
                  </p>
                  <div className="flex flex-wrap gap-4">
@@ -1349,7 +1223,7 @@ export default function Domov() {
                      <input 
                        type="text" 
                        placeholder={t('askMeAnything')}
-                       className="flex-1 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880] transition-colors"
+                       className="flex-1 bg-slate-50 dark:bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-[#C5A880] transition-colors"
                        readOnly
                        onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))}
                      />
@@ -1368,91 +1242,8 @@ export default function Domov() {
         </div>
       </section>
 
-      {/* Showroom Promo Section */}
-      <section className="py-16 sm:py-24 bg-gradient-to-br from-slate-900 via-slate-805 to-slate-950 text-white relative overflow-hidden border-b border-[#C5A880]/15">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(197,168,128,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(197,168,128,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-[#9E2A2B]/10 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-[#C5A880]/10 rounded-full blur-[120px] pointer-events-none" />
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-5xl mx-auto flex flex-col lg:flex-row items-center gap-12">
-            
-            {/* Left side: engaging copywriting */}
-            <div className="flex-1 text-left space-y-6">
-              <Badge className="bg-[#C5A880] text-slate-950 font-bold px-3.5 py-1.5 rounded-full text-xs uppercase tracking-wider">
-                Vyskúšajte pred kúpou
-              </Badge>
-              <h2 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
-                Vyskúšajte si bývanie na vlastnej koži predtým, <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#C5A880] to-[#E2C799]">než ho kúpite!</span>
-              </h2>
-              <p className="text-slate-300 font-light leading-relaxed text-sm sm:text-base">
-                Kúpa nového domu je životné rozhodnutie. Prečo by ste mali kupovať "mačku vo vreci"? V spolupráci s našimi partnermi pre vás staviame zážitkové **Showroom domy**, ktoré si budete môcť prenajať na víkend alebo pár nocí. Zažijete tak dokonalé ticho, vôňu dreva, špičkové zateplenie a tepelnú pohodu na vlastnej koži.
-              </p>
-              <div className="bg-white/5 border border-white/10 rounded-2xl p-5 text-xs sm:text-sm text-slate-350 space-y-2">
-                <p className="font-bold text-[#E2C799] flex items-center gap-2">
-                  <Sparkles className="w-4.5 h-4.5 text-[#C5A880]" />
-                  GARANCIA VRÁTENIA PENAZÍ:
-                </p>
-                <p className="font-light">
-                  Ak sa po ubytovaní v našom showroome rozhodnete pre kúpu akéhokoľvek domu z nášho katalógu, **celú sumu, ktorú ste zaplatili za prenájom, vám odpočítame z kúpnej ceny domu!** Vyskúšanie máte v takom prípade úplne zadarmo.
-                </p>
-              </div>
-
-              <div className="pt-2">
-                <Link to={createPageUrl("Showroom")}>
-                  <Button size="lg" className="bg-[#C5A880] hover:bg-[#C5A880]/90 text-slate-950 font-black text-base px-8 py-6 rounded-2xl transition-all shadow-[0_0_25px_rgba(197,168,128,0.25)] flex items-center justify-center gap-2 group">
-                    <Calendar className="w-5 h-5 group-hover:rotate-6 transition-transform" />
-                    <span>Rezervovať showroom dom</span>
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </Link>
-              </div>
-            </div>
-
-            {/* Right side: Locations preview */}
-            <div className="w-full lg:w-96 shrink-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-6 shadow-2xl relative overflow-hidden text-left">
-              <h3 className="font-bold text-xs uppercase tracking-wider text-[#C5A880] mb-4">Pripravované lokality:</h3>
-              
-              <div className="space-y-4">
-                {/* Location 1: Komárno */}
-                <div className="p-4 rounded-2xl bg-slate-950/60 border border-white/5 flex gap-3.5 items-start">
-                  <div className="w-10 h-10 rounded-xl bg-orange-600/10 border border-orange-500/25 flex items-center justify-center text-[#C5A880] shrink-0 font-bold text-lg">
-                    1
-                  </div>
-                  <div>
-                    <div className="flex justify-between items-center w-full">
-                      <h4 className="font-bold text-sm text-white">Komárno</h4>
-                      <Badge className="bg-orange-600/15 text-orange-400 text-[8px] border border-orange-500/25 py-0.5 px-2">staviame</Badge>
-                    </div>
-                    <p className="text-[11px] text-slate-400 font-light mt-1">Celoročný modulárny Barn House s krásnym bazénom a saunou v prírode.</p>
-                    <p className="text-[10px] text-slate-500 mt-2 font-medium">Partner: American Living s.r.o.</p>
-                  </div>
-                </div>
-
-                {/* Location 2: Levoča */}
-                <div className="p-4 rounded-2xl bg-slate-950/60 border border-white/5 flex gap-3.5 items-start">
-                  <div className="w-10 h-10 rounded-xl bg-orange-600/10 border border-orange-500/25 flex items-center justify-center text-[#C5A880] shrink-0 font-bold text-lg">
-                    2
-                  </div>
-                  <div>
-                    <div className="flex justify-between items-center w-full">
-                      <h4 className="font-bold text-sm text-white">Okolie Levoče</h4>
-                      <Badge className="bg-orange-600/15 text-orange-400 text-[8px] border border-orange-500/25 py-0.5 px-2">pripravujeme</Badge>
-                    </div>
-                    <p className="text-[11px] text-slate-400 font-light mt-1">Ekologický montovaný rodinný dom v lone spišskej prírody.</p>
-                    <p className="text-[10px] text-slate-500 mt-2 font-medium">Partner: American Living s.r.o.</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="mt-4 pt-4 border-t border-white/5 text-[10px] text-slate-450 text-center font-medium">
-                Domy vlastnia a spravujú licencovaní partneri.
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
+      {/* Kapitola 05: Showroom */}
+      <ShowroomChapter />
 
       {/* Populárne domy Carousel */}
       {domy && domy.length > 0 && (
@@ -1460,8 +1251,9 @@ export default function Domov() {
           <div className="container mx-auto px-4 mb-8">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-2xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-2 transition-colors duration-300">{t('popularHouses')}</h2>
-                <p className="text-slate-650 dark:text-slate-400 transition-colors duration-300">{t('popularHousesDesc')}</p>
+                <span className="font-['Fraunces'] text-4xl sm:text-5xl text-[#E2C799] leading-none block mb-1">06</span>
+                <h2 className="font-['Fraunces'] text-2xl sm:text-4xl text-[#F3EFE6] mb-2 uppercase">{t('popularHouses')}</h2>
+                <p className="text-slate-400 font-light">{t('popularHousesDesc')}</p>
               </div>
               <Link to={createPageUrl("Katalog")} className="hidden sm:flex items-center gap-2 text-primary hover:text-red-655 dark:hover:text-red-400 font-semibold transition-colors">
                 {t('showAllHouses')} <ArrowRight className="w-5 h-5" />
@@ -1481,7 +1273,7 @@ export default function Domov() {
                   className="snap-center sm:snap-start shrink-0 w-[85vw] sm:w-[400px] lg:w-[450px]"
                 >
                   <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}`}>
-                    <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-white/10 overflow-hidden group hover:-translate-y-2 transition-all duration-300 shadow-md dark:shadow-xl hover:shadow-[#C5A880]/15 dark:hover:shadow-red-950/20">
+                    <Card className="bg-white/[0.04] backdrop-blur-md border-white/10 overflow-hidden group hover:-translate-y-2 transition-all duration-300 shadow-md dark:shadow-xl hover:shadow-[#C5A880]/15 dark:hover:shadow-red-950/20">
                       <div className="aspect-[4/3] overflow-hidden relative">
                         <img 
                           src={optimizeImageUrl(dom.hlavny_obrazok || dom.obrazky?.[0], 600)} 
@@ -1516,9 +1308,9 @@ export default function Domov() {
                       <div className="p-5">
                         <div className="flex items-center justify-between mb-4">
                           <div className="text-xs text-slate-500 dark:text-slate-400 transition-colors duration-300">{t('priceFrom')}</div>
-                          <div className="text-xl font-black text-slate-900 dark:text-white transition-colors duration-300">{dom.zakladna_cena?.toLocaleString('sk-SK')} €</div>
+                          <div className="text-xl font-black text-[#F3EFE6] transition-colors duration-300">{dom.zakladna_cena?.toLocaleString('sk-SK')} €</div>
                         </div>
-                        <Button variant="outline" className="w-full border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white hover:text-slate-900 dark:hover:text-slate-950 bg-white/70 dark:bg-transparent text-slate-800 dark:text-white transition-all">
+                        <Button variant="outline" className="w-full border-white/10 hover:bg-slate-50 dark:hover:bg-white hover:text-slate-900 dark:hover:text-slate-950 bg-white/70 dark:bg-transparent text-slate-800 dark:text-white transition-all">
                           {t('houseDetail')} <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </Button>
                       </div>
@@ -1542,16 +1334,7 @@ export default function Domov() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--grid-color)_1px,transparent_1px),linear-gradient(to_bottom,var(--grid-color)_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
         
         <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <h2 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white mb-4 leading-tight transition-colors duration-300">
-              {t('gallerySectionTitle')}
-            </h2>
-            <div className="mt-2 mb-6">
-              <p className="inline-block text-slate-800 dark:text-slate-200 text-sm sm:text-lg font-normal leading-relaxed bg-white/90 dark:bg-slate-900/90 border border-slate-200/85 dark:border-white/10 px-6 py-3.5 rounded-2xl shadow-sm backdrop-blur-md transition-colors duration-300">
-                {t('galleryDesc')}
-              </p>
-            </div>
-          </div>
+          <ChapterHeading number="07" title={t('gallerySectionTitle')} subtitle={t('galleryDesc')} />
 
           {/* House Selector Tabs */}
           <div className="flex flex-wrap justify-center gap-3 mb-8">
@@ -1586,7 +1369,7 @@ export default function Domov() {
                 className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${
                   activeShowcaseTab === "exterier"
                     ? 'bg-[#C5A880] text-slate-950 shadow-md'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    : 'text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 {t('exterier')}
@@ -1597,7 +1380,7 @@ export default function Domov() {
                 className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${
                   activeShowcaseTab === "interier"
                     ? 'bg-[#C5A880] text-slate-950 shadow-md'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    : 'text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 {t('interier')}
@@ -1695,20 +1478,14 @@ export default function Domov() {
       <section className="py-12 sm:py-24 bg-slate-50 dark:bg-[#050508] relative overflow-hidden border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
         <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#C5A880]/20 to-transparent"></div>
         <div className="container mx-auto px-4 relative z-10">
-            <motion.h2 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              className="text-2xl sm:text-4xl md:text-5xl font-bold text-center mb-8 sm:mb-16 text-slate-900 dark:text-white transition-colors duration-300"
-            >
-            {t('trustedPartnersTitle')}
-          </motion.h2>
+            <ChapterHeading number="08" title={t('trustedPartnersTitle')} />
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8 max-w-6xl mx-auto">
             {/* Prosto House */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-3xl p-6 sm:p-10 shadow-md dark:shadow-2xl hover:shadow-[#C5A880]/10 dark:hover:bg-slate-800/50 transition-all duration-300"
+              className="bg-white/[0.04] backdrop-blur-md border border-white/10 rounded-3xl p-6 sm:p-10 shadow-md dark:shadow-2xl hover:shadow-[#C5A880]/10 dark:hover:bg-slate-800/50 transition-all duration-300"
             >
               <div className="mb-3 sm:mb-6">
                 <div className="aspect-[16/9] overflow-hidden rounded-xl">
@@ -1722,10 +1499,10 @@ export default function Domov() {
                   />
                 </div>
               </div>
-              <h3 className="text-xl sm:text-3xl font-bold mb-3 sm:mb-5 text-slate-900 dark:text-white transition-colors duration-300">
+              <h3 className="text-xl sm:text-3xl font-bold mb-3 sm:mb-5 text-[#F3EFE6] transition-colors duration-300">
                 {t('prostoTitle')}
               </h3>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm sm:text-lg font-light transition-colors duration-300">
+              <p className="text-slate-400 leading-relaxed text-sm sm:text-lg font-light transition-colors duration-300">
                 {t('prostoBody')}
               </p>
             </motion.div>
@@ -1734,7 +1511,7 @@ export default function Domov() {
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-3xl p-6 sm:p-10 shadow-md dark:shadow-2xl hover:shadow-[#C5A880]/10 dark:hover:bg-slate-800/50 transition-all duration-300"
+              className="bg-white/[0.04] backdrop-blur-md border border-white/10 rounded-3xl p-6 sm:p-10 shadow-md dark:shadow-2xl hover:shadow-[#C5A880]/10 dark:hover:bg-slate-800/50 transition-all duration-300"
             >
               <div className="mb-3 sm:mb-6">
                 <div className="aspect-[16/9] overflow-hidden rounded-xl">
@@ -1748,10 +1525,10 @@ export default function Domov() {
                   />
                 </div>
               </div>
-              <h3 className="text-xl sm:text-3xl font-bold mb-3 sm:mb-5 text-slate-900 dark:text-white transition-colors duration-300">
+              <h3 className="text-xl sm:text-3xl font-bold mb-3 sm:mb-5 text-[#F3EFE6] transition-colors duration-300">
                 {t('ticabTitle')}
               </h3>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm sm:text-lg font-light transition-colors duration-300">
+              <p className="text-slate-400 leading-relaxed text-sm sm:text-lg font-light transition-colors duration-300">
                 {t('ticabBody')}
               </p>
             </motion.div>
@@ -1779,13 +1556,13 @@ export default function Domov() {
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#C5A880]/15 dark:bg-red-500/10 border border-[#C5A880]/30 dark:border-red-500/20 text-slate-800 dark:text-red-400 text-sm font-bold mb-6">
                   <Gift className="w-4 h-4" /> VIP Benefit Program
                 </div>
-                <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white mb-6 leading-tight transition-colors duration-300">
+                <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black text-[#F3EFE6] mb-6 leading-tight transition-colors duration-300">
                   {t('moreThanJustAHouse')}<br />
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-800 dark:from-red-400 dark:to-red-600">
                     {t('financialInjection')}
                   </span>
                 </h2>
-                <p className="text-lg sm:text-xl text-slate-800 dark:text-slate-200 font-normal mb-8 leading-relaxed max-w-xl bg-white/90 dark:bg-slate-900/90 border border-slate-200/85 dark:border-white/10 px-6 py-4 sm:py-5 rounded-2xl shadow-md backdrop-blur-md transition-colors duration-300">
+                <p className="text-lg sm:text-xl text-slate-300 font-normal mb-8 leading-relaxed max-w-xl bg-white/[0.05] backdrop-blur-md border border-slate-200/85 dark:border-white/10 px-6 py-4 sm:py-5 rounded-2xl shadow-md backdrop-blur-md transition-colors duration-300">
                   {t('grantDescriptionPart1')} <strong className="text-slate-955 dark:text-white font-bold">{t('grantDescriptionPart2')}</strong>{t('grantDescriptionPart3')}
                 </p>
                 
@@ -1799,7 +1576,7 @@ export default function Domov() {
                 </Link>
                 
                 <div className="mt-8">
-                  <div className="inline-flex items-center gap-3 text-xs sm:text-sm bg-white/90 dark:bg-slate-900/90 border border-slate-200/85 dark:border-white/10 px-4 py-2.5 rounded-xl shadow-sm text-slate-700 dark:text-slate-300 backdrop-blur-md transition-colors duration-300">
+                  <div className="inline-flex items-center gap-3 text-xs sm:text-sm bg-white/[0.05] backdrop-blur-md border border-slate-200/85 dark:border-white/10 px-4 py-2.5 rounded-xl shadow-sm text-slate-700 dark:text-slate-300 backdrop-blur-md transition-colors duration-300">
                     <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-[#C5A880]" />
                     <span>{t('guaranteedFinancing')}</span>
                   </div>
@@ -1817,25 +1594,25 @@ export default function Domov() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, delay: 0.2 }}
-                  className="bg-white dark:bg-slate-900/40 backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-3xl p-6 sm:p-8 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-all shadow-md dark:shadow-2xl relative overflow-hidden group"
+                  className="bg-white dark:bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-3xl p-6 sm:p-8 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-all shadow-md dark:shadow-2xl relative overflow-hidden group"
                 >
                   <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl group-hover:bg-emerald-500/20 transition-all"></div>
                   <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-emerald-900/50">
                     <Home className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 transition-colors duration-300">{t('forFamilies')}</h3>
+                  <h3 className="text-xl font-bold text-[#F3EFE6] mb-4 transition-colors duration-300">{t('forFamilies')}</h3>
                   <ul className="space-y-4">
                     <li className="flex items-start gap-3">
                       <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
-                      <span className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed transition-colors duration-300">{t('grantAtSigning')}</span>
+                      <span className="text-slate-300 text-sm leading-relaxed transition-colors duration-300">{t('grantAtSigning')}</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
-                      <span className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed transition-colors duration-300">{t('energyFullyRefunded')}</span>
+                      <span className="text-slate-300 text-sm leading-relaxed transition-colors duration-300">{t('energyFullyRefunded')}</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
-                      <span className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed transition-colors duration-300">{t('supportAfterHandover')}</span>
+                      <span className="text-slate-300 text-sm leading-relaxed transition-colors duration-300">{t('supportAfterHandover')}</span>
                     </li>
                   </ul>
                 </motion.div>
@@ -1846,25 +1623,25 @@ export default function Domov() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, delay: 0.4 }}
-                  className="bg-white dark:bg-slate-900/40 backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-3xl p-6 sm:p-8 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-all shadow-md dark:shadow-2xl relative overflow-hidden lg:mt-12 group"
+                  className="bg-white dark:bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-3xl p-6 sm:p-8 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-all shadow-md dark:shadow-2xl relative overflow-hidden lg:mt-12 group"
                 >
                   <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/10 rounded-full blur-3xl group-hover:bg-yellow-500/20 transition-all"></div>
                   <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-yellow-700 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-yellow-900/50">
                     <TrendingUp className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 transition-colors duration-300">{t('forInvestors')}</h3>
+                  <h3 className="text-xl font-bold text-[#F3EFE6] mb-4 transition-colors duration-300">{t('forInvestors')}</h3>
                   <ul className="space-y-4">
                     <li className="flex items-start gap-3">
                       <CheckCircle className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />
-                      <span className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed transition-colors duration-300">{t('grantAtSigning')}</span>
+                      <span className="text-slate-300 text-sm leading-relaxed transition-colors duration-300">{t('grantAtSigning')}</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <CheckCircle className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />
-                      <span className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed transition-colors duration-300">{t('marketingFree')}</span>
+                      <span className="text-slate-300 text-sm leading-relaxed transition-colors duration-300">{t('marketingFree')}</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <CheckCircle className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />
-                      <span className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed transition-colors duration-300">{t('passiveIncomeFromAirbnb')}</span>
+                      <span className="text-slate-300 text-sm leading-relaxed transition-colors duration-300">{t('passiveIncomeFromAirbnb')}</span>
                     </li>
                   </ul>
                 </motion.div>
@@ -1882,6 +1659,9 @@ export default function Domov() {
       </section>
       
       <style>{`
+        .cinematic h2, .cinematic h3 {
+          font-family: 'Fraunces', Georgia, serif;
+        }
         @keyframes shimmer {
           0% { transform: translateX(-100%); }
           100% { transform: translateX(100%); }
@@ -1896,14 +1676,14 @@ export default function Domov() {
         <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-[#C5A880]/10 dark:bg-red-950/15 rounded-full blur-[120px] pointer-events-none"></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-5xl mx-auto">
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-[#C5A880]/30 rounded-3xl p-8 sm:p-12 shadow-md dark:shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 transition-colors duration-300">
+            <div className="bg-white/[0.04] backdrop-blur-md border border-slate-200 dark:border-[#C5A880]/30 rounded-3xl p-8 sm:p-12 shadow-md dark:shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 transition-colors duration-300">
               <div className="absolute top-0 left-0 w-3 h-full bg-[#C5A880]"></div>
               
               <div className="flex-1 text-center md:text-left">
-                <h2 className="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white mb-4 leading-tight transition-colors duration-300">
+                <h2 className="text-2xl sm:text-4xl font-black text-[#F3EFE6] mb-4 leading-tight transition-colors duration-300">
                   Chcete si postaviť nový dom a nemáte na to kapitál?
                 </h2>
-                <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-lg font-light leading-relaxed max-w-2xl transition-colors duration-300">
+                <p className="text-slate-300 text-sm sm:text-lg font-light leading-relaxed max-w-2xl transition-colors duration-300">
                   Žiadny problém! Máme model financovania pre tých, ktorí nemajú našetrené. Pomôžeme vám vyriešiť financovanie celej výstavby od A po Z.
                 </p>
               </div>
@@ -1953,7 +1733,7 @@ export default function Domov() {
                   </div>
                 </motion.div>
                 <div className="flex-1 text-center md:text-left">
-                  <h2 className="text-2xl sm:text-5xl font-black text-slate-900 dark:text-white mb-3 sm:mb-5 leading-tight transition-colors duration-300">
+                  <h2 className="text-2xl sm:text-5xl font-black text-[#F3EFE6] mb-3 sm:mb-5 leading-tight transition-colors duration-300">
                     {t('mortgageFixationTitle')}
                   </h2>
                   <p className="text-sm sm:text-2xl text-slate-700 dark:text-white/98 leading-relaxed font-semibold mb-4 sm:mb-8 transition-colors duration-300">
@@ -1996,24 +1776,17 @@ export default function Domov() {
             transition={{ duration: 0.6 }}
             className="text-center mb-4 sm:mb-10"
           >
-            <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 text-slate-900 dark:text-white transition-colors duration-300">
-              {t('allInOnePlace')}
-            </h2>
-            <div className="mt-2 mb-6">
-              <p className="inline-block text-sm sm:text-lg text-slate-800 dark:text-slate-200 max-w-3xl mx-auto bg-white/90 dark:bg-slate-900/90 border border-slate-200/85 dark:border-white/10 px-6 py-3.5 rounded-2xl shadow-sm backdrop-blur-md transition-colors duration-300">
-                {t('comprehensiveServicesDesc')}
-              </p>
-            </div>
+            <ChapterHeading number="10" title={t('allInOnePlace')} subtitle={t('comprehensiveServicesDesc')} />
             <div className="flex flex-wrap justify-center gap-1 sm:gap-2 text-[10px] sm:text-sm font-semibold">
-              <div className="flex items-center gap-1 bg-white dark:bg-white/5 px-2.5 py-1 sm:px-4 sm:py-2 rounded-full text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10 shadow-sm transition-colors duration-300">
+              <div className="flex items-center gap-1 bg-white dark:bg-white/5 px-2.5 py-1 sm:px-4 sm:py-2 rounded-full text-slate-700 dark:text-slate-300 border border-white/10 shadow-sm transition-colors duration-300">
                 <Building className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 text-primary" />
                 <span>{t('constructionCompany')}</span>
               </div>
-              <div className="flex items-center gap-1 bg-white dark:bg-white/5 px-2.5 py-1 sm:px-4 sm:py-2 rounded-full text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10 shadow-sm transition-colors duration-300">
+              <div className="flex items-center gap-1 bg-white dark:bg-white/5 px-2.5 py-1 sm:px-4 sm:py-2 rounded-full text-slate-700 dark:text-slate-300 border border-white/10 shadow-sm transition-colors duration-300">
                 <Building2 className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 text-primary" />
                 <span>{t('realEstateAgency')}</span>
               </div>
-              <div className="flex items-center gap-1 bg-white dark:bg-white/5 px-2.5 py-1 sm:px-4 sm:py-2 rounded-full text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10 shadow-sm transition-colors duration-300">
+              <div className="flex items-center gap-1 bg-white dark:bg-white/5 px-2.5 py-1 sm:px-4 sm:py-2 rounded-full text-slate-700 dark:text-slate-300 border border-white/10 shadow-sm transition-colors duration-300">
                 <Landmark className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 text-primary" />
                 <span>{t('financialServices')}</span>
               </div>
@@ -2046,7 +1819,7 @@ export default function Domov() {
                   }}
                   className={`h-full ${getBentoClasses(index)}`}
                 >
-                  <Card className="group overflow-hidden h-full flex flex-col hover:shadow-2xl hover:shadow-[#C5A880]/15 dark:hover:shadow-red-950/20 transition-all duration-300 cursor-pointer bg-white dark:bg-slate-900 border-slate-200 dark:border-white/10 shadow-md hover:-translate-y-2">
+                  <Card className="group overflow-hidden h-full flex flex-col hover:shadow-2xl hover:shadow-[#C5A880]/15 dark:hover:shadow-red-950/20 transition-all duration-300 cursor-pointer bg-white/[0.04] backdrop-blur-md border-white/10 shadow-md hover:-translate-y-2">
                     <div className="relative flex-1 min-h-[200px] overflow-hidden">
                       <img 
                         src={optimizeImageUrl(sluzba.image, 800)}
@@ -2056,7 +1829,7 @@ export default function Domov() {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent transition-colors duration-500" />
                       <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 right-4">
-                        <div className="w-10 h-10 sm:w-14 sm:h-14 bg-white/95 dark:bg-slate-950/95 border border-slate-200 dark:border-white/10 rounded-xl flex items-center justify-center shadow-2xl mb-4 group-hover:-translate-y-2 transition-transform duration-500">
+                        <div className="w-10 h-10 sm:w-14 sm:h-14 bg-white/95 dark:bg-slate-950/95 border border-white/10 rounded-xl flex items-center justify-center shadow-2xl mb-4 group-hover:-translate-y-2 transition-transform duration-500">
                           <sluzba.icon className="w-5 h-5 sm:w-7 sm:h-7 text-primary" />
                         </div>
                         <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 drop-shadow-md">{sluzba.nazov}</h3>
@@ -2075,7 +1848,7 @@ export default function Domov() {
 
           <div className="text-center">
             <p className="text-sm sm:text-xl text-slate-650 dark:text-slate-400 mb-4 sm:mb-6 transition-colors duration-300">
-              <strong className="text-slate-900 dark:text-white font-bold">{t('youDontHaveToArrange')}</strong> {t('weHandleEverything')}
+              <strong className="text-[#F3EFE6] font-bold">{t('youDontHaveToArrange')}</strong> {t('weHandleEverything')}
             </p>
             <Link to={createPageUrl("Kontakt")}>
               <Button size="lg" className="bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-bold px-6 sm:px-10 py-6 text-sm sm:text-lg shadow-[0_0_20px_rgba(239,68,68,0.2)] hover:shadow-[0_0_30px_rgba(239,68,68,0.4)] transition-all rounded-2xl border border-red-500/30">
@@ -2097,14 +1870,7 @@ export default function Domov() {
             transition={{ duration: 0.6 }}
             className="text-center mb-4 sm:mb-10"
           >
-            <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-6 text-slate-900 dark:text-white transition-colors duration-300">
-              {t('whyAmericanLiving')}
-            </h2>
-            <div className="mt-2 mb-6">
-              <p className="inline-block text-sm sm:text-lg text-slate-800 dark:text-slate-200 max-w-3xl mx-auto bg-white/90 dark:bg-slate-900/90 border border-slate-200/85 dark:border-white/10 px-6 py-3.5 rounded-2xl shadow-sm backdrop-blur-md transition-colors duration-300">
-                {t('qualityBrand')}
-              </p>
-            </div>
+            <ChapterHeading number="11" title={t('whyAmericanLiving')} subtitle={t('qualityBrand')} />
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-6 mb-8 sm:mb-12">
@@ -2117,16 +1883,16 @@ export default function Domov() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 whileHover={{ y: -8 }}
               >
-                <Card className="p-8 text-center h-full hover:shadow-2xl hover:border-[#C5A880]/30 transition-all duration-300 bg-white dark:bg-slate-900 border-slate-200/60 dark:border-white/5 shadow-md dark:shadow-xl group">
+                <Card className="p-8 text-center h-full hover:shadow-2xl hover:border-[#C5A880]/30 transition-all duration-300 bg-white/[0.04] backdrop-blur-md border-slate-200/60 dark:border-white/5 shadow-md dark:shadow-xl group">
                   <motion.div 
                     whileHover={{ rotate: [0, -10, 10, -10, 0], scale: 1.15 }}
                     transition={{ duration: 0.5 }}
-                    className="w-16 h-16 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm dark:shadow-lg transition-colors duration-300"
+                    className="w-16 h-16 bg-slate-50 dark:bg-slate-950 border border-white/10 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm dark:shadow-lg transition-colors duration-300"
                   >
                     <vyhoda.icon className="w-8 h-8 text-[#C5A880] dark:text-[#E2C799]" />
                   </motion.div>
-                  <h3 className="text-lg font-bold mb-3 text-slate-900 dark:text-white transition-colors duration-300">{vyhoda.title}</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-light transition-colors duration-300">{vyhoda.description}</p>
+                  <h3 className="text-lg font-bold mb-3 text-[#F3EFE6] transition-colors duration-300">{vyhoda.title}</h3>
+                  <p className="text-sm text-slate-400 leading-relaxed font-light transition-colors duration-300">{vyhoda.description}</p>
                 </Card>
               </motion.div>
             ))}
@@ -2158,7 +1924,7 @@ export default function Domov() {
                   <p className="text-xs sm:text-base text-slate-800 dark:text-slate-300 mb-2 sm:mb-3 leading-relaxed font-medium transition-colors duration-300">
                     {t('misleadingAdsDesc2')}
                   </p>
-                  <p className="text-sm sm:text-lg text-slate-900 dark:text-white font-bold transition-colors duration-300">
+                  <p className="text-sm sm:text-lg text-[#F3EFE6] font-bold transition-colors duration-300">
                     ✓ {t('ourHousesMeetStandards')}
                   </p>
                 </div>
@@ -2179,14 +1945,7 @@ export default function Domov() {
               transition={{ duration: 0.6 }}
               className="text-center mb-4 sm:mb-10"
             >
-              <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-6 text-slate-900 dark:text-white transition-colors duration-300">
-                {t('ourOffer')}
-              </h2>
-              <div className="mt-2 mb-6">
-                <p className="inline-block text-sm sm:text-lg text-slate-800 dark:text-slate-200 bg-white/90 dark:bg-slate-900/90 border border-slate-200/85 dark:border-white/10 px-6 py-3.5 rounded-2xl shadow-sm backdrop-blur-md transition-colors duration-300">
-                  {t('woodHouseNotLookWood')}
-                </p>
-              </div>
+              <ChapterHeading number="12" title={t('ourOffer')} subtitle={t('woodHouseNotLookWood')} />
             </motion.div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 sm:gap-4 mb-4 sm:mb-12">
@@ -2200,7 +1959,7 @@ export default function Domov() {
                   whileHover={{ y: -8 }}
                 >
                   <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}`}>
-                    <Card className="group overflow-hidden hover:shadow-2xl hover:border-[#C5A880]/30 hover:-translate-y-2 transition-all duration-300 bg-white dark:bg-slate-900 border-slate-200/80 dark:border-white/10 shadow-md dark:shadow-xl h-full flex flex-col">
+                    <Card className="group overflow-hidden hover:shadow-2xl hover:border-[#C5A880]/30 hover:-translate-y-2 transition-all duration-300 bg-white/[0.04] backdrop-blur-md border-slate-200/80 dark:border-white/10 shadow-md dark:shadow-xl h-full flex flex-col">
                       <div className="relative aspect-video overflow-hidden">
                         <img
                           src={optimizeImageUrl(dom.hlavny_obrazok, 300)}
@@ -2226,7 +1985,7 @@ export default function Domov() {
                           <div className="mb-2">
                             {getManufacturerBadge(dom.vyrobca)}
                           </div>
-                          <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white mb-2 sm:mb-3 group-hover:text-primary transition-colors line-clamp-2 leading-tight">
+                          <h3 className="text-sm sm:text-base font-bold text-[#F3EFE6] mb-2 sm:mb-3 group-hover:text-primary transition-colors line-clamp-2 leading-tight">
                             {dom.nazov}
                           </h3>
                         </div>
@@ -2269,7 +2028,7 @@ export default function Domov() {
             >
               <Link to={createPageUrl("Katalog")}>
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                  <Button size="lg" className="relative bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-850 text-slate-900 dark:text-white font-black text-sm sm:text-xl px-6 sm:px-16 py-4 sm:py-8 shadow-md dark:shadow-[0_0_30px_rgba(255,255,255,0.05)] border border-slate-200 dark:border-white/10 transition-all duration-300 group rounded-2xl">
+                  <Button size="lg" className="relative bg-white/[0.04] backdrop-blur-md hover:bg-slate-50 dark:hover:bg-slate-850 text-[#F3EFE6] font-black text-sm sm:text-xl px-6 sm:px-16 py-4 sm:py-8 shadow-md dark:shadow-[0_0_30px_rgba(255,255,255,0.05)] border border-white/10 transition-all duration-300 group rounded-2xl">
                     <Home className="mr-1 w-4 h-4 sm:mr-2 sm:w-6 sm:h-6 group-hover:rotate-12 transition-transform text-[#C5A880]" />
                     {t('showAllHouses')}
                     <ArrowRight className="ml-1 w-4 h-4 sm:ml-2 sm:w-6 sm:h-6 group-hover:translate-x-2 transition-transform" />
@@ -2285,7 +2044,7 @@ export default function Domov() {
       <section className="py-6 sm:py-16 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-white/5 transition-colors duration-300">
         <div className="container mx-auto px-2 sm:px-4">
           <div className="text-center mb-4 sm:mb-8">
-            <h2 className="text-sm sm:text-2xl font-bold text-slate-900 dark:text-white transition-colors duration-300">{t('implementationProcess')}</h2>
+            <h2 className="text-sm sm:text-2xl font-bold text-[#F3EFE6] transition-colors duration-300">{t('implementationProcess')}</h2>
           </div>
 
           <motion.div 
@@ -2299,7 +2058,7 @@ export default function Domov() {
               <motion.div 
                 key={index} 
                 variants={staggerItem}
-                className="flex items-center gap-0.5 sm:gap-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-full px-3 py-1.5 sm:px-5 sm:py-2.5 shadow-sm transition-colors duration-300"
+                className="flex items-center gap-0.5 sm:gap-1 bg-white/[0.04] backdrop-blur-md border border-white/10 rounded-full px-3 py-1.5 sm:px-5 sm:py-2.5 shadow-sm transition-colors duration-300"
               >
                 <span className="text-[7px] sm:text-xs font-bold text-primary dark:text-[#C5A880]">{krok.cislo}</span>
                 <krok.icon className="w-2.5 h-2.5 sm:w-4.5 sm:h-4.5 text-primary dark:text-[#C5A880]" />
@@ -2318,16 +2077,16 @@ export default function Domov() {
       />
 
       {/* CTA Section */}
-      <section className="py-12 sm:py-24 bg-background dark:bg-slate-950 border-t border-slate-200 dark:border-white/10 relative overflow-hidden transition-colors duration-300">
+      <section className="py-12 sm:py-24 bg-background dark:bg-slate-950 border-t border-white/10 relative overflow-hidden transition-colors duration-300">
         <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-80 h-80 bg-[#C5A880]/10 dark:bg-red-500/10 rounded-full blur-[100px] pointer-events-none" />
         <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-[#C5A880]/5 dark:bg-[#C5A880]/10 rounded-full blur-[100px] pointer-events-none" />
         <div className="container mx-auto px-2 sm:px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-lg sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-4 text-slate-900 dark:text-white transition-colors duration-300">
+            <h2 className="text-lg sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-4 text-[#F3EFE6] transition-colors duration-300">
               {t('readyForOwnHouse')}
             </h2>
             <div className="mt-2 mb-6 sm:mb-10">
-              <p className="inline-block text-sm sm:text-lg text-slate-800 dark:text-slate-200 bg-white/90 dark:bg-slate-900/90 border border-slate-200/85 dark:border-white/10 px-6 py-3.5 rounded-2xl shadow-sm backdrop-blur-md transition-colors duration-300">
+              <p className="inline-block text-sm sm:text-lg text-slate-300 bg-white/[0.05] backdrop-blur-md border border-slate-200/85 dark:border-white/10 px-6 py-3.5 rounded-2xl shadow-sm backdrop-blur-md transition-colors duration-300">
                 {t('contactUsAndFind')}
               </p>
             </div>
