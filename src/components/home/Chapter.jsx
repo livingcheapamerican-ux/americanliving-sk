@@ -18,7 +18,7 @@ export default function Chapter({ number, kicker, title, text, image, reverse = 
           loading="lazy"
         />
       </div>
-      <div className={reverse ? "lg:order-1" : ""}>
+      <div className={`${reverse ? "lg:order-1" : ""} rounded-3xl bg-[#EFE9DF]/92 backdrop-blur-md border border-[#E0D8CA]/70 shadow-[0_10px_30px_rgba(44,58,51,0.08)] p-6 sm:p-8`}>
         {kicker && <p className="text-[11px] uppercase tracking-[0.25em] text-[#9E2A2B] font-bold mb-3">{kicker}</p>}
         <h2 className="font-['Sora'] text-2xl sm:text-4xl font-bold text-[#2C3A33] leading-tight mb-4">{title}</h2>
         <p className="text-sm sm:text-base text-[#6B7A72] leading-relaxed mb-5 max-w-lg">{text}</p>

@@ -9,7 +9,7 @@ export default function ChapterHeading({ number, kicker, title, subtitle, align 
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.5 }}
-      className={`flex flex-col ${alignClass} max-w-3xl mb-8 sm:mb-12`}
+      className={`flex flex-col ${alignClass} max-w-3xl mb-8 sm:mb-12 rounded-3xl bg-[#EFE9DF]/92 backdrop-blur-md border border-[#E0D8CA]/70 px-6 py-6 sm:px-8 sm:py-7`}
     >
       {kicker && (
         <p className="text-[11px] uppercase tracking-[0.25em] text-[#9E2A2B] font-bold mb-3">{kicker}</p>
