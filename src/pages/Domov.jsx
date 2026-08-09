@@ -822,7 +822,7 @@ export default function Domov() {
     : lcpImage;
 
   return (
-    <div className="warm min-h-screen -mt-10 sm:-mt-12 md:-mt-14 lg:-mt-16 xl:-mt-20 overflow-x-hidden relative bg-[#EFE9DF] text-[#2C3A33]">
+    <div className="warm min-h-screen -mt-10 sm:-mt-12 md:-mt-14 lg:-mt-16 xl:-mt-20 overflow-x-hidden lg:overflow-x-visible relative bg-[#EFE9DF] text-[#2C3A33]">
       <div className="relative z-10">
         <Helmet>
         <link rel="canonical" href="https://americanliving.sk" />
@@ -899,7 +899,7 @@ export default function Domov() {
 
 
       {/* Hero Section - Warm architectural with interior video background */}
-      <section className="hero-section relative bg-[#EFE9DF] pt-36 sm:pt-44 lg:pt-56 pb-12 sm:pb-16 overflow-hidden">
+      <section className="hero-section relative bg-[#EFE9DF] pt-36 sm:pt-44 lg:pt-56 pb-12 sm:pb-16 overflow-hidden lg:w-screen lg:ml-[calc(50%-50vw)]">
         {/* Background video: modern house interior */}
         <div className="absolute inset-0 pointer-events-none">
           <video
@@ -1650,6 +1650,9 @@ export default function Domov() {
       <style>{`
         .warm h2, .warm h3 {
           font-family: 'Sora', system-ui, sans-serif;
+        }
+        body {
+          overflow-x: clip;
         }
         @keyframes shimmer {
           0% { transform: translateX(-100%); }
