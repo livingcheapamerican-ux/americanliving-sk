@@ -20,6 +20,7 @@ import { optimizeImageUrl } from "../components/ImageWithWatermark";
 import Chapter from "../components/home/Chapter";
 import ChapterHeading from "../components/home/ChapterHeading";
 import ShowroomChapter from "../components/home/ShowroomChapter";
+import HomeBackgroundVideo from "../components/home/HomeBackgroundVideo";
 
 const sliderT = {
   sk: { viz: "Vizualizácia", real: "Realizácia" },
@@ -822,8 +823,11 @@ export default function Domov() {
     : lcpImage;
 
   return (
-    <div className="warm min-h-screen -mt-10 sm:-mt-12 md:-mt-14 lg:-mt-16 xl:-mt-20 overflow-x-hidden lg:overflow-x-visible relative bg-[#EFE9DF] text-[#2C3A33]">
-      <div className="relative z-10">
+    <div className="warm min-h-screen -mt-10 sm:-mt-12 md:-mt-14 lg:-mt-16 xl:-mt-20 overflow-x-hidden lg:overflow-x-visible relative text-[#2C3A33]">
+      {/* 1. VRSTVA (SPODNÁ) - fixné video na celej stránke */}
+      <HomeBackgroundVideo />
+      {/* 2. VRSTVA (HORNÁ) - obsah stránky, ktorý sa roluje nad videom */}
+      <div className="fixed-bg-content relative z-10">
         <Helmet>
         <link rel="canonical" href="https://americanliving.sk" />
         <title>American Living – Modulárne a montované domy na kľúč | Slovensko</title>
@@ -899,23 +903,9 @@ export default function Domov() {
 
 
       {/* Hero Section - Warm architectural with interior video background */}
-      <section className="hero-section relative bg-[#EFE9DF] pt-36 sm:pt-44 lg:pt-56 pb-12 sm:pb-16 overflow-hidden lg:w-screen lg:ml-[calc(50%-50vw)]">
-        {/* Background video: modern house interior */}
-        <div className="absolute inset-0 pointer-events-none">
-          <video
-            src="https://media.base44.com/videos/public/6916d89a485af231beb54c71/828604ee8_Hero_interir_video.mp4"
-            autoPlay
-            muted
-            loop
-            playsInline
-            poster={lcpImageOptimized}
-            className="w-full h-full object-cover"
-            aria-hidden="true"
-          />
-          {/* Scrim for legibility, fading into the warm page background */}
-          <div className="absolute inset-0 bg-[#14100C]/45" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#14100C]/60 via-[#14100C]/40 to-[#EFE9DF]" />
-        </div>
+      <section className="hero-section relative pt-36 sm:pt-44 lg:pt-56 pb-12 sm:pb-16 overflow-hidden">
+        {/* Scrim pre čitateľnosť nad fixným videom */}
+        <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: 'rgba(20, 16, 12, 0.62)' }} />
         <div className="container mx-auto px-4 relative z-10">
 
           {/* Centered intro */}
