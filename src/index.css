@@ -195,12 +195,9 @@ button:focus-visible {
   animation: kenBurns 45s ease-in-out infinite;
 }
 
-/* Sekcie nad videom: sklenená vrstva – video zostáva ostré, text čitateľný */
+/* Sekcie nad videom sú priehľadné – krémové pozadie majú len karty, bannery a tlačidlá */
 .fixed-bg-content section {
-  background-color: rgba(239, 233, 223, 0.82) !important;
-  backdrop-filter: blur(14px) !important;
-  -webkit-backdrop-filter: blur(14px) !important;
-}
-.dark .fixed-bg-content section {
-  background-color: rgba(8, 8, 10, 0.78) !important;
+  background-color: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
