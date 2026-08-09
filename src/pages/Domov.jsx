@@ -898,9 +898,25 @@ export default function Domov() {
 
 
 
-      {/* Hero Section - Warm architectural */}
-      <section className="hero-section relative bg-[#EFE9DF] pt-36 sm:pt-44 lg:pt-56 pb-12 sm:pb-16">
-        <div className="container mx-auto px-4">
+      {/* Hero Section - Warm architectural with interior video background */}
+      <section className="hero-section relative bg-[#EFE9DF] pt-36 sm:pt-44 lg:pt-56 pb-12 sm:pb-16 overflow-hidden">
+        {/* Background video: modern house interior */}
+        <div className="absolute inset-0 pointer-events-none">
+          <video
+            src="https://media.base44.com/videos/public/6916d89a485af231beb54c71/828604ee8_Hero_interir_video.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster={lcpImageOptimized}
+            className="w-full h-full object-cover"
+            aria-hidden="true"
+          />
+          {/* Scrim for legibility, fading into the warm page background */}
+          <div className="absolute inset-0 bg-[#14100C]/45" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#14100C]/60 via-[#14100C]/40 to-[#EFE9DF]" />
+        </div>
+        <div className="container mx-auto px-4 relative z-10">
 
           {/* Centered intro */}
           <div className="max-w-4xl mx-auto text-center">
@@ -931,7 +947,7 @@ export default function Domov() {
               variants={headlineContainer}
               initial="hidden"
               animate="visible"
-              className="font-['Fraunces'] text-4xl sm:text-6xl lg:text-7xl font-semibold text-[#2C3A33] mb-5 leading-[1.05] tracking-tight"
+              className="font-['Fraunces'] text-4xl sm:text-6xl lg:text-7xl font-semibold text-[#F7F2E9] mb-5 leading-[1.05] tracking-tight drop-shadow-[0_2px_12px_rgba(0,0,0,0.35)]"
             >
               {(t('heroTitleFirst')?.split(" ") || []).map((word, idx) => (
                 <motion.span key={`first-${idx}`} variants={headlineWord} className="inline-block mr-2.5">
@@ -939,7 +955,7 @@ export default function Domov() {
                 </motion.span>
               ))}
               {" "}
-              <span className="text-[#9E2A2B]">
+              <span className="text-[#E2C799]">
                 {(t('heroTitleSecond')?.split(" ") || []).map((word, idx) => (
                   <motion.span key={`second-${idx}`} variants={headlineWord} className="inline-block mr-2.5">
                     {word}
@@ -952,7 +968,7 @@ export default function Domov() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.35 }}
-              className="text-sm sm:text-lg text-[#6B7A72] leading-relaxed max-w-2xl mx-auto"
+              className="text-sm sm:text-lg text-[#F0EAE0]/90 leading-relaxed max-w-2xl mx-auto drop-shadow-[0_1px_8px_rgba(0,0,0,0.4)]"
             >
               {t('heroDescription')}
             </motion.p>
