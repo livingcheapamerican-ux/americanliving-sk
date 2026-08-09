@@ -1,12 +1,23 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-const DEFAULT_VIDEO = "https://media.base44.com/videos/public/6916d89a485af231beb54c71/828604ee8_Hero_interir_video.mp4";
+const PLAYLIST = [
+  "https://media.base44.com/videos/public/6916d89a485af231beb54c71/828604ee8_Hero_interir_video.mp4",
+  "https://media.base44.com/videos/public/6916d89a485af231beb54c71/0c2d598c4_Interir_1.mp4",
+  "https://media.base44.com/videos/public/6916d89a485af231beb54c71/1a8b1b600_Exterir_1.mp4",
+  "https://media.base44.com/videos/public/6916d89a485af231beb54c71/5d8b93133_Interir_2.mp4",
+  "https://media.base44.com/videos/public/6916d89a485af231beb54c71/b88638d4d_Exterir_2.mp4",
+  "https://media.base44.com/videos/public/6916d89a485af231beb54c71/acfc1c0b3_Interir_3.mp4",
+  "https://media.base44.com/videos/public/6916d89a485af231beb54c71/b0d35b2bc_Exterir_4.mp4"
+];
 
 export default function HomeBackgroundVideo({ videoUrl }) {
   const videoRef = useRef(null);
+  const [index, setIndex] = useState(0);
   const [dark, setDark] = useState(
     typeof document !== 'undefined' && document.documentElement.classList.contains('dark')
   );
+
+  const clips = videoUrl ? [videoUrl, ...PLAYLIST.filter(u => u !== videoUrl)] : PLAYLIST;
 
   useEffect(() => {
     if (typeof document === 'undefined') return;
@@ -22,26 +33,22 @@ export default function HomeBackgroundVideo({ videoUrl }) {
       videoRef.current.muted = true;
       videoRef.current.play().catch(() => {});
     }
-  }, [videoUrl]);
+  }, [index]);
 
   return (
-    <div className="fixed inset-0 w-full h-full overflow-hidden bg-[#EFE9DF] dark:bg-[#050508] z-0 pointer-events-none select-none">
+    <div className="fixed inset-0 w-full h-full overflow-hidden bg-[#0D0D11] z-0 pointer-events-none select-none">
       <video
         ref={videoRef}
-        src={videoUrl || DEFAULT_VIDEO}
+        key={clips[index % clips.length]}
+        src={clips[index % clips.length]}
         autoPlay
-        loop
         muted
         playsInline
         preload="auto"
         aria-hidden="true"
-        className="w-full h-full object-cover transition-all duration-1000 ease-in-out"
-        style={{ filter: dark ? 'brightness(0.35) contrast(1.1)' : 'brightness(0.9) contrast(1.02)' }}
-      />
-      {/* Jemný závoj, aby bol obsah stránky čitateľný nad videom */}
-      <div
-        className="absolute inset-0"
-        style={{ backgroundColor: dark ? 'rgba(5, 5, 8, 0.8)' : 'rgba(239, 233, 223, 0.88)' }}
+        onEnded={() => setIndex(i => (i + 1) % clips.length)}
+        className="w-full h-full object-cover"
+        style={{ filter: dark ? 'brightness(0.55)' : 'none' }}
       />
     </div>
   );

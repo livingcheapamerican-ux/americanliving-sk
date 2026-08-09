@@ -905,7 +905,7 @@ export default function Domov() {
       {/* Hero Section - Warm architectural with interior video background */}
       <section className="hero-section relative pt-36 sm:pt-44 lg:pt-56 pb-12 sm:pb-16 overflow-hidden">
         {/* Scrim pre čitateľnosť nad fixným videom */}
-        <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: 'rgba(20, 16, 12, 0.62)' }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(15,12,9,0.30) 0%, rgba(15,12,9,0.18) 45%, rgba(15,12,9,0.42) 100%)' }} />
         <div className="container mx-auto px-4 relative z-10">
 
           {/* Centered intro */}
