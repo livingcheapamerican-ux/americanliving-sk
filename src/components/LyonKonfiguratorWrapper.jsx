@@ -5,11 +5,13 @@ import { useLanguage } from "./LanguageContext";
 import LyonFinalSummaryModal from "./LyonFinalSummaryModal";
 import FloatingPrice from "./FloatingPrice";
 import LyonStart from "./lyon/LyonStart";
+import LyonBackBar from "./lyon/LyonBackBar";
 import { applyChataPreset, applyA0Preset } from "./lyon/lyonBaliky";
 
 export default function LyonKonfiguratorWrapper(props) {
   const [showSummaryModal, setShowSummaryModal] = useState(false);
   const [started, setStarted] = useState(false);
+  const [balik, setBalik] = useState(null);
   const BASE_PRICE = props.dom?.zakladna_cena || 73431;
   const { t } = useLanguage();
   
@@ -318,15 +320,19 @@ export default function LyonKonfiguratorWrapper(props) {
         dom={props.dom}
         CENY={CENY}
         basePrice={BASE_PRICE}
-        onSelectChata={() => { applyChataPreset(presetSetters); setStarted(true); }}
-        onSelectA0={() => { applyA0Preset(presetSetters); setStarted(true); }}
-        onExpert={() => setStarted(true)}
+        onSelectChata={() => { applyChataPreset(presetSetters); setBalik("chata"); setStarted(true); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+        onSelectA0={() => { applyA0Preset(presetSetters); setBalik("a0"); setStarted(true); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+        onExpert={() => { setBalik("expert"); setStarted(true); }}
       />
     );
   }
 
   return (
       <>
+        <LyonBackBar
+          balikLabel={balik === "a0" ? "Rodinný dom A0" : balik === "chata" ? "Rekreačná stavba" : "Expert režim"}
+          onBack={() => { setStarted(false); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+        />
         <KonfiguratorLyon {...allProps} onSubmit={handleSubmit} />
         <FloatingPrice 
           price={totalPrice} 
