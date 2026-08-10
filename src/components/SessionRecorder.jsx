@@ -718,6 +718,29 @@ export default function SessionRecorder() {
     return () => clearInterval(interval);
   }, []);
 
+  // Presný heartbeat každých 30s – iba ak je karta viditeľná (presné "kto je online")
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!sessionIdRef.current || document.hidden) return;
+      if (
+        (localStorageAvailableRef.current && localStorage.getItem('base44_is_admin') === 'true') ||
+        user?.role === 'admin' || user?.super_admin === true
+      ) return;
+      updateActiveTime();
+      const startTime = sessionDbStartTimeRef.current || sessionStartRef.current;
+      base44.functions.invoke('trackUserSession', {
+        action: 'heartbeat',
+        session_id: sessionIdRef.current,
+        data: {
+          current_page: window.location.pathname + window.location.search,
+          duration_seconds: startTime ? Math.round((Date.now() - new Date(startTime).getTime()) / 1000) : 0,
+          active_duration_seconds: activeDurationSecondsRef.current
+        }
+      }).catch(() => {});
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [user]);
+
   useEffect(() => {
     const handleOnline = () => scheduleSave();
     const handleOffline = () => scheduleSave();

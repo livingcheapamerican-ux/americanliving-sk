@@ -34,6 +34,8 @@ import {
 import { format } from "date-fns";
 import { sk } from "date-fns/locale";
 import OnlineVisitorsMap from "../components/analytics/OnlineVisitorsMap";
+import LiveVisitorsPanel from "../components/analytics/LiveVisitorsPanel";
+import AudienceInsights from "../components/analytics/AudienceInsights";
 
 // Helper na presné určenie online stavu (aktivita v posledných 5 minútach)
 const isSessionOnline = (session) => {
@@ -508,7 +510,7 @@ export default function AdminAnalyzaSessions() {
   };
 
   // Real-time online visitors
-  const { data: onlineVisitors } = useQuery({
+  const { data: onlineVisitors, isFetching: liveFetching } = useQuery({
     queryKey: ['online-visitors-realtime'],
     queryFn: async () => {
       const response = await base44.functions.invoke('getRealTimeVisitors');
@@ -516,8 +518,8 @@ export default function AdminAnalyzaSessions() {
     },
     initialData: { count: 0, sessions: [] },
     enabled: isAdmin,
-    refetchInterval: 300000, // Update každých 5 minút (optimalizácia kreditov)
-    staleTime: 240000
+    refetchInterval: 20000, // presné live dáta každých 20 sekúnd
+    staleTime: 10000
   });
 
   const { data: domy = [] } = useQuery({
@@ -1137,7 +1139,7 @@ export default function AdminAnalyzaSessions() {
             <p className="text-sm text-slate-500 font-semibold mt-1">Komplexná behaviorálna a výkonnostná analytika návštevnosti</p>
             <div className="flex items-center gap-2 mt-2 text-[10px] text-slate-450 font-black uppercase">
               <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse"></div>
-              Live stream aktívny • Auto-aktualizácia každých 5 minút
+              Live stream aktívny • Presné live dáta každých 20 sekúnd
             </div>
           </div>
 
@@ -1228,6 +1230,16 @@ export default function AdminAnalyzaSessions() {
             </div>
           </Card>
         )}
+
+        {/* Live visitors */}
+        <LiveVisitorsPanel
+          live={onlineVisitors}
+          isFetching={liveFetching}
+          onOpenMap={() => setShowMapModal(true)}
+        />
+
+        {/* Hĺbkové poznatky o publiku */}
+        <AudienceInsights sessions={filteredSessions} />
 
         {/* KPI Dashboard stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3.5 mb-6">

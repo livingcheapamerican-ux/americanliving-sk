@@ -82,6 +82,24 @@ Deno.serve(async (req) => {
       });
     }
 
+    if (action === 'heartbeat') {
+      const existing = await base44.entities.UserSession.filter({ session_id });
+      if (existing.length === 0) {
+        return Response.json({ error: 'Session not found' }, { status: 404 });
+      }
+      if (isAdminSession(existing[0])) {
+        return Response.json({ success: true, message: 'Admin session skipped' });
+      }
+      await base44.entities.UserSession.update(existing[0].id, {
+        last_activity: new Date().toISOString(),
+        is_active: true,
+        current_page: data?.current_page,
+        duration_seconds: data?.duration_seconds,
+        active_duration_seconds: data?.active_duration_seconds
+      });
+      return Response.json({ success: true });
+    }
+
     if (action === 'update') {
       console.log('[trackUserSession] Updating session:', session_id);
       const existing = await base44.entities.UserSession.filter({ session_id });
