@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Phone, Mail, Clock, Send, CheckCircle } from "lucide-react";
+import { Phone, Mail, Clock, Send, CheckCircle, MessageSquare } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLanguage } from "../components/LanguageContext";
 
@@ -26,13 +26,11 @@ export default function Kontakt() {
 
   const createDopytMutation = useMutation({
     mutationFn: async (data) => {
-      // Vytvor dopyt v databáze
       const novyDopyt = await base44.entities.Dopyt.create(data);
-      
+
       console.log('✅ Dopyt vytvorený:', novyDopyt.id);
       console.log('📧 Volám notifikujNovyDopyt...');
-      
-      // Pošli notifikáciu predajcovi
+
       const notifikaciaResult = await base44.functions.invoke('notifikujNovyDopyt', {
         dopyt: {
           id: novyDopyt.id,
@@ -46,9 +44,9 @@ export default function Kontakt() {
           dom_id: null
         }
       });
-      
+
       console.log('📧 Notifikácia result:', notifikaciaResult);
-      
+
       return novyDopyt;
     },
     onSuccess: () => {
@@ -89,52 +87,73 @@ export default function Kontakt() {
     }
   ];
 
+  const sluzby = [
+    t('sellYourProperty'),
+    t('selectAndBuyLand'),
+    t('mortgageArrangement'),
+    t('projectDocumentation'),
+    t('buildingPermitService'),
+    t('houseConstruction'),
+    t('utilityConnection'),
+    t('finalApproval')
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <section className="relative bg-gradient-to-r from-red-900 to-red-700 text-white py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-black/30"></div>
-        <div className="container mx-auto px-4 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="max-w-3xl"
-          >
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 drop-shadow-lg">
+    <div className="min-h-screen bg-background">
+      {/* Hero */}
+      <section className="relative overflow-hidden border-b border-border">
+        <div className="absolute inset-0 bg-gradient-to-br from-muted via-background to-background" />
+        <div className="absolute -top-32 -left-24 w-[420px] h-[420px] rounded-full bg-primary/10 blur-3xl" />
+        <div className="container mx-auto px-4 relative z-10 py-16 md:py-24">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-3xl">
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold tracking-wide uppercase mb-6">
+              <MessageSquare className="w-3.5 h-3.5" />
+              {t('contact')}
+            </span>
+            <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-5 leading-tight">
               {t('contactUsTitle')}
             </h1>
-            <p className="text-xl text-white drop-shadow-md">
-              {t('contactUsSubtitle')}
-            </p>
+            <div className="w-20 h-1 bg-accent rounded-full mb-6" />
+            <p className="text-lg md:text-xl text-muted-foreground">{t('contactUsSubtitle')}</p>
           </motion.div>
         </div>
       </section>
 
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
-          {/* Kontaktný formulár */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-          >
-            <Card className="p-8 shadow-xl">
+      <div className="container mx-auto px-4 py-14">
+        <div className="grid lg:grid-cols-5 gap-8 max-w-6xl mx-auto">
+          {/* Formulár */}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="lg:col-span-3">
+            <Card className="p-6 md:p-8 shadow-lg">
               {!submitted ? (
-                  <>
-                    <h2 className="text-2xl font-bold text-primary mb-6">
-                      {t('writeUs')}
-                    </h2>
-                    <form id="contact-form" onSubmit={handleSubmit} className="space-y-6">
+                <>
+                  <h2 className="text-2xl font-bold text-foreground mb-1">{t('writeUs')}</h2>
+                  <p className="text-sm text-muted-foreground mb-6">{t('weWillRespond')}</p>
+                  <form id="contact-form" onSubmit={handleSubmit} className="space-y-5">
+                    <div className="grid sm:grid-cols-2 gap-5">
                       <div>
                         <Label htmlFor="meno">{t('name')} *</Label>
-                      <Input
-                        id="meno"
-                        name="meno"
-                        required
-                        value={formData.meno}
-                        onChange={(e) => setFormData({ ...formData, meno: e.target.value })}
-                        placeholder="Ján Novák"
-                        className="mt-2 !text-gray-900 placeholder:text-gray-500"
-                      />
+                        <Input
+                          id="meno"
+                          name="meno"
+                          required
+                          value={formData.meno}
+                          onChange={(e) => setFormData({ ...formData, meno: e.target.value })}
+                          placeholder="Ján Novák"
+                          className="mt-2"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="telefon">{t('phone')} *</Label>
+                        <Input
+                          id="telefon"
+                          name="telefon"
+                          required
+                          value={formData.telefon}
+                          onChange={(e) => setFormData({ ...formData, telefon: e.target.value })}
+                          placeholder="+421 900 123 456"
+                          className="mt-2"
+                        />
+                      </div>
                     </div>
 
                     <div>
@@ -147,27 +166,14 @@ export default function Kontakt() {
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder="jan.novak@email.sk"
-                        className="mt-2 !text-gray-900 placeholder:text-gray-500"
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="telefon">{t('phone')} *</Label>
-                      <Input
-                        id="telefon"
-                        name="telefon"
-                        required
-                        value={formData.telefon}
-                        onChange={(e) => setFormData({ ...formData, telefon: e.target.value })}
-                        placeholder="+421 900 123 456"
-                        className="mt-2 !text-gray-900 placeholder:text-gray-500"
+                        className="mt-2"
                       />
                     </div>
 
                     <div>
                       <Label htmlFor="typ">{t('inquiryType')}</Label>
-                      <Select 
-                        value={formData.typ_dopytu} 
+                      <Select
+                        value={formData.typ_dopytu}
                         onValueChange={(value) => setFormData({ ...formData, typ_dopytu: value })}
                       >
                         <SelectTrigger className="mt-2">
@@ -192,143 +198,99 @@ export default function Kontakt() {
                         onChange={(e) => setFormData({ ...formData, poznamka: e.target.value })}
                         placeholder="Popíšte vašu požiadavku alebo otázku..."
                         rows={6}
-                        className="mt-2 !text-gray-900 placeholder:text-gray-500"
+                        className="mt-2"
                       />
                     </div>
 
                     <Button
-                        type="submit"
-                        size="lg"
-                        className="w-full bg-secondary hover:bg-secondary/90 text-white font-semibold"
-                        disabled={createDopytMutation.isPending}
-                      >
-                        {createDopytMutation.isPending ? (
-                          t('sending')
-                        ) : (
-                          <>
-                            {t('sendMessage')}
-                            <Send className="ml-2 w-5 h-5" />
-                          </>
-                        )}
-                      </Button>
-                    </form>
-                    </>
-                    ) : (
-                    <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="text-center py-12"
+                      type="submit"
+                      size="lg"
+                      className="w-full bg-primary hover:bg-primary/90 text-white font-semibold"
+                      disabled={createDopytMutation.isPending}
                     >
-                    <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <CheckCircle className="w-10 h-10 text-green-600" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-primary mb-4">
-                      {t('thankYou')}
-                    </h3>
-                    <p className="text-gray-600 leading-relaxed">
-                      {t('messageSuccess')}
-                    </p>
-                    </motion.div>
-                    )}
+                      {createDopytMutation.isPending ? (
+                        t('sending')
+                      ) : (
+                        <>
+                          {t('sendMessage')}
+                          <Send className="ml-2 w-5 h-5" />
+                        </>
+                      )}
+                    </Button>
+                  </form>
+                </>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="text-center py-14"
+                >
+                  <div className="w-20 h-20 bg-emerald-500/15 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <CheckCircle className="w-10 h-10 text-emerald-600 dark:text-emerald-400" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-foreground mb-3">{t('thankYou')}</h3>
+                  <p className="text-muted-foreground leading-relaxed">{t('messageSuccess')}</p>
+                </motion.div>
+              )}
             </Card>
           </motion.div>
 
-          {/* Kontaktné informácie */}
+          {/* Kontaktné info */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="space-y-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="lg:col-span-2 space-y-5"
           >
-            <div>
-              <h2 className="text-2xl font-bold text-primary mb-6">
-                {t('contactInfo')}
-              </h2>
-              <div className="space-y-4">
-                {kontaktInfo.map((info, index) => (
-                  <Card key={index} className="p-6 hover:shadow-lg transition-shadow">
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <info.icon className="w-6 h-6 text-primary" />
-                      </div>
-                      <div className="flex-grow">
-                        <h3 className="font-semibold text-primary mb-1">{info.nazov}</h3>
-                        {info.link ? (
-                          <a
-                            href={info.link}
-                            className="text-lg text-secondary hover:text-secondary/80 transition-colors font-medium block mb-1"
-                          >
-                            {info.hodnota}
-                          </a>
-                        ) : (
-                          <p className="text-lg text-gray-800 font-medium mb-1">{info.hodnota}</p>
-                        )}
-                        {info.popis && (
-                          <p className="text-sm text-gray-500">{info.popis}</p>
-                        )}
-                      </div>
+            <div className="space-y-3">
+              {kontaktInfo.map((info, index) => (
+                <Card key={index} className="p-5 hover:shadow-md hover:border-accent/40 transition-all">
+                  <div className="flex items-start gap-4">
+                    <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <info.icon className="w-5 h-5 text-primary" />
                     </div>
-                  </Card>
-                ))}
-              </div>
+                    <div className="flex-grow min-w-0">
+                      <h3 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">{info.nazov}</h3>
+                      {info.link ? (
+                        <a href={info.link} className="text-base font-semibold text-foreground hover:text-primary transition-colors block break-words">
+                          {info.hodnota}
+                        </a>
+                      ) : (
+                        <p className="text-base font-semibold text-foreground">{info.hodnota}</p>
+                      )}
+                      {info.popis && <p className="text-xs text-muted-foreground mt-1">{info.popis}</p>}
+                    </div>
+                  </div>
+                </Card>
+              ))}
             </div>
 
-            {/* Naše služby */}
-            <Card className="p-6 bg-gradient-to-br from-blue-50 to-white">
-              <h3 className="font-bold text-primary mb-4">{t('comprehensiveServices')}</h3>
-              <ul className="space-y-2 text-sm text-gray-700">
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
-                  <span>{t('sellYourProperty')}</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
-                  <span>{t('selectAndBuyLand')}</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
-                  <span>{t('mortgageArrangement')}</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
-                  <span>{t('projectDocumentation')}</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
-                  <span>{t('buildingPermitService')}</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
-                  <span>{t('houseConstruction')}</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
-                  <span>{t('utilityConnection')}</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
-                  <span>{t('finalApproval')}</span>
-                </li>
+            <Card className="p-6 bg-muted/50">
+              <h3 className="font-bold text-foreground mb-4">{t('comprehensiveServices')}</h3>
+              <ul className="space-y-2.5">
+                {sluzby.map((sluzba, i) => (
+                  <li key={i} className="flex items-start gap-2.5 text-sm text-muted-foreground">
+                    <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
+                    <span>{sluzba}</span>
+                  </li>
+                ))}
               </ul>
             </Card>
           </motion.div>
         </div>
       </div>
 
-      {/* Ďalšie možnosti kontaktu */}
-      <section className="py-16 bg-white">
+      {/* Rýchly kontakt */}
+      <section className="py-16 bg-card border-t border-border">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl font-bold text-primary mb-6">
-              {t('needQuickAnswer')}
-            </h2>
-            <p className="text-lg text-gray-600 mb-8">
-              {t('callOrEmail')}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="tel:+421905138124"> {/* Updated phone link */}
-                <Button size="lg" className="bg-primary hover:bg-primary/90 w-full sm:w-auto">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3">{t('needQuickAnswer')}</h2>
+            <p className="text-muted-foreground mb-8">{t('callOrEmail')}</p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <a href="tel:+421905138124">
+                <Button size="lg" className="bg-primary hover:bg-primary/90 text-white w-full sm:w-auto">
                   <Phone className="mr-2 w-5 h-5" />
-                  +421 905 138 124 {/* Updated phone number */}
+                  +421 905 138 124
                 </Button>
               </a>
               <a href="mailto:info@americanliving.sk">
