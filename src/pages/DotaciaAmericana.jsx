@@ -344,17 +344,15 @@ export default function DotaciaAmericana() {
       <audio ref={pianoRef} src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" />
       <audio ref={houseRef} src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" />
 
-      {/* Full-width Fixed Background Video */}
+      {/* Full-width Fixed Background Image & Soft Overlay */}
       <div className="fixed inset-0 w-full h-full overflow-hidden z-0 pointer-events-none select-none">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-cover opacity-35 scale-105"
-          src="https://media.base44.com/videos/public/6916d89a485af231beb54c71/828604ee8_Hero_interir_video.mp4"
+        <img
+          src="https://images.unsplash.com/photo-1560518883-ff514cd811de?w=1600&q=85"
+          alt="American Living Dotácia Bývania"
+          className="w-full h-full object-cover scale-105 brightness-95"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/70 to-slate-950/95" />
+        {/* Soft, clear scrim for maximum readability without darkening the background */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/60 via-slate-900/40 to-slate-950/75 backdrop-blur-[2px]" />
       </div>
 
       {/* HERO SECTION - Súkromná Dotácia AMERICANA */}
@@ -705,69 +703,69 @@ export default function DotaciaAmericana() {
         {modalType && (
           <Dialog open={!!modalType} onOpenChange={() => setModalType(null)}>
             <DialogContent
-              className="bg-card border-border max-h-[90vh] overflow-y-auto p-4 sm:p-6 rounded-xl w-full max-w-lg sm:max-w-xl md:max-w-2xl text-foreground"
+              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white max-h-[90vh] overflow-y-auto p-6 sm:p-8 rounded-3xl w-full max-w-lg sm:max-w-xl md:max-w-2xl shadow-2xl z-[100]"
             >
-              <DialogHeader className="pb-1">
-                <DialogTitle className="text-sm sm:text-lg font-serif font-bold text-primary leading-tight pr-6">
-                  {modalType === 'rodina' ? '🏡 ' + t('dotaciaModalTitleRodina') : '📈 ' + t('dotaciaModalTitleInvestor')}
+              <DialogHeader className="pb-3 border-b border-slate-200 dark:border-slate-800">
+                <DialogTitle className="text-lg sm:text-2xl font-extrabold text-slate-900 dark:text-white leading-tight pr-6">
+                  {modalType === 'rodina' ? '🏡 Žiadosť o Dotáciu AMERICANA - Pre rodiny' : '📈 Žiadosť o Dotáciu AMERICANA - Pre investorov'}
                 </DialogTitle>
               </DialogHeader>
 
               {/* Benefits strip */}
-              <div className="mb-2 p-2 bg-emerald-500/10 border-l-4 border-emerald-500 rounded">
-                <p className="text-xs font-semibold text-emerald-400">
+              <div className="my-4 p-3.5 bg-emerald-500/15 border-l-4 border-emerald-500 rounded-xl">
+                <p className="text-xs sm:text-sm font-bold text-emerald-800 dark:text-emerald-300">
                   {modalType === 'rodina' 
-                    ? '✅ ' + t('dotaciaModalBenefitsRodina')
-                    : '✅ ' + t('dotaciaModalBenefitsInvestor')
+                    ? '✅ Priamy odpočet dotácie z ceny domu bez zbytočnej štátnej byrokracie.'
+                    : '✅ Investičná podpora pre pasívny príjem a správa nehnuteľnosti.'
                   }
                 </p>
               </div>
 
               {/* Form */}
-              <form onSubmit={handleSubmit} className="space-y-3">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">{t('dotaciaFormName')}</label>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 mb-1.5">{t('dotaciaFormName')}</label>
                   <Input
                     type="text"
                     placeholder={t('dotaciaFormNamePlaceholder')}
                     value={formData.meno}
                     onChange={(e) => setFormData({ ...formData, meno: e.target.value })}
                     required
-                    className="text-sm h-10"
+                    className="text-sm h-11 bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 font-medium rounded-xl px-4"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    {t('dotaciaFormTypeGrant')} <span className="text-red-600">*</span>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 mb-1.5">
+                    Typ Dotácie AMERICANA <span className="text-red-600">*</span>
                   </label>
                   <Select value={formData.typ_grantu} onValueChange={(value) => setFormData({ ...formData, typ_grantu: value })} required>
-                    <SelectTrigger className="text-xs sm:text-sm h-10 text-foreground">
+                    <SelectTrigger className="text-sm h-11 bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-medium rounded-xl px-4">
                       <SelectValue placeholder={t('dotaciaFormTypeGrantPlaceholder')} />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
                       <SelectItem value="Program AMBASSADOR - Dotované bývanie pre rodiny">
-                        {t('dotaciaFormTypeGrantOption1')}
+                        Program AMBASSADOR - Dotované bývanie pre rodiny
                       </SelectItem>
                       <SelectItem value="Program INVESTOR & PARTNER pre pasívny príjem">
-                        {t('dotaciaFormTypeGrantOption2')}
+                        Program PARTNER - Investičný stimul pre pasívny príjem
                       </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">{t('dotaciaFormHouse')}</label>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 mb-1.5">{t('dotaciaFormHouse')}</label>
                   <Select value={formData.dom_id} onValueChange={(value) => setFormData({ ...formData, dom_id: value })}>
-                    <SelectTrigger className="text-xs sm:text-sm h-10 text-foreground">
+                    <SelectTrigger className="text-sm h-11 bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-medium rounded-xl px-4">
                       <SelectValue placeholder={t('dotaciaFormHousePlaceholder')} />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
                       {houses?.map((dom) => {
                         const dotacia = Math.round(dom.zakladna_cena * 0.05);
                         return (
                           <SelectItem key={dom.id} value={dom.id}>
-                            {dom.nazov} – {dotacia.toLocaleString()} €
+                            {dom.nazov} – Dotácia {dotacia.toLocaleString()} €
                           </SelectItem>
                         );
                       })}
@@ -776,71 +774,71 @@ export default function DotaciaAmericana() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 mb-1.5">
                     {t('dotaciaFormFinancing')} <span className="text-red-600">*</span>
                   </label>
                   <Select value={formData.forma_financovania} onValueChange={(value) => setFormData({ ...formData, forma_financovania: value })} required>
-                    <SelectTrigger className="text-xs sm:text-sm h-10 text-foreground">
+                    <SelectTrigger className="text-sm h-11 bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-medium rounded-xl px-4">
                       <SelectValue placeholder={t('dotaciaFormFinancingPlaceholder')} />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Hotovosť">{t('dotaciaFormFinancingOption1')}</SelectItem>
-                      <SelectItem value="Úver - vybavujem si sám">{t('dotaciaFormFinancingOption2')}</SelectItem>
-                      <SelectItem value="Úver vybavte mi">3. Vyberte mi najlepší úver</SelectItem>
+                    <SelectContent className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
+                      <SelectItem value="Hotovosť">Vlastná hotovosť</SelectItem>
+                      <SelectItem value="Úver - vybavujem si sám">Hypotéka / Úver (vlastné vybavenie)</SelectItem>
+                      <SelectItem value="Úver vybavte mi">Hypotéka na kľúč (vybavte za mňa)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 {modalType === 'rodina' && (
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                      {t('dotaciaFormLocation')} <span className="text-red-600">*</span>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 mb-1.5">
+                      Lokalita pozemku / stavby <span className="text-red-600">*</span>
                     </label>
                     <Input
                       type="text"
-                      placeholder={t('dotaciaFormLocationPlaceholder')}
+                      placeholder="Napr. Trnava, Žilina, Nitra..."
                       value={formData.lokalita}
                       onChange={(e) => setFormData({ ...formData, lokalita: e.target.value })}
                       required
-                      className="text-sm h-10"
+                      className="text-sm h-11 bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 font-medium rounded-xl px-4"
                     />
                   </div>
                 )}
 
                 {modalType === 'investor' && (
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">{t('dotaciaFormBudget')}</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 mb-1.5">Plánovaný rozpočet (€)</label>
                     <Input
                       type="text"
-                      placeholder={t('dotaciaFormBudgetPlaceholder')}
+                      placeholder="Napr. 80 000 €"
                       value={formData.rozpocet}
                       onChange={(e) => setFormData({ ...formData, rozpocet: e.target.value })}
-                      className="text-sm h-10"
+                      className="text-sm h-11 bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 font-medium rounded-xl px-4"
                     />
                   </div>
                 )}
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Email</label>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 mb-1.5">Váš E-mail <span className="text-red-600">*</span></label>
                   <Input
                     type="email"
                     placeholder="jan.novak@example.com"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     required
-                    className="text-sm h-10"
+                    className="text-sm h-11 bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 font-medium rounded-xl px-4"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">{t('phone')}</label>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 mb-1.5">Telefónne číslo <span className="text-red-600">*</span></label>
                   <Input
                     type="tel"
-                    placeholder="+421 XXX XXX XXX"
+                    placeholder="+421 9XX XXX XXX"
                     value={formData.telefon}
                     onChange={(e) => setFormData({ ...formData, telefon: e.target.value })}
                     required
-                    className="text-sm h-10"
+                    className="text-sm h-11 bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 font-medium rounded-xl px-4"
                   />
                 </div>
 
@@ -848,10 +846,10 @@ export default function DotaciaAmericana() {
                   type="submit"
                   size="lg"
                   disabled={isSubmitting}
-                  className="w-full font-bold py-3 text-sm sm:text-base bg-primary hover:bg-secondary text-white"
+                  className="w-full font-bold py-3.5 text-base bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-lg hover:shadow-emerald-600/30 transition-all flex items-center justify-center gap-2 mt-4"
                 >
-                  {isSubmitting ? t('dotaciaFormSubmitting') : t('dotaciaFormSubmit')}
-                  <ArrowRight className="ml-2 w-4 h-4" />
+                  {isSubmitting ? "Odosielam žiadosť..." : "Odoslať žiadosť o Dotáciu AMERICANA"}
+                  <ArrowRight className="w-5 h-5" />
                 </Button>
               </form>
             </DialogContent>
