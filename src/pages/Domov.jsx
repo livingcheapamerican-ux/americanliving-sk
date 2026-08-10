@@ -1668,22 +1668,20 @@ export default function Domov() {
           </div>
         )}
       </section>
-
-      {/* Trusted Partners Section - Overení partneri */}
-      <section className="py-12 sm:py-24 bg-[#EFE9DF] relative overflow-hidden border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
+      <section className="py-16 sm:py-24 bg-slate-950 text-white relative overflow-hidden border-b border-white/10">
         <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#C5A880]/20 to-transparent"></div>
         <div className="container mx-auto px-4 relative z-10">
             <ChapterHeading kicker="Partneri" title={t('trustedPartnersTitle')} />
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-6xl mx-auto mt-8">
             {/* Prosto House */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              className="bg-white border border-[#E0D8CA] rounded-3xl p-6 sm:p-10 shadow-md dark:shadow-2xl hover:shadow-[#C5A880]/10 dark:hover:bg-slate-800/50 transition-all duration-300"
+              className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl hover:border-[#C5A880]/40 transition-all duration-300"
             >
-              <div className="mb-3 sm:mb-6">
-                <div className="aspect-[16/9] overflow-hidden rounded-xl">
+              <div className="mb-4 sm:mb-6">
+                <div className="aspect-[16/9] overflow-hidden rounded-2xl border border-slate-800">
                   <img 
                     src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?fm=webp&auto=format,compress&w=600&q=75" 
                     alt="Prosto House - Modern wood house technology"
@@ -1694,10 +1692,10 @@ export default function Domov() {
                   />
                 </div>
               </div>
-              <h3 className="text-xl sm:text-3xl font-bold mb-3 sm:mb-5 text-[#2C3A33] transition-colors duration-300">
+              <h3 className="text-xl sm:text-3xl font-extrabold mb-3 text-white">
                 {t('prostoTitle')}
               </h3>
-              <p className="text-[#6B7A72] leading-relaxed text-sm sm:text-lg font-light transition-colors duration-300">
+              <p className="text-slate-300 leading-relaxed text-sm sm:text-base font-normal">
                 {t('prostoBody')}
               </p>
             </motion.div>
@@ -1706,10 +1704,10 @@ export default function Domov() {
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              className="bg-white border border-[#E0D8CA] rounded-3xl p-6 sm:p-10 shadow-md dark:shadow-2xl hover:shadow-[#C5A880]/10 dark:hover:bg-slate-800/50 transition-all duration-300"
+              className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl hover:border-[#C5A880]/40 transition-all duration-300"
             >
-              <div className="mb-3 sm:mb-6">
-                <div className="aspect-[16/9] overflow-hidden rounded-xl">
+              <div className="mb-4 sm:mb-6">
+                <div className="aspect-[16/9] overflow-hidden rounded-2xl border border-slate-800">
                   <img 
                     src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?fm=webp&auto=format,compress&w=600&q=75" 
                     alt="TicabHouse - Precision modular construction"
@@ -1720,10 +1718,10 @@ export default function Domov() {
                   />
                 </div>
               </div>
-              <h3 className="text-xl sm:text-3xl font-bold mb-3 sm:mb-5 text-[#2C3A33] transition-colors duration-300">
+              <h3 className="text-xl sm:text-3xl font-extrabold mb-3 text-white">
                 {t('ticabTitle')}
               </h3>
-              <p className="text-[#6B7A72] leading-relaxed text-sm sm:text-lg font-light transition-colors duration-300">
+              <p className="text-slate-300 leading-relaxed text-sm sm:text-base font-normal">
                 {t('ticabBody')}
               </p>
             </motion.div>
@@ -1731,11 +1729,11 @@ export default function Domov() {
         </div>
       </section>
 
-      {/* SÚKROMNÝ GRANT AMERICANA - Premium Redesign */}
-      <section className="py-16 sm:py-28 bg-[#EFE9DF] relative overflow-hidden border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
+      {/* SÚKROMNÁ DOTÁCIA AMERICANA - Premium Dark Section */}
+      <section className="py-16 sm:py-28 bg-slate-950 text-white relative overflow-hidden border-b border-white/10">
         {/* Glow effects */}
-        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-[#C5A880]/10 dark:bg-red-600/10 rounded-full blur-[120px] pointer-events-none"></div>
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#C5A880]/5 dark:bg-red-900/10 rounded-full blur-[150px] pointer-events-none"></div>
+        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-[#C5A880]/10 rounded-full blur-[120px] pointer-events-none"></div>
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[150px] pointer-events-none"></div>
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
@@ -1748,32 +1746,31 @@ export default function Domov() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
               >
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#C5A880]/15 dark:bg-red-500/10 border border-[#C5A880]/30 dark:border-red-500/20 text-slate-800 dark:text-red-400 text-sm font-bold mb-6">
-                  <Gift className="w-4 h-4" /> VIP Benefit Program
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#C5A880]/20 border border-[#C5A880]/40 text-xs sm:text-sm font-black uppercase tracking-wider text-[#E2C799] mb-4">
+                  <Gift className="w-4 h-4 text-[#E2C799]" />
+                  <span>SÚKROMNÁ DOTÁCIA AMERICANA</span>
                 </div>
-                <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black text-[#2C3A33] mb-6 leading-tight transition-colors duration-300">
-                  {t('moreThanJustAHouse')}<br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-800 dark:from-red-400 dark:to-red-600">
-                    {t('financialInjection')}
+                <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight">
+                  Viac než len dom.<br />
+                  <span className="text-[#E2C799]">
+                    Finančná dotácia až 15 000 €
                   </span>
                 </h2>
-                <p className="text-lg sm:text-xl text-[#6B7A72] font-normal mb-8 leading-relaxed max-w-xl bg-white border border-[#E0D8CA] px-6 py-4 sm:py-5 rounded-2xl shadow-md backdrop-blur-md transition-colors duration-300">
-                  {t('grantDescriptionPart1')} <strong className="text-slate-955 dark:text-white font-bold">{t('grantDescriptionPart2')}</strong>{t('grantDescriptionPart3')}
+                <p className="text-base sm:text-lg text-slate-300 font-normal mb-8 leading-relaxed max-w-xl bg-slate-900/90 border border-slate-800 px-6 py-5 rounded-2xl shadow-xl backdrop-blur-md">
+                  Získajte nenávratný finančný príspevok na energetickú certifikáciu A0, fotovoltiku a terénne prípravy rodinného domu. Bez štátnej byrokracie a s priamym odpočtom z ceny.
                 </p>
                 
                 <Link to={createPageUrl("DotaciaAmericana")} className="inline-block w-full sm:w-auto">
-                  <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-bold px-8 py-7 text-lg shadow-[0_0_30px_rgba(220,38,38,0.3)] hover:shadow-[0_0_50px_rgba(220,38,38,0.5)] border border-red-400/50 transition-all group rounded-2xl">
-                    <span className="flex items-center justify-center gap-3">
-                      {t('verifyGrantEligibility')}
-                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    </span>
+                  <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-[#C5A880] to-[#E2C799] hover:from-[#d5b890] hover:to-[#f2d7a9] text-slate-950 font-black px-8 py-4 text-base shadow-xl border border-[#C5A880]/50 transition-all rounded-xl flex items-center justify-center gap-3">
+                    <span>Overiť nárok na Dotáciu AMERICANA</span>
+                    <ArrowRight className="w-5 h-5" />
                   </Button>
                 </Link>
                 
-                <div className="mt-8">
-                  <div className="inline-flex items-center gap-3 text-xs sm:text-sm bg-white border border-[#E0D8CA] px-4 py-2.5 rounded-xl shadow-sm text-slate-700 dark:text-[#6B7A72] backdrop-blur-md transition-colors duration-300">
-                    <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-[#C5A880]" />
-                    <span>{t('guaranteedFinancing')}</span>
+                <div className="mt-6">
+                  <div className="inline-flex items-center gap-3 text-xs sm:text-sm bg-slate-900 border border-slate-800 px-4 py-2.5 rounded-xl text-slate-300 shadow-md">
+                    <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />
+                    <span>Garancia priameho odpočtu bez čakacích lehôt úradov</span>
                   </div>
                 </div>
               </motion.div>
@@ -1789,25 +1786,24 @@ export default function Domov() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, delay: 0.2 }}
-                  className="bg-white dark:bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-3xl p-6 sm:p-8 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-all shadow-md dark:shadow-2xl relative overflow-hidden group"
+                  className="bg-slate-900/90 backdrop-blur-xl border border-emerald-500/30 rounded-3xl p-6 sm:p-8 transition-all shadow-2xl relative overflow-hidden group"
                 >
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl group-hover:bg-emerald-500/20 transition-all"></div>
-                  <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-emerald-900/50">
-                    <Home className="w-6 h-6 text-white" />
+                  <div className="w-12 h-12 bg-emerald-500/20 border border-emerald-500/40 rounded-2xl flex items-center justify-center mb-6">
+                    <Home className="w-6 h-6 text-emerald-400" />
                   </div>
-                  <h3 className="text-xl font-bold text-[#2C3A33] mb-4 transition-colors duration-300">{t('forFamilies')}</h3>
+                  <h3 className="text-xl font-bold text-white mb-4">Program AMBASSADOR</h3>
                   <ul className="space-y-4">
                     <li className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
-                      <span className="text-[#6B7A72] text-sm leading-relaxed transition-colors duration-300">{t('grantAtSigning')}</span>
+                      <CheckCircle className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+                      <span className="text-slate-300 text-sm leading-relaxed">Priamy odpočet dotácie pri podpise zmluvy</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
-                      <span className="text-[#6B7A72] text-sm leading-relaxed transition-colors duration-300">{t('energyFullyRefunded')}</span>
+                      <CheckCircle className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+                      <span className="text-slate-300 text-sm leading-relaxed">Energetický certifikát A0 v plnej výške</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
-                      <span className="text-[#6B7A72] text-sm leading-relaxed transition-colors duration-300">{t('supportAfterHandover')}</span>
+                      <CheckCircle className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+                      <span className="text-slate-300 text-sm leading-relaxed">Trvalé poradenstvo a záručný servis</span>
                     </li>
                   </ul>
                 </motion.div>
@@ -1818,25 +1814,24 @@ export default function Domov() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, delay: 0.4 }}
-                  className="bg-white dark:bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-3xl p-6 sm:p-8 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-all shadow-md dark:shadow-2xl relative overflow-hidden lg:mt-12 group"
+                  className="bg-slate-900/90 backdrop-blur-xl border border-amber-500/30 rounded-3xl p-6 sm:p-8 transition-all shadow-2xl relative overflow-hidden lg:mt-12 group"
                 >
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/10 rounded-full blur-3xl group-hover:bg-yellow-500/20 transition-all"></div>
-                  <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-yellow-700 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-yellow-900/50">
-                    <TrendingUp className="w-6 h-6 text-white" />
+                  <div className="w-12 h-12 bg-amber-500/20 border border-amber-500/40 rounded-2xl flex items-center justify-center mb-6">
+                    <TrendingUp className="w-6 h-6 text-amber-400" />
                   </div>
-                  <h3 className="text-xl font-bold text-[#2C3A33] mb-4 transition-colors duration-300">{t('forInvestors')}</h3>
+                  <h3 className="text-xl font-bold text-white mb-4">Program PARTNER</h3>
                   <ul className="space-y-4">
                     <li className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />
-                      <span className="text-[#6B7A72] text-sm leading-relaxed transition-colors duration-300">{t('grantAtSigning')}</span>
+                      <CheckCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                      <span className="text-slate-300 text-sm leading-relaxed">Investičná dotácia a stimul pri kúpe domu</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />
-                      <span className="text-[#6B7A72] text-sm leading-relaxed transition-colors duration-300">{t('marketingFree')}</span>
+                      <CheckCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                      <span className="text-slate-300 text-sm leading-relaxed">Kompletná spravovateľská podpora prenájmu</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />
-                      <span className="text-[#6B7A72] text-sm leading-relaxed transition-colors duration-300">{t('passiveIncomeFromAirbnb')}</span>
+                      <CheckCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                      <span className="text-slate-300 text-sm leading-relaxed">Garancia pasívneho príjmu z nehnuteľnosti</span>
                     </li>
                   </ul>
                 </motion.div>
