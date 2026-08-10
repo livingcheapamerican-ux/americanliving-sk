@@ -307,7 +307,7 @@ function LayoutContent({ children }) {
             </div>
             
             {/* Navigácia ako Glassmorphism Pill */}
-            <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
+            <nav className="hidden xl:flex items-center gap-1 xl:gap-2 min-w-0 overflow-hidden">
               {[...navItems, ...adminNavItems].map((item) => {
                 const tourId = item.path === createPageUrl("Katalog") ? "nav-katalog"
                   : item.path === createPageUrl("OdporucanieDomov") ? "nav-ai"
@@ -330,7 +330,7 @@ function LayoutContent({ children }) {
                         : isDotacia 
                           ? 'bg-gradient-to-r from-red-600 via-red-500 to-red-700 text-white hover:scale-105 shadow-[0_0_20px_rgba(239,68,68,0.4)]'
                         : isKredity
-                          ? 'bg-orange-500/20 text-orange-400 hover:bg-orange-500/30'
+                          ? 'hidden 2xl:inline-block bg-orange-500/20 text-orange-400 hover:bg-orange-500/30'
                           : 'text-slate-700 dark:text-slate-200 hover:text-red-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10'
                     }`}
                   >
@@ -413,7 +413,7 @@ function LayoutContent({ children }) {
               </div>
             </div>
 
-          <div className="hidden lg:flex items-center gap-1 xl:gap-2">
+          <div className="hidden 2xl:flex items-center gap-1 xl:gap-2">
             {isAdmin && (
               <>
                 <Link to={createPageUrl("AdminUserManagement")}>
@@ -536,14 +536,6 @@ function LayoutContent({ children }) {
                 </Link>
               </>
             )}
-            <a href="tel:+421905138124" className="text-primary font-semibold text-xs lg:text-sm xl:text-base whitespace-nowrap">
-              +421 905 138 124
-            </a>
-            <Link to={createPageUrl("Kontakt")}>
-              <Button size="sm" className="bg-secondary hover:bg-secondary/90 text-white font-semibold text-xs lg:text-sm h-7 lg:h-8 px-3 lg:px-4 whitespace-nowrap">
-                {t('contact')}
-              </Button>
-            </Link>
             {isSuperAdmin && (
               <Link to={createPageUrl("Domov")}>
                 <Button size="sm" className="bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs lg:text-sm h-7 lg:h-8 px-3 lg:px-4 whitespace-nowrap">
@@ -553,7 +545,7 @@ function LayoutContent({ children }) {
             )}
             </div>
 
-            <div className="lg:hidden flex items-center gap-1">
+            <div className="xl:hidden flex items-center gap-1">
               {/* Mobile Theme Switcher Button */}
               <button
                 onClick={toggleTheme}
@@ -618,7 +610,7 @@ function LayoutContent({ children }) {
           </div>
 
           {mobileMenuOpen && (
-            <nav className="lg:hidden mt-3 border-t border-slate-200 dark:border-white/10 pt-3 overflow-y-auto max-h-[80vh]">
+            <nav className="xl:hidden mt-3 border-t border-slate-200 dark:border-white/10 pt-3 overflow-y-auto max-h-[80vh]">
 
               {/* Hlavná navigácia */}
               <div className="space-y-1 pb-3">
