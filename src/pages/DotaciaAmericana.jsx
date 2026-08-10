@@ -127,25 +127,7 @@ export default function DotaciaAmericana() {
 
   const queryClient = useQueryClient();
 
-  // Slideshow for Rodina - faster on mobile
-  useEffect(() => {
-    if (!heroSettings?.rodina_fotky?.length) return;
-    const isMobile = window.innerWidth < 768;
-    const interval = setInterval(() => {
-      setRodinaIndex((prev) => (prev + 1) % heroSettings.rodina_fotky.length);
-    }, isMobile ? 3000 : (heroSettings.rodina_interval || 5000));
-    return () => clearInterval(interval);
-  }, [heroSettings?.rodina_fotky, heroSettings?.rodina_interval]);
-
-  // Slideshow for Investor - faster on mobile
-  useEffect(() => {
-    if (!heroSettings?.investor_fotky?.length) return;
-    const isMobile = window.innerWidth < 768;
-    const interval = setInterval(() => {
-      setInvestorIndex((prev) => (prev + 1) % heroSettings.investor_fotky.length);
-    }, isMobile ? 3000 : (heroSettings.investor_interval || 5000));
-    return () => clearInterval(interval);
-  }, [heroSettings?.investor_fotky, heroSettings?.investor_interval]);
+  // Interval slideshow disabled to ensure 100% butter smooth performance
 
   // Preload next images for smooth transitions
   useEffect(() => {
@@ -362,324 +344,146 @@ export default function DotaciaAmericana() {
       <audio ref={pianoRef} src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" />
       <audio ref={houseRef} src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" />
 
+      {/* Full-width Fixed Background Video */}
+      <div className="fixed inset-0 w-full h-full overflow-hidden z-0 pointer-events-none select-none">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover opacity-35 scale-105"
+          src="https://media.base44.com/videos/public/6916d89a485af231beb54c71/828604ee8_Hero_interir_video.mp4"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/70 to-slate-950/95" />
+      </div>
+
       {/* HERO SECTION - Súkromná Dotácia AMERICANA */}
-      <section className="relative pt-28 sm:pt-36 lg:pt-40 pb-12 sm:pb-16 overflow-hidden bg-slate-950 text-white min-h-screen">
+      <section className="relative pt-28 sm:pt-36 lg:pt-40 pb-12 sm:pb-16 overflow-hidden text-white z-10 min-h-screen">
         {/* Top Header Banner */}
-        <div className="container mx-auto px-4 mb-8 text-center max-w-4xl relative z-20">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#C5A880]/20 border border-[#C5A880]/40 text-xs sm:text-sm font-black uppercase tracking-wider text-[#E2C799] mb-4">
+        <div className="container mx-auto px-4 mb-10 text-center max-w-4xl relative z-20">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#C5A880]/20 border border-[#C5A880]/40 text-xs sm:text-sm font-black uppercase tracking-wider text-[#E2C799] mb-4 shadow-lg backdrop-blur-md">
             <Gift className="w-4 h-4 text-[#E2C799]" />
             <span>SÚKROMNÁ DOTÁCIA AMERICANA</span>
           </div>
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight mb-4 drop-shadow-lg">
             Získajte finančnú dotáciu až do <span className="text-[#E2C799]">15 000 €</span>
           </h1>
-          <p className="text-sm sm:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-sm sm:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed drop-shadow-md">
             Priamy finančný príspevok na energetickú certifikáciu A0, terénne prípravy a prevádzku vášho rodinného alebo investičného domu. Bez zdĺhavej štátnej byrokracie.
           </p>
         </div>
-        {/* MOBILE VERZIA - Slideshow */}
-        <div className="md:hidden">
-          {/* Slideshow pozadia */}
-          <div className="relative h-[50vh] overflow-hidden">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={`mobile-hero-${rodinaIndex}`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.8 }}
-                className="absolute inset-0"
-              >
-                {heroSettings?.rodina_fotky?.length > 0 ? (
-                  <img
-                    src={heroSettings.rodina_fotky[rodinaIndex] + '?w=800&q=70'}
-                    alt="Moderný modulárny dom American Living - Program Ambassador dotované bývanie pre rodiny"
-                    loading="eager"
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <img
-                    src="https://images.unsplash.com/photo-1560518883-ff514cd811de?w=800&q=70"
-                    alt="Moderný modulárny dom s dotáciou American Living"
-                    className="w-full h-full object-cover"
-                  />
-                )}
-              </motion.div>
-            </AnimatePresence>
-            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60"></div>
+
+        {/* 2 Program Cards (AMBASSADOR & PARTNER) */}
+        <div className="container mx-auto px-4 max-w-6xl relative z-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
             
-            {/* Edit Button */}
-            <button
-              onClick={() => setShowPhotoManager('rodina')}
-              className="absolute top-4 right-4 z-30 bg-background/90 hover:bg-background border border-border p-3 rounded-full shadow-lg transition-all text-foreground"
-            >
-              <Edit className="w-5 h-5 text-emerald-500" />
-            </button>
+            {/* AMBASSADOR CARD (Rodina) */}
+            <Card className="p-6 sm:p-8 bg-slate-900/90 dark:bg-slate-900/90 backdrop-blur-xl border border-emerald-500/30 text-white rounded-3xl shadow-2xl flex flex-col justify-between hover:border-emerald-500/60 transition-all group">
+              <div>
+                {/* Animated Photo Container */}
+                <div className="relative aspect-[16/10] rounded-2xl overflow-hidden mb-6 border border-emerald-500/30">
+                  <motion.img
+                    src={heroSettings?.rodina_fotky?.[0] || "https://images.unsplash.com/photo-1560518883-ff514cd811de?w=1000&q=80"}
+                    alt="Rodinný modulárny dom American Living"
+                    animate={{ scale: [1, 1.06, 1] }}
+                    transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute bottom-3 left-3 bg-emerald-500/25 backdrop-blur-md border border-emerald-500/40 text-emerald-300 text-xs font-bold px-3.5 py-1.5 rounded-full flex items-center gap-1.5">
+                    <Home className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Program AMBASSADOR • Pre Rodiny</span>
+                  </div>
+                </div>
 
-            {/* Titulok na mobile */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 z-20">
-              <h1 className="text-3xl font-serif font-black text-white mb-3 drop-shadow-2xl leading-tight">
-                Dotácia AMERICANA
-              </h1>
-              <p className="text-base text-white/95 mb-4 drop-shadow-xl font-sans">
-                {t('dotaciaGrantNote')}
-              </p>
-            </div>
-          </div>
+                <div className="flex items-center justify-between mb-3">
+                  <h2 className="text-2xl font-extrabold text-white">Program AMBASSADOR</h2>
+                  <span className="text-xs font-black px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                    Až 15 000 €
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm text-emerald-400 font-bold mb-3">
+                  {t('dotaciaHeroLeftSubtitle') || "Dotácia na rodinné bývanie pre mladé rodiny aj seniorov"}
+                </p>
+                <p className="text-xs sm:text-sm text-slate-300 mb-6 leading-relaxed">
+                  {t('dotaciaHeroLeftDesc') || "Získajte nenávratný finančný príspevok na certifikáciu energetickej triedy A0, fotovoltiku a terénne prípravy rodinného domu."}
+                </p>
 
-          {/* Karty na mobile */}
-          <div className="bg-background py-8 px-4 space-y-6 transition-colors duration-300">
-            {/* Ambassador Card */}
-            <Card className="p-6 bg-card backdrop-blur-xl border border-border shadow-lg relative overflow-hidden">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-green-600 rounded-lg flex items-center justify-center">
-                  <Home className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-xl font-serif font-black text-emerald-600 dark:text-emerald-400">
-                    Program AMBASSADOR
-                  </h2>
-                  <p className="text-xs text-emerald-700 dark:text-emerald-500 font-bold">
-                    {t('dotaciaHeroLeftSubtitle')}
-                  </p>
-                </div>
-              </div>
-              <p className="text-sm text-slate-600 dark:text-slate-300 mb-4 leading-relaxed">
-                {t('dotaciaHeroLeftDesc')}
-              </p>
-              <div className="space-y-2 mb-4">
-                <div className="flex items-start gap-2 bg-emerald-500/10 p-2 rounded">
-                  <CheckCircle className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
-                  <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400">{t('dotaciaGrant')}</p>
-                </div>
-                <div className="flex items-start gap-2 bg-emerald-500/10 p-2 rounded">
-                  <CheckCircle className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
-                  <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400">{t('dotaciaBonusEnergy')}</p>
-                </div>
-              </div>
-              {/* Energodotácia banner - mobile ambassador */}
-              <div className="mt-3 p-3 bg-blue-500/10 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-500/30 rounded-lg">
-                <div className="flex items-start gap-2">
-                  <Zap className="w-4 h-4 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-xs font-black text-blue-700 dark:text-blue-400">⚡ {energoT.title}</p>
-                    <p className="text-xs text-blue-800 dark:text-blue-300 mt-0.5">{energoT.ambassador}</p>
+                <div className="space-y-2.5 mb-6">
+                  <div className="flex items-start gap-2.5 bg-emerald-500/10 p-3 rounded-xl border border-emerald-500/20">
+                    <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <p className="text-xs font-semibold text-emerald-200">Príspevok na energetický štandard A0</p>
+                  </div>
+                  <div className="flex items-start gap-2.5 bg-emerald-500/10 p-3 rounded-xl border border-emerald-500/20">
+                    <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <p className="text-xs font-semibold text-emerald-200">Priamy odpočet z ceny bez byrokracie</p>
                   </div>
                 </div>
               </div>
+
               <Button
                 onClick={() => setModalType('rodina')}
-                className="w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-bold mt-3"
+                className="w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-bold py-3 text-sm sm:text-base rounded-xl shadow-lg hover:shadow-emerald-500/30 transition-all flex items-center justify-center gap-2"
               >
-                Požiadať o dotované bývanie
-                <ArrowRight className="ml-2 w-4 h-4" />
+                <span>Požiadať o rodinnú dotáciu</span>
+                <ArrowRight className="w-5 h-5" />
               </Button>
             </Card>
 
-            {/* Investor Card */}
-            <Card className="p-6 bg-card backdrop-blur-xl border border-border shadow-lg relative overflow-hidden">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-lg flex items-center justify-center">
-                  <TrendingUp className="w-6 h-6 text-white" />
+            {/* PARTNER CARD (Investor) */}
+            <Card className="p-6 sm:p-8 bg-slate-900/90 dark:bg-slate-900/90 backdrop-blur-xl border border-amber-500/30 text-white rounded-3xl shadow-2xl flex flex-col justify-between hover:border-amber-500/60 transition-all group">
+              <div>
+                {/* Animated Photo Container */}
+                <div className="relative aspect-[16/10] rounded-2xl overflow-hidden mb-6 border border-amber-500/30">
+                  <motion.img
+                    src={heroSettings?.investor_fotky?.[0] || "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1000&q=80"}
+                    alt="Investičný modulárny dom American Living"
+                    animate={{ scale: [1, 1.06, 1] }}
+                    transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute bottom-3 left-3 bg-amber-500/25 backdrop-blur-md border border-amber-500/40 text-amber-300 text-xs font-bold px-3.5 py-1.5 rounded-full flex items-center gap-1.5">
+                    <TrendingUp className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Program PARTNER • Pre Investorov</span>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="text-xl font-serif font-black text-yellow-600 dark:text-yellow-450">
-                    Program PARTNER
-                  </h2>
-                  <p className="text-xs text-yellow-700 dark:text-yellow-500 font-bold">
-                    {t('dotaciaHeroRightSubtitle')}
-                  </p>
+
+                <div className="flex items-center justify-between mb-3">
+                  <h2 className="text-2xl font-extrabold text-white">Program PARTNER</h2>
+                  <span className="text-xs font-black px-3 py-1 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                    Investičný stimul
+                  </span>
                 </div>
-              </div>
-              <p className="text-sm text-slate-600 dark:text-slate-300 mb-4 leading-relaxed">
-                {t('dotaciaHeroRightDesc')}
-              </p>
-              <div className="space-y-2 mb-4">
-                <div className="flex items-start gap-2 bg-yellow-500/10 p-2 rounded">
-                  <CheckCircle className="w-4 h-4 text-yellow-600 dark:text-yellow-500 flex-shrink-0 mt-0.5" />
-                  <p className="text-xs font-bold text-yellow-600 dark:text-yellow-400">{t('dotaciaGrant')}</p>
-                </div>
-                <div className="flex items-start gap-2 bg-yellow-500/10 p-2 rounded">
-                  <CheckCircle className="w-4 h-4 text-yellow-600 dark:text-yellow-500 flex-shrink-0 mt-0.5" />
-                  <p className="text-xs font-bold text-yellow-600 dark:text-yellow-400">{t('dotaciaInvestorBonusMarketing')}</p>
-                </div>
-              </div>
-              {/* Energodotácia banner - mobile investor */}
-              <div className="mt-3 p-3 bg-blue-500/10 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-500/30 rounded-lg">
-                <div className="flex items-start gap-2">
-                  <Zap className="w-4 h-4 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-xs font-black text-blue-700 dark:text-blue-400">⚡ {energoT.title}</p>
-                    <p className="text-xs text-blue-800 dark:text-blue-300 mt-0.5">{energoT.investor}</p>
+                <p className="text-xs sm:text-sm text-amber-400 font-bold mb-3">
+                  {t('dotaciaHeroRightSubtitle') || "Dotovaný rozvoj investičných nehnuteľností a prenájmu"}
+                </p>
+                <p className="text-xs sm:text-sm text-slate-300 mb-6 leading-relaxed">
+                  {t('dotaciaHeroRightDesc') || "Investujte do modulárneho domu na prenájom. Získajte garanciu výnosu a priamy príspevok na vybavenie nehnuteľnosti."}
+                </p>
+
+                <div className="space-y-2.5 mb-6">
+                  <div className="flex items-start gap-2.5 bg-amber-500/10 p-3 rounded-xl border border-amber-500/20">
+                    <CheckCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                    <p className="text-xs font-semibold text-amber-200">Garancia výnosu z krátkodobého prenájmu</p>
+                  </div>
+                  <div className="flex items-start gap-2.5 bg-amber-500/10 p-3 rounded-xl border border-amber-500/20">
+                    <CheckCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                    <p className="text-xs font-semibold text-amber-200">Kompletná spravovateľská podpora American Living</p>
                   </div>
                 </div>
               </div>
+
               <Button
                 onClick={() => setModalType('investor')}
-                className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-slate-900 font-bold mt-3"
+                className="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-slate-950 font-bold py-3 text-sm sm:text-base rounded-xl shadow-lg hover:shadow-amber-500/30 transition-all flex items-center justify-center gap-2"
               >
-                Žiadosť o investičný stimul
-                <ArrowRight className="ml-2 w-4 h-4" />
+                <span>Žiadosť o investičný stimul</span>
+                <ArrowRight className="w-5 h-5" />
               </Button>
             </Card>
+
           </div>
-        </div>
-
-        {/* DESKTOP VERZIA - Split Screen */}
-        <div className="hidden md:flex md:flex-row h-screen">
-          {/* ĽAVÁ STRANA - VICTORIA (Rodina) */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="relative w-1/2 h-full overflow-hidden group cursor-pointer"
-            onClick={() => setModalType('rodina')}
-          >
-            <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30 z-10 pointer-events-none"></div>
-            {heroSettings?.rodina_fotky?.length > 0 ? (
-              <AnimatePresence mode="wait">
-                <motion.img
-                  key={`rodina-${rodinaIndex}`}
-                  src={heroSettings.rodina_fotky[rodinaIndex] + '?w=1200&q=75'}
-                  alt="Šťastná rodina pred moderným domom American Living - Program Ambassador dotované bývanie"
-                  loading="eager"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.5 }}
-                  className="absolute inset-0 w-full h-full object-cover brightness-90"
-                />
-              </AnimatePresence>
-            ) : (
-              <img
-                src="https://images.unsplash.com/photo-1560518883-ff514cd811de?w=1200&q=75"
-                alt="Šťastná rodina pred moderným modulárnym domom American Living s dotáciou"
-                loading="eager"
-                className="absolute inset-0 w-full h-full object-cover brightness-90"
-              />
-            )}
-            
-            <button
-              onClick={(e) => { e.stopPropagation(); setShowPhotoManager('rodina'); }}
-              className="absolute top-4 right-4 z-30 bg-background/90 hover:bg-background border border-border p-3 rounded-full shadow-lg transition-all text-foreground"
-            >
-              <Edit className="w-5 h-5 text-emerald-500" />
-            </button>
-
-            <div className="relative z-20 flex flex-col items-start justify-start h-full p-8 pt-16">
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.3 }}
-                className="bg-card backdrop-blur-xl p-6 rounded-xl border border-border shadow-xl w-full max-w-md"
-              >
-                <h2 className="text-2xl lg:text-3xl font-serif font-bold text-slate-900 dark:text-white mb-2 leading-tight">
-                  {t('dotaciaHeroLeft')}
-                </h2>
-                <p className="text-base text-emerald-600 dark:text-emerald-400 mb-2 font-sans font-bold">
-                  {t('dotaciaHeroLeftSubtitle')}
-                </p>
-                <p className="text-sm text-slate-600 dark:text-slate-300 mb-4 font-sans leading-relaxed">
-                  {t('dotaciaHeroLeftDesc')}
-                </p>
-                {/* Energodotácia - Ambassador desktop */}
-                <div className="mb-3 p-3 bg-blue-900/20 border-l-4 border-blue-500 rounded-lg">
-                  <div className="flex items-start gap-2">
-                    <Zap className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
-                    <p className="text-xs text-blue-400 font-semibold leading-snug">
-                      <strong>⚡ {energoT.title}</strong> – {energoT.ambassador}
-                    </p>
-                  </div>
-                </div>
-                <Button
-                  size="lg"
-                  className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-sans font-bold px-6 py-3 text-base rounded-lg shadow-xl w-full"
-                  onClick={(e) => { e.stopPropagation(); setModalType('rodina'); }}
-                >
-                  {t('dotaciaHeroLeftButton')}
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
-              </motion.div>
-            </div>
-          </motion.div>
-
-          {/* PRAVÁ STRANA - ALEXANDER (Investor) */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="relative w-1/2 h-full overflow-hidden group cursor-pointer"
-            onClick={() => setModalType('investor')}
-          >
-            <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30 z-10 pointer-events-none"></div>
-            {heroSettings?.investor_fotky?.length > 0 ? (
-              <AnimatePresence mode="wait">
-                <motion.img
-                  key={`investor-${investorIndex}`}
-                  src={heroSettings.investor_fotky[investorIndex] + '?w=1200&q=75'}
-                  alt="Investičná nehnuteľnosť American Living - Program Partner pasívny príjem z modulárneho domu"
-                  loading="eager"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.5 }}
-                  className="absolute inset-0 w-full h-full object-cover brightness-90"
-                />
-              </AnimatePresence>
-            ) : (
-              <video
-                autoPlay
-                loop
-                muted
-                playsInline
-                preload="auto"
-                className="absolute inset-0 w-full h-full object-cover brightness-90"
-              >
-                <source src="https://player.vimeo.com/external/434045526.sd.mp4?s=236a2c3d3f29c7e1c1b1c3b3b3b3b3b3&profile_id=164" type="video/mp4" />
-              </video>
-            )}
-
-            <button
-              onClick={(e) => { e.stopPropagation(); setShowPhotoManager('investor'); }}
-              className="absolute top-4 right-4 z-30 bg-background/90 hover:bg-background border border-border p-3 rounded-full shadow-lg transition-all text-foreground"
-            >
-              <Edit className="w-5 h-5 text-yellow-500" />
-            </button>
-
-            <div className="relative z-20 flex flex-col items-end justify-start h-full p-8 pt-16">
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.3 }}
-                className="bg-card backdrop-blur-xl p-6 rounded-xl border border-border shadow-xl w-full max-w-md"
-              >
-                <h2 className="text-2xl lg:text-3xl font-serif font-bold text-slate-900 dark:text-white mb-2 drop-shadow-xl leading-tight">
-                  {t('dotaciaHeroRight')}
-                </h2>
-                <p className="text-base text-yellow-600 dark:text-yellow-400 mb-2 drop-shadow-lg font-sans font-medium">
-                  {t('dotaciaHeroRightSubtitle')}
-                </p>
-                <p className="text-sm text-slate-600 dark:text-slate-300 mb-4 drop-shadow-lg font-sans leading-relaxed">
-                  {t('dotaciaHeroRightDesc')}
-                </p>
-                {/* Energodotácia - Investor desktop */}
-                <div className="mb-3 p-3 bg-blue-900/60 border-l-4 border-blue-500/30 rounded-lg">
-                  <div className="flex items-start gap-2">
-                    <Zap className="w-4 h-4 text-blue-300 flex-shrink-0 mt-0.5" />
-                    <p className="text-xs text-blue-100 font-semibold leading-snug">
-                      <strong>⚡ {energoT.title}</strong> – {energoT.investor}
-                    </p>
-                  </div>
-                </div>
-                <Button
-                  size="lg"
-                  className="bg-yellow-400 hover:bg-yellow-300 text-slate-900 font-sans font-bold px-6 py-3 text-base rounded-lg shadow-xl w-full"
-                  onClick={(e) => { e.stopPropagation(); setModalType('investor'); }}
-                >
-                  {t('dotaciaHeroRightButton')}
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
-              </motion.div>
-            </div>
-          </motion.div>
         </div>
       </section>
 
