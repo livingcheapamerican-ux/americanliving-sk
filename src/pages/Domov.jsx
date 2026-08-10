@@ -1149,26 +1149,81 @@ export default function Domov() {
             </div>
           </div>
 
-          {/* Kapitola 02: 100% Financovanie */}
-          <Chapter
-            kicker="Financovanie"
-            reverse
-            title={t('trustFinanceTitle')}
-            text={t('trustFinanceDesc')}
-            image="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=900&q=75"
-          >
-            <button
-              onClick={() => {
-                window.dispatchEvent(new CustomEvent('openChatbotWithContext', {
-                  detail: { message: "Chcem zistiť viac o modeli 100% financovania bez našetrených úspor." }
-                }));
-              }}
-              className="inline-flex items-center gap-2 text-sm text-[#C5A880] hover:text-[#E2C799] transition-colors font-bold"
-            >
-              <span>{t('trustFinanceButton')}</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </Chapter>
+          {/* Sekcia 3: 100% Financovanie stavby */}
+          <div className="relative rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 border border-emerald-500/30 p-6 sm:p-10 lg:p-12 shadow-2xl overflow-hidden text-white">
+            {/* Ambient Background Glow */}
+            <div className="absolute top-0 left-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute bottom-0 right-0 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="relative z-10 max-w-5xl mx-auto">
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
+                <div>
+                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-xs font-black uppercase tracking-wider text-emerald-300 mb-3">
+                    <Landmark className="w-4 h-4 text-emerald-400" />
+                    <span>100% FINANCOVANIE STAVBY</span>
+                  </div>
+                  <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
+                    Postavte svoj dom <span className="text-emerald-400">bez vlastných úspor</span>
+                  </h2>
+                </div>
+                <div className="flex flex-wrap items-center gap-3 shrink-0">
+                  <button
+                    onClick={() => {
+                      window.dispatchEvent(new CustomEvent('openChatbotWithContext', {
+                        detail: { message: "Chcem zistiť viac o modeli 100% financovania bez našetrených úspor." }
+                      }));
+                    }}
+                    className="rounded-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold px-6 py-3 text-sm sm:text-base shadow-lg hover:shadow-emerald-600/40 transition-all flex items-center gap-2"
+                  >
+                    <span>Konzultácia k financovaniu</span>
+                    <ArrowRight className="w-5 h-5" />
+                  </button>
+                  <Link to={createPageUrl("Kalkulacka")}>
+                    <Button variant="outline" className="rounded-full border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-white font-bold px-5 py-3 text-sm">
+                      Kalkulačka splátok
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+
+              <p className="text-slate-300 text-sm sm:text-base leading-relaxed mb-8 max-w-3xl">
+                {t('trustFinanceDesc') || "Nemáte počiatočnú hotovosť? V American Living financujeme výstavbu aj bez úspor. Náš špecialista pre vás zmluvne vybaví hypotéku na kľúč vo všetkých významných bankách."}
+              </p>
+
+              {/* 3 Prehľadné Výhodové Karty */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-5 backdrop-blur-sm hover:border-emerald-500/50 transition-colors">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-300 font-black text-lg mb-3">
+                    🪙
+                  </div>
+                  <h3 className="font-bold text-white text-base mb-1">0 € Počiatočná hotovosť</h3>
+                  <p className="text-xs text-slate-300 leading-normal">
+                    Nemusíte čakať roky na našetrenie vlastných úspor. Profinancujeme celú stavbu od základu.
+                  </p>
+                </div>
+
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-5 backdrop-blur-sm hover:border-emerald-500/50 transition-colors">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-300 font-black text-lg mb-3">
+                    📑
+                  </div>
+                  <h3 className="font-bold text-white text-base mb-1">Hypotéka na kľúč</h3>
+                  <p className="text-xs text-slate-300 leading-normal">
+                    Náš hypotekárny špecialista porovná banky a vybaví pre vás najnižšiu úrokovú sadzbu.
+                  </p>
+                </div>
+
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-5 backdrop-blur-sm hover:border-emerald-500/50 transition-colors">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-300 font-black text-lg mb-3">
+                    🔒
+                  </div>
+                  <h3 className="font-bold text-white text-base mb-1">Pevná garancia ceny</h3>
+                  <p className="text-xs text-slate-300 leading-normal">
+                    Zmluvne zakotvená konečná rozpočtová suma bez akýchkoľvek skrytých poplatkov a zdražení.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
 
           {/* Kapitola 03: Rýchle odovzdanie */}
           <Chapter
