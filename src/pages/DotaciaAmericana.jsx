@@ -362,8 +362,21 @@ export default function DotaciaAmericana() {
       <audio ref={pianoRef} src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" />
       <audio ref={houseRef} src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" />
 
-      {/* HERO SECTION - Mobile: Slideshow, Desktop: Split Screen */}
-      <section className="min-h-screen md:h-screen relative overflow-hidden">
+      {/* HERO SECTION - Súkromná Dotácia AMERICANA */}
+      <section className="relative pt-28 sm:pt-36 lg:pt-40 pb-12 sm:pb-16 overflow-hidden bg-slate-950 text-white min-h-screen">
+        {/* Top Header Banner */}
+        <div className="container mx-auto px-4 mb-8 text-center max-w-4xl relative z-20">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#C5A880]/20 border border-[#C5A880]/40 text-xs sm:text-sm font-black uppercase tracking-wider text-[#E2C799] mb-4">
+            <Gift className="w-4 h-4 text-[#E2C799]" />
+            <span>SÚKROMNÁ DOTÁCIA AMERICANA</span>
+          </div>
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight mb-4 drop-shadow-lg">
+            Získajte finančnú dotáciu až do <span className="text-[#E2C799]">15 000 €</span>
+          </h1>
+          <p className="text-sm sm:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
+            Priamy finančný príspevok na energetickú certifikáciu A0, terénne prípravy a prevádzku vášho rodinného alebo investičného domu. Bez zdĺhavej štátnej byrokracie.
+          </p>
+        </div>
         {/* MOBILE VERZIA - Slideshow */}
         <div className="md:hidden">
           {/* Slideshow pozadia */}
@@ -667,6 +680,54 @@ export default function DotaciaAmericana() {
               </motion.div>
             </div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* 4 KROKY - Ako funguje Dotácia AMERICANA */}
+      <section className="py-16 bg-slate-900 border-t border-slate-800 text-white relative z-20">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <h2 className="text-2xl sm:text-4xl font-extrabold mb-3">
+              Ako funguje uplatnenie Dotácie AMERICANA?
+            </h2>
+            <p className="text-sm sm:text-base text-slate-300">
+              Jednoduchý 4-krokový proces bez zbytočného papierovania a čakacích lehôt.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-6 relative shadow-lg">
+              <span className="text-4xl font-black text-[#C5A880] mb-3 block">01</span>
+              <h3 className="text-lg font-bold mb-2 text-white">Výber domu</h3>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                Vyberte si ľubovoľný montovaný alebo modulárny dom z nášho katalógu.
+              </p>
+            </div>
+
+            <div className="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-6 relative shadow-lg">
+              <span className="text-4xl font-black text-[#C5A880] mb-3 block">02</span>
+              <h3 className="text-lg font-bold mb-2 text-white">Overenie nároku</h3>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                Vyplňte krátky online formulár – nárok vyhodnotíme do 24 hodín.
+              </p>
+            </div>
+
+            <div className="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-6 relative shadow-lg">
+              <span className="text-4xl font-black text-[#C5A880] mb-3 block">03</span>
+              <h3 className="text-lg font-bold mb-2 text-white">Odpočet z ceny</h3>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                Suma dotácie (až 15 000 €) sa započíta priamo do vašej zmluvy a rozpočtu.
+              </p>
+            </div>
+
+            <div className="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-6 relative shadow-lg">
+              <span className="text-4xl font-black text-[#C5A880] mb-3 block">04</span>
+              <h3 className="text-lg font-bold mb-2 text-white">Rýchle nasťahovanie</h3>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                Stavbu vám odovzdáme v rozmedzí od 6 do 12 týždňov na kľúč.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
