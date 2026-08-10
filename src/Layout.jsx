@@ -895,6 +895,24 @@ function LayoutContent({ children }) {
       <CookieConsentBanner />
       <SessionRecorder />
 
+      {/* Floating Admin & Session Recorder Bar */}
+      {isAdmin && (
+        <div className="fixed top-24 right-4 z-[99] flex flex-col items-end gap-2">
+          <Link
+            to={createPageUrl("AdminAnalyzaSessions")}
+            className="inline-flex items-center gap-2 bg-slate-900/95 hover:bg-slate-800 border border-slate-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold shadow-2xl backdrop-blur-md transition-all group"
+            title="Sledovanie návštevníkov a nahrávky relácií"
+          >
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+            </span>
+            <Activity className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform" />
+            <span>Session Recorder Live</span>
+          </Link>
+        </div>
+      )}
+
       <Chatbot />
       </div>
       );

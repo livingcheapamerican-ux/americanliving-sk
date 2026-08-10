@@ -1052,27 +1052,19 @@ export default function Domov() {
                   </Link>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-2.5 mt-5">
+                <div className="flex flex-col sm:flex-row gap-3 mt-5">
                   <Link to={createPageUrl("Katalog")} className="flex-1">
-                    <Button size="lg" className="w-full bg-[#9E2A2B] hover:bg-[#802021] text-white font-bold text-xs px-4 py-5 rounded-xl flex items-center justify-center gap-2">
+                    <Button size="lg" className="w-full bg-[#9E2A2B] hover:bg-[#802021] text-white font-bold text-xs sm:text-sm px-4 py-5 rounded-xl flex items-center justify-center gap-2 shadow-md">
                       <Home className="w-4 h-4" />
                       <span>{t('viewCatalogButton')}</span>
                     </Button>
                   </Link>
                   <Link to={createPageUrl("Showroom")} className="flex-1">
-                    <Button size="lg" className="w-full bg-white hover:bg-[#F5F1E9] text-[#2C3A33] border border-[#E0D8CA] font-bold text-xs px-4 py-5 rounded-xl flex items-center justify-center gap-2">
+                    <Button size="lg" className="w-full bg-white hover:bg-[#F5F1E9] text-[#2C3A33] border border-[#E0D8CA] font-bold text-xs sm:text-sm px-4 py-5 rounded-xl flex items-center justify-center gap-2 shadow-sm">
                       <Calendar className="w-4 h-4 text-[#9E2A2B]" />
                       <span>{t('showroom')}</span>
                     </Button>
                   </Link>
-                  <Button
-                    size="lg"
-                    onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))}
-                    className="flex-1 bg-white hover:bg-[#F5F1E9] text-[#2C3A33] border border-[#E0D8CA] font-bold text-xs px-4 py-5 rounded-xl flex items-center justify-center gap-2"
-                  >
-                    <MessageCircle className="w-4 h-4 text-[#9E2A2B]" />
-                    <span>{t('consultationWithKexo')}</span>
-                  </Button>
                 </div>
               </motion.div>
             </div>
