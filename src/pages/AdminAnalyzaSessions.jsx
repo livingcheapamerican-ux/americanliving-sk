@@ -139,6 +139,45 @@ export default function AdminAnalyzaSessions() {
     return Object.values(groups).sort((a, b) => new Date(b.lastVisit) - new Date(a.lastVisit));
   }, [filteredSessions]);
 
+  // Rozsah dát – čo je vôbec načítané v databáze a čo je práve zobrazené
+  const dataRange = useMemo(() => {
+    const times = sessions.map(s => new Date(s.start_time).getTime()).filter(t => !isNaN(t));
+    const shown = filteredSessions.map(s => new Date(s.start_time).getTime()).filter(t => !isNaN(t));
+    return {
+      loadedFrom: times.length ? new Date(Math.min(...times)) : null,
+      loadedTo: times.length ? new Date(Math.max(...times)) : null,
+      shownFrom: shown.length ? new Date(Math.min(...shown)) : null,
+      shownTo: shown.length ? new Date(Math.max(...shown)) : null
+    };
+  }, [sessions, filteredSessions]);
+
+  const applyPreset = (days) => {
+    if (days === null) {
+      setFilterDateFrom("");
+      setFilterDateTo("");
+      return;
+    }
+    const to = new Date();
+    const from = new Date();
+    from.setDate(from.getDate() - (days - 1));
+    const iso = (d) => d.toISOString().split('T')[0];
+    setFilterDateFrom(iso(from));
+    setFilterDateTo(iso(to));
+  };
+
+  const activePreset = (() => {
+    if (!filterDateFrom && !filterDateTo) return 'all';
+    const iso = (d) => d.toISOString().split('T')[0];
+    const today = iso(new Date());
+    if (filterDateTo !== today) return null;
+    for (const days of [1, 7, 30, 90]) {
+      const from = new Date();
+      from.setDate(from.getDate() - (days - 1));
+      if (filterDateFrom === iso(from)) return String(days);
+    }
+    return null;
+  })();
+
   const stats = useMemo(() => ({
     totalSessions: filteredSessions.length,
     uniqueUsers: groupedVisitors.length,
@@ -293,6 +332,50 @@ export default function AdminAnalyzaSessions() {
                 {groupByVisitor ? `${groupedVisitors.length} návštevníkov` : `${filteredSessions.length} relácií`}
               </Badge>
             </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 mb-4">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mr-1">Obdobie:</span>
+            {[
+              { label: 'Dnes', days: 1 },
+              { label: 'Posledných 7 dní', days: 7 },
+              { label: 'Posledných 30 dní', days: 30 },
+              { label: 'Posledných 90 dní', days: 90 },
+              { label: 'Všetky dáta', days: null }
+            ].map(preset => {
+              const key = preset.days === null ? 'all' : String(preset.days);
+              const isActive = activePreset === key;
+              return (
+                <Button
+                  key={preset.label}
+                  size="sm"
+                  variant={isActive ? "default" : "outline"}
+                  onClick={() => applyPreset(preset.days)}
+                  className={`font-bold h-8 text-xs ${isActive ? 'bg-indigo-600 hover:bg-indigo-700 text-white' : 'bg-white'}`}
+                >
+                  {preset.label}
+                </Button>
+              );
+            })}
+          </div>
+
+          <div className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 mb-4 text-[11px] font-bold text-slate-600 flex flex-wrap gap-x-6 gap-y-1">
+            <span>
+              Zobrazené obdobie:{' '}
+              <span className="text-slate-900">
+                {dataRange.shownFrom
+                  ? `${safeFormat(dataRange.shownFrom, 'dd.MM.yyyy HH:mm', { locale: sk })} – ${safeFormat(dataRange.shownTo, 'dd.MM.yyyy HH:mm', { locale: sk })}`
+                  : 'žiadne dáta pre zvolený filter'}
+              </span>
+            </span>
+            <span>
+              Dostupné v databáze:{' '}
+              <span className="text-slate-900">
+                {dataRange.loadedFrom
+                  ? `${safeFormat(dataRange.loadedFrom, 'dd.MM.yyyy', { locale: sk })} – ${safeFormat(dataRange.loadedTo, 'dd.MM.yyyy', { locale: sk })} (posledných ${sessions.length} relácií)`
+                  : '—'}
+              </span>
+            </span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
