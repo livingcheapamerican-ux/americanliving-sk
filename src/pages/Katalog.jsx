@@ -589,7 +589,7 @@ export default function Katalog() {
           </script>
         </Helmet>
         {/* Header */}
-        <div className="bg-slate-900/5 dark:bg-slate-900/40 backdrop-blur-md border-b border-border/60 py-8 sm:py-16 relative z-10">
+        <div className="bg-slate-900/5 dark:bg-slate-900/40 backdrop-blur-md border-b border-border/60 pt-28 sm:pt-36 lg:pt-40 pb-8 sm:pb-12 relative z-10">
           <div className="container mx-auto px-4">
             <div className="flex flex-col gap-4 lg:gap-8 lg:flex-row lg:items-center">
               {/* Ľavá časť - Hlavný nadpis a popis */}

@@ -179,6 +179,7 @@ function LayoutContent({ children }) {
   const isAdmin = user?.role === 'admin' || user?.super_admin === true;
 
   const navItems = [
+    { name: t('home') || "Domov", path: createPageUrl("Domov"), icon: Home },
     { name: t('catalog') || "Katalóg domov", path: createPageUrl("Katalog"), icon: Grid3x3 },
     { name: t('dotacia') || "DOTÁCIA AMERICANA", path: createPageUrl("DotaciaAmericana"), icon: Gift, isDotacia: true },
     { name: t('showroom') || "Showroom & Realizácie", path: createPageUrl("Showroom"), icon: Calendar },
@@ -274,7 +275,7 @@ function LayoutContent({ children }) {
       <header 
         className={`fixed left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'top-4' : 'top-0 sm:top-6'} px-2 sm:px-6`}
       >
-        <div className={`mx-auto max-w-7xl transition-all duration-500 ${(scrolled && !mobileMenuOpen) ? 'bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 border border-slate-200 dark:border-white/10 rounded-full py-2 px-4' : (mobileMenuOpen ? 'bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-3xl p-4 shadow-2xl mt-2' : 'bg-transparent py-4 px-4')}`}>
+        <div className={`mx-auto max-w-7xl transition-all duration-500 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl shadow-xl border border-slate-200/80 dark:border-white/10 ${mobileMenuOpen ? 'rounded-3xl p-4 mt-2' : 'rounded-full py-2.5 px-4'}`}>
           <div className="flex items-center justify-between gap-1 sm:gap-2">
             {/* Mobile - placeholder for layout balance */}
             <div className="sm:hidden w-8" />

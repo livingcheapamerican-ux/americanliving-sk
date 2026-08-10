@@ -229,9 +229,9 @@ const localShowcaseT = {
     noCapitalTitle: "Do you want to build a new house and have no capital?",
     noCapitalDesc: "No problem! We have a financing model for those with no savings. We will help you secure financing from A to Z.",
     askKexoFinancing: "Ask Kexo about financing",
-    trustGrantTitle: "Súkromný Grant AMERICANA",
-    trustGrantDesc: "We provide a unique operational grant and financial subsidy for energy certification and house operation up to €15,000.",
-    trustGrantLink: "Check grant eligibility",
+    trustGrantTitle: "Súkromná Dotácia AMERICANA",
+    trustGrantDesc: "Poskytujeme unikátnu dotáciu a finančný príspevok na energetickú certifikáciu a prevádzku domu až do 15 000 €.",
+    trustGrantLink: "Zistiť nárok na dotáciu",
     trustFinanceTitle: "100% Construction Financing",
     trustFinanceDesc: "No cash? At American Living we finance construction without initial savings. We arrange everything for you including mortgage.",
     trustFinanceButton: "Ask about financing",
@@ -303,25 +303,6 @@ const headlineWord = {
     }
   }
 };
-
-// FullWidthVideoBackground renders a crisp, high-definition full-width video background
-// with subtle dark vignettes to ensure 100% text legibility inside foreground glass cards.
-function FullWidthVideoBackground() {
-  return (
-    <div className="fixed inset-0 w-full h-full overflow-hidden bg-slate-950 z-0 pointer-events-none select-none">
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="w-full h-full object-cover scale-105 transition-opacity duration-1000 opacity-80"
-        src="https://videos.pexels.com/video-files/3209828/3209828-hd_1920_1080_25fps.mp4"
-      />
-      {/* Light subtle vignette gradient overlay for contrast without blurring the video */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/65 via-slate-950/30 to-slate-950/80 pointer-events-none" />
-    </div>
-  );
-}
 
 export default function Domov() {
   const [showSettings, setShowSettings] = useState(false);
@@ -842,8 +823,10 @@ export default function Domov() {
     : lcpImage;
 
   return (
-    <div className="min-h-screen -mt-10 sm:-mt-12 md:-mt-14 lg:-mt-16 xl:-mt-20 overflow-x-hidden relative">
-      <FullWidthVideoBackground />
+    <div className="warm min-h-screen -mt-10 sm:-mt-12 md:-mt-14 lg:-mt-16 xl:-mt-20 overflow-x-hidden lg:overflow-x-visible relative text-[#2C3A33]">
+      {/* 1. VRSTVA (SPODNÁ) - fixné video na celej stránke */}
+      <HomeBackgroundVideo />
+      {/* 2. VRSTVA (HORNÁ) - obsah stránky, ktorý sa roluje nad videom */}
       <div className="fixed-bg-content relative z-10">
         <Helmet>
         <link rel="canonical" href="https://americanliving.sk" />
@@ -919,118 +902,97 @@ export default function Domov() {
 
 
 
-      {/* Hero Section */}
-      <section className="hero-section relative pt-20 lg:pt-28 pb-12 overflow-hidden">
+      {/* Hero Section - Warm architectural with interior video background */}
+      <section className="hero-section relative pt-36 sm:pt-44 lg:pt-56 pb-12 sm:pb-16 overflow-hidden">
         {/* Scrim pre čitateľnosť nad fixným videom */}
         <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(15,12,9,0.30) 0%, rgba(15,12,9,0.18) 45%, rgba(15,12,9,0.42) 100%)' }} />
+        <div className="container mx-auto px-4 relative z-10">
 
-        {/* Ambient background glows - Rich premium gradients */}
-        <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] bg-[#C5A880]/10 dark:bg-red-600/15 rounded-full blur-[180px] pointer-events-none" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] bg-[#C5A880]/10 dark:bg-[#C5A880]/15 rounded-full blur-[180px] pointer-events-none" />
-        <div className="absolute top-[30%] left-[35%] w-[500px] h-[500px] bg-[#C5A880]/5 dark:bg-slate-900/30 rounded-full blur-[150px] pointer-events-none" />
+          {/* Centered intro */}
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="flex items-center justify-center gap-3 mb-5 flex-wrap">
+              <motion.img
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6 }}
+                src={LOGO_URL}
+                alt="American Living"
+                className="h-10 w-auto rounded-full"
+                width={40}
+                height={40}
+                loading="eager"
+              />
+              <motion.div
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#E0D8CA] bg-white text-xs font-semibold text-[#2C3A33] shadow-sm"
+              >
+                <span className="w-2 h-2 rounded-full bg-[#9E2A2B]"></span>
+                <span>{t('heroBadgeText')}</span>
+              </motion.div>
+            </div>
 
-        <div className="relative z-10 container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            
-            {/* Left Column: Glassmorphism Card for 100% text readability over video */}
-            <div className="lg:col-span-6 flex flex-col text-left min-w-0 w-full">
-              <div className="hero-glass-card p-6 sm:p-8 rounded-3xl max-w-2xl text-white">
-                {/* Logo & Small Badge */}
-                <div className="flex items-center gap-3 mb-6 flex-wrap">
-                  <motion.img 
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
+            <motion.h1
+              variants={headlineContainer}
+              initial="hidden"
+              animate="visible"
+              className="font-['Fraunces'] text-4xl sm:text-6xl lg:text-7xl font-semibold text-[#F7F2E9] mb-5 leading-[1.05] tracking-tight drop-shadow-[0_2px_12px_rgba(0,0,0,0.35)]"
+            >
+              {(t('heroTitleFirst')?.split(" ") || []).map((word, idx) => (
+                <motion.span key={`first-${idx}`} variants={headlineWord} className="inline-block mr-2.5">
+                  {word}
+                </motion.span>
+              ))}
+              {" "}
+              <span className="text-[#E2C799]">
+                {(t('heroTitleSecond')?.split(" ") || []).map((word, idx) => (
+                  <motion.span key={`second-${idx}`} variants={headlineWord} className="inline-block mr-2.5">
+                    {word}
+                  </motion.span>
+                ))}
+              </span>
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.35 }}
+              className="text-sm sm:text-lg text-[#F0EAE0]/90 leading-relaxed max-w-2xl mx-auto drop-shadow-[0_1px_8px_rgba(0,0,0,0.4)]"
+            >
+              {t('heroDescription')}
+            </motion.p>
+          </div>
+
+          {/* Photo + floating configurator card */}
+          <div className="relative mt-10 sm:mt-14 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-end max-w-6xl mx-auto">
+            <div className="lg:col-span-7">
+              <div className="aspect-[4/3] sm:aspect-[16/10] rounded-3xl overflow-hidden border border-[#E0D8CA] shadow-[0_22px_50px_rgba(44,58,51,0.12)] bg-white">
+                <AnimatePresence>
+                  <motion.img
+                    key={`${selectedHouseId}-${selectedFacade}`}
+                    src={selectedFacadeImage}
+                    alt={currentHouseData.name}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
                     transition={{ duration: 0.6 }}
-                    src={LOGO_URL} 
-                    alt="American Living" 
-                    className="h-10 sm:h-12 w-auto drop-shadow-lg rounded-full"
-                    width={48}
-                    height={48}
+                    className="w-full h-full object-cover"
                     loading="eager"
                   />
-                  <motion.div
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6, delay: 0.1 }}
-                    className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-500/20 border border-red-500/30 text-xs font-bold text-red-300"
-                  >
-                    <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-                    <span>Certifikované modulárne a montované domy</span>
-                  </motion.div>
-                </div>
-
-                {/* Main Headline */}
-                <motion.h1 
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.7 }}
-                  className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4 leading-[1.15] tracking-tight"
-                >
-                  Váš americký sen o bývaní. <br className="hidden sm:inline" />
-                  <span className="bg-gradient-to-r from-red-400 via-amber-300 to-amber-200 bg-clip-text text-transparent">
-                    Bez starostí, do 4 mesiacov.
-                  </span>
-                </motion.h1>
-
-                {/* Subheadline */}
-                <motion.p 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.7, delay: 0.2 }}
-                  className="text-sm sm:text-base text-slate-200 mb-6 leading-relaxed font-normal"
-                >
-                  Nízkoenergetické modulované a montované domy v štandarde A0 so zárukou 80+ rokov, garantovanou pevnou cenou a možnosťou získania <strong className="text-amber-300">Dotácie Americana</strong>.
-                </motion.p>
-
-                {/* Clear Primary & Secondary CTAs */}
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.7, delay: 0.4 }}
-                  className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-6 w-full"
-                >
-                  <Link to={createPageUrl("Katalog")} className="flex-1">
-                    <Button size="lg" className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-black text-base px-6 py-6 shadow-lg shadow-red-600/40 border border-red-400/40 rounded-2xl flex items-center justify-center gap-2 group">
-                      <Home className="w-5 h-5 group-hover:rotate-6 transition-transform" />
-                      <span>Pozrieť katalóg s cenami</span>
-                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    </Button>
-                  </Link>
-                  <Link to={createPageUrl("DotaciaAmericana")} className="flex-1">
-                    <Button size="lg" variant="outline" className="w-full bg-slate-900/60 hover:bg-slate-800/80 text-amber-300 border border-amber-400/40 font-bold text-base px-6 py-6 rounded-2xl transition-all flex items-center justify-center gap-2 backdrop-blur-sm">
-                      <Gift className="w-5 h-5 text-amber-400" />
-                      <span>Overiť Dotáciu Americana</span>
-                    </Button>
-                  </Link>
-                </motion.div>
-
-                {/* Trust Badges Bar */}
-                <div className="flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-300 pt-4 border-t border-white/10">
-                  <span className="flex items-center gap-1.5 text-emerald-400">
-                    <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" /> Garantovaná cena
-                  </span>
-                  <span className="flex items-center gap-1.5 text-amber-300">
-                    <CheckCircle className="w-4 h-4 text-amber-300 shrink-0" /> Výstavba za 6-12 týždňov
-                  </span>
-                  <span className="flex items-center gap-1.5 text-cyan-300">
-                    <CheckCircle className="w-4 h-4 text-cyan-300 shrink-0" /> Energetická trieda A0
-                  </span>
-                </div>
+                </AnimatePresence>
               </div>
+            </div>
 
-              {/* Interactive Quick House Switcher with Real Images */}
-              <div className="pt-6 border-t border-white/10 max-w-xl">
-                <div className="mb-4">
-                  <span className="inline-block bg-white/90 dark:bg-slate-900/90 border border-slate-200/85 dark:border-white/10 px-3.5 py-1.5 rounded-xl shadow-sm text-slate-700 dark:text-slate-300 text-[10px] sm:text-xs font-bold uppercase tracking-wider backdrop-blur-md">
-                    {t('clickToSeeMostLucrativeModels')}
-                  </span>
-                </div>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.8 }}
-                  className="flex overflow-x-auto gap-3 pb-3 pt-1 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-805 scroll-smooth snap-x"
-                >
+            <div className="lg:col-span-5">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.35 }}
+                className="bg-white border border-[#E0D8CA] rounded-3xl p-5 sm:p-6 shadow-[0_18px_40px_rgba(44,58,51,0.10)]"
+              >
+                <p className="text-[10px] uppercase tracking-[0.2em] text-[#9E2A2B] font-bold mb-3">{t('clickToSeeMostLucrativeModels')}</p>
+                <div className="flex overflow-x-auto gap-2 pb-1 snap-x scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                   {switcherHouses.map((house) => (
                     <button
                       key={house.id}
@@ -1048,126 +1010,74 @@ export default function Domov() {
                       {house.name}
                     </button>
                   ))}
-                </motion.div>
-              </div>
-            </div>
-
-            {/* Right Column: Interactive Lookbook (Color Swapper) & Floating Tags */}
-            <div className="lg:col-span-6 relative">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                className="relative bg-gradient-to-br from-white/95 to-slate-50/55 dark:from-slate-900/50 dark:to-slate-950/70 backdrop-blur-2xl border border-slate-200 dark:border-white/15 rounded-3xl p-4 sm:p-6 shadow-[0_20px_50px_rgba(197,168,128,0.06)] dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)] overflow-hidden group transition-colors duration-300"
-              >
-                {/* Lookbook main image wrapper */}
-                <div className="aspect-[4/3] rounded-2xl overflow-hidden relative border border-slate-250 dark:border-white/5 bg-slate-950">
-                  <AnimatePresence>
-                    <motion.img 
-                      key={`${selectedHouseId}-${selectedFacade}`}
-                      src={selectedFacadeImage} 
-                      alt={currentHouseData.name}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.4 }}
-                      className="absolute inset-0 w-full h-full object-cover" 
-                      loading="eager"
-                    />
-                  </AnimatePresence>
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
-                  
-                  {/* Floating Brand Badge */}
-                  <div className="absolute top-4 right-4 z-20">
-                    {getManufacturerBadge(currentHouseData.manufacturer)}
-                  </div>
-                  
-                  {/* Floating stats tag 1 (top-left) - Dynamic delivery time based on manufacturer */}
-                  <motion.div 
-                    animate={{ y: [0, -5, 0] }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute top-4 left-4 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border border-slate-200 dark:border-white/15 rounded-xl px-3.5 py-2 flex items-center gap-2 shadow-[0_8px_32px_rgba(0,0,0,0.15)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)] z-20 transition-colors duration-300"
-                  >
-                    <div className="w-8 h-8 rounded-lg bg-[#C5A880]/20 flex items-center justify-center border border-[#C5A880]/30">
-                       <Clock className="w-4 h-4 text-[#C5A880]" />
-                    </div>
-                    <div>
-                      <p className="text-[9px] text-slate-505 dark:text-slate-400 font-semibold uppercase tracking-wider">
-                        {currentHouseData.manufacturer?.toLowerCase().includes("ticab") ? t('factoryProduction') : t('turnkeyDelivery')}
-                      </p>
-                      <p className="text-xs font-black text-slate-800 dark:text-white">
-                        {currentHouseData.manufacturer?.toLowerCase().includes("ticab") ? t('sixWeeks') : t('upToTwelveWeeks')}
-                      </p>
-                    </div>
-                  </motion.div>
-
-                  {/* Floating stats tag 2 (bottom-right) */}
-                  <motion.div 
-                    animate={{ y: [0, 5, 0] }}
-                    transition={{ duration: 4, delay: 2, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute bottom-4 right-4 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border border-slate-250 dark:border-white/15 rounded-xl px-3.5 py-2 flex items-center gap-2 shadow-[0_8px_32px_rgba(0,0,0,0.15)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)] z-20 transition-colors duration-300"
-                  >
-                    <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center border border-emerald-500/35">
-                      <Star className="w-4 h-4 text-emerald-400 animate-pulse" />
-                    </div>
-                    <div>
-                      <p className="text-[9px] text-slate-505 dark:text-slate-400 font-semibold uppercase tracking-wider">{t('builtArea')}</p>
-                      <p className="text-xs font-black text-emerald-400">{currentHouseData.area} m²</p>
-                    </div>
-                  </motion.div>
                 </div>
 
-                {/* Lookbook info & controls */}
-                <div className="mt-4 sm:mt-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div>
-                      <h3 className="text-base sm:text-xl font-bold text-slate-800 dark:text-white leading-tight">{currentHouseData.name}</h3>
-                      <div className="text-xs text-slate-500 dark:text-slate-400 mt-1.5 font-medium flex items-center gap-1.5 flex-wrap">
-                        <span>{currentHouseData.rooms} {t('roomsLabel')}</span>
-                        <span>•</span>
-                        {getManufacturerBadge(currentHouseData.manufacturer)}
-                        <span>•</span>
-                        <span><strong className="text-slate-800 dark:text-white">{t('from')} {currentHouseData.price.toLocaleString()} €</strong></span>
-                      </div>
-                    </div>
-                    <Link to={`${createPageUrl("DetailDomu")}?id=${currentHouseData.id}`}>
-                      <Button variant="ghost" size="sm" className="text-xs text-[#C5A880] hover:text-[#C5A880]/80 p-0 hover:bg-transparent flex items-center gap-1 font-black transition-colors duration-300">
-                        <span>{t('configure')}</span>
-                        <ChevronRight className="w-4 h-4" />
-                      </Button>
-                    </Link>
-                  </div>
-
-                  {/* Facade switcher controls with live thumbnails */}
-                  {hasMultipleFacades && (
-                    <div className="flex flex-col sm:flex-row gap-2">
+                {hasMultipleFacades && (
+                  <div className="mt-4">
+                    <p className="text-[11px] text-[#8B948E] font-semibold mb-2">{t('facade') || 'Fasáda'}</p>
+                    <div className="flex flex-wrap gap-2">
                       {facadeOptions.map((opt) => (
                         <button
                           key={opt.id}
                           type="button"
                           onClick={() => setSelectedFacade(opt.id)}
-                          className={`flex-1 p-2 rounded-xl border text-left transition-all duration-300 flex items-center gap-2.5 hover:scale-[1.02] ${
-                            selectedFacade === opt.id 
-                              ? 'bg-[#C5A880]/10 border-[#C5A880] text-[#C5A880] dark:text-white shadow-[0_0_15px_rgba(197,168,128,0.1)]' 
-                              : 'bg-slate-100 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-white/10 hover:border-slate-300 dark:hover:border-white/15'
+                          className={`px-3.5 py-2 rounded-full border text-xs font-semibold transition-all ${
+                            selectedFacade === opt.id
+                              ? 'border-[#C5A880] bg-[#C5A880]/25 text-[#2C3A33]'
+                              : 'border-[#E0D8CA] text-[#2C3A33] hover:border-[#C5A880] bg-white'
                           }`}
                         >
-                          <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 border border-slate-200 dark:border-white/10 bg-slate-950 transition-all duration-300">
-                            <img src={optimizeImageUrl(opt.img, 120)} alt={opt.name} className="w-full h-full object-cover" />
-                          </div>
-                          <div className="min-w-0">
-                            <p className={`text-[11px] leading-tight font-black transition-colors duration-300 ${selectedFacade === opt.id ? 'text-[#C5A880]' : 'text-slate-800 dark:text-slate-200'}`}>{opt.name}</p>
-                            <p className="text-[9px] leading-tight text-slate-505 dark:text-slate-400 mt-0.5 truncate">{opt.desc}</p>
-                          </div>
+                          {opt.name}
                         </button>
                       ))}
                     </div>
-                  )}
+                  </div>
+                )}
+
+                <div className="mt-5 pt-4 border-t border-[#E8E1D5]">
+                  <p className="text-[10px] uppercase tracking-widest text-[#8B948E] mb-1">{t('from')}</p>
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <p className="font-['Sora'] text-2xl sm:text-3xl font-bold text-[#2C3A33] leading-none">{currentHouseData.price.toLocaleString('sk-SK')} €</p>
+                    {getManufacturerBadge(currentHouseData.manufacturer)}
+                  </div>
+                  <p className="text-xs text-[#6B7A72] mt-2">
+                    {currentHouseData.name} • {currentHouseData.rooms} {t('roomsLabel')} • {currentHouseData.area} m²
+                  </p>
+                  <p className="text-xs text-[#6B7A72]">
+                    {currentHouseData.manufacturer?.toLowerCase().includes("ticab") ? `${t('factoryProduction')}: ${t('sixWeeks')}` : `${t('turnkeyDelivery')}: ${t('upToTwelveWeeks')}`}
+                  </p>
+                  <Link to={`${createPageUrl("DetailDomu")}?id=${currentHouseData.id}`} className="inline-flex items-center gap-1 text-xs font-bold text-[#9E2A2B] hover:text-[#802021] mt-2 transition-colors">
+                    <span>{t('configure')}</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-2.5 mt-5">
+                  <Link to={createPageUrl("Katalog")} className="flex-1">
+                    <Button size="lg" className="w-full bg-[#9E2A2B] hover:bg-[#802021] text-white font-bold text-xs px-4 py-5 rounded-xl flex items-center justify-center gap-2">
+                      <Home className="w-4 h-4" />
+                      <span>{t('viewCatalogButton')}</span>
+                    </Button>
+                  </Link>
+                  <Link to={createPageUrl("Showroom")} className="flex-1">
+                    <Button size="lg" className="w-full bg-white hover:bg-[#F5F1E9] text-[#2C3A33] border border-[#E0D8CA] font-bold text-xs px-4 py-5 rounded-xl flex items-center justify-center gap-2">
+                      <Calendar className="w-4 h-4 text-[#9E2A2B]" />
+                      <span>{t('showroom')}</span>
+                    </Button>
+                  </Link>
+                  <Button
+                    size="lg"
+                    onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))}
+                    className="flex-1 bg-white hover:bg-[#F5F1E9] text-[#2C3A33] border border-[#E0D8CA] font-bold text-xs px-4 py-5 rounded-xl flex items-center justify-center gap-2"
+                  >
+                    <MessageCircle className="w-4 h-4 text-[#9E2A2B]" />
+                    <span>{t('consultationWithKexo')}</span>
+                  </Button>
                 </div>
               </motion.div>
             </div>
-
           </div>
+
         </div>
       </section>
 
@@ -1175,9 +1085,9 @@ export default function Domov() {
       <section className="py-14 sm:py-20 relative bg-[#F7F4EE] border-t border-[#E0D8CA]">
         <div className="container mx-auto px-4 space-y-14 sm:space-y-20">
 
-          {/* Kapitola 01: Súkromný Grant */}
+          {/* Kapitola 01: Súkromná Dotácia */}
           <Chapter
-            kicker="Grant"
+            kicker="Dotácia"
             title={t('trustGrantTitle')}
             text={t('trustGrantDesc')}
             image="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=900&q=75"
