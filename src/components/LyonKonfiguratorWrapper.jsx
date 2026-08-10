@@ -4,9 +4,12 @@ import KonfiguratorLyon, { LyonSummaryPanel } from "./KonfiguratorLyon";
 import { useLanguage } from "./LanguageContext";
 import LyonFinalSummaryModal from "./LyonFinalSummaryModal";
 import FloatingPrice from "./FloatingPrice";
+import LyonStart from "./lyon/LyonStart";
+import { applyChataPreset, applyA0Preset } from "./lyon/lyonBaliky";
 
 export default function LyonKonfiguratorWrapper(props) {
   const [showSummaryModal, setShowSummaryModal] = useState(false);
+  const [started, setStarted] = useState(false);
   const BASE_PRICE = props.dom?.zakladna_cena || 73431;
   const { t } = useLanguage();
   
@@ -207,7 +210,7 @@ export default function LyonKonfiguratorWrapper(props) {
       obkladStien, interieroveDvere, elektro, bleskozvod, prepat, pripravaNaSolarnePanely, sprchovyKut, vana, bateria,
       skrinka, stropKupelna, inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava]);
 
-  const formatPrice = (price) => price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
+  const formatPrice = (price) => Math.round(Number(price) || 0).toLocaleString('sk-SK') + " €";
 
   const handleSubmit = () => {
     setShowSummaryModal(true);
@@ -298,6 +301,29 @@ export default function LyonKonfiguratorWrapper(props) {
       throw error;
     }
   };
+
+  const presetSetters = {
+    setUcel, setIzolaciaStien, setIzolaciaPodlahy, setIzolaciaStropu, setTepelneCerpadlo,
+    setRekuperacia, setPripravaNaRekuperaciu, setPodlahovoKurenie, setPripravaNaKrb,
+    setOchranaKachle, setKlimatizacia, setFasada, setStrecha, setOdkvapy, setOkna,
+    setVchodoveDvere, setObkladStien, setPodlaha, setInterieroveDvere, setElektro,
+    setBleskozvod, setPrepat, setPripravaNaSolarnePanely, setSprchovyKut, setVana,
+    setBateria, setSkrinka, setStropKupelna, setInziniering, setProjektACertifikacia,
+    setRevizia, setZaklady, setMontaz, setDoprava,
+  };
+
+  if (!started) {
+    return (
+      <LyonStart
+        dom={props.dom}
+        CENY={CENY}
+        basePrice={BASE_PRICE}
+        onSelectChata={() => { applyChataPreset(presetSetters); setStarted(true); }}
+        onSelectA0={() => { applyA0Preset(presetSetters); setStarted(true); }}
+        onExpert={() => setStarted(true)}
+      />
+    );
+  }
 
   return (
       <>

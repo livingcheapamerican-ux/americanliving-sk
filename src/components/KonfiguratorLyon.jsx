@@ -113,7 +113,7 @@ const ConfiguratorRow = ({
                         ? 'text-emerald-600 dark:text-emerald-400 font-bold' 
                         : 'text-slate-500 dark:text-slate-400'
                   }`}>
-                    {isStandard ? (t('includedInPriceShort') || 'V cene') : `+${opt.price.toLocaleString()} €`}
+                    {isStandard ? (t('includedInPriceShort') || 'V cene') : `+${Math.round(opt.price).toLocaleString('sk-SK')} €`}
                   </span>
                 )}
               </button>
@@ -206,7 +206,7 @@ const OptionCard = ({ label, price, description, selected, onClick, isA0, isAdmi
                   ? 'text-base text-blue-600 dark:text-blue-300' 
                   : 'text-base text-slate-655 dark:text-slate-400'
           }`}>
-            {isStandard ? (t('includedInPriceShort') || 'Základný štandard') : `+${price.toLocaleString()} €`}
+            {isStandard ? (t('includedInPriceShort') || 'Základný štandard') : `+${Math.round(price).toLocaleString('sk-SK')} €`}
           </span>
           {isStandard && (
             <span className={`block text-[10px] uppercase font-bold tracking-wider mt-0.5 ${
@@ -300,7 +300,7 @@ const AddonRow = ({ label, price, checked, onChange, disabled = false, locked = 
                   ? 'text-sm text-emerald-600 dark:text-emerald-400' 
                   : 'text-base text-slate-655 dark:text-slate-400'
             }`}>
-              {price === 0 ? (priceZeroLabel !== undefined ? priceZeroLabel : (t('includedInPriceShort') || 'Bez príplatku')) : `+${price.toLocaleString()} €`}
+              {price === 0 ? (priceZeroLabel !== undefined ? priceZeroLabel : (t('includedInPriceShort') || 'Bez príplatku')) : `+${Math.round(price).toLocaleString('sk-SK')} €`}
             </span>
           </div>
         )}
@@ -1266,7 +1266,7 @@ export default function KonfiguratorLyon(props = {}) {
       obkladStien, interieroveDvere, elektro, bleskozvod, prepat, pripravaNaSolarnePanely, sprchovyKut, vana, bateria,
       skrinka, stropKupelna, inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava]);
 
-  const formatPrice = props.formatPrice || ((price) => price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €");
+  const formatPrice = props.formatPrice || ((price) => Math.round(Number(price) || 0).toLocaleString('sk-SK') + " €");
 
 
   // ── ScrollSpy Logika ──
