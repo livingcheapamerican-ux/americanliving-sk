@@ -286,7 +286,7 @@ function LayoutContent({ children }) {
                 <img 
                   src={LOGO_URL} 
                   alt="American Living" 
-                  className="h-5 sm:h-8 md:h-10 lg:h-12 xl:h-16 w-auto transition-transform group-hover:scale-105"
+                  className="h-5 sm:h-8 md:h-10 lg:h-11 w-auto shrink-0 transition-transform group-hover:scale-105"
                 />
               </Link>
 
@@ -301,15 +301,15 @@ function LayoutContent({ children }) {
                   <img 
                     src={KONFIGA_LOGO_URL} 
                     alt="Konfiga.eu - AI CRM" 
-                    className="h-5 sm:h-6 md:h-7 lg:h-9 xl:h-11 w-auto"
+                    className="h-5 sm:h-6 md:h-7 lg:h-8 w-auto shrink-0"
                   />
                 </a>
               </div>
             </div>
             
             {/* Navigácia ako Glassmorphism Pill */}
-            <nav className="hidden xl:flex flex-1 items-center justify-center gap-1 xl:gap-2 min-w-0 overflow-hidden">
-              {[...navItems, ...adminNavItems].map((item) => {
+            <nav className="hidden xl:flex items-center gap-1 xl:gap-2 shrink-0 mx-auto">
+              {navItems.filter(i => !i.isMyAccount && !i.name.startsWith('💰')).map((item) => {
                 const tourId = item.path === createPageUrl("Katalog") ? "nav-katalog"
                   : item.path === createPageUrl("OdporucanieDomov") ? "nav-ai"
                   : item.path === createPageUrl("ONas") ? "nav-onas"
@@ -348,7 +348,7 @@ function LayoutContent({ children }) {
               })}
             </nav>
 
-            <div className="hidden sm:flex items-center gap-2">
+            <div className="hidden sm:flex items-center gap-2 shrink-0">
               {/* Phone number link */}
               <a 
                 href="tel:+421905138124" 

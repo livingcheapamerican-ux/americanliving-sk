@@ -6,6 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Settings, FileText, Image, Brain, Upload, Sparkles, Languages, Activity, Zap, Users, Gift } from "lucide-react";
 
 const ADMIN_LINKS = [
+  { page: "AdminCennik", label: "Cenník Admin", icon: FileText },
+  { page: "MojeKonto", label: "Moje Konto", icon: Users },
+  { page: "Marketing", label: "Marketing", icon: Activity },
+  { page: "AdminIntegrationLogs", label: "Kredity", icon: Zap },
   { page: "AdminUserManagement", label: "Používatelia", icon: Users },
   { page: "AdminCreditMonitor", label: "Credit Monitor", icon: Zap },
   { page: "AdminPixelSettings", label: "Meta Pixel", icon: Settings },
