@@ -15,6 +15,7 @@ import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import DotaciaBackgroundVideo from "../components/dotacia/DotaciaBackgroundVideo";
+import DomFotoPair from "../components/dotacia/DomFotoPair";
 
 
 const dotaciaLocalT = {
@@ -1279,20 +1280,7 @@ export default function DotaciaAmericana() {
                       viewport={{ once: true }}
                     >
                       <Card className="overflow-hidden hover:shadow-2xl transition-all border border-border bg-card">
-                        <div className="grid grid-cols-2 gap-2">
-                          <img 
-                            src={dom.hlavny_obrazok} 
-                            alt={`${dom.nazov} - modulárny dom s dotáciou American Living`}
-                            className="w-full h-64 object-cover"
-                          />
-                          {dom.zakladna_konfiguracia_obrazok && (
-                            <img 
-                              src={dom.zakladna_konfiguracia_obrazok} 
-                              alt={`${dom.nazov} - základná konfigurácia interiéru`}
-                              className="w-full h-64 object-cover"
-                            />
-                          )}
-                        </div>
+                        <DomFotoPair dom={dom} />
                         <div className="p-4 sm:p-6 bg-card">
                           <h3 className="text-base sm:text-xl font-serif font-bold text-white mb-4">{dom.nazov} - {t('dotaciaEdition2026')}</h3>
 

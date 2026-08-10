@@ -16,6 +16,7 @@ import { LanguageProvider, useLanguage } from "./components/LanguageContext";
 import LanguageSelector from "./components/LanguageSelector";
 import UserTracking from "./components/UserTracking";
 import SessionRecorder from "./components/SessionRecorder";
+import AdminQuickLinks from "./components/layout/AdminQuickLinks";
 
 
 
@@ -280,7 +281,7 @@ function LayoutContent({ children }) {
             {/* Mobile - placeholder for layout balance */}
             <div className="sm:hidden w-8" />
 
-            <div className="flex-1 flex items-center justify-center sm:justify-start gap-1 sm:gap-2">
+            <div className="flex-1 sm:flex-none shrink-0 flex items-center justify-center sm:justify-start gap-1 sm:gap-2">
               <Link to={createPageUrl("Domov")} className="group">
                 <img 
                   src={LOGO_URL} 
@@ -307,7 +308,7 @@ function LayoutContent({ children }) {
             </div>
             
             {/* Navigácia ako Glassmorphism Pill */}
-            <nav className="hidden xl:flex items-center gap-1 xl:gap-2 min-w-0 overflow-hidden">
+            <nav className="hidden xl:flex flex-1 items-center justify-center gap-1 xl:gap-2 min-w-0 overflow-hidden">
               {[...navItems, ...adminNavItems].map((item) => {
                 const tourId = item.path === createPageUrl("Katalog") ? "nav-katalog"
                   : item.path === createPageUrl("OdporucanieDomov") ? "nav-ai"
@@ -413,137 +414,7 @@ function LayoutContent({ children }) {
               </div>
             </div>
 
-          <div className="hidden 2xl:flex items-center gap-1 xl:gap-2">
-            {isAdmin && (
-              <>
-                <Link to={createPageUrl("AdminUserManagement")}>
-                  <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white hover:bg-white/10 h-8 w-8" title={t('adminUserManagement')}>
-                    <Users className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("AdminCreditMonitor")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Credit Monitor">
-                    <Zap className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("AdminPixelSettings")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminMetaPixel')}>
-                    <Settings className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("AdminAnalyzaSessions")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminAnalyticsSessions')}>
-                    <Activity className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("AdminSEOAnalyzer")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminSEOAnalyzer')}>
-                    <Zap className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("AIMarketingInsights")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminAIMarketing')}>
-                    <Sparkles className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("SocialMediaDashboard")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminSocialMedia')}>
-                    <Activity className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                  </Button>
-                </Link>
-              </>
-            )}
-            {isSuperAdmin && (
-              <>
-                <Link to={createPageUrl("AdminAnalyzaDomov")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminAIAnalysis')}>
-                    <Brain className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("AdminSpravaDomov")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminHouseManagement')}>
-                    <Image className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("AdminUploadFotiekDomov")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminPhotoUpload')}>
-                    <Upload className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("AdminPrekladyDomov")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminTranslationsHouses')}>
-                    <FileText className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("AdminGenerujObrazkyBlogov")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminBlogImageGen')}>
-                    <Sparkles className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("AdminPrekladyBlogov")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminBlogTranslations')}>
-                    <Languages className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("AdminPrekladyKonfiguratora")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminConfiguratorTranslations')}>
-                    <Settings className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("AdminWatermark")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminWatermark')}>
-                    <Image className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("AdminMigraciaFotiek")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminPhotoMigration')}>
-                    <Upload className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("TestAnalyzaKonfiguratora")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminConfiguratorAnalysis')}>
-                    <Sparkles className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("RegenerujPrekladyDeFrSrHrEl")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminRegenerateTranslations')}>
-                    <Languages className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("AdminTestGemini")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminTestGemini')}>
-                    <Zap className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("AdminDotaciaHero")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Dotácia Hero">
-                    <Gift className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                  </Button>
-                </Link>
-                </>
-                )}
-                {isAdmin && (
-                <>
-                <Link to={createPageUrl("AdminDokumenty")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminDocuments')}>
-                    <FileText className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("AdminGoogleDrive")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminGoogleDrive')}>
-                    <Settings className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                  </Button>
-                </Link>
-              </>
-            )}
-            {isSuperAdmin && (
-              <Link to={createPageUrl("Domov")}>
-                <Button size="sm" className="bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs lg:text-sm h-7 lg:h-8 px-3 lg:px-4 whitespace-nowrap">
-                  <Settings className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                </Button>
-              </Link>
-            )}
-            </div>
+          <AdminQuickLinks isAdmin={isAdmin} isSuperAdmin={isSuperAdmin} />
 
             <div className="xl:hidden flex items-center gap-1">
               {/* Mobile Theme Switcher Button */}
