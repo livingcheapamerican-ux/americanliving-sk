@@ -2,12 +2,12 @@ import React, { useRef, useState } from 'react';
 
 // Striedanie videí: šťastné rodiny + investori v luxuse
 const PLAYLIST = [
-  "https://media.base44.com/videos/public/6916d89a485af231beb54c71/5ab84ad1c_Rodina_pred_domom.mp4",
-  "https://media.base44.com/videos/public/6916d89a485af231beb54c71/1fd5215ac_Investor_v_kresle.mp4",
-  "https://media.base44.com/videos/public/6916d89a485af231beb54c71/6dd7690ab_Rodina_sahovanie.mp4",
-  "https://media.base44.com/videos/public/6916d89a485af231beb54c71/5a5a350b4_Investori_rokovanie.mp4",
-  "https://media.base44.com/videos/public/6916d89a485af231beb54c71/afb7c3465_Rodinn_veera.mp4",
-  "https://media.base44.com/videos/public/6916d89a485af231beb54c71/b88638d4d_Exterir_2.mp4"
+  "https://media.base44.com/videos/public/6916d89a485af231beb54c71/81b26f95a_Rodina_pred_domom.mp4",
+  "https://media.base44.com/videos/public/6916d89a485af231beb54c71/e49b9c00b_Investor_v_kresle.mp4",
+  "https://media.base44.com/videos/public/6916d89a485af231beb54c71/652a395f8_Pr_na_terase.mp4",
+  "https://media.base44.com/videos/public/6916d89a485af231beb54c71/739eb1e7c_Investori_pri_okne.mp4",
+  "https://media.base44.com/videos/public/6916d89a485af231beb54c71/4a2c33d1b_Rodinn_veera.mp4",
+  "https://media.base44.com/videos/public/6916d89a485af231beb54c71/4ed9ecf81_Luxusn_dom_exterir.mp4"
 ];
 
 export default function DotaciaBackgroundVideo() {
