@@ -1085,18 +1085,69 @@ export default function Domov() {
       <section className="py-14 sm:py-20 relative bg-[#F7F4EE] border-t border-[#E0D8CA]">
         <div className="container mx-auto px-4 space-y-14 sm:space-y-20">
 
-          {/* Kapitola 01: Súkromná Dotácia */}
-          <Chapter
-            kicker="Dotácia"
-            title={t('trustGrantTitle')}
-            text={t('trustGrantDesc')}
-            image="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=900&q=75"
-          >
-            <Link to={createPageUrl("DotaciaAmericana")} className="inline-flex items-center gap-2 text-sm text-[#C5A880] hover:text-[#E2C799] transition-colors font-bold">
-              <span>{t('trustGrantLink')}</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </Chapter>
+          {/* Sekcia 2: Súkromná Dotácia AMERICANA */}
+          <div className="relative rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 border border-[#C5A880]/30 p-6 sm:p-10 lg:p-12 shadow-2xl overflow-hidden text-white">
+            {/* Ambient Background Glow */}
+            <div className="absolute top-0 right-0 w-96 h-96 bg-[#C5A880]/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-80 h-80 bg-red-600/10 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="relative z-10 max-w-5xl mx-auto">
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
+                <div>
+                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#C5A880]/20 border border-[#C5A880]/40 text-xs font-black uppercase tracking-wider text-[#E2C799] mb-3">
+                    <Gift className="w-4 h-4 text-[#E2C799]" />
+                    <span>Súkromná Dotácia AMERICANA</span>
+                  </div>
+                  <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
+                    Získajte dotáciu až do <span className="text-[#E2C799]">15 000 €</span> na váš nový dom
+                  </h2>
+                </div>
+                <Link to={createPageUrl("DotaciaAmericana")} className="shrink-0">
+                  <Button className="rounded-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold px-6 py-3 text-sm sm:text-base shadow-lg hover:shadow-red-600/40 transition-all flex items-center gap-2">
+                    <span>Zistiť nárok na dotáciu</span>
+                    <ArrowRight className="w-5 h-5" />
+                  </Button>
+                </Link>
+              </div>
+
+              <p className="text-slate-300 text-sm sm:text-base leading-relaxed mb-8 max-w-3xl">
+                {t('trustGrantDesc') || "Poskytujeme unikátnu súkromnú dotáciu a finančný príspevok na energetickú certifikáciu A0, prípravu inžinierskych sietí a prevádzku domu. Bez zbytočnej štátnej byrokracie a s priamym odpočtom z ponuky."}
+              </p>
+
+              {/* 3 Prehľadné Výhodové Karty */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-5 backdrop-blur-sm hover:border-[#C5A880]/50 transition-colors">
+                  <div className="w-10 h-10 rounded-xl bg-[#C5A880]/20 border border-[#C5A880]/40 flex items-center justify-center text-[#E2C799] font-black text-lg mb-3">
+                    ⚡
+                  </div>
+                  <h3 className="font-bold text-white text-base mb-1">Príspevok na certifikát A0</h3>
+                  <p className="text-xs text-slate-300 leading-normal">
+                    Finančná podpora na kompletný energetický certifikát v najvyššej triede A0 pre nulové účty.
+                  </p>
+                </div>
+
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-5 backdrop-blur-sm hover:border-[#C5A880]/50 transition-colors">
+                  <div className="w-10 h-10 rounded-xl bg-[#C5A880]/20 border border-[#C5A880]/40 flex items-center justify-center text-[#E2C799] font-black text-lg mb-3">
+                    🏗️
+                  </div>
+                  <h3 className="font-bold text-white text-base mb-1">Príspevok na prípojky a základ</h3>
+                  <p className="text-xs text-slate-300 leading-normal">
+                    Odľahčenie počiatočných nákladov pri realizácii inžinierskych sietí a terénnych úprav.
+                  </p>
+                </div>
+
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-5 backdrop-blur-sm hover:border-[#C5A880]/50 transition-colors">
+                  <div className="w-10 h-10 rounded-xl bg-[#C5A880]/20 border border-[#C5A880]/40 flex items-center justify-center text-[#E2C799] font-black text-lg mb-3">
+                    📋
+                  </div>
+                  <h3 className="font-bold text-white text-base mb-1">Priamy odpočet z rozpočtu</h3>
+                  <p className="text-xs text-slate-300 leading-normal">
+                    Žiadne čakacie lehoty úradov. Dotácia sa započítava priamo do vašej výslednej cenovej ponuky.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
 
           {/* Kapitola 02: 100% Financovanie */}
           <Chapter
