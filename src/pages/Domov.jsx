@@ -300,35 +300,21 @@ const headlineWord = {
   }
 };
 
-// NaturePhotoBackground renders a premium, high-resolution nature landscape photo
-// with an infinite, slow Ken Burns zoom/pan animation, overlayed with soft gradient masks
-// to ensure perfect contrast and legibility for text content in both light and dark modes.
-function NaturePhotoBackground() {
-  const isDark = document.documentElement.classList.contains('dark');
-  const [dark, setDark] = React.useState(isDark);
-
-  React.useEffect(() => {
-    // Listen for dark mode toggle on root element
-    const observer = new MutationObserver(() => {
-      setDark(document.documentElement.classList.contains('dark'));
-    });
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-    return () => observer.disconnect();
-  }, []);
-
-  // Premium, atmospheric landscape photos of misty forests/hills at sunrise
-  const lightImage = "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1920&q=80"; // Gorgeous misty hills & forest at sunrise (golden/green tones)
-  const darkImage = "https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=1920&q=80";  // Deep misty pine forest (dark green, gold light rays)
-
+// FullWidthVideoBackground renders a crisp, high-definition full-width video background
+// with subtle dark vignettes to ensure 100% text legibility inside foreground glass cards.
+function FullWidthVideoBackground() {
   return (
-    <div className="fixed inset-0 w-full h-full overflow-hidden bg-[#FAF8F5] dark:bg-[#050508] z-0 pointer-events-none select-none">
-      {/* Background Image with slow Ken Burns effect */}
-      <img
-        src={dark ? darkImage : lightImage}
-        alt="Nature background"
-        className="w-full h-full object-cover animate-ken-burns transition-all duration-1000 ease-in-out scale-105"
-        style={{ filter: dark ? 'brightness(0.35) contrast(1.1)' : 'brightness(0.95) contrast(1.02)' }}
+    <div className="fixed inset-0 w-full h-full overflow-hidden bg-slate-950 z-0 pointer-events-none select-none">
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="w-full h-full object-cover scale-105 transition-opacity duration-1000 opacity-80"
+        src="https://videos.pexels.com/video-files/3209828/3209828-hd_1920_1080_25fps.mp4"
       />
+      {/* Light subtle vignette gradient overlay for contrast without blurring the video */}
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/65 via-slate-950/30 to-slate-950/80 pointer-events-none" />
     </div>
   );
 }
@@ -853,7 +839,7 @@ export default function Domov() {
 
   return (
     <div className="min-h-screen -mt-10 sm:-mt-12 md:-mt-14 lg:-mt-16 xl:-mt-20 overflow-x-hidden relative">
-      <NaturePhotoBackground />
+      <FullWidthVideoBackground />
       <div className="fixed-bg-content relative z-10">
         <Helmet>
         <link rel="canonical" href="https://americanliving.sk" />
@@ -945,95 +931,91 @@ export default function Domov() {
         <div className="relative z-10 container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
-            {/* Left Column: Copywriting & CTAs */}
+            {/* Left Column: Glassmorphism Card for 100% text readability over video */}
             <div className="lg:col-span-6 flex flex-col text-left min-w-0 w-full">
-              {/* Logo & Small Badge */}
-              <div className="flex items-center gap-3 mb-6 flex-wrap">
-                <motion.img 
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.6 }}
-                  src={LOGO_URL} 
-                  alt="American Living" 
-                  className="h-10 sm:h-14 w-auto drop-shadow-lg rounded-full"
-                  width={56}
-                  height={56}
-                  loading="eager"
-                />
-                <motion.div
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.1 }}
-                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#C5A880]/10 dark:bg-white/5 border border-[#C5A880]/30 dark:border-white/10 text-xs font-semibold text-slate-700 dark:text-slate-300"
+              <div className="hero-glass-card p-6 sm:p-8 rounded-3xl max-w-2xl text-white">
+                {/* Logo & Small Badge */}
+                <div className="flex items-center gap-3 mb-6 flex-wrap">
+                  <motion.img 
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.6 }}
+                    src={LOGO_URL} 
+                    alt="American Living" 
+                    className="h-10 sm:h-12 w-auto drop-shadow-lg rounded-full"
+                    width={48}
+                    height={48}
+                    loading="eager"
+                  />
+                  <motion.div
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.6, delay: 0.1 }}
+                    className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-500/20 border border-red-500/30 text-xs font-bold text-red-300"
+                  >
+                    <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                    <span>Certifikované modulárne a montované domy</span>
+                  </motion.div>
+                </div>
+
+                {/* Main Headline */}
+                <motion.h1 
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7 }}
+                  className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4 leading-[1.15] tracking-tight"
                 >
-                  <span className="w-2 h-2 rounded-full bg-[#C5A880] animate-pulse"></span>
-                  <span>{t('heroBadgeText')}</span>
+                  Váš americký sen o bývaní. <br className="hidden sm:inline" />
+                  <span className="bg-gradient-to-r from-red-400 via-amber-300 to-amber-200 bg-clip-text text-transparent">
+                    Bez starostí, do 4 mesiacov.
+                  </span>
+                </motion.h1>
+
+                {/* Subheadline */}
+                <motion.p 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, delay: 0.2 }}
+                  className="text-sm sm:text-base text-slate-200 mb-6 leading-relaxed font-normal"
+                >
+                  Nízkoenergetické modulované a montované domy v štandarde A0 so zárukou 80+ rokov, garantovanou pevnou cenou a možnosťou získania <strong className="text-amber-300">Dotácie Americana</strong>.
+                </motion.p>
+
+                {/* Clear Primary & Secondary CTAs */}
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, delay: 0.4 }}
+                  className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-6 w-full"
+                >
+                  <Link to={createPageUrl("Katalog")} className="flex-1">
+                    <Button size="lg" className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-black text-base px-6 py-6 shadow-lg shadow-red-600/40 border border-red-400/40 rounded-2xl flex items-center justify-center gap-2 group">
+                      <Home className="w-5 h-5 group-hover:rotate-6 transition-transform" />
+                      <span>Pozrieť katalóg s cenami</span>
+                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </Link>
+                  <Link to={createPageUrl("DotaciaAmericana")} className="flex-1">
+                    <Button size="lg" variant="outline" className="w-full bg-slate-900/60 hover:bg-slate-800/80 text-amber-300 border border-amber-400/40 font-bold text-base px-6 py-6 rounded-2xl transition-all flex items-center justify-center gap-2 backdrop-blur-sm">
+                      <Gift className="w-5 h-5 text-amber-400" />
+                      <span>Overiť Dotáciu Americana</span>
+                    </Button>
+                  </Link>
                 </motion.div>
+
+                {/* Trust Badges Bar */}
+                <div className="flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-300 pt-4 border-t border-white/10">
+                  <span className="flex items-center gap-1.5 text-emerald-400">
+                    <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" /> Garantovaná cena
+                  </span>
+                  <span className="flex items-center gap-1.5 text-amber-300">
+                    <CheckCircle className="w-4 h-4 text-amber-300 shrink-0" /> Výstavba za 6-12 týždňov
+                  </span>
+                  <span className="flex items-center gap-1.5 text-cyan-300">
+                    <CheckCircle className="w-4 h-4 text-cyan-300 shrink-0" /> Energetická trieda A0
+                  </span>
+                </div>
               </div>
-
-              {/* Main Headline */}
-              <motion.h1 
-                variants={headlineContainer}
-                initial="hidden"
-                animate="visible"
-                className="text-3xl sm:text-5xl md:text-6xl font-black text-slate-900 dark:text-white mb-6 leading-[1.1] tracking-tight"
-                style={{ textShadow: '2px 2px 10px rgba(0,0,0,0.05)' }}
-              >
-                {(t('heroTitleFirst')?.split(" ") || []).map((word, idx) => (
-                  <motion.span key={`first-${idx}`} variants={headlineWord} className="inline-block mr-2">
-                    {word}
-                  </motion.span>
-                ))}
-                {" "}
-                <span className="bg-gradient-to-r from-[#C5A880] via-[#E2C799] to-[#C5A880] bg-clip-text text-transparent block sm:inline">
-                  {(t('heroTitleSecond')?.split(" ") || []).map((word, idx) => (
-                    <motion.span key={`second-${idx}`} variants={headlineWord} className="inline-block mr-2">
-                      {word}
-                    </motion.span>
-                  ))}
-                </span>
-              </motion.h1>
-
-              {/* Subheadline */}
-              <motion.p 
-                initial={{ opacity: 0, y: 25 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                className="text-base sm:text-xl text-slate-800 dark:text-slate-200 mb-8 leading-relaxed font-normal max-w-2xl bg-white/90 dark:bg-slate-900/90 border border-slate-200/85 dark:border-white/10 px-6 py-4 sm:py-5 rounded-2xl shadow-md backdrop-blur-md"
-              >
-                {t('heroDescription')}
-              </motion.p>
-
-              {/* CTAs */}
-              <motion.div 
-                initial={{ opacity: 0, y: 25 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
-                className="flex flex-col sm:flex-row flex-wrap gap-4 mb-10 w-full max-w-xl"
-              >
-                <Link to={createPageUrl("Katalog")} className="w-full sm:w-auto">
-                  <Button size="lg" className="relative w-full sm:w-auto bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-black text-lg px-8 py-7 shadow-[0_0_30px_rgba(220,38,38,0.4)] border border-red-500/50 transition-all rounded-2xl flex items-center justify-center gap-2 group">
-                    <Home className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-                    <span>{t('viewCatalogButton')}</span>
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("Showroom")} className="w-full sm:w-auto">
-                  <Button size="lg" className="relative w-full sm:w-auto bg-gradient-to-r from-[#C5A880] to-[#bca076] hover:from-[#bca076] hover:to-[#C5A880] text-slate-950 font-black text-lg px-8 py-7 shadow-[0_0_30px_rgba(197,168,128,0.3)] border border-[#C5A880]/50 transition-all rounded-2xl flex items-center justify-center gap-2 group">
-                    <Calendar className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                    <span>{t('showroom')}</span>
-                  </Button>
-                </Link>
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))}
-                  className="w-full sm:w-auto bg-white/70 dark:bg-white/5 hover:bg-[#C5A880]/10 dark:hover:bg-[#C5A880]/15 hover:border-[#C5A880]/50 text-slate-800 dark:text-white border border-slate-200 dark:border-white/15 font-bold text-base px-8 py-7 rounded-2xl transition-all flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(197,168,128,0.15)] backdrop-blur-sm shadow-sm"
-                >
-                  <MessageCircle className="w-5 h-5" />
-                  <span>{t('consultationWithKexo')}</span>
-                </Button>
-              </motion.div>
 
               {/* Interactive Quick House Switcher with Real Images */}
               <div className="pt-6 border-t border-white/10 max-w-xl">
