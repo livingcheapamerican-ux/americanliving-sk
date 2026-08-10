@@ -48,6 +48,26 @@ const BlogDetail = () => {
   return <LazyComp />;
 };
 
+const PridatInzeratPage = () => {
+  const LazyComp = getLazyPage('PridatInzerat');
+  return <LazyComp />;
+};
+
+const AdminInzeratyPage = () => {
+  const LazyComp = getLazyPage('AdminInzeraty');
+  return <LazyComp />;
+};
+
+const OdhadCenyPage = () => {
+  const LazyComp = getLazyPage('OdhadCeny');
+  return <LazyComp />;
+};
+
+const MojeInzeratyPage = () => {
+  const LazyComp = getLazyPage('MojeInzeraty');
+  return <LazyComp />;
+};
+
 const LayoutRoute = () => Layout ?
   <Layout><Outlet /></Layout>
   : <Outlet />;
@@ -100,6 +120,10 @@ const AuthenticatedApp = () => {
             </React.Fragment>
           );
         })}
+        <Route path="/odhad-ceny" element={<OdhadCenyPage />} />
+        <Route path="/moje-inzeraty" element={<MojeInzeratyPage />} />
+        <Route path="/pridat-inzerat" element={<PridatInzeratPage />} />
+        <Route path="/admin-inzeraty" element={<AdminInzeratyPage />} />
         <Route path="/lokalita/:slug" element={<LokaciaDetail />} />
         <Route path="/blog/:slug" element={<BlogDetail />} />
         <Route path="/moje-konto" element={<MojeKonto />} caseSensitive />

@@ -773,7 +773,7 @@ function LayoutContent({ children }) {
         </div>
       </main>
 
-      <footer className="bg-[#0D0D11] border-t border-[#C5A880]/10 text-white mt-20">
+      <footer className="relative z-30 bg-[#0D0D11] border-t border-[#C5A880]/10 text-white mt-20">
         <div className="container mx-auto px-4 py-12">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div>

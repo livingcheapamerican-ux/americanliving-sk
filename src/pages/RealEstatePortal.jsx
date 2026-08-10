@@ -1,410 +1,460 @@
-import React, { useState, useMemo } from "react";
-import { 
-  Sparkles, Search, MapPin, Home, Euro, Calculator, ShieldCheck, 
-  ChevronRight, Phone, Mail, CheckCircle2, ArrowRight, X, SlidersHorizontal,
-  Bed, Bath, Maximize, Lock, Building2, Eye, Flame, Zap
-} from "lucide-react";
+import React, { useState, useMemo, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { base44 } from "@/api/base44Client";
+import { useQuery } from "@tanstack/react-query";
+import { Building2, Loader2, SearchX, Plus, KeyRound, Tag, Calculator, Scale, LayoutDashboard } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import AISearchBar from "@/components/realestate/AISearchBar";
+import FilterBar from "@/components/realestate/FilterBar";
+import CoverageMap from "@/components/realestate/CoverageMap";
+import PropertyCard from "@/components/realestate/PropertyCard";
+import ListingCard from "@/components/realestate/ListingCard";
+import LeadModal from "@/components/realestate/LeadModal";
+import ListingLeadModal from "@/components/realestate/ListingLeadModal";
+import MortgageCalculator from "@/components/realestate/MortgageCalculator";
+import CompareSelect from "@/components/realestate/CompareSelect";
+import CompareTable from "@/components/realestate/CompareTable";
 
-// 🏡 REÁLNE NEHNUTEĽNOSTI & PROJEKTY AMERICAN LIVING
-const REAL_ESTATE_LISTINGS = [
-  {
-    id: "fjord-130",
-    title: "Váš luxusný rodinný dom Fjord 130 m²",
-    category: "Drevostavba / Rodinný dom",
-    location: "Kvetoslavov / Okolie BA (30 min od centra)",
-    price_eur: 189000,
-    area_m2: 130,
-    rooms: 4,
-    bathrooms: 2,
-    energy_rating: "A0 (Nízkoenergetický)",
-    image_url: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80",
-    badge: "🔥 Najobľúbenejší Model",
-    description: "Moderný 4-izbový nízkonákladový rodinný dom Fjord s plochou 130 m². Skvelé dispozičné riešenie, veľká terasa a tepelné čerpadlo v cene.",
-    features: ["Tepelné čerpadlo", "Podlahové kúrenie", "Veľkoformátové okná", "Príprava na fotovoltiku"]
-  },
-  {
-    id: "tinyhouse-mobile",
-    title: "Snívate o vlastnom dome na kolesách? Drevostavba Tinyhouse",
-    category: "Mobilný dom / Tinyhouse",
-    location: "Stupava & Celá SR",
-    price_eur: 45000,
-    area_m2: 42,
-    rooms: 2,
-    bathrooms: 1,
-    energy_rating: "A0",
-    image_url: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=1200&q=80",
-    badge: "⚡ Rýchle Dodanie (3 mesiace)",
-    description: "Štýlový celoročne obývateľný mobilný Tinyhouse. Kompletné vybavenie vrátane kúpeľne, kuchynskej linky a loftovej spálne.",
-    features: ["Zariadený interier", "Celoročná izolácia", "Flexibilné umiestnenie", "Nízke mesačné náklady (40 €)"]
-  },
-  {
-    id: "luxus-5room",
-    title: "Luxusný 5-izbový rodinný drevodom Premium",
-    category: "Rodinný dom na kľúč",
-    location: "Nové Zámky / Komárno",
-    price_eur: 239000,
-    area_m2: 175,
-    rooms: 5,
-    bathrooms: 3,
-    energy_rating: "A0 Super-low energy",
-    image_url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
-    badge: "👑 Premium Edition",
-    description: "Priestranný 5-izbový dvojpodlažný dom pre náročnú rodinu. Dvojgaráž, krytá terasa a inteligentná domácnosť v štandarde.",
-    features: ["Dvojgaráž", "Smart Home rozvody", "Rekuperácia", "Fotovoltický systém 5kW"]
-  },
-  {
-    id: "americana-dotacia",
-    title: "Americana Dotácia: Byt vs. Rodinný Dom",
-    category: "Novostavba na pozemku",
-    location: "Západné Slovensko",
-    price_eur: 159000,
-    area_m2: 110,
-    rooms: 4,
-    bathrooms: 2,
-    energy_rating: "A0",
-    image_url: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80",
-    badge: "💰 Výhodné Financovanie",
-    description: "Zymeňte predražený 3-izbový byt za nový 4-izbový rodinný dom s vlastnou záhradou za rovnakú cenu hypotéky.",
-    features: ["Pozemok v cene", "Garancia ceny", "Pomoc s hypotékou zdarma", "Nulové poplatky RK"]
-  }
+const MAX_COMPARE = 4;
+
+const TABS = [
+  { id: "domy", label: "🏡 Nové domy American Living", icon: Building2 },
+  { id: "predaj", label: "🏷️ Nehnuteľnosti na predaj", icon: Tag },
+  { id: "prenajom", label: "🔑 Prenájmy", icon: KeyRound },
 ];
 
 export default function RealEstatePortal() {
   const [aiQuery, setAiQuery] = useState("");
-  const [leadModalListing, setLeadModalListing] = useState(null);
-  const [leadForm, setLeadForm] = useState({ name: "", phone: "", email: "", note: "" });
-  const [submittedLead, setSubmittedLead] = useState(false);
+  const [searching, setSearching] = useState(false);
+  const [aiResult, setAiResult] = useState(null); // { ids, reasons, summary }
+  const [tab, setTab] = useState("domy");
+  const [leadDom, setLeadDom] = useState(null);
+  const [leadListing, setLeadListing] = useState(null);
+  const [filters, setFilters] = useState({ typ: "all", maxCena: "all", minIzby: "all" });
+  const [calcPrice, setCalcPrice] = useState(89000);
+  const [compareIds, setCompareIds] = useState([]);
+  const [showCompare, setShowCompare] = useState(false);
 
-  // Hypotekárna kalkulačka
-  const [calcPrice, setCalcPrice] = useState(189000);
-  const [calcDown, setCalcDown] = useState(20);
-  const [calcYears, setCalcYears] = useState(30);
-  const [calcRate, setCalcRate] = useState(3.8);
+  const { data: domy = [], isLoading } = useQuery({
+    queryKey: ['realestate-domy'],
+    queryFn: () => base44.entities.Dom.filter({ verejny: true }, 'poradie'),
+  });
 
-  const monthlyPayment = useMemo(() => {
-    const loanAmount = calcPrice * (1 - calcDown / 100);
-    const monthlyRate = calcRate / 100 / 12;
-    const months = calcYears * 12;
-    if (monthlyRate === 0) return loanAmount / months;
-    const payment = (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
-    return Math.round(payment);
-  }, [calcPrice, calcDown, calcYears, calcRate]);
+  const { data: listings = [] } = useQuery({
+    queryKey: ['realestate-listings'],
+    queryFn: () => base44.entities.Nehnutelnost.filter({ status: 'schvaleny' }, '-created_date'),
+  });
 
-  // AI Vyhľadávanie v prirodzenej reči
-  const filteredListings = useMemo(() => {
-    if (!aiQuery.trim()) return REAL_ESTATE_LISTINGS;
-    const q = aiQuery.toLowerCase();
-    return REAL_ESTATE_LISTINGS.filter(item => 
-      item.title.toLowerCase().includes(q) ||
-      item.description.toLowerCase().includes(q) ||
-      item.location.toLowerCase().includes(q) ||
-      item.category.toLowerCase().includes(q) ||
-      item.features.some(f => f.toLowerCase().includes(q))
+  const handleAiSearch = async () => {
+    const q = aiQuery.trim();
+    if (!q || (domy.length === 0 && listings.length === 0)) return;
+    setSearching(true);
+    setAiResult(null);
+
+    base44.analytics.track({ eventName: "realestate_portal_ai_search" });
+
+    try {
+      const katalog = [
+        ...domy.map(d => ({
+          id: d.id,
+          typ_zaznamu: "novy_dom_american_living",
+          nazov: d.nazov,
+          vyrobca: d.vyrobca,
+          typ: d.typ_domu,
+          cena_eur: d.zakladna_cena,
+          zastavana_plocha_m2: d.zastavana_plocha,
+          uzitkova_plocha_m2: d.uzitkova_plocha,
+          pocet_izieb: d.pocet_izieb,
+          popis: (d.popis || "").slice(0, 200),
+        })),
+        ...listings.map(l => ({
+          id: l.id,
+          typ_zaznamu: l.typ_ponuky === "prenajom" ? "inzerat_prenajom" : "inzerat_predaj",
+          nazov: l.nazov,
+          kategoria: l.kategoria,
+          mesto: l.mesto,
+          cena_eur: l.cena,
+          plocha_m2: l.plocha,
+          pocet_izieb: l.pocet_izieb,
+          popis: (l.popis || "").slice(0, 200),
+        })),
+      ];
+
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `Si realitný AI asistent spoločnosti American Living. Katalóg obsahuje NOVÉ domy American Living (typ_zaznamu: novy_dom_american_living) aj INZERÁTY existujúcich nehnuteľností na predaj a prenájom (inzerat_predaj, inzerat_prenajom).
+
+Zákazník napísal túto požiadavku v prirodzenej reči: "${q}"
+
+Katalóg (JSON): ${JSON.stringify(katalog)}
+
+Tvoja úloha:
+1. Vyber záznamy, ktoré najlepšie zodpovedajú požiadavke, zoradené od najvhodnejšieho. Ak zákazník hľadá prenájom, uprednostni inzeráty prenájmu. Ak uvedie rozpočet, prísne ho rešpektuj.
+2. Ku každému vybranému záznamu napíš krátke zdôvodnenie v slovenčine (max 15 slov).
+3. Napíš krátke celkové zhrnutie v slovenčine (max 2 vety, priateľský tón).
+
+Ak nič nevyhovuje presne, vyber 2-3 najbližšie alternatívy a v zhrnutí vysvetli kompromis.`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            matches: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  id: { type: "string" },
+                  reason: { type: "string" },
+                },
+              },
+            },
+            summary: { type: "string" },
+          },
+        },
+      });
+
+      const validId = (id) => domy.some(d => d.id === id) || listings.some(l => l.id === id);
+      const matches = (result?.matches || []).filter(m => validId(m.id));
+      const reasons = {};
+      matches.forEach(m => { reasons[m.id] = m.reason; });
+      setAiResult({
+        ids: matches.map(m => m.id),
+        reasons,
+        summary: result?.summary || "",
+      });
+    } catch (err) {
+      const ql = q.toLowerCase();
+      const ids = [
+        ...domy.filter(d =>
+          (d.nazov || "").toLowerCase().includes(ql) ||
+          (d.popis || "").toLowerCase().includes(ql)
+        ).map(d => d.id),
+        ...listings.filter(l =>
+          (l.nazov || "").toLowerCase().includes(ql) ||
+          (l.mesto || "").toLowerCase().includes(ql)
+        ).map(l => l.id),
+      ];
+      setAiResult({
+        ids,
+        reasons: {},
+        summary: ids.length > 0
+          ? "AI asistent je momentálne nedostupný, zobrazujeme výsledky podľa kľúčových slov."
+          : "AI asistent je momentálne nedostupný a kľúčové slová sa nezhodujú so žiadnou ponukou. Skúste to prosím neskôr.",
+      });
+    } finally {
+      setSearching(false);
+    }
+  };
+
+  const handleClear = () => {
+    setAiQuery("");
+    setAiResult(null);
+  };
+
+  const aiOrder = useMemo(
+    () => (aiResult ? new Map(aiResult.ids.map((id, i) => [id, i])) : null),
+    [aiResult]
+  );
+
+  const displayedDomy = useMemo(() => {
+    let list = domy;
+    if (aiOrder) {
+      list = domy.filter(d => aiOrder.has(d.id)).sort((a, b) => aiOrder.get(a.id) - aiOrder.get(b.id));
+    }
+    if (filters.typ !== "all") list = list.filter(d => d.typ_domu === filters.typ);
+    if (filters.maxCena !== "all") list = list.filter(d => d.zakladna_cena <= Number(filters.maxCena));
+    if (filters.minIzby !== "all") list = list.filter(d => (d.pocet_izieb || 0) >= Number(filters.minIzby));
+    return list;
+  }, [domy, aiOrder, filters]);
+
+  const displayedListings = useMemo(() => {
+    if (aiOrder) {
+      return listings.filter(l => aiOrder.has(l.id)).sort((a, b) => aiOrder.get(a.id) - aiOrder.get(b.id));
+    }
+    return listings.filter(l => l.typ_ponuky === (tab === "prenajom" ? "prenajom" : "predaj"));
+  }, [listings, aiOrder, tab]);
+
+  // Počítanie zobrazení inzerátov – raz za návštevu pre každý inzerát
+  useEffect(() => {
+    if (listings.length === 0) return;
+    let uzPocitane = [];
+    try {
+      uzPocitane = JSON.parse(sessionStorage.getItem("videne_inzeraty") || "[]");
+    } catch (e) {
+      uzPocitane = [];
+    }
+    const nove = listings.filter((l) => !uzPocitane.includes(l.id));
+    if (nove.length === 0) return;
+
+    base44.entities.Nehnutelnost.bulkUpdate(
+      nove.map((l) => ({ id: l.id, pocet_zobrazeni: (l.pocet_zobrazeni || 0) + 1 }))
     );
-  }, [aiQuery]);
+    try {
+      sessionStorage.setItem("videne_inzeraty", JSON.stringify([...uzPocitane, ...nove.map((l) => l.id)]));
+    } catch (e) {
+      // sessionStorage nedostupné – zobrazenia sa spočítajú znova pri ďalšom načítaní
+    }
+  }, [listings]);
 
-  function handleSendLead(e) {
-    e.preventDefault();
-    setSubmittedLead(true);
-    setTimeout(() => {
-      setSubmittedLead(false);
-      setLeadModalListing(null);
-      setLeadForm({ name: "", phone: "", email: "", note: "" });
-    }, 2500);
-  }
+  const toggleCompare = (id) => {
+    setCompareIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : prev.length >= MAX_COMPARE ? prev : [...prev, id]
+    );
+  };
+
+  const compareItems = useMemo(() => {
+    return compareIds.map((id) => {
+      const dom = domy.find((d) => d.id === id);
+      if (dom) return { ...dom, __kind: "dom" };
+      const listing = listings.find((l) => l.id === id);
+      return listing ? { ...listing, __kind: "listing" } : null;
+    }).filter(Boolean);
+  }, [compareIds, domy, listings]);
+
+  const handleInterest = (dom) => {
+    setLeadDom(dom);
+    if (dom.zakladna_cena) setCalcPrice(Math.round(dom.zakladna_cena));
+  };
+
+  const handleListingInterest = (listing) => {
+    setLeadListing(listing);
+    if (listing.typ_ponuky === "predaj" && listing.cena) setCalcPrice(Math.round(listing.cena));
+  };
+
+  const listingsGrid = (items, emptyText) => (
+    items.length === 0 ? (
+      <div className="text-center py-16 space-y-3">
+        <SearchX className="w-10 h-10 text-slate-600 mx-auto" />
+        <p className="text-sm text-slate-400">{emptyText}</p>
+        <Link to="/pridat-inzerat">
+          <Button className="bg-purple-600 hover:bg-purple-500 text-white text-xs rounded-xl">
+            <Plus className="w-3.5 h-3.5 mr-1" /> Pridať prvý inzerát zadarmo
+          </Button>
+        </Link>
+      </div>
+    ) : (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {items.map((l) => (
+          <CompareSelect key={l.id} selected={compareIds.includes(l.id)} disabled={compareIds.length >= MAX_COMPARE} onToggle={() => toggleCompare(l.id)}>
+            <ListingCard listing={l} aiReason={aiResult?.reasons[l.id]} onInterest={handleListingInterest} />
+          </CompareSelect>
+        ))}
+      </div>
+    )
+  );
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans pb-20">
-      
-      {/* 🔒 UPOZORNENIE O INTERNOM PREVIEW REŽIME PRE AMERICAN LIVING SK */}
-      <div className="bg-amber-500/10 border-b border-amber-500/30 py-2.5 px-4 text-center">
-        <div className="max-w-7xl mx-auto flex items-center justify-center gap-2 text-xs font-mono text-amber-300">
-          <Lock className="w-4 h-4 text-amber-400 shrink-0" />
-          <strong className="uppercase font-bold tracking-wider">🔒 Interné Preview pre American Living SK:</strong>
-          <span>Tento AI Realitný Portál je momentálne v neverejnom režime pre testovanie a schválenie.</span>
-        </div>
-      </div>
 
-      {/* HERO SEKCIA S AI VYHĽADÁVAČOM V PRIRODZENOM JAZYKU */}
-      <section className="relative overflow-hidden pt-12 pb-16 px-4 border-b border-slate-800 bg-gradient-to-b from-slate-900/80 via-slate-950 to-slate-950">
+      {/* HERO SEKCIA S AI VYHĽADÁVAČOM */}
+      <section className="relative overflow-hidden pt-16 pb-16 px-4 border-b border-slate-800 bg-gradient-to-b from-slate-900/80 via-slate-950 to-slate-950">
         <div className="max-w-5xl mx-auto text-center space-y-6 relative z-10">
           <Badge className="bg-purple-600/20 text-purple-300 border border-purple-500/30 px-3 py-1 rounded-full text-xs font-mono">
-            ✨ Powered by Gemini AI Natural Language Search (American Living Portal)
+            ✨ AI vyhľadávanie v prirodzenej reči – nové domy, predaj aj prenájom
           </Badge>
-          
+
           <h1 className="text-3xl md:text-5xl font-black text-white tracking-tight leading-tight">
-            Nájdite svoj nový rodinný dom <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-amber-200 bg-clip-text text-transparent">prirodzenou rečou AI</span>
+            Nájdite svoje nové bývanie <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-amber-200 bg-clip-text text-transparent">prirodzenou rečou</span>
           </h1>
 
           <p className="text-sm md:text-base text-slate-400 max-w-2xl mx-auto">
-            Už žiadne nekonečné vyklikávanie zbytočných filtrov. Napíšte AI asistentovi presne to, čo od svojho bývania očakávate.
+            Nové domy American Living, nehnuteľnosti na predaj aj prenájmy – všetko na jednom mieste. Napíšte AI asistentovi, čo hľadáte, a on vám odporučí najvhodnejšiu ponuku.
           </p>
 
-          {/* AI VYHĽADÁVACIE POLE S PROMPTAMI */}
-          <div className="bg-slate-900/90 border border-purple-500/40 p-2.5 rounded-2xl shadow-2xl backdrop-blur-xl max-w-3xl mx-auto">
-            <div className="flex items-center gap-3 bg-slate-950/80 rounded-xl px-4 py-3 border border-slate-800 focus-within:border-purple-400 transition-all">
-              <Sparkles className="w-5 h-5 text-purple-400 shrink-0 animate-pulse" />
-              <input
-                type="text"
-                value={aiQuery}
-                onChange={(e) => setAiQuery(e.target.value)}
-                placeholder="Skúste napísať: Hľadám 4-izbový rodinný dom v okolí Bratislavy do 200k s nízkymi nákladmi..."
-                className="w-full bg-transparent text-white text-sm focus:outline-none placeholder-slate-500"
-              />
-              {aiQuery && (
-                <button onClick={() => setAiQuery("")} className="text-slate-500 hover:text-white">
-                  <X className="w-4 h-4" />
-                </button>
-              )}
-            </div>
+          <AISearchBar
+            query={aiQuery}
+            onQueryChange={setAiQuery}
+            onSearch={handleAiSearch}
+            onClear={handleClear}
+            searching={searching}
+            aiSummary={aiResult?.summary}
+          />
 
-            {/* RYCHLE UKÁŽKY DOTAZOV */}
-            <div className="flex items-center gap-2 mt-3 overflow-x-auto pb-1 px-1 text-[11px] font-mono">
-              <span className="text-slate-500 font-bold shrink-0">Skúste príkazy:</span>
-              {[
-                "Nízkoenergetický Fjord 130m²",
-                "Mobilný dom Tinyhouse do 50k",
-                "Luxusný 5-izbový dom s dvojgarážou",
-                "Bývanie v Stupave a Kvetoslavove"
-              ].map((suggestion) => (
-                <button
-                  key={suggestion}
-                  onClick={() => setAiQuery(suggestion)}
-                  className="bg-slate-800/60 hover:bg-purple-900/40 text-slate-300 hover:text-purple-200 border border-slate-700/60 rounded-lg px-2.5 py-1 whitespace-nowrap transition-all"
-                >
-                  {suggestion}
-                </button>
-              ))}
-            </div>
+          <div className="flex flex-col sm:flex-row gap-2 justify-center items-center">
+            <Link to="/odhad-ceny">
+              <Button variant="outline" className="w-full border-emerald-500/40 bg-emerald-500/10 text-emerald-200 hover:bg-emerald-500/20 hover:text-white text-xs rounded-xl">
+                <Calculator className="w-3.5 h-3.5 mr-1" /> Zistite hodnotu svojej nehnuteľnosti zadarmo
+              </Button>
+            </Link>
+            <Link to="/pridat-inzerat">
+              <Button variant="outline" className="w-full border-purple-500/40 bg-purple-500/10 text-purple-200 hover:bg-purple-500/20 hover:text-white text-xs rounded-xl">
+                <Plus className="w-3.5 h-3.5 mr-1" /> Predávate alebo prenajímate? Pridajte inzerát zadarmo
+              </Button>
+            </Link>
+            <Link to="/moje-inzeraty">
+              <Button variant="outline" className="w-full border-slate-600 bg-slate-800/40 text-slate-300 hover:bg-slate-800 hover:text-white text-xs rounded-xl">
+                <LayoutDashboard className="w-3.5 h-3.5 mr-1" /> Moje inzeráty
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* HLAVNÝ OBSAH - ZOZNAM NEHNUTEĽNOSTÍ */}
+      {/* OBSAH */}
       <main className="max-w-7xl mx-auto px-4 py-10 space-y-12">
         <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                <Building2 className="w-5 h-5 text-amber-400" />
-                Ponuka Novostavieb & Rodinných Domov American Living ({filteredListings.length})
-              </h2>
-              <p className="text-xs text-slate-400 mt-0.5">Garancia ceny na kľúč, garancia dodania a 10-ročná záruka na stavbu</p>
+          {/* Taby */}
+          {!aiResult && (
+            <div className="flex gap-2 flex-wrap">
+              {TABS.map((t) => (
+                <button
+                  key={t.id}
+                  onClick={() => setTab(t.id)}
+                  className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all border ${
+                    tab === t.id
+                      ? "bg-amber-500 text-slate-950 border-amber-400"
+                      : "bg-slate-900/60 text-slate-300 border-slate-800 hover:border-slate-600"
+                  }`}
+                >
+                  {t.label}
+                </button>
+              ))}
             </div>
-          </div>
+          )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {filteredListings.map((item) => (
-              <div 
-                key={item.id}
-                className="bg-slate-900/70 rounded-2xl border border-slate-800 overflow-hidden hover:border-amber-500/40 transition-all group flex flex-col justify-between shadow-lg"
-              >
-                <div>
-                  <div className="relative h-48 overflow-hidden">
-                    <img 
-                      src={item.image_url} 
-                      alt={item.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
-                    />
-                    <div className="absolute top-3 left-3">
-                      <Badge className="bg-slate-950/80 text-amber-300 border border-amber-500/30 text-[10px] backdrop-blur-md">
-                        {item.badge}
-                      </Badge>
-                    </div>
-                    <div className="absolute bottom-3 right-3">
-                      <Badge className="bg-emerald-500/90 text-slate-950 font-black text-xs">
-                        {item.price_eur.toLocaleString()} €
-                      </Badge>
-                    </div>
-                  </div>
-
-                  <div className="p-4 space-y-3">
-                    <span className="text-[10px] text-purple-400 font-mono font-bold uppercase">{item.category}</span>
-                    <h3 className="text-sm font-bold text-white leading-snug line-clamp-2">{item.title}</h3>
-                    
-                    <div className="flex items-center gap-1.5 text-slate-400 text-[11px] font-mono">
-                      <MapPin className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                      <span className="truncate">{item.location}</span>
-                    </div>
-
-                    <div className="grid grid-cols-3 gap-1 bg-slate-950 p-2 rounded-xl text-[10px] font-mono text-slate-300 border border-slate-800 text-center">
-                      <div><Maximize className="w-3 h-3 mx-auto text-slate-500 mb-0.5" />{item.area_m2} m²</div>
-                      <div><Bed className="w-3 h-3 mx-auto text-slate-500 mb-0.5" />{item.rooms} izby</div>
-                      <div><Bath className="w-3 h-3 mx-auto text-slate-500 mb-0.5" />{item.bathrooms} kúpeľňa</div>
-                    </div>
-
-                    <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">{item.description}</p>
-                  </div>
-                </div>
-
-                <div className="p-4 pt-0 space-y-2">
-                  <Button 
-                    onClick={() => {
-                      setLeadModalListing(item);
-                      setCalcPrice(item.price_eur);
-                    }}
-                    className="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs rounded-xl flex items-center justify-center gap-2 py-2.5"
-                  >
-                    Mám Záujem / Obhliadka <ArrowRight className="w-3.5 h-3.5" />
-                  </Button>
-                </div>
+          {aiResult ? (
+            <>
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                  <Building2 className="w-5 h-5 text-amber-400" />
+                  AI odporúčania ({displayedDomy.length + displayedListings.length})
+                </h2>
+                <Button variant="outline" onClick={handleClear}
+                  className="border-slate-700 bg-transparent text-slate-300 hover:bg-slate-800 hover:text-white text-xs rounded-xl">
+                  Zobraziť celú ponuku
+                </Button>
               </div>
-            ))}
-          </div>
+
+              {displayedDomy.length === 0 && displayedListings.length === 0 ? (
+                <div className="text-center py-16 space-y-3">
+                  <SearchX className="w-10 h-10 text-slate-600 mx-auto" />
+                  <p className="text-sm text-slate-400">Nenašla sa žiadna zodpovedajúca ponuka.</p>
+                </div>
+              ) : (
+                <div className="space-y-8">
+                  {displayedDomy.length > 0 && (
+                    <div className="space-y-3">
+                      <h3 className="text-sm font-bold text-amber-300">🏡 Nové domy American Living ({displayedDomy.length})</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {displayedDomy.map((dom) => (
+                          <CompareSelect key={dom.id} selected={compareIds.includes(dom.id)} disabled={compareIds.length >= MAX_COMPARE} onToggle={() => toggleCompare(dom.id)}>
+                            <PropertyCard dom={dom} aiReason={aiResult.reasons[dom.id]} onInterest={handleInterest} />
+                          </CompareSelect>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {displayedListings.length > 0 && (
+                    <div className="space-y-3">
+                      <h3 className="text-sm font-bold text-purple-300">🏷️ Inzeráty – predaj a prenájom ({displayedListings.length})</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {displayedListings.map((l) => (
+                          <CompareSelect key={l.id} selected={compareIds.includes(l.id)} disabled={compareIds.length >= MAX_COMPARE} onToggle={() => toggleCompare(l.id)}>
+                            <ListingCard listing={l} aiReason={aiResult.reasons[l.id]} onInterest={handleListingInterest} />
+                          </CompareSelect>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </>
+          ) : tab === "domy" ? (
+            <>
+              <FilterBar filters={filters} onChange={setFilters} />
+              <div>
+                <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                  <Building2 className="w-5 h-5 text-amber-400" />
+                  Ponuka domov American Living ({displayedDomy.length})
+                </h2>
+                <p className="text-xs text-slate-400 mt-0.5">Garancia ceny na kľúč, garancia dodania a záruka na stavbu</p>
+              </div>
+
+              {isLoading ? (
+                <div className="flex items-center justify-center py-20 text-slate-400 gap-3">
+                  <Loader2 className="w-6 h-6 animate-spin text-amber-400" />
+                  <span className="text-sm font-mono">Načítavam ponuku domov...</span>
+                </div>
+              ) : displayedDomy.length === 0 ? (
+                <div className="text-center py-16 space-y-3">
+                  <SearchX className="w-10 h-10 text-slate-600 mx-auto" />
+                  <p className="text-sm text-slate-400">Žiadne domy nezodpovedajú zvoleným filtrom.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {displayedDomy.map((dom) => (
+                    <CompareSelect key={dom.id} selected={compareIds.includes(dom.id)} disabled={compareIds.length >= MAX_COMPARE} onToggle={() => toggleCompare(dom.id)}>
+                      <PropertyCard dom={dom} onInterest={handleInterest} />
+                    </CompareSelect>
+                  ))}
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <div>
+                  <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                    {tab === "prenajom" ? <KeyRound className="w-5 h-5 text-sky-400" /> : <Tag className="w-5 h-5 text-purple-400" />}
+                    {tab === "prenajom" ? `Prenájmy (${displayedListings.length})` : `Nehnuteľnosti na predaj (${displayedListings.length})`}
+                  </h2>
+                  <p className="text-xs text-slate-400 mt-0.5">Overené inzeráty od majiteľov a agentov – inzercia zadarmo</p>
+                </div>
+                <Link to="/pridat-inzerat">
+                  <Button className="bg-purple-600 hover:bg-purple-500 text-white text-xs rounded-xl">
+                    <Plus className="w-3.5 h-3.5 mr-1" /> Pridať inzerát zadarmo
+                  </Button>
+                </Link>
+              </div>
+              {listingsGrid(
+                displayedListings,
+                tab === "prenajom"
+                  ? "Zatiaľ tu nie sú žiadne prenájmy. Buďte prvý, kto pridá inzerát!"
+                  : "Zatiaľ tu nie sú žiadne nehnuteľnosti na predaj. Buďte prvý, kto pridá inzerát!"
+              )}
+            </>
+          )}
         </div>
 
+        {/* REALITNÁ MAPA */}
+        <CoverageMap listings={listings} onListingInterest={handleListingInterest} />
+
         {/* HYPOTEKÁRNA KALKULAČKA */}
-        <section className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 md:p-8 space-y-6">
-          <div className="flex items-center gap-3">
-            <div className="bg-amber-500/20 p-3 rounded-2xl border border-amber-500/30">
-              <Calculator className="w-6 h-6 text-amber-400" />
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-white">Smart Hypotekárna Kalkulačka American Living</h3>
-              <p className="text-xs text-slate-400">Vypočítajte si presnú mesačnú splátku vášho nového rodinného domu</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
-            <div className="space-y-4 lg:col-span-2 font-mono text-xs">
-              <div>
-                <div className="flex justify-between text-slate-300 mb-1">
-                  <span>Cena nehnuteľnosti:</span>
-                  <strong className="text-amber-400 font-bold">{calcPrice.toLocaleString()} €</strong>
-                </div>
-                <input 
-                  type="range" min="30000" max="400000" step="5000" value={calcPrice}
-                  onChange={(e) => setCalcPrice(Number(e.target.value))}
-                  className="w-full accent-amber-400 bg-slate-800 h-2 rounded-lg cursor-pointer"
-                />
-              </div>
-
-              <div>
-                <div className="flex justify-between text-slate-300 mb-1">
-                  <span>Vlastné úspory (Akontácia %):</span>
-                  <strong className="text-amber-400 font-bold">{calcDown} % ({Math.round(calcPrice * calcDown / 100).toLocaleString()} €)</strong>
-                </div>
-                <input 
-                  type="range" min="0" max="50" step="5" value={calcDown}
-                  onChange={(e) => setCalcDown(Number(e.target.value))}
-                  className="w-full accent-amber-400 bg-slate-800 h-2 rounded-lg cursor-pointer"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-slate-400 mb-1 block">Doba splácania (roky):</label>
-                  <select 
-                    value={calcYears} 
-                    onChange={(e) => setCalcYears(Number(e.target.value))}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white"
-                  >
-                    {[10, 15, 20, 25, 30].map(y => <option key={y} value={y}>{y} rokov</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label className="text-slate-400 mb-1 block">Úroková sadzba (% p.a.):</label>
-                  <input 
-                    type="number" step="0.1" value={calcRate}
-                    onChange={(e) => setCalcRate(Number(e.target.value))}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-slate-950 p-6 rounded-2xl border border-amber-500/30 text-center space-y-4 shadow-xl">
-              <span className="text-xs font-mono text-slate-400 uppercase tracking-wider block">Odhadovaná mesačná splátka</span>
-              <div className="text-4xl font-black text-amber-400 font-mono">
-                {monthlyPayment} € <span className="text-sm font-normal text-slate-400">/ mesiac</span>
-              </div>
-              <p className="text-[11px] text-slate-400 leading-relaxed font-mono">
-                Výpočet je orientačný. Náš hypotekárny špecialista vám vybaví schválenie hypotéky zdarma.
-              </p>
-            </div>
-          </div>
-        </section>
+        <MortgageCalculator price={calcPrice} onPriceChange={setCalcPrice} />
       </main>
 
-      {/* MODÁLNE OKNO PRE DOPYT */}
-      {leadModalListing && (
-        <div className="fixed inset-0 z-[150] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-purple-500/40 max-w-lg w-full rounded-3xl p-6 space-y-5 shadow-2xl relative">
-            <button 
-              onClick={() => setLeadModalListing(null)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-white p-1 rounded-lg bg-slate-800"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="space-y-1">
-              <Badge className="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px]">
-                Mám záujem o projekt
-              </Badge>
-              <h3 className="text-base font-bold text-white leading-snug">{leadModalListing.title}</h3>
-              <p className="text-xs text-slate-400 font-mono">Lokalita: {leadModalListing.location} • Cena: {leadModalListing.price_eur.toLocaleString()} €</p>
-            </div>
-
-            {submittedLead ? (
-              <div className="bg-emerald-500/20 border border-emerald-500/40 p-6 rounded-2xl text-center space-y-2">
-                <CheckCircle2 className="w-10 h-10 text-emerald-400 mx-auto" />
-                <h4 className="font-bold text-white text-base">Ďakujeme za Váš záujem!</h4>
-                <p className="text-xs text-slate-300 font-mono">Váš dopyt bol odoslaný. Náš poradca American Living vám zavolá v priebehu dnešného dňa.</p>
-              </div>
-            ) : (
-              <form onSubmit={handleSendLead} className="space-y-3 text-xs font-mono">
-                <div>
-                  <label className="text-slate-400 block mb-1">Meno a Priezvisko *</label>
-                  <input 
-                    type="text" required
-                    placeholder="napr. Richard Kováč"
-                    value={leadForm.name}
-                    onChange={(e) => setLeadForm({ ...leadForm, name: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:border-amber-400 focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="text-slate-400 block mb-1">Telefónne číslo *</label>
-                  <input 
-                    type="tel" required
-                    placeholder="napr. +421 905 123 456"
-                    value={leadForm.phone}
-                    onChange={(e) => setLeadForm({ ...leadForm, phone: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:border-amber-400 focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="text-slate-400 block mb-1">Váš E-mail</label>
-                  <input 
-                    type="email"
-                    placeholder="napr. richard@americanliving.sk"
-                    value={leadForm.email}
-                    onChange={(e) => setLeadForm({ ...leadForm, email: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:border-amber-400 focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="text-slate-400 block mb-1">Poznámka / Otázka (Voliteľné)</label>
-                  <textarea 
-                    rows={2}
-                    placeholder="Mám záujem o osobnú obhliadku v Kvetoslavove..."
-                    value={leadForm.note}
-                    onChange={(e) => setLeadForm({ ...leadForm, note: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:border-amber-400 focus:outline-none"
-                  />
-                </div>
-
-                <Button type="submit" className="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs py-3 rounded-xl">
-                  Odoslať Dopyt
-                </Button>
-              </form>
-            )}
-          </div>
+      {/* LIŠTA POROVNANIA */}
+      {compareIds.length > 0 && !showCompare && (
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[140] bg-slate-900 border border-amber-500/40 rounded-2xl shadow-2xl px-4 py-3 flex items-center gap-3 max-w-[95vw]">
+          <span className="text-xs text-slate-300 font-mono">
+            Vybrané na porovnanie: <strong className="text-amber-400">{compareIds.length}</strong> / {MAX_COMPARE}
+          </span>
+          <Button
+            onClick={() => setShowCompare(true)}
+            disabled={compareIds.length < 2}
+            className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs rounded-xl disabled:opacity-50"
+          >
+            <Scale className="w-3.5 h-3.5 mr-1" /> {compareIds.length < 2 ? "Vyberte aspoň 2" : "Porovnať"}
+          </Button>
+          <button onClick={() => setCompareIds([])} className="text-xs text-slate-400 hover:text-white font-mono">
+            Zrušiť
+          </button>
         </div>
       )}
 
+      {/* MODÁLNE OKNÁ */}
+      {showCompare && compareItems.length >= 2 && (
+        <CompareTable
+          items={compareItems}
+          onRemove={(id) => {
+            const zvysok = compareIds.filter((x) => x !== id);
+            setCompareIds(zvysok);
+            if (zvysok.length < 2) setShowCompare(false);
+          }}
+          onClose={() => setShowCompare(false)}
+        />
+      )}
+      {leadDom && <LeadModal dom={leadDom} onClose={() => setLeadDom(null)} />}
+      {leadListing && <ListingLeadModal listing={leadListing} onClose={() => setLeadListing(null)} />}
     </div>
   );
 }
