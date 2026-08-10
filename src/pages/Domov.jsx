@@ -1225,18 +1225,72 @@ export default function Domov() {
             </div>
           </div>
 
-          {/* Kapitola 03: Rýchle odovzdanie */}
-          <Chapter
-            kicker="Výstavba"
-            title={t('trustBuildTitle')}
-            text={t('trustBuildDesc')}
-            image="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=900&q=75"
-          >
-            <Link to={createPageUrl("AkoToFunguje")} className="inline-flex items-center gap-2 text-sm text-[#C5A880] hover:text-[#E2C799] transition-colors font-bold">
-              <span>{t('trustBuildLink')}</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </Chapter>
+          {/* Sekcia 4: Rýchle odovzdanie domu do 3 mesiacov */}
+          <div className="relative rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 border border-amber-500/30 p-6 sm:p-10 lg:p-12 shadow-2xl overflow-hidden text-white mt-12">
+            {/* Ambient Background Glow */}
+            <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-80 h-80 bg-orange-600/10 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="relative z-10 max-w-5xl mx-auto">
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
+                <div>
+                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-xs font-black uppercase tracking-wider text-amber-300 mb-3">
+                    <Clock className="w-4 h-4 text-amber-400" />
+                    <span>GARANCIA RYCHLEJ VÝSTAVBY</span>
+                  </div>
+                  <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
+                    Bývajte vo vlastnom domu <span className="text-amber-400">do 3 mesiacov</span>
+                  </h2>
+                </div>
+                <Link to={createPageUrl("AkoToFunguje")} className="shrink-0">
+                  <Button className="rounded-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-slate-950 font-bold px-6 py-3 text-sm sm:text-base shadow-lg hover:shadow-amber-500/30 transition-all flex items-center gap-2">
+                    <span>Ako to funguje krok za krokom</span>
+                    <ArrowRight className="w-5 h-5" />
+                  </Button>
+                </Link>
+              </div>
+
+              <p className="text-slate-300 text-sm sm:text-base leading-relaxed mb-8 max-w-3xl">
+                Žiadne stavenisko natiahnuté na roky ani nekonečné meškanie. Vďaka precíznej továrenskej výrobe v suchom prostredí dodávame a montujeme modulárne rodinné domy do 90 dní od zmluvy.
+              </p>
+
+              {/* 3-Kroková Časová Os (Timeline Grid) */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-5 backdrop-blur-sm hover:border-amber-500/50 transition-colors relative">
+                  <div className="text-xs font-black text-amber-400 uppercase tracking-widest mb-2">01. TÝŽDEŇ 1 - 8</div>
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300 font-black text-lg mb-3">
+                    🏭
+                  </div>
+                  <h3 className="font-bold text-white text-base mb-1">Továrenská výroba</h3>
+                  <p className="text-xs text-slate-300 leading-normal">
+                    Výroba modulov a stien v hale s milimetrovou presnosťou a certifikáciou A0 bez vplyvu počasia.
+                  </p>
+                </div>
+
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-5 backdrop-blur-sm hover:border-amber-500/50 transition-colors relative">
+                  <div className="text-xs font-black text-amber-400 uppercase tracking-widest mb-2">02. TÝŽDEŇ 9 - 10</div>
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300 font-black text-lg mb-3">
+                    🚛
+                  </div>
+                  <h3 className="font-bold text-white text-base mb-1">Transport & Inžinierske siete</h3>
+                  <p className="text-xs text-slate-300 leading-normal">
+                    Príprava pozemku, osadenie zemných vrutov / platne a dovoz modulov priamo na váš pozemok.
+                  </p>
+                </div>
+
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-5 backdrop-blur-sm hover:border-amber-500/50 transition-colors relative">
+                  <div className="text-xs font-black text-amber-400 uppercase tracking-widest mb-2">03. TÝŽDEŇ 11 - 12</div>
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300 font-black text-lg mb-3">
+                    🔑
+                  </div>
+                  <h3 className="font-bold text-white text-base mb-1">Montáž & Odovzdanie kľúčov</h3>
+                  <p className="text-xs text-slate-300 leading-normal">
+                    Montáž hotová do 48 hodín. Dokončenie interiéru a odovzdanie kľúčov k nasťahovaniu do 3 mesiacov.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
 
         </div>
       </section>
