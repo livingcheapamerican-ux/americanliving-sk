@@ -4,7 +4,8 @@ import { createPageUrl } from "@/utils";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { ArrowRight, CheckCircle, Zap, Plus, Trash2, Eye, EyeOff, Package, Gift } from "lucide-react";
+import { ArrowRight, CheckCircle, Zap, Plus, Trash2, Eye, EyeOff, Package, Gift, MoreVertical } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import DomCardGallery from "./DomCardGallery";
 import DomSpecs from "./DomSpecs";
 
@@ -49,24 +50,34 @@ const DomCard = memo(({
           {/* Akcie vpravo hore */}
           <div className="absolute top-1.5 right-1.5 flex gap-1 z-10">
             {canManage && (
-              <>
-                <button
-                  onClick={(e) => handleDeleteDom(dom, e)}
-                  disabled={deleteDomMutation.isPending}
-                  title="Vymazať dom"
-                  className="w-7 h-7 rounded-md flex items-center justify-center bg-red-600/90 backdrop-blur-sm text-white hover:bg-red-700 transition-all disabled:opacity-50 shadow sm:opacity-0 sm:group-hover:opacity-100"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  onClick={(e) => handleToggleVerejny(dom, e)}
-                  disabled={toggleVerejnyMutation.isPending}
-                  title={dom.verejny !== false ? 'Skryť pre verejnosť' : 'Zobraziť pre verejnosť'}
-                  className={`w-7 h-7 rounded-md flex items-center justify-center backdrop-blur-sm text-white transition-all disabled:opacity-50 shadow sm:opacity-0 sm:group-hover:opacity-100 ${dom.verejny !== false ? 'bg-green-600/90 hover:bg-green-700' : 'bg-slate-500/90 hover:bg-slate-600'}`}
-                >
-                  {dom.verejny !== false ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
-                </button>
-              </>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button
+                    title="Správa domu"
+                    className="w-7 h-7 rounded-md flex items-center justify-center bg-slate-900/80 backdrop-blur-sm text-white hover:bg-slate-800 transition-all shadow"
+                  >
+                    <MoreVertical className="w-3.5 h-3.5" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent align="end" className="w-44 p-1">
+                  <button
+                    onClick={(e) => handleToggleVerejny(dom, e)}
+                    disabled={toggleVerejnyMutation.isPending}
+                    className="w-full flex items-center gap-2 px-2 py-2 rounded-md text-xs font-semibold hover:bg-muted transition-colors disabled:opacity-50"
+                  >
+                    {dom.verejny !== false ? <Eye className="w-3.5 h-3.5 text-green-600" /> : <EyeOff className="w-3.5 h-3.5 text-slate-500" />}
+                    {dom.verejny !== false ? 'Skryť pre verejnosť' : 'Zobraziť pre verejnosť'}
+                  </button>
+                  <button
+                    onClick={(e) => handleDeleteDom(dom, e)}
+                    disabled={deleteDomMutation.isPending}
+                    className="w-full flex items-center gap-2 px-2 py-2 rounded-md text-xs font-semibold text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors disabled:opacity-50"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    Vymazať dom
+                  </button>
+                </PopoverContent>
+              </Popover>
             )}
             <button
               onClick={() => toggleSrovnanie(dom)}
@@ -101,7 +112,7 @@ const DomCard = memo(({
           {/* Cena + akcia */}
           <div className="mt-auto pt-1.5 border-t border-border">
             <p className="text-[8px] sm:text-[10px] text-muted-foreground font-semibold leading-none mb-0.5">
-              {jeTicab ? t('basicConfigPrice') : dom.vyrobca === "Prosto House" ? "Základná cena" : t('priceFromLabel')}
+              {t('basicConfigPrice')}
             </p>
             {jeTicab ? (
               <div className="flex items-baseline flex-wrap gap-x-1.5">
@@ -120,7 +131,7 @@ const DomCard = memo(({
                 <span className="text-base sm:text-xl font-black text-red-600 dark:text-red-400 leading-tight">
                   {dom.zakladna_cena?.toLocaleString('sk-SK')} €
                 </span>
-                <span className="text-[8px] sm:text-[10px] text-muted-foreground">vrátane DPH</span>
+                <span className="w-full text-[8px] sm:text-[10px] text-muted-foreground font-semibold">vrátane DPH</span>
               </div>
             )}
 

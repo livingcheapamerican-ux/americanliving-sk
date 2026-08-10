@@ -21,6 +21,11 @@ import { Info, Gift } from "lucide-react";
 import ImageWithWatermark from "../components/ImageWithWatermark";
 import ProstoHouseMarketing from "../components/ProstoHouseMarketing";
 import DomCard from "../components/katalog/DomCard";
+import DomCardSkeleton from "../components/katalog/DomCardSkeleton";
+import FilterSection from "../components/katalog/FilterSection";
+import ActiveFilterChips from "../components/katalog/ActiveFilterChips";
+import CompareBar from "../components/katalog/CompareBar";
+import { SlidersHorizontal, X, ChevronDown } from "lucide-react";
 
 // CatalogPhotoBackground renders a premium, high-resolution nature landscape photo
 // with an infinite, slow Ken Burns zoom/pan animation, overlayed with soft gradient masks.
@@ -107,6 +112,7 @@ export default function Katalog() {
   const [portraitImages, setPortraitImages] = useState({});
   const [energyCert, setEnergyCert] = useState('all');
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -193,6 +199,22 @@ export default function Katalog() {
     toggleVerejnyMutation.mutate({ domId: dom.id, verejny: !dom.verejny });
   }, [toggleVerejnyMutation]);
 
+  const resetFilters = useCallback(() => {
+    setKategoriaFilter("vsetky");
+    setVyrobcaFilter([]);
+    setTypFilter([]);
+    setPlocharozsah([0, 500]);
+    setUzitkovaRozsah([0, 500]);
+    setHladanie("");
+    setHladanieInput("");
+    setCenoveRozpatie([0, 300000]);
+    setPocetIziebFilter([]);
+    setPocetModulovFilter([]);
+    setModuloveDomyFilter('all');
+    setZoradenie("poradie");
+    setEnergyCert('all');
+  }, []);
+
   const toggleSrovnanie = useCallback((dom) => {
     if (vybraneNaSrovnanie.find((d) => d.id === dom.id)) {
       setVybraneNaSrovnanie(vybraneNaSrovnanie.filter((d) => d.id !== dom.id));
@@ -249,6 +271,19 @@ export default function Katalog() {
   });
 
   const vyrobcovia = ["Ticab house", "Prosto House"];
+
+  // Aktívne filtre ako odstrániteľné štítky
+  const typLabels = { modularny: t('modularType'), montovany: t('prefabType'), mobilny: t('mobileType') };
+  const activeChips = [
+    ...(hladanie ? [{ key: 'hladanie', label: `"${hladanie}"`, onRemove: () => { setHladanie(""); setHladanieInput(""); } }] : []),
+    ...vyrobcaFilter.map((v) => ({ key: `v-${v}`, label: v, onRemove: () => setVyrobcaFilter(vyrobcaFilter.filter((x) => x !== v)) })),
+    ...typFilter.map((tp) => ({ key: `t-${tp}`, label: typLabels[tp] || tp, onRemove: () => setTypFilter(typFilter.filter((x) => x !== tp)) })),
+    ...pocetIziebFilter.map((iz) => ({ key: `i-${iz}`, label: `${iz} ${t('roomsFilter')}`, onRemove: () => setPocetIziebFilter(pocetIziebFilter.filter((x) => x !== iz)) })),
+    ...(cenoveRozpatie[1] !== 300000 ? [{ key: 'cena', label: `≤ ${cenoveRozpatie[1].toLocaleString('sk-SK')} €`, onRemove: () => setCenoveRozpatie([0, 300000]) }] : []),
+    ...(plocharozsah[1] !== 500 ? [{ key: 'plocha', label: `≤ ${plocharozsah[1]} m²`, onRemove: () => setPlocharozsah([0, 500]) }] : []),
+    ...(moduloveDomyFilter !== 'all' ? [{ key: 'moduly', label: moduloveDomyFilter === '1modul' ? t('oneModularHouses') : t('multiModularHouses'), onRemove: () => setModuloveDomyFilter('all') }] : []),
+    ...(energyCert !== 'all' ? [{ key: 'energy', label: energyCert === 'a0' ? t('energyClassA0') : t('energyClassNone'), onRemove: () => setEnergyCert('all') }] : []),
+  ];
 
   // Generovanie dynamických meta tagov
   const generateMetaTags = () => {
@@ -438,8 +473,22 @@ export default function Katalog() {
             animate={{ opacity: 1, x: 0 }}
             className="lg:w-72 flex-shrink-0 relative w-full">
             <div className="absolute inset-0 bg-primary/5 dark:bg-red-600/10 blur-[50px] pointer-events-none rounded-full" />
-            <Card className="p-3 sm:p-5 lg:sticky lg:top-24 shadow-xl bg-card/85 backdrop-blur-2xl border-border max-w-full overflow-hidden relative z-10">
-              <div className="flex items-center gap-2 mb-3 sm:mb-4">
+
+            {/* Mobilné tlačidlo na otvorenie filtrov */}
+            <Button
+              variant="outline"
+              onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
+              className="lg:hidden w-full justify-between h-11 mb-2 bg-card/90 backdrop-blur-xl font-bold"
+            >
+              <span className="flex items-center gap-2">
+                <SlidersHorizontal className="w-4 h-4 text-primary" />
+                {t('filters')}{activeChips.length > 0 ? ` (${activeChips.length})` : ''}
+              </span>
+              {mobileFiltersOpen ? <X className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            </Button>
+
+            <Card className={`${mobileFiltersOpen ? 'block' : 'hidden'} lg:block p-3 sm:p-5 lg:sticky lg:top-24 shadow-xl bg-card/85 backdrop-blur-2xl border-border max-w-full overflow-hidden relative z-10`}>
+              <div className="hidden lg:flex items-center gap-2 mb-3 sm:mb-4">
                 <Filter className="w-4 h-4 text-primary" />
                 <h2 className="text-base sm:text-lg font-bold text-foreground">{t('filters')}</h2>
               </div>
@@ -462,36 +511,8 @@ export default function Katalog() {
                   </div>
                 </div>
 
-                {/* Zoradenie */}
-                <div>
-                  <label className="block text-xs font-semibold text-muted-foreground mb-1">
-                    <ArrowUpDown className="w-3 h-3 inline mr-1" />
-                    {t('sortBy')}
-                  </label>
-                  <Select value={zoradenie} onValueChange={setZoradenie}>
-                    <SelectTrigger className="h-8 text-sm">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="poradie">{t('default')}</SelectItem>
-                      <SelectItem value="cena_vzostupne">{t('priceCheapest')}</SelectItem>
-                      <SelectItem value="cena_zostupne">{t('priceExpensive')}</SelectItem>
-                      <SelectItem value="plocha_vzostupne">{t('areaSmallest')}</SelectItem>
-                      <SelectItem value="plocha_zostupne">{t('areaLargest')}</SelectItem>
-                      <SelectItem value="uzitkova_vzostupne">{t('usableAreaSmallest')}</SelectItem>
-                      <SelectItem value="uzitkova_zostupne">{t('usableAreaLargest')}</SelectItem>
-                      <SelectItem value="nazov_az">{t('nameAZ')}</SelectItem>
-                      <SelectItem value="nazov_za">{t('nameZA')}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
                 {/* Výrobca */}
-                <div>
-                  <label className="block text-xs font-semibold text-muted-foreground mb-2 flex items-center gap-1">
-                    <Home className="w-3 h-3 text-red-500" />
-                    {t('manufacturer')}
-                  </label>
+                <FilterSection title={t('manufacturer')} icon={Home} iconClass="text-red-500" badge={vyrobcaFilter.length}>
                   <div className="grid grid-cols-1 gap-1.5">
                     {vyrobcovia.map((v) => (
                       <button
@@ -516,14 +537,10 @@ export default function Katalog() {
                       </button>
                     ))}
                   </div>
-                </div>
+                </FilterSection>
 
                 {/* Typ domu */}
-                <div>
-                  <label className="block text-xs font-semibold text-muted-foreground mb-2 flex items-center gap-1">
-                    <LayoutGrid className="w-3 h-3 text-amber-500" />
-                    {t('type')}
-                  </label>
+                <FilterSection title={t('type')} icon={LayoutGrid} iconClass="text-amber-500" badge={typFilter.length}>
                   <div className="grid grid-cols-1 gap-1.5">
                     {[
                       { value: "modularny", label: t('modularType'), icon: LayoutGrid, color: "amber" },
@@ -556,7 +573,7 @@ export default function Katalog() {
                       );
                     })}
                   </div>
-                </div>
+                </FilterSection>
 
                 {/* Cenové rozpätie */}
                 <div className="bg-background border border-emerald-500/30 rounded-lg p-3">
