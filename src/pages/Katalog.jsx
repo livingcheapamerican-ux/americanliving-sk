@@ -20,6 +20,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Info, Gift } from "lucide-react";
 import ImageWithWatermark from "../components/ImageWithWatermark";
 import ProstoHouseMarketing from "../components/ProstoHouseMarketing";
+import DomCard from "../components/katalog/DomCard";
 
 // CatalogPhotoBackground renders a premium, high-resolution nature landscape photo
 // with an infinite, slow Ken Burns zoom/pan animation, overlayed with soft gradient masks.
@@ -49,235 +50,6 @@ function CatalogPhotoBackground() {
     </div>
   );
 }
-
-// Memoizovaný komponent pre kartičku domu
-const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitImages, jeVybrany, toggleSrovnanie, vybraneNaSrovnanie, canManage, handleToggleVerejny, toggleVerejnyMutation, handleDeleteDom, deleteDomMutation, location, t }) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.05 }}
-      className="h-full"
-    >
-      <Card className={`group overflow-hidden hover:shadow-[0_0_30px_rgba(158,42,43,0.1)] dark:hover:shadow-[0_0_30px_rgba(239,68,68,0.15)] hover:border-primary/30 dark:hover:border-red-500/30 transition-all duration-500 hover:-translate-y-2 bg-card border-border flex flex-col h-full ${jeVybrany ? 'ring-2 ring-primary' : ''} ${dom.verejny === false ? 'opacity-60' : ''}`}>
-        <div className="relative overflow-hidden aspect-[16/9]">
-          <Link to={`${createPageUrl("DetailDomu")}?${dom.slug ? `slug=${dom.slug}` : `id=${dom.id}`}&return=${encodeURIComponent(location.pathname + location.search)}`}>
-            {dom.hlavny_obrazok ? (
-              <ImageWithWatermark
-                src={
-                  dizajnFilter === "podorys3d" && dom.podorys_3d 
-                    ? dom.podorys_3d 
-                    : dizajnFilter === "drevo" && dom.zakladna_konfiguracia_obrazok 
-                      ? dom.zakladna_konfiguracia_obrazok 
-                      : dom.hlavny_obrazok
-                }
-                alt={dom.nazov}
-                className={`w-full h-full ${dizajnFilter === "podorys3d" ? "object-contain bg-white" : "object-cover"} group-hover:scale-110 transition-transform duration-700 ease-out`}
-                useCatalogSetting={true}
-                priority={index < 4}
-                loading={index < 4 ? "eager" : "lazy"}
-                optimizeWidth={400}
-                width={400}
-                height={225}
-              />
-            ) : (
-              <div className="w-full h-full bg-muted flex items-center justify-center">
-                <Home className="w-12 h-12 sm:w-16 sm:h-16 text-muted-foreground group-hover:scale-110 transition-transform duration-500" />
-              </div>
-            )}
-          </Link>
-          <div className="absolute top-2 right-2 sm:top-4 sm:right-4 flex gap-1 sm:gap-2">
-            {canManage && (
-              <button
-                onClick={(e) => handleDeleteDom(dom, e)}
-                disabled={deleteDomMutation.isPending}
-                className="p-1.5 sm:p-2 rounded-full bg-red-600/90 backdrop-blur-sm text-white hover:bg-red-700 transition-all disabled:opacity-50 shadow-lg"
-              >
-                <Trash2 className="w-3.5 h-3.5 sm:w-5 sm:h-5" />
-              </button>
-            )}
-            {canManage && (
-              <button
-                onClick={(e) => handleToggleVerejny(dom, e)}
-                disabled={toggleVerejnyMutation.isPending}
-                title={dom.verejny !== false ? 'Skryť pre verejnosť' : 'Zobraziť pre verejnosť'}
-                className={`p-1.5 sm:p-2 rounded-full backdrop-blur-sm transition-all disabled:opacity-50 shadow-lg ${
-                  dom.verejny !== false 
-                    ? 'bg-green-600/90 text-white hover:bg-green-700' 
-                    : 'bg-muted-foreground/90 text-white hover:bg-muted-foreground'
-                }`}
-              >
-                {dom.verejny !== false ? <Eye className="w-3.5 h-3.5 sm:w-5 sm:h-5" /> : <EyeOff className="w-3.5 h-3.5 sm:w-5 sm:h-5" />}
-              </button>
-            )}
-            <button
-              onClick={() => toggleSrovnanie(dom)}
-              disabled={!jeVybrany && vybraneNaSrovnanie.length >= 3}
-              className={`p-1.5 sm:p-2 rounded-full backdrop-blur-sm transition-all shadow-lg hover:scale-110 active:scale-95 ${
-                jeVybrany
-                  ? 'bg-primary text-white shadow-[0_0_15px_rgba(158,42,43,0.5)]'
-                  : 'bg-white/95 dark:bg-slate-900/95 text-slate-900 dark:text-slate-100 hover:bg-primary dark:hover:bg-red-500 hover:text-white'} ${
-                !jeVybrany && vybraneNaSrovnanie.length >= 3 ? 'opacity-50 cursor-not-allowed hover:bg-white/90 dark:hover:bg-slate-900/90 hover:text-slate-900 dark:hover:text-slate-100 hover:scale-100' : ''}`}
-            >
-              <Plus className={`w-3.5 h-3.5 sm:w-5 sm:h-5 transition-transform duration-300 ${jeVybrany ? 'rotate-45' : ''}`} />
-            </button>
-          </div>
-        </div>
-        
-        <div className="p-2 sm:p-4 flex-1 flex flex-col">
-        <Link to={`${createPageUrl("DetailDomu")}?${dom.slug ? `slug=${dom.slug}` : `id=${dom.id}`}&return=${encodeURIComponent(location.pathname + location.search)}`}>
-          <h3 className="text-xs sm:text-lg font-bold text-foreground mb-1 group-hover:text-primary transition-colors duration-300 line-clamp-2 leading-tight">
-            {dom.nazov}
-          </h3>
-          {dom.vyrobca === "Prosto House" && dom.prosto_house_kod && (
-            <div className="flex items-center gap-1 mb-1">
-              <Package className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-red-500" />
-              <span className="text-[8px] sm:text-[10px] font-bold text-red-500">{dom.prosto_house_kod}</span>
-            </div>
-          )}
-        </Link>
-          
-          {/* Kľúčové benefity pod názvom */}
-          <div className="flex flex-wrap gap-0.5 sm:gap-1 mb-1 sm:mb-1.5 mt-1">
-            {dom.celorocny && (
-              <div className="bg-amber-500/20 border border-amber-500/30 text-amber-400 px-1.5 py-0.5 rounded text-[8px] sm:text-[10px] font-bold shadow-sm flex items-center gap-1 transition-all duration-300 group-hover:border-amber-400/50">
-                <CheckCircle className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                {t('yearRound')}
-              </div>
-            )}
-            {dom.energeticky_certifikat && (
-              <div className="bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 px-1.5 py-0.5 rounded text-[8px] sm:text-[10px] font-bold shadow-sm flex items-center gap-1 transition-all duration-300 group-hover:border-emerald-400/50">
-                <Zap className="w-2.5 h-2.5 sm:w-3 sm:h-3 group-hover:text-yellow-300 transition-colors" />
-                A0
-              </div>
-            )}
-          </div>
-
-          {/* Základné parametre - dlazdice so zoom ikonami */}
-          <div className="grid grid-cols-3 gap-1 sm:gap-2 mb-2 sm:mb-3 mt-2">
-            <div className="bg-background rounded border border-border/60 p-1 sm:p-1.5 text-center transition-colors group-hover:border-border">
-              <Home className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-muted-foreground group-hover:text-primary group-hover:scale-125 group-hover:-translate-y-0.5 transition-all duration-300" />
-              <div className="text-[8px] sm:text-[10px] text-muted-foreground/80 leading-tight mb-0.5">{t('manufacturer')}</div>
-              <div className="font-bold text-foreground text-[9px] sm:text-[11px] leading-tight">{dom.vyrobca}</div>
-            </div>
-            
-            <div className="bg-background rounded border border-border/60 p-1 sm:p-1.5 text-center transition-colors group-hover:border-border">
-              {dom.typ_domu === 'montovany' ? (
-                <Hammer className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-orange-500 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300" />
-              ) : dom.typ_domu === 'mobilny' ? (
-                <Caravan className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-teal-500 group-hover:scale-125 group-hover:-translate-x-1 transition-all duration-300" />
-              ) : (
-                <LayoutGrid className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-amber-500 group-hover:scale-125 group-hover:rotate-6 transition-all duration-300" />
-              )}
-              <div className="text-[8px] sm:text-[10px] text-muted-foreground/80 leading-tight mb-0.5">{t('houseType')}</div>
-              <div className="font-bold text-foreground text-[9px] sm:text-[11px] leading-tight">{dom.typ_domu === 'modularny' ? t('modularType') : dom.typ_domu === 'montovany' ? t('prefabType') : t('mobileType')}</div>
-            </div>
-            
-            <div className="bg-background rounded border border-border/60 p-1 sm:p-1.5 text-center transition-colors group-hover:border-border">
-              <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-primary rounded-sm mx-auto mb-1 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300" />
-              <div className="text-[8px] sm:text-[10px] text-muted-foreground/80 leading-tight mb-0.5">{t('builtArea')}</div>
-              <div className="font-bold text-foreground text-[9px] sm:text-[11px]">{dom.zastavana_plocha} m²</div>
-            </div>
-            
-            {dom.uzitkova_plocha && (
-              <div className="bg-background rounded border border-border/60 p-1 sm:p-1.5 text-center transition-colors group-hover:border-border">
-                <Square className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-purple-400 group-hover:scale-125 group-hover:rotate-6 transition-all duration-300" />
-                <div className="text-[8px] sm:text-[10px] text-muted-foreground/80 leading-tight mb-0.5">{t('usableArea')}</div>
-                <div className="font-bold text-foreground text-[9px] sm:text-[11px]">{dom.uzitkova_plocha} m²</div>
-              </div>
-            )}
-            
-            {dom.pocet_izieb && (
-              <div className="bg-background rounded border border-border/60 p-1 sm:p-1.5 text-center transition-colors group-hover:border-border">
-                <Grid3x3 className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-blue-400 group-hover:scale-125 group-hover:-translate-y-0.5 transition-all duration-300" />
-                <div className="text-[8px] sm:text-[10px] text-muted-foreground/80 leading-tight mb-0.5">{t('rooms')}</div>
-                <div className="font-bold text-foreground text-[9px] sm:text-[11px]">{dom.pocet_izieb}</div>
-              </div>
-            )}
-            
-            {dom.pocet_modulov && (
-              <div className="bg-background rounded border border-border/60 p-1 sm:p-1.5 text-center transition-colors group-hover:border-border">
-                <Boxes className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-red-500 group-hover:scale-125 transition-all duration-300" />
-                <div className="text-[8px] sm:text-[10px] text-muted-foreground/80 leading-tight mb-0.5">Moduly</div>
-                <div className="font-bold text-foreground text-[9px] sm:text-[11px]">{dom.pocet_modulov}</div>
-              </div>
-            )}
-            
-            {dom.terasa_plocha && (
-              dom.vyrobca !== "Ticab house" || 
-              (dom.popis && (dom.popis.includes("vstavaná") || dom.popis.includes("zabudovaná") || dom.popis.includes("Vstavaná") || dom.popis.includes("Zabudovaná"))) ||
-              (dom.specifikacia && !dom.specifikacia.includes("Terasa: ❌"))
-            ) && (
-              <div className="bg-background rounded border border-border/60 p-1 sm:p-1.5 text-center transition-colors group-hover:border-border">
-                <Fence className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-1 text-teal-400 group-hover:scale-125 transition-all duration-300" />
-                <div className="text-[8px] sm:text-[10px] text-muted-foreground/80 leading-tight mb-0.5">Terasa</div>
-                <div className="font-bold text-foreground text-[9px] sm:text-[11px]">{dom.terasa_plocha} m²</div>
-              </div>
-            )}
-          </div>
-
-          <div className="pt-2 sm:pt-3 border-t border-border mt-auto">
-            {/* Cena - zvýraznená */}
-            <div className="bg-background rounded border border-border/80 p-2 sm:p-3 mb-2 sm:mb-3">
-              <p className="text-[9px] sm:text-[11px] text-muted-foreground font-semibold mb-1">
-                {dom.vyrobca === "Ticab house" ? t('basicConfigPrice') : dom.vyrobca === "Prosto House" ? "Základná cena" : t('priceFromLabel')}
-              </p>
-              {dom.vyrobca === "Ticab house" ? (
-                <div>
-                  <div className="flex items-center gap-2">
-                    <p className="text-xs sm:text-sm font-bold text-red-500/70 line-through">
-                      {dom.zakladna_cena?.toLocaleString('sk-SK')} €
-                    </p>
-                    <p className="text-lg sm:text-xl font-black text-emerald-600 dark:text-emerald-400 group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition-all drop-shadow-sm">
-                      {Math.round(dom.zakladna_cena * 0.95)?.toLocaleString('sk-SK')} €
-                    </p>
-                  </div>
-                  <p className="text-[8px] sm:text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold mt-0.5">
-                    💰 S dotáciou AMERICANA
-                  </p>
-                  <p className="text-[8px] sm:text-[10px] text-muted-foreground/75 mt-1">vrátane DPH</p>
-                </div>
-              ) : (
-                <div>
-                  <p className="text-lg sm:text-xl font-black text-red-600 dark:text-red-400 group-hover:text-red-700 dark:group-hover:text-red-300 transition-all drop-shadow-sm">
-                    {dom.zakladna_cena?.toLocaleString('sk-SK')} €
-                  </p>
-                  <p className="text-[8px] sm:text-[10px] text-muted-foreground/75 mt-1">vrátane DPH</p>
-                </div>
-              )}
-            </div>
-            {/* Akčné tlačidlá */}
-            <div className="space-y-1 sm:space-y-1.5">
-              {dom.vyrobca === "Ticab house" && (
-                <div className="mb-2">
-                  <Link to={createPageUrl(`DotaciaAmericana?dom=${dom.id}`)}>
-                    <Button 
-                      size="sm" 
-                      className="relative overflow-hidden w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-white text-[9px] sm:text-[10px] px-1.5 sm:px-2 h-7 sm:h-8 font-bold shadow-[0_0_15px_rgba(16,185,129,0.3)] hover:shadow-[0_0_25px_rgba(16,185,129,0.6)] transition-all border border-emerald-500/50 group/btn"
-                    >
-                      <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
-                      <Gift className="relative z-10 w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1 drop-shadow-md" />
-                      <span className="relative z-10 drop-shadow-md tracking-wider">{t('dotacia')}</span>
-                    </Button>
-                  </Link>
-                  <p className="text-[8px] sm:text-[10px] text-center font-bold text-emerald-600 dark:text-emerald-400 mt-1 leading-tight px-1">
-                    Požiadajte o dotáciu na energie zdarma
-                  </p>
-                </div>
-              )}
-              <Link to={`${createPageUrl("DetailDomu")}?${dom.slug ? `slug=${dom.slug}` : `id=${dom.id}`}&return=${encodeURIComponent(location.pathname + location.search)}`}>
-                <Button size="sm" className="w-full bg-slate-100 dark:bg-white/10 hover:bg-primary dark:hover:bg-red-600 text-foreground dark:text-white border border-slate-200 dark:border-white/20 hover:border-primary dark:hover:border-red-500 text-[10px] sm:text-xs px-2 h-8 font-bold shadow-sm transition-all duration-300">
-                  {t('detail')}
-                  <ArrowRight className="ml-2 w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </Card>
-    </motion.div>
-  );
-});
 
 export default function Katalog() {
   const location = useLocation();
@@ -1056,85 +828,58 @@ export default function Katalog() {
 
           {/* Domy Grid */}
           <div className="flex-grow w-full max-w-full overflow-hidden">
-            {/* Dizajn filter - Mobilne responzívny */}
-            <div className="relative mb-4 sm:mb-6">
-              {/* Animovaný gradient pozadie */}
-              <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 rounded-2xl opacity-90 blur-sm animate-pulse"></div>
-              
-              <Card className="relative p-3 sm:p-6 bg-gradient-to-br from-orange-50/20 via-background to-red-50/20 dark:from-orange-950/20 dark:via-slate-900/40 dark:to-red-950/20 border-2 sm:border-4 border-orange-400 dark:border-orange-500/50 shadow-2xl">
-                {/* Dekoratívne prvky */}
-                <div className="absolute top-0 left-0 w-20 h-20 bg-yellow-300 rounded-full blur-3xl opacity-30 animate-pulse"></div>
-                <div className="absolute bottom-0 right-0 w-24 h-24 bg-red-300 rounded-full blur-3xl opacity-30 animate-pulse" style={{ animationDelay: '1s' }}></div>
-                
-                <div className="relative flex flex-col items-center gap-2 sm:gap-4">
-                  {/* Text s ikonou */}
-                  <div className="flex items-center gap-1.5 sm:gap-3 w-full justify-center">
-                    <motion.div 
-                      animate={{ rotate: [0, 10, -10, 0] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                      className="flex-shrink-0 w-8 h-8 sm:w-14 sm:h-14 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg"
-                    >
-                      <span className="text-base sm:text-3xl">🎨</span>
-                    </motion.div>
-                    <div className="text-center sm:text-left">
-                      <p className="text-[10px] sm:text-base font-bold text-foreground flex flex-wrap items-center justify-center sm:justify-start gap-1">
-                        <span className="bg-red-600 text-white px-1.5 py-0.5 rounded-full text-[8px] sm:text-xs animate-pulse">{t('newBadge')}</span>
-                        <span className="whitespace-nowrap">{t('showInDesign')}</span>
-                      </p>
-                      <p className="text-[8px] sm:text-sm text-muted-foreground font-medium hidden sm:block">{t('viewHousesInDifferentColors')}</p>
-                    </div>
-                  </div>
-                  
-                  {/* Tlačidlá - optimalizované pre malé mobily */}
-                  <div className="flex flex-col sm:flex-row gap-1.5 sm:gap-3 w-full">
-                    <motion.div whileTap={{ scale: 0.95 }} className="flex-1">
-                      <Button
-                        variant={dizajnFilter === "murovka" ? "default" : "ghost"}
-                        onClick={() => setDizajnFilter("murovka")}
-                        className={`w-full px-2 py-2 sm:px-8 sm:py-4 text-[10px] sm:text-lg font-bold shadow-lg transition-all ${
-                          dizajnFilter === "murovka" 
-                            ? "bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white border-0" 
-                            : "border-2 border-orange-500 bg-card hover:bg-orange-500/10 text-foreground"
+            {/* Lišta nad výsledkami: počet, dizajn fotiek, zoradenie */}
+            <Card className="mb-4 p-2 sm:p-3 bg-card/90 backdrop-blur-xl border-border shadow-sm">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                <p className="text-xs sm:text-sm font-bold text-foreground shrink-0">
+                  <span className="text-primary">{zoradeneDomy.length}</span> {t('houses')}
+                </p>
+
+                <div className="flex items-center gap-1 bg-muted/60 border border-border rounded-lg p-0.5 flex-1 sm:flex-none">
+                  {[
+                    { value: "murovka", label: t('brickDesign'), icon: Building2 },
+                    { value: "drevo", label: t('woodDesign'), icon: TreePine },
+                    { value: "podorys3d", label: t('threeDFloorPlan'), icon: Grid3x3 }
+                  ].map((opt) => {
+                    const Icon = opt.icon;
+                    const isActive = dizajnFilter === opt.value;
+                    return (
+                      <button
+                        key={opt.value}
+                        onClick={() => setDizajnFilter(opt.value)}
+                        title={opt.label}
+                        className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-2 sm:px-3 h-8 rounded-md text-[10px] sm:text-xs font-bold transition-all ${
+                          isActive ? 'bg-primary text-white shadow-sm' : 'text-muted-foreground hover:text-foreground hover:bg-background'
                         }`}
                       >
-                        <Building2 className="w-3 h-3 sm:w-6 sm:h-6 mr-1" />
-                        <span className="truncate">{t('brickDesign')}</span>
-                      </Button>
-                    </motion.div>
- 
-                    <motion.div whileTap={{ scale: 0.95 }} className="flex-1">
-                      <Button
-                        variant={dizajnFilter === "drevo" ? "default" : "ghost"}
-                        onClick={() => setDizajnFilter("drevo")}
-                        className={`w-full px-2 py-2 sm:px-8 sm:py-4 text-[10px] sm:text-lg font-bold shadow-lg transition-all ${
-                          dizajnFilter === "drevo" 
-                            ? "bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-700 hover:to-yellow-700 text-white border-0" 
-                            : "border-2 border-amber-500 bg-card hover:bg-amber-500/10 text-foreground"
-                        }`}
-                      >
-                        <TreePine className="w-3 h-3 sm:w-6 sm:h-6 mr-1" />
-                        <span className="truncate">{t('woodDesign')}</span>
-                      </Button>
-                    </motion.div>
- 
-                    <motion.div whileTap={{ scale: 0.95 }} className="flex-1">
-                      <Button
-                        variant={dizajnFilter === "podorys3d" ? "default" : "ghost"}
-                        onClick={() => setDizajnFilter("podorys3d")}
-                        className={`w-full px-2 py-2 sm:px-8 sm:py-4 text-[10px] sm:text-lg font-bold shadow-lg transition-all ${
-                          dizajnFilter === "podorys3d" 
-                            ? "bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-0" 
-                            : "border-2 border-purple-500 bg-card hover:bg-purple-500/10 text-foreground"
-                        }`}
-                      >
-                        <Grid3x3 className="w-3 h-3 sm:w-6 sm:h-6 mr-0.5 sm:mr-1" />
-                        <span className="whitespace-nowrap">{t('threeDFloorPlan')}</span>
-                      </Button>
-                    </motion.div>
-                  </div>
+                        <Icon className="w-3.5 h-3.5" />
+                        <span className="truncate">{opt.label}</span>
+                      </button>
+                    );
+                  })}
                 </div>
-              </Card>
-            </div>
+
+                <div className="sm:ml-auto sm:w-56">
+                  <Select value={zoradenie} onValueChange={setZoradenie}>
+                    <SelectTrigger className="h-8 text-xs">
+                      <ArrowUpDown className="w-3 h-3 mr-1.5 shrink-0" />
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="poradie">{t('default')}</SelectItem>
+                      <SelectItem value="cena_vzostupne">{t('priceCheapest')}</SelectItem>
+                      <SelectItem value="cena_zostupne">{t('priceExpensive')}</SelectItem>
+                      <SelectItem value="plocha_vzostupne">{t('areaSmallest')}</SelectItem>
+                      <SelectItem value="plocha_zostupne">{t('areaLargest')}</SelectItem>
+                      <SelectItem value="uzitkova_vzostupne">{t('usableAreaSmallest')}</SelectItem>
+                      <SelectItem value="uzitkova_zostupne">{t('usableAreaLargest')}</SelectItem>
+                      <SelectItem value="nazov_az">{t('nameAZ')}</SelectItem>
+                      <SelectItem value="nazov_za">{t('nameZA')}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </Card>
  
             {/* Srovnání panel */}
             {/* Srovnání panel */}
