@@ -1404,84 +1404,120 @@ export default function Domov() {
       {/* Kapitola 05: Showroom */}
       <ShowroomChapter />
 
-      {/* Populárne domy Carousel */}
+      {/* Sekcia 6: Populárne domy Carousel */}
       {domy && domy.length > 0 && (
-        <section className="py-12 sm:py-20 bg-[#EFE9DF] relative border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
-          <div className="container mx-auto px-4 mb-8">
-            <div className="flex items-center justify-between">
+        <section className="py-16 sm:py-24 bg-slate-950 text-white relative border-b border-white/10 overflow-hidden">
+          {/* Ambient Background Glow */}
+          <div className="absolute top-1/2 left-1/3 -translate-y-1/2 w-96 h-96 bg-[#C5A880]/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="container mx-auto px-4 mb-10 relative z-10">
+            <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
               <div>
-                <p className="text-[11px] uppercase tracking-[0.25em] text-[#9E2A2B] font-bold mb-2">Modely</p>
-                <h2 className="font-['Sora'] text-2xl sm:text-4xl font-bold text-[#2C3A33] mb-2">{t('popularHouses')}</h2>
-                <p className="text-[#6B7A72]">{t('popularHousesDesc')}</p>
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#C5A880]/20 border border-[#C5A880]/40 text-xs font-black uppercase tracking-wider text-[#E2C799] mb-3">
+                  <Star className="w-4 h-4 text-[#E2C799]" />
+                  <span>BESTSELLERY AMERICAN LIVING</span>
+                </div>
+                <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
+                  Najobľúbenejšie <span className="text-[#E2C799]">modulárne a rodinné domy</span>
+                </h2>
+                <p className="text-slate-300 text-sm sm:text-base mt-2 max-w-2xl">
+                  Energetická trieda A0 s nízkoenergetickou prevádzkou, priamy odpočet Dotácie AMERICANA a odovzdanie do 3 mesiacov.
+                </p>
               </div>
-              <Link to={createPageUrl("Katalog")} className="hidden sm:flex items-center gap-2 text-primary hover:text-red-655 dark:hover:text-red-400 font-semibold transition-colors">
-                {t('showAllHouses')} <ArrowRight className="w-5 h-5" />
+              <Link to={createPageUrl("Katalog")} className="hidden sm:flex items-center gap-2 text-[#E2C799] hover:text-white font-bold transition-colors shrink-0">
+                <span>Všetky modely domov</span>
+                <ArrowRight className="w-5 h-5" />
               </Link>
             </div>
           </div>
           
-          <div className="w-full overflow-hidden">
-            <div className="flex overflow-x-auto snap-x snap-mandatory pb-8 px-4 sm:px-12 xl:px-24 gap-4 sm:gap-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-              {domy.map((dom, index) => (
-                <motion.div 
-                  key={dom.id} 
-                  initial={{ opacity: 0, x: 50 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="snap-center sm:snap-start shrink-0 w-[85vw] sm:w-[400px] lg:w-[450px]"
-                >
-                  <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}`}>
-                    <Card className="bg-white border-[#E0D8CA] overflow-hidden group hover:-translate-y-2 transition-all duration-300 shadow-md dark:shadow-xl hover:shadow-[#C5A880]/15 dark:hover:shadow-red-950/20">
-                      <div className="aspect-[4/3] overflow-hidden relative">
-                        <img 
-                          src={optimizeImageUrl(dom.hlavny_obrazok || dom.obrazky?.[0], 600)} 
-                          alt={dom.nazov} 
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
-                          loading="lazy"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-80" />
-                        
-                        {dom.popularny && (
-                          <div className="absolute top-4 left-4 bg-red-600/90 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg border border-red-500/50 flex items-center gap-1">
-                            <Star className="w-3 h-3" /> Bestseller
+          <div className="w-full overflow-hidden relative z-10">
+            <div className="flex overflow-x-auto snap-x snap-mandatory pb-8 px-4 sm:px-12 xl:px-24 gap-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+              {domy.map((dom, index) => {
+                const dotaciaObjem = Math.min(15000, Math.round(dom.zakladna_cena * 0.05));
+                return (
+                  <motion.div 
+                    key={dom.id} 
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.08 }}
+                    className="snap-center sm:snap-start shrink-0 w-[85vw] sm:w-[400px] lg:w-[440px]"
+                  >
+                    <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}`}>
+                      <Card className="bg-slate-900/90 border border-slate-800 hover:border-[#C5A880]/50 overflow-hidden group transition-all duration-500 shadow-2xl rounded-3xl flex flex-col justify-between h-full">
+                        <div>
+                          {/* Image Container */}
+                          <div className="aspect-[16/10] overflow-hidden relative">
+                            <img 
+                              src={optimizeImageUrl(dom.hlavny_obrazok || dom.obrazky?.[0], 700)} 
+                              alt={dom.nazov} 
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 brightness-95" 
+                              loading="lazy"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-90" />
+                            
+                            <div className="absolute top-3 left-3 flex flex-wrap gap-2">
+                              {dom.popularny && (
+                                <span className="bg-amber-500/20 backdrop-blur-md border border-amber-500/40 text-amber-300 text-xs font-extrabold px-3 py-1 rounded-full flex items-center gap-1">
+                                  <Star className="w-3.5 h-3.5 text-amber-400" /> Bestseller
+                                </span>
+                              )}
+                              <span className="bg-emerald-500/20 backdrop-blur-md border border-emerald-500/40 text-emerald-300 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                                ⚡ Štandard A0
+                              </span>
+                            </div>
+
+                            <div className="absolute bottom-3 left-4 right-4">
+                              <h3 className="text-xl sm:text-2xl font-black text-white mb-1 drop-shadow-lg">{dom.nazov}</h3>
+                              <div className="flex flex-wrap gap-2 mt-1">
+                                {dom.zastavana_plocha && (
+                                  <span className="text-xs font-bold bg-slate-900/80 backdrop-blur-md text-slate-200 px-2.5 py-1 rounded-lg border border-white/10">
+                                    {dom.zastavana_plocha} m²
+                                  </span>
+                                )}
+                                {dom.pocet_izieb && (
+                                  <span className="text-xs font-bold bg-slate-900/80 backdrop-blur-md text-slate-200 px-2.5 py-1 rounded-lg border border-white/10">
+                                    {dom.pocet_izieb} izby
+                                  </span>
+                                )}
+                              </div>
+                            </div>
                           </div>
-                        )}
-                        
-                        <div className="absolute bottom-4 left-4 right-4">
-                          <h3 className="text-xl sm:text-2xl font-bold text-white mb-1 drop-shadow-md">{dom.nazov}</h3>
-                          <div className="flex flex-wrap gap-2 mt-2">
-                            {dom.zastavana_plocha && (
-                              <span className="text-xs font-semibold bg-slate-955/60 backdrop-blur-md text-slate-200 px-2 py-1 rounded-md border border-white/10">
-                                {dom.zastavana_plocha} m²
-                              </span>
-                            )}
-                            {dom.pocet_izieb && (
-                              <span className="text-xs font-semibold bg-slate-955/60 backdrop-blur-md text-slate-200 px-2 py-1 rounded-md border border-white/10">
-                                {dom.pocet_izieb} {t('roomsLabel') || 'izby'}
-                              </span>
-                            )}
+
+                          {/* Details & Pricing */}
+                          <div className="p-5">
+                            <div className="flex items-center justify-between mb-3 pb-3 border-b border-slate-800">
+                              <div>
+                                <p className="text-xs text-slate-400 font-medium">Základná cena od</p>
+                                <p className="text-xl font-extrabold text-white">{dom.zakladna_cena?.toLocaleString('sk-SK')} €</p>
+                              </div>
+                              <div className="text-right">
+                                <span className="inline-block text-[11px] font-black px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                                  Dotácia -{dotaciaObjem.toLocaleString('sk-SK')} €
+                                </span>
+                              </div>
+                            </div>
+
+                            <Button className="w-full bg-slate-800 hover:bg-[#C5A880] text-white hover:text-slate-950 font-bold py-3 text-sm rounded-xl transition-all flex items-center justify-center gap-2">
+                              <span>Detail domu a zistiť cenu</span>
+                              <ArrowRight className="w-4 h-4" />
+                            </Button>
                           </div>
                         </div>
-                      </div>
-                      <div className="p-5">
-                        <div className="flex items-center justify-between mb-4">
-                          <div className="text-xs text-slate-500 dark:text-[#6B7A72] transition-colors duration-300">{t('priceFrom')}</div>
-                          <div className="text-xl font-black text-[#2C3A33] transition-colors duration-300">{dom.zakladna_cena?.toLocaleString('sk-SK')} €</div>
-                        </div>
-                        <Button variant="outline" className="w-full border-white/10 hover:bg-slate-50 dark:hover:bg-white hover:text-slate-900 dark:hover:text-slate-950 bg-white/70 dark:bg-transparent text-slate-800 dark:text-white transition-all">
-                          {t('houseDetail')} <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                        </Button>
-                      </div>
-                    </Card>
-                  </Link>
-                </motion.div>
-              ))}
+                      </Card>
+                    </Link>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
-          <div className="container mx-auto px-4 mt-4 sm:hidden">
-            <Link to={createPageUrl("Katalog")} className="flex items-center justify-center gap-2 text-primary hover:text-red-655 font-semibold transition-colors w-full bg-white dark:bg-slate-900/50 py-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm">
-              {t('showAllHouses')} <ArrowRight className="w-5 h-5" />
+
+          <div className="container mx-auto px-4 mt-6 sm:hidden relative z-10">
+            <Link to={createPageUrl("Katalog")} className="flex items-center justify-center gap-2 text-[#E2C799] font-bold w-full bg-slate-900 py-3.5 rounded-xl border border-slate-800 shadow-md">
+              <span>Zobraziť kompletný katalóg domov</span>
+              <ArrowRight className="w-5 h-5" />
             </Link>
           </div>
         </section>
