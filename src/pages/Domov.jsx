@@ -919,11 +919,10 @@ export default function Domov() {
 
 
 
-      {/* Hero Section - Warm architectural with interior video background */}
-      <section className="hero-section relative pt-36 sm:pt-44 lg:pt-56 pb-12 sm:pb-16 overflow-hidden">
+      {/* Hero Section */}
+      <section className="hero-section relative pt-20 lg:pt-28 pb-12 overflow-hidden">
         {/* Scrim pre čitateľnosť nad fixným videom */}
         <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(15,12,9,0.30) 0%, rgba(15,12,9,0.18) 45%, rgba(15,12,9,0.42) 100%)' }} />
-        <div className="container mx-auto px-4 relative z-10">
 
         {/* Ambient background glows - Rich premium gradients */}
         <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] bg-[#C5A880]/10 dark:bg-red-600/15 rounded-full blur-[180px] pointer-events-none" />
@@ -1049,74 +1048,126 @@ export default function Domov() {
                       {house.name}
                     </button>
                   ))}
+                </motion.div>
+              </div>
+            </div>
+
+            {/* Right Column: Interactive Lookbook (Color Swapper) & Floating Tags */}
+            <div className="lg:col-span-6 relative">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="relative bg-gradient-to-br from-white/95 to-slate-50/55 dark:from-slate-900/50 dark:to-slate-950/70 backdrop-blur-2xl border border-slate-200 dark:border-white/15 rounded-3xl p-4 sm:p-6 shadow-[0_20px_50px_rgba(197,168,128,0.06)] dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)] overflow-hidden group transition-colors duration-300"
+              >
+                {/* Lookbook main image wrapper */}
+                <div className="aspect-[4/3] rounded-2xl overflow-hidden relative border border-slate-250 dark:border-white/5 bg-slate-950">
+                  <AnimatePresence>
+                    <motion.img 
+                      key={`${selectedHouseId}-${selectedFacade}`}
+                      src={selectedFacadeImage} 
+                      alt={currentHouseData.name}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.4 }}
+                      className="absolute inset-0 w-full h-full object-cover" 
+                      loading="eager"
+                    />
+                  </AnimatePresence>
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
+                  
+                  {/* Floating Brand Badge */}
+                  <div className="absolute top-4 right-4 z-20">
+                    {getManufacturerBadge(currentHouseData.manufacturer)}
+                  </div>
+                  
+                  {/* Floating stats tag 1 (top-left) - Dynamic delivery time based on manufacturer */}
+                  <motion.div 
+                    animate={{ y: [0, -5, 0] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute top-4 left-4 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border border-slate-200 dark:border-white/15 rounded-xl px-3.5 py-2 flex items-center gap-2 shadow-[0_8px_32px_rgba(0,0,0,0.15)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)] z-20 transition-colors duration-300"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-[#C5A880]/20 flex items-center justify-center border border-[#C5A880]/30">
+                       <Clock className="w-4 h-4 text-[#C5A880]" />
+                    </div>
+                    <div>
+                      <p className="text-[9px] text-slate-505 dark:text-slate-400 font-semibold uppercase tracking-wider">
+                        {currentHouseData.manufacturer?.toLowerCase().includes("ticab") ? t('factoryProduction') : t('turnkeyDelivery')}
+                      </p>
+                      <p className="text-xs font-black text-slate-800 dark:text-white">
+                        {currentHouseData.manufacturer?.toLowerCase().includes("ticab") ? t('sixWeeks') : t('upToTwelveWeeks')}
+                      </p>
+                    </div>
+                  </motion.div>
+
+                  {/* Floating stats tag 2 (bottom-right) */}
+                  <motion.div 
+                    animate={{ y: [0, 5, 0] }}
+                    transition={{ duration: 4, delay: 2, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute bottom-4 right-4 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border border-slate-250 dark:border-white/15 rounded-xl px-3.5 py-2 flex items-center gap-2 shadow-[0_8px_32px_rgba(0,0,0,0.15)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)] z-20 transition-colors duration-300"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center border border-emerald-500/35">
+                      <Star className="w-4 h-4 text-emerald-400 animate-pulse" />
+                    </div>
+                    <div>
+                      <p className="text-[9px] text-slate-505 dark:text-slate-400 font-semibold uppercase tracking-wider">{t('builtArea')}</p>
+                      <p className="text-xs font-black text-emerald-400">{currentHouseData.area} m²</p>
+                    </div>
+                  </motion.div>
                 </div>
 
-                {hasMultipleFacades && (
-                  <div className="mt-4">
-                    <p className="text-[11px] text-[#8B948E] font-semibold mb-2">{t('facade') || 'Fasáda'}</p>
-                    <div className="flex flex-wrap gap-2">
+                {/* Lookbook info & controls */}
+                <div className="mt-4 sm:mt-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <h3 className="text-base sm:text-xl font-bold text-slate-800 dark:text-white leading-tight">{currentHouseData.name}</h3>
+                      <div className="text-xs text-slate-500 dark:text-slate-400 mt-1.5 font-medium flex items-center gap-1.5 flex-wrap">
+                        <span>{currentHouseData.rooms} {t('roomsLabel')}</span>
+                        <span>•</span>
+                        {getManufacturerBadge(currentHouseData.manufacturer)}
+                        <span>•</span>
+                        <span><strong className="text-slate-800 dark:text-white">{t('from')} {currentHouseData.price.toLocaleString()} €</strong></span>
+                      </div>
+                    </div>
+                    <Link to={`${createPageUrl("DetailDomu")}?id=${currentHouseData.id}`}>
+                      <Button variant="ghost" size="sm" className="text-xs text-[#C5A880] hover:text-[#C5A880]/80 p-0 hover:bg-transparent flex items-center gap-1 font-black transition-colors duration-300">
+                        <span>{t('configure')}</span>
+                        <ChevronRight className="w-4 h-4" />
+                      </Button>
+                    </Link>
+                  </div>
+
+                  {/* Facade switcher controls with live thumbnails */}
+                  {hasMultipleFacades && (
+                    <div className="flex flex-col sm:flex-row gap-2">
                       {facadeOptions.map((opt) => (
                         <button
                           key={opt.id}
                           type="button"
                           onClick={() => setSelectedFacade(opt.id)}
-                          className={`px-3.5 py-2 rounded-full border text-xs font-semibold transition-all ${
-                            selectedFacade === opt.id
-                              ? 'border-[#C5A880] bg-[#C5A880]/25 text-[#2C3A33]'
-                              : 'border-[#E0D8CA] text-[#2C3A33] hover:border-[#C5A880] bg-white'
+                          className={`flex-1 p-2 rounded-xl border text-left transition-all duration-300 flex items-center gap-2.5 hover:scale-[1.02] ${
+                            selectedFacade === opt.id 
+                              ? 'bg-[#C5A880]/10 border-[#C5A880] text-[#C5A880] dark:text-white shadow-[0_0_15px_rgba(197,168,128,0.1)]' 
+                              : 'bg-slate-100 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-white/10 hover:border-slate-300 dark:hover:border-white/15'
                           }`}
                         >
-                          {opt.name}
+                          <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 border border-slate-200 dark:border-white/10 bg-slate-950 transition-all duration-300">
+                            <img src={optimizeImageUrl(opt.img, 120)} alt={opt.name} className="w-full h-full object-cover" />
+                          </div>
+                          <div className="min-w-0">
+                            <p className={`text-[11px] leading-tight font-black transition-colors duration-300 ${selectedFacade === opt.id ? 'text-[#C5A880]' : 'text-slate-800 dark:text-slate-200'}`}>{opt.name}</p>
+                            <p className="text-[9px] leading-tight text-slate-505 dark:text-slate-400 mt-0.5 truncate">{opt.desc}</p>
+                          </div>
                         </button>
                       ))}
                     </div>
-                  </div>
-                )}
-
-                <div className="mt-5 pt-4 border-t border-[#E8E1D5]">
-                  <p className="text-[10px] uppercase tracking-widest text-[#8B948E] mb-1">{t('from')}</p>
-                  <div className="flex items-center gap-3 flex-wrap">
-                    <p className="font-['Sora'] text-2xl sm:text-3xl font-bold text-[#2C3A33] leading-none">{currentHouseData.price.toLocaleString('sk-SK')} €</p>
-                    {getManufacturerBadge(currentHouseData.manufacturer)}
-                  </div>
-                  <p className="text-xs text-[#6B7A72] mt-2">
-                    {currentHouseData.name} • {currentHouseData.rooms} {t('roomsLabel')} • {currentHouseData.area} m²
-                  </p>
-                  <p className="text-xs text-[#6B7A72]">
-                    {currentHouseData.manufacturer?.toLowerCase().includes("ticab") ? `${t('factoryProduction')}: ${t('sixWeeks')}` : `${t('turnkeyDelivery')}: ${t('upToTwelveWeeks')}`}
-                  </p>
-                  <Link to={`${createPageUrl("DetailDomu")}?id=${currentHouseData.id}`} className="inline-flex items-center gap-1 text-xs font-bold text-[#9E2A2B] hover:text-[#802021] mt-2 transition-colors">
-                    <span>{t('configure')}</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-
-                <div className="flex flex-col sm:flex-row gap-2.5 mt-5">
-                  <Link to={createPageUrl("Katalog")} className="flex-1">
-                    <Button size="lg" className="w-full bg-[#9E2A2B] hover:bg-[#802021] text-white font-bold text-xs px-4 py-5 rounded-xl flex items-center justify-center gap-2">
-                      <Home className="w-4 h-4" />
-                      <span>{t('viewCatalogButton')}</span>
-                    </Button>
-                  </Link>
-                  <Link to={createPageUrl("Showroom")} className="flex-1">
-                    <Button size="lg" className="w-full bg-white hover:bg-[#F5F1E9] text-[#2C3A33] border border-[#E0D8CA] font-bold text-xs px-4 py-5 rounded-xl flex items-center justify-center gap-2">
-                      <Calendar className="w-4 h-4 text-[#9E2A2B]" />
-                      <span>{t('showroom')}</span>
-                    </Button>
-                  </Link>
-                  <Button
-                    size="lg"
-                    onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))}
-                    className="flex-1 bg-white hover:bg-[#F5F1E9] text-[#2C3A33] border border-[#E0D8CA] font-bold text-xs px-4 py-5 rounded-xl flex items-center justify-center gap-2"
-                  >
-                    <MessageCircle className="w-4 h-4 text-[#9E2A2B]" />
-                    <span>{t('consultationWithKexo')}</span>
-                  </Button>
+                  )}
                 </div>
               </motion.div>
             </div>
-          </div>
 
+          </div>
         </div>
       </section>
 
