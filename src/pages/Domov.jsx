@@ -163,7 +163,7 @@ const dotaciaVerifyT = {
 
 // Social proof translations
 const socialProofT = {
-  sk: { clients: "spokojných rodín", reviews: "overených recenzií", years: "rokov skúseností", quote1: "Dom sme dostali za 4 mesiace. Všetko vybavili za nás – hypotéka, pozemok aj kolaudácia.", name1: "Mária K., Trnava", quote2: "Konečne firma, ktorá drží slovo. Cena ostala rovnaká od začiatku do konca.", name2: "Peter S., Žilina" },
+  sk: { clients: "spokojných rodín", reviews: "overených recenzií", years: "rokov skúseností", quote1: "Dom sme dostali do 3 mesiacov. Všetko vybavili za nás – hypotéka, pozemok aj kolaudácia.", name1: "Mária K., Trnava", quote2: "Konečne firma, ktorá drží slovo. Cena ostala rovnaká od začiatku do konca.", name2: "Peter S., Žilina" },
   en: { clients: "happy families", reviews: "verified reviews", years: "years of experience", quote1: "We received our house in 4 months. They handled everything – mortgage, land and final approval.", name1: "Maria K., Trnava", quote2: "Finally a company that keeps its word. The price stayed the same from start to finish.", name2: "Peter S., Zilina" },
   de: { clients: "zufriedene Familien", reviews: "verifizierte Bewertungen", years: "Jahre Erfahrung", quote1: "Wir erhielten unser Haus in 4 Monaten. Sie erledigten alles – Hypothek, Grundstück und Abnahme.", name1: "Maria K., Trnava", quote2: "Endlich eine Firma, die ihr Wort hält. Der Preis blieb von Anfang bis Ende gleich.", name2: "Peter S., Zilina" },
   fr: { clients: "familles satisfaites", reviews: "avis vérifiés", years: "ans d'expérience", quote1: "Nous avons reçu notre maison en 4 mois. Ils ont tout géré – hypothèque, terrain et réception.", name1: "Maria K., Trnava", quote2: "Enfin une entreprise qui tient sa parole. Le prix est resté le même du début à la fin.", name2: "Peter S., Zilina" },
@@ -909,7 +909,7 @@ export default function Domov() {
         <div className="container mx-auto px-4 relative z-10">
 
           {/* Centered intro */}
-          <div className="max-w-4xl mx-auto text-center">
+          <div className="max-w-4xl mx-auto text-center p-6 sm:p-8 rounded-3xl backdrop-blur-sm bg-black/25 border border-white/10 shadow-2xl">
             <div className="flex items-center justify-center gap-3 mb-5 flex-wrap">
               <motion.img
                 initial={{ opacity: 0, scale: 0.8 }}
