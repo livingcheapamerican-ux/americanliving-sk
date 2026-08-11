@@ -52,9 +52,8 @@ function CatalogPhotoBackground() {
         decoding="async"
         fetchpriority="low"
         className="w-full h-full object-cover"
-        style={{ filter: dark ? 'brightness(0.4) contrast(1.05)' : 'brightness(1) contrast(1.02)' }}
+        style={{ filter: dark ? 'brightness(0.5)' : 'none' }}
       />
-      <div className="absolute inset-0 bg-[#FAF8F5]/60 dark:bg-[#050508]/70" />
     </div>
   );
 }
