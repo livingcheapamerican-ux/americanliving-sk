@@ -41,8 +41,8 @@ function CatalogPhotoBackground() {
     return () => observer.disconnect();
   }, []);
 
-  const lightImage = "https://media.base44.com/images/public/6916d89a485af231beb54c71/12d241e4e_generated_image.png";
-  const darkImage = "https://media.base44.com/images/public/6916d89a485af231beb54c71/dd85228b8_generated_image.png";
+  const lightImage = "https://media.base44.com/images/public/6916d89a485af231beb54c71/fd519fceb_generated_image.png";
+  const darkImage = "https://media.base44.com/images/public/6916d89a485af231beb54c71/7e733f1dc_generated_image.png";
 
   return (
     <div className="fixed inset-0 w-full h-full overflow-hidden bg-[#FAF8F5] dark:bg-[#050508] z-0 pointer-events-none select-none">
