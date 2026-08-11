@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
 import { ArrowRight, CheckCircle, Zap, Plus, Trash2, Eye, EyeOff, Package, Gift, MoreVertical } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import DomCardGallery from "./DomCardGallery";
@@ -18,12 +17,7 @@ const DomCard = memo(({
   const cenaSDotaciou = jeTicab ? Math.round(dom.zakladna_cena * 0.95) : null;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: Math.min(index, 8) * 0.04 }}
-      className="h-full"
-    >
+    <div className="h-full">
       <Card className={`group overflow-hidden hover:shadow-lg hover:border-primary/40 transition-all duration-300 bg-card border-border flex flex-col h-full ${jeVybrany ? 'ring-2 ring-primary' : ''} ${dom.verejny === false ? 'opacity-60' : ''}`}>
         {/* Fotka + prepínač dizajnu */}
         <div className="relative overflow-hidden aspect-[4/3]">
@@ -154,7 +148,7 @@ const DomCard = memo(({
           </div>
         </div>
       </Card>
-    </motion.div>
+    </div>
   );
 });
 

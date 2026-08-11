@@ -165,7 +165,7 @@ export default function ImageWithWatermark({
         ref={imgRef}
         src={displaySrc}
         alt={alt}
-        className={`${className} ${loaded ? "opacity-100" : "opacity-0"} transition-opacity duration-300 select-none pointer-events-none`}
+        className={`${className} select-none pointer-events-none`}
         onLoad={handleLoad}
         onError={() => {
           if (!useOriginal && optimizedSrc !== src) setUseOriginal(true);
