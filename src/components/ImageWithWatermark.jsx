@@ -51,6 +51,27 @@ export function optimizeImageUrl(src, width = 800) {
   return src;
 }
 
+// ─── Trvalá cache fotiek (Supabase posiela no-cache, prehliadač by ich inak sťahoval znova) ───
+const memoryCache = new Map(); // url -> objectURL
+
+async function getCachedImageUrl(src) {
+  if (memoryCache.has(src)) return memoryCache.get(src);
+  const cache = await caches.open("al-img-v1");
+  let res = await cache.match(src);
+  if (!res) {
+    res = await fetch(src);
+    if (!res.ok) throw new Error("fetch failed");
+    await cache.put(src, res.clone());
+  }
+  const objectUrl = URL.createObjectURL(await res.blob());
+  memoryCache.set(src, objectUrl);
+  return objectUrl;
+}
+
+function isCacheable(url) {
+  return !!url && typeof window !== "undefined" && "caches" in window && url.includes("supabase.co/storage");
+}
+
 // ─── Component ───────────────────────────────────────────────────────────────
 export default function ImageWithWatermark({
   src,
@@ -117,6 +138,27 @@ export default function ImageWithWatermark({
 
   const optimizedSrc = useOriginal ? src : optimizeImageUrl(src, optimizeWidth);
 
+  // Fotku servírujeme z trvalej cache – po prvom načítaní sa už nikdy nesťahuje znova
+  const [displaySrc, setDisplaySrc] = React.useState(() =>
+    isCacheable(optimizedSrc) ? memoryCache.get(optimizedSrc) || null : optimizedSrc
+  );
+
+  React.useEffect(() => {
+    if (!isCacheable(optimizedSrc)) {
+      setDisplaySrc(optimizedSrc);
+      return;
+    }
+    if (memoryCache.has(optimizedSrc)) {
+      setDisplaySrc(memoryCache.get(optimizedSrc));
+      return;
+    }
+    let alive = true;
+    getCachedImageUrl(optimizedSrc)
+      .then((u) => { if (alive) setDisplaySrc(u); })
+      .catch(() => { if (alive) setDisplaySrc(optimizedSrc); });
+    return () => { alive = false; };
+  }, [optimizedSrc]);
+
   const handleLoad = (e) => {
     setLoaded(true);
     if (onLoad) onLoad(e);
@@ -149,9 +191,10 @@ export default function ImageWithWatermark({
         <div className="absolute inset-0 bg-gray-200 animate-pulse" />
       )}
 
+      {displaySrc && (
       <img
         ref={imgRef}
-        src={optimizedSrc}
+        src={displaySrc}
         alt={alt}
         className={`${className} ${loaded ? "opacity-100" : "opacity-0"} transition-opacity duration-300 select-none pointer-events-none`}
         onLoad={handleLoad}
@@ -177,6 +220,7 @@ export default function ImageWithWatermark({
         }}
         {...props}
       />
+      )}
 
       {enabled && loaded && (
         <div
