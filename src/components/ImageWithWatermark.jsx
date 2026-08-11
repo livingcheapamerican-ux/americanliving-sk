@@ -68,6 +68,13 @@ export default function ImageWithWatermark({
   const [loaded, setLoaded] = React.useState(false);
   const [error, setError] = React.useState(false);
   const [useOriginal, setUseOriginal] = React.useState(false);
+  const imgRef = React.useRef(null);
+
+  // Ak je obrázok už v cache, onLoad sa nemusí spustiť – skontroluj priamo
+  React.useEffect(() => {
+    const img = imgRef.current;
+    if (img && img.complete && img.naturalWidth > 0) setLoaded(true);
+  });
 
   const { data: settings } = useQuery({
     queryKey: ["site-settings-watermark"],
@@ -143,6 +150,7 @@ export default function ImageWithWatermark({
       )}
 
       <img
+        ref={imgRef}
         src={optimizedSrc}
         alt={alt}
         className={`${className} ${loaded ? "opacity-100" : "opacity-0"} transition-opacity duration-300 select-none pointer-events-none`}

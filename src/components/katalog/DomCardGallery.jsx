@@ -40,7 +40,7 @@ export default function DomCardGallery({ dom, dizajnFilter, priority }) {
         className={`w-full h-full ${aktivny === "podorys3d" ? "object-contain bg-white" : "object-cover"} group-hover:scale-105 transition-transform duration-700 ease-out`}
         useCatalogSetting={true}
         priority={priority}
-        loading={priority ? "eager" : "lazy"}
+        loading="eager"
         optimizeWidth={400}
         width={400}
         height={300}
