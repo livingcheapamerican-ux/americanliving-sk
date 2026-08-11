@@ -48,7 +48,7 @@ const DomCard = memo(({
                 <PopoverTrigger asChild>
                   <button
                     title="Správa domu"
-                    className="w-7 h-7 rounded-md flex items-center justify-center bg-slate-900/80 backdrop-blur-sm text-white hover:bg-slate-800 transition-all shadow"
+                    className="w-7 h-7 rounded-md flex items-center justify-center bg-slate-900 text-white hover:bg-slate-800 transition-all shadow"
                   >
                     <MoreVertical className="w-3.5 h-3.5" />
                   </button>
@@ -77,10 +77,10 @@ const DomCard = memo(({
               onClick={() => toggleSrovnanie(dom)}
               disabled={!jeVybrany && vybraneNaSrovnanie.length >= 3}
               title={jeVybrany ? t('cancelSelection') : t('compareHouses')}
-              className={`w-7 h-7 rounded-md flex items-center justify-center backdrop-blur-sm transition-all shadow ${
+              className={`w-7 h-7 rounded-md flex items-center justify-center transition-all shadow ${
                 jeVybrany
                   ? 'bg-primary text-white'
-                  : 'bg-white/90 dark:bg-slate-900/90 text-slate-900 dark:text-slate-100 hover:bg-primary hover:text-white'
+                  : 'bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 hover:bg-primary hover:text-white'
               } ${!jeVybrany && vybraneNaSrovnanie.length >= 3 ? 'opacity-40 cursor-not-allowed' : ''}`}
             >
               <Plus className={`w-3.5 h-3.5 transition-transform ${jeVybrany ? 'rotate-45' : ''}`} />

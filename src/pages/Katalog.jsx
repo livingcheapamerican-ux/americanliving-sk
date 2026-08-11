@@ -380,9 +380,8 @@ export default function Katalog() {
   };
 
   return (
-    <div className="min-h-screen bg-transparent text-foreground overflow-x-hidden max-w-full font-['Outfit'] relative">
-      <CatalogPhotoBackground />
-      <div className="fixed-bg-content relative z-10">
+    <div className="min-h-screen bg-background text-foreground overflow-x-hidden max-w-full font-['Outfit'] relative">
+      <div className="relative z-10">
         <Helmet>
           <title>{metaTitle}</title>
           <meta name="description" content={metaDescription} />
@@ -398,7 +397,7 @@ export default function Katalog() {
           </script>
         </Helmet>
         {/* Header */}
-        <div className="bg-slate-900/5 dark:bg-slate-900/40 backdrop-blur-md border-b border-border/60 pt-28 sm:pt-36 lg:pt-40 pb-8 sm:pb-12 relative z-10">
+        <div className="bg-muted/40 dark:bg-slate-900/40 border-b border-border/60 pt-28 sm:pt-36 lg:pt-40 pb-8 sm:pb-12 relative z-10">
           <div className="container mx-auto px-4">
             <div className="flex flex-col gap-4 lg:gap-8 lg:flex-row lg:items-center">
               {/* Ľavá časť - Hlavný nadpis a popis */}
@@ -410,7 +409,7 @@ export default function Katalog() {
                   {t('houseCatalog')}
                 </h1>
                 <div className="mt-2">
-                  <p className="inline-block text-slate-800 dark:text-slate-200 text-sm sm:text-lg font-normal leading-relaxed bg-white/90 dark:bg-slate-900/90 border border-slate-200/85 dark:border-white/10 px-5 py-2.5 rounded-2xl shadow-md backdrop-blur-md transition-colors duration-300">
+                  <p className="inline-block text-slate-800 dark:text-slate-200 text-sm sm:text-lg font-normal leading-relaxed bg-white dark:bg-slate-900 border border-slate-200/85 dark:border-white/10 px-5 py-2.5 rounded-2xl shadow-md transition-colors duration-300">
                     {t('modularAndMobileHouses')}
                   </p>
                 </div>
@@ -458,7 +457,7 @@ export default function Katalog() {
       <div className="container mx-auto px-2 sm:px-4 py-6 sm:py-12 max-w-full overflow-hidden">
         {/* Tabs pre kategórie */}
         <Tabs value={kategoriaFilter} onValueChange={setKategoriaFilter} className="mb-4 sm:mb-6">
-          <TabsList className={`grid w-full max-w-xl mx-auto h-10 sm:h-12 bg-card/50 backdrop-blur-xl border border-border rounded-full p-1 shadow-xl ${canManage ? 'grid-cols-4' : 'grid-cols-3'}`}>
+          <TabsList className={`grid w-full max-w-xl mx-auto h-10 sm:h-12 bg-card border border-border rounded-full p-1 shadow-xl ${canManage ? 'grid-cols-4' : 'grid-cols-3'}`}>
             <TabsTrigger value="vsetky" className="catalog-tab text-xs sm:text-sm rounded-full transition-all duration-300">{t('all')} ({verejneDomy.length})</TabsTrigger>
             <TabsTrigger value="rodinne_domy" className="catalog-tab text-xs sm:text-sm rounded-full transition-all duration-300">{t('familyHouses')} ({rodinneDomy.length})</TabsTrigger>
             <TabsTrigger value="mobilne_domy" className="catalog-tab text-xs sm:text-sm rounded-full transition-all duration-300">{t('mobileHouses')} ({mobilneDomy.length})</TabsTrigger>
@@ -474,13 +473,11 @@ export default function Katalog() {
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             className="lg:w-72 flex-shrink-0 relative w-full">
-            <div className="absolute inset-0 bg-primary/5 dark:bg-red-600/10 blur-[50px] pointer-events-none rounded-full" />
-
             {/* Mobilné tlačidlo na otvorenie filtrov */}
             <Button
               variant="outline"
               onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
-              className="lg:hidden w-full justify-between h-11 mb-2 bg-card/90 backdrop-blur-xl font-bold"
+              className="lg:hidden w-full justify-between h-11 mb-2 bg-card font-bold"
             >
               <span className="flex items-center gap-2">
                 <SlidersHorizontal className="w-4 h-4 text-primary" />
