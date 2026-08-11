@@ -1,14 +1,23 @@
 import React, { useState } from "react";
+import { optimizeImageUrl } from "../ImageWithWatermark";
 
 function SafeImg({ src, alt }) {
   const [failed, setFailed] = useState(false);
+  const [useOriginal, setUseOriginal] = useState(false);
   if (!src || failed) return null;
+
+  const optimized = useOriginal ? src : optimizeImageUrl(src, 800);
+
   return (
     <img
-      src={src}
+      src={optimized}
       alt={alt}
       loading="lazy"
-      onError={() => setFailed(true)}
+      decoding="async"
+      onError={() => {
+        if (!useOriginal) setUseOriginal(true);
+        else setFailed(true);
+      }}
       className="w-full h-64 object-cover"
     />
   );

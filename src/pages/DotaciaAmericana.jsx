@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import DotaciaBackgroundVideo from "../components/dotacia/DotaciaBackgroundVideo";
 import DomFotoPair from "../components/dotacia/DomFotoPair";
+import { optimizeImageUrl } from "../components/ImageWithWatermark";
 
 
 const dotaciaLocalT = {
@@ -356,8 +357,9 @@ export default function DotaciaAmericana() {
                 {/* Animated Photo Container */}
                 <div className="relative aspect-[16/10] rounded-2xl overflow-hidden mb-6 border border-emerald-500/30">
                   <motion.img
-                    src={heroSettings?.rodina_fotky?.[0] || "https://images.unsplash.com/photo-1560518883-ff514cd811de?w=1000&q=80"}
+                    src={optimizeImageUrl(heroSettings?.rodina_fotky?.[0] || "https://images.unsplash.com/photo-1560518883-ff514cd811de?w=1000&q=80", 1000)}
                     alt="Rodinný modulárny dom American Living"
+                    decoding="async"
                     animate={{ scale: [1, 1.06, 1] }}
                     transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
                     className="w-full h-full object-cover"
@@ -409,8 +411,9 @@ export default function DotaciaAmericana() {
                 {/* Animated Photo Container */}
                 <div className="relative aspect-[16/10] rounded-2xl overflow-hidden mb-6 border border-amber-500/30">
                   <motion.img
-                    src={heroSettings?.investor_fotky?.[0] || "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1000&q=80"}
+                    src={optimizeImageUrl(heroSettings?.investor_fotky?.[0] || "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1000&q=80", 1000)}
                     alt="Investičný modulárny dom American Living"
+                    decoding="async"
                     animate={{ scale: [1, 1.06, 1] }}
                     transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay: 2 }}
                     className="w-full h-full object-cover"
@@ -549,8 +552,10 @@ export default function DotaciaAmericana() {
                         #{index + 1}
                       </div>
                       <img
-                        src={url}
+                        src={optimizeImageUrl(url, 400)}
                         alt={`Fotka ${index + 1}`}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-40 object-cover rounded-lg"
                       />
                       <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -614,13 +619,17 @@ export default function DotaciaAmericana() {
                     <h3 className="text-xl font-bold text-foreground mb-4">Váš vybraný dom</h3>
                     <div className="grid grid-cols-2 gap-4 mb-4">
                       <img 
-                        src={successData.house.hlavny_obrazok} 
+                        src={optimizeImageUrl(successData.house.hlavny_obrazok, 800)}
+                        loading="lazy"
+                        decoding="async" 
                         alt={`${successData.house.nazov} - vybraný dom s dotáciou American Living`}
                         className="w-full h-48 object-cover rounded-lg"
                       />
                       {successData.house.zakladna_konfiguracia_obrazok && (
                         <img 
-                          src={successData.house.zakladna_konfiguracia_obrazok} 
+                          src={optimizeImageUrl(successData.house.zakladna_konfiguracia_obrazok, 800)}
+                          loading="lazy"
+                          decoding="async" 
                           alt={`${successData.house.nazov} - základná konfigurácia`}
                           className="w-full h-48 object-cover rounded-lg"
                         />

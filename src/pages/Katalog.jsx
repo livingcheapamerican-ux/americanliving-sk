@@ -41,14 +41,16 @@ function CatalogPhotoBackground() {
     return () => observer.disconnect();
   }, []);
 
-  const lightImage = "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1920&q=80"; // Yosemite valley
-  const darkImage = "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1920&q=80";  // Starry mountains night
+  const lightImage = "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1920&q=80&fm=webp&auto=format"; // Yosemite valley
+  const darkImage = "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1920&q=80&fm=webp&auto=format";  // Starry mountains night
 
   return (
     <div className="fixed inset-0 w-full h-full overflow-hidden bg-[#FAF8F5] dark:bg-[#050508] z-0 pointer-events-none select-none">
       <img
         src={dark ? darkImage : lightImage}
         alt="Catalog background"
+        decoding="async"
+        fetchpriority="low"
         className="w-full h-full object-cover animate-ken-burns transition-all duration-1000 ease-in-out scale-105"
         style={{ filter: dark ? 'brightness(0.35) contrast(1.1)' : 'brightness(0.95) contrast(1.02)' }}
       />

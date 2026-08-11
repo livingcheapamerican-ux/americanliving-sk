@@ -67,6 +67,7 @@ export default function ImageWithWatermark({
 }) {
   const [loaded, setLoaded] = React.useState(false);
   const [error, setError] = React.useState(false);
+  const [useOriginal, setUseOriginal] = React.useState(false);
 
   const { data: settings } = useQuery({
     queryKey: ["site-settings-watermark"],
@@ -107,7 +108,7 @@ export default function ImageWithWatermark({
     xxlarge: "text-4xl",
   };
 
-  const optimizedSrc = optimizeImageUrl(src, optimizeWidth);
+  const optimizedSrc = useOriginal ? src : optimizeImageUrl(src, optimizeWidth);
 
   const handleLoad = (e) => {
     setLoaded(true);
@@ -146,7 +147,10 @@ export default function ImageWithWatermark({
         alt={alt}
         className={`${className} ${loaded ? "opacity-100" : "opacity-0"} transition-opacity duration-300 select-none pointer-events-none`}
         onLoad={handleLoad}
-        onError={() => setError(true)}
+        onError={() => {
+          if (!useOriginal && optimizedSrc !== src) setUseOriginal(true);
+          else setError(true);
+        }}
         loading={loadingAttr}
         fetchpriority={fetchPriorityAttr}
         decoding={priority ? "sync" : "async"}
