@@ -51,7 +51,7 @@ function CatalogPhotoBackground() {
         alt="Catalog background"
         decoding="async"
         fetchpriority="low"
-        className="w-full h-full object-cover animate-ken-burns transition-all duration-1000 ease-in-out scale-105"
+        className="w-full h-full object-cover scale-105"
         style={{ filter: dark ? 'brightness(0.35) contrast(1.1)' : 'brightness(0.95) contrast(1.02)' }}
       />
     </div>
@@ -489,7 +489,7 @@ export default function Katalog() {
               {mobileFiltersOpen ? <X className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
             </Button>
 
-            <Card className={`${mobileFiltersOpen ? 'block' : 'hidden'} lg:block p-3 sm:p-5 lg:sticky lg:top-24 shadow-xl bg-card/85 backdrop-blur-2xl border-border max-w-full overflow-hidden relative z-10`}>
+            <Card className={`${mobileFiltersOpen ? 'block' : 'hidden'} lg:block p-3 sm:p-5 lg:sticky lg:top-24 shadow-xl bg-card border-border max-w-full overflow-hidden relative z-10`}>
               <div className="hidden lg:flex items-center gap-2 mb-3 sm:mb-4">
                 <Filter className="w-4 h-4 text-primary" />
                 <h2 className="text-base sm:text-lg font-bold text-foreground">{t('filters')}</h2>
@@ -848,7 +848,7 @@ export default function Katalog() {
           {/* Domy Grid */}
           <div className="flex-grow w-full max-w-full overflow-hidden">
             {/* Lišta nad výsledkami: počet, dizajn fotiek, zoradenie */}
-            <Card className="mb-4 p-2 sm:p-3 bg-card/90 backdrop-blur-xl border-border shadow-sm">
+            <Card className="mb-4 p-2 sm:p-3 bg-card border-border shadow-sm">
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                 <p className="text-xs sm:text-sm font-bold text-foreground shrink-0">
                   <span className="text-primary">{zoradeneDomy.length}</span> {t('houses')}
@@ -947,11 +947,7 @@ export default function Katalog() {
                     <ProstoHouseMarketing />
                   </div>
                 )}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1.5 sm:gap-4 w-full max-w-full"
-                >
+                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1.5 sm:gap-4 w-full max-w-full">
                   {zoradeneDomy.map((dom, index) => {
                     const jeVybrany = vybraneNaSrovnanie.find((d) => d.id === dom.id);
                     return (
@@ -975,7 +971,7 @@ export default function Katalog() {
                       />
                     );
                   })}
-                </motion.div>
+                </div>
               </>
             ) : (
 
