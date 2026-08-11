@@ -41,19 +41,20 @@ function CatalogPhotoBackground() {
     return () => observer.disconnect();
   }, []);
 
-  const lightImage = "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1920&q=80&fm=webp&auto=format"; // Yosemite valley
-  const darkImage = "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1920&q=80&fm=webp&auto=format";  // Starry mountains night
+  const lightImage = "https://media.base44.com/images/public/6916d89a485af231beb54c71/12d241e4e_generated_image.png";
+  const darkImage = "https://media.base44.com/images/public/6916d89a485af231beb54c71/dd85228b8_generated_image.png";
 
   return (
     <div className="fixed inset-0 w-full h-full overflow-hidden bg-[#FAF8F5] dark:bg-[#050508] z-0 pointer-events-none select-none">
       <img
         src={dark ? darkImage : lightImage}
-        alt="Catalog background"
+        alt="Moderná ulica s domami z nášho katalógu"
         decoding="async"
         fetchpriority="low"
-        className="w-full h-full object-cover scale-105"
-        style={{ filter: dark ? 'brightness(0.35) contrast(1.1)' : 'brightness(0.95) contrast(1.02)' }}
+        className="w-full h-full object-cover"
+        style={{ filter: dark ? 'brightness(0.4) contrast(1.05)' : 'brightness(1) contrast(1.02)' }}
       />
+      <div className="absolute inset-0 bg-[#FAF8F5]/60 dark:bg-[#050508]/70" />
     </div>
   );
 }
@@ -380,8 +381,9 @@ export default function Katalog() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden max-w-full font-['Outfit'] relative">
-      <div className="relative z-10">
+    <div className="min-h-screen bg-transparent text-foreground overflow-x-hidden max-w-full font-['Outfit'] relative">
+      <CatalogPhotoBackground />
+      <div className="fixed-bg-content relative z-10">
         <Helmet>
           <title>{metaTitle}</title>
           <meta name="description" content={metaDescription} />
