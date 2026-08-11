@@ -53,6 +53,7 @@ export function optimizeImageUrl(src, width = 800) {
 
 // ─── Trvalá cache fotiek (Supabase posiela no-cache, prehliadač by ich inak sťahoval znova) ───
 const memoryCache = new Map(); // url -> objectURL
+const loadedUrls = new Set(); // už raz zobrazené fotky – pri prekreslení sa neblikne placeholder
 
 async function getCachedImageUrl(src) {
   if (memoryCache.has(src)) return memoryCache.get(src);
@@ -86,16 +87,9 @@ export default function ImageWithWatermark({
   id,
   ...props
 }) {
-  const [loaded, setLoaded] = React.useState(false);
   const [error, setError] = React.useState(false);
   const [useOriginal, setUseOriginal] = React.useState(false);
   const imgRef = React.useRef(null);
-
-  // Ak je obrázok už v cache, onLoad sa nemusí spustiť – skontroluj priamo
-  React.useEffect(() => {
-    const img = imgRef.current;
-    if (img && img.complete && img.naturalWidth > 0) setLoaded(true);
-  });
 
   const { data: settings } = useQuery({
     queryKey: ["site-settings-watermark"],
@@ -143,6 +137,18 @@ export default function ImageWithWatermark({
     isCacheable(optimizedSrc) ? memoryCache.get(optimizedSrc) || null : optimizedSrc
   );
 
+  // Ak sme fotku už raz zobrazili, ukáž ju hneď – žiadny placeholder ani fade
+  const [loaded, setLoaded] = React.useState(() => loadedUrls.has(optimizedSrc));
+
+  React.useEffect(() => {
+    if (loadedUrls.has(optimizedSrc)) setLoaded(true);
+    const img = imgRef.current;
+    if (img && img.complete && img.naturalWidth > 0) {
+      loadedUrls.add(optimizedSrc);
+      setLoaded(true);
+    }
+  }, [optimizedSrc]);
+
   React.useEffect(() => {
     if (!isCacheable(optimizedSrc)) {
       setDisplaySrc(optimizedSrc);
@@ -160,6 +166,7 @@ export default function ImageWithWatermark({
   }, [optimizedSrc]);
 
   const handleLoad = (e) => {
+    loadedUrls.add(optimizedSrc);
     setLoaded(true);
     if (onLoad) onLoad(e);
   };
