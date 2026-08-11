@@ -51,27 +51,8 @@ export function optimizeImageUrl(src, width = 800) {
   return src;
 }
 
-// ─── Trvalá cache fotiek (Supabase posiela no-cache, prehliadač by ich inak sťahoval znova) ───
-const memoryCache = new Map(); // url -> objectURL
-const loadedUrls = new Set(); // už raz zobrazené fotky – pri prekreslení sa neblikne placeholder
-
-async function getCachedImageUrl(src) {
-  if (memoryCache.has(src)) return memoryCache.get(src);
-  const cache = await caches.open("al-img-v1");
-  let res = await cache.match(src);
-  if (!res) {
-    res = await fetch(src);
-    if (!res.ok) throw new Error("fetch failed");
-    await cache.put(src, res.clone());
-  }
-  const objectUrl = URL.createObjectURL(await res.blob());
-  memoryCache.set(src, objectUrl);
-  return objectUrl;
-}
-
-function isCacheable(url) {
-  return !!url && typeof window !== "undefined" && "caches" in window && url.includes("supabase.co/storage");
-}
+// Už raz zobrazené fotky – pri prekreslení sa neblikne placeholder
+const loadedUrls = new Set();
 
 // ─── Component ───────────────────────────────────────────────────────────────
 export default function ImageWithWatermark({
@@ -132,10 +113,7 @@ export default function ImageWithWatermark({
 
   const optimizedSrc = useOriginal ? src : optimizeImageUrl(src, optimizeWidth);
 
-  // Fotku servírujeme z trvalej cache – po prvom načítaní sa už nikdy nesťahuje znova
-  const [displaySrc, setDisplaySrc] = React.useState(() =>
-    isCacheable(optimizedSrc) ? memoryCache.get(optimizedSrc) || null : optimizedSrc
-  );
+  const displaySrc = optimizedSrc;
 
   // Ak sme fotku už raz zobrazili, ukáž ju hneď – žiadny placeholder ani fade
   const [loaded, setLoaded] = React.useState(() => loadedUrls.has(optimizedSrc));
@@ -147,22 +125,6 @@ export default function ImageWithWatermark({
       loadedUrls.add(optimizedSrc);
       setLoaded(true);
     }
-  }, [optimizedSrc]);
-
-  React.useEffect(() => {
-    if (!isCacheable(optimizedSrc)) {
-      setDisplaySrc(optimizedSrc);
-      return;
-    }
-    if (memoryCache.has(optimizedSrc)) {
-      setDisplaySrc(memoryCache.get(optimizedSrc));
-      return;
-    }
-    let alive = true;
-    getCachedImageUrl(optimizedSrc)
-      .then((u) => { if (alive) setDisplaySrc(u); })
-      .catch(() => { if (alive) setDisplaySrc(optimizedSrc); });
-    return () => { alive = false; };
   }, [optimizedSrc]);
 
   const handleLoad = (e) => {
