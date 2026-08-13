@@ -526,6 +526,10 @@ function LayoutContent({ children }) {
                   <p className="px-4 py-1 text-[11px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1">Admin</p>
                   <div className="space-y-1">
                     {isSuperAdmin && <>
+                      <Link to="/admin-dopyty" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-4 px-4 py-3.5 rounded-2xl font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 transition-all min-h-[56px]">
+                        <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/5 flex items-center justify-center flex-shrink-0"><Mail className="w-4 h-4" /></div>
+                        📥 Žiadosti a dopyty
+                      </Link>
                       <Link to={createPageUrl("AdminAnalyzaDomov")} onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-4 px-4 py-3.5 rounded-2xl font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 transition-all min-h-[56px]">
                         <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/5 flex items-center justify-center flex-shrink-0"><Brain className="w-4 h-4" /></div>
                         {t('adminAIAnalysis')}

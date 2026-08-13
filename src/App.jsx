@@ -58,6 +58,11 @@ const AdminInzeratyPage = () => {
   return <LazyComp />;
 };
 
+const AdminDopytyPage = () => {
+  const LazyComp = getLazyPage('AdminDopyty');
+  return <LazyComp />;
+};
+
 const OdhadCenyPage = () => {
   const LazyComp = getLazyPage('OdhadCeny');
   return <LazyComp />;
@@ -124,6 +129,7 @@ const AuthenticatedApp = () => {
         <Route path="/moje-inzeraty" element={<MojeInzeratyPage />} />
         <Route path="/pridat-inzerat" element={<PridatInzeratPage />} />
         <Route path="/admin-inzeraty" element={<AdminInzeratyPage />} />
+        <Route path="/admin-dopyty" element={<AdminDopytyPage />} />
         <Route path="/lokalita/:slug" element={<LokaciaDetail />} />
         <Route path="/blog/:slug" element={<BlogDetail />} />
         <Route path="/moje-konto" element={<MojeKonto />} caseSensitive />
