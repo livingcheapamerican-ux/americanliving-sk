@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { Settings, FileText, Image, Brain, Upload, Sparkles, Languages, Activity, Zap, Users, Gift } from "lucide-react";
+import { Settings, FileText, Image, Brain, Upload, Sparkles, Languages, Activity, Zap, Users, Gift, Inbox } from "lucide-react";
 
 const ADMIN_LINKS = [
+  { page: "AdminDopyty", path: "/admin-dopyty", label: "Žiadosti a dopyty", icon: Inbox },
   { page: "AdminCennik", label: "Cenník Admin", icon: FileText },
   { page: "MojeKonto", label: "Moje Konto", icon: Users },
   { page: "Marketing", label: "Marketing", icon: Activity },
@@ -56,10 +57,10 @@ export default function AdminQuickLinks({ isAdmin, isSuperAdmin }) {
         <PopoverContent align="end" className="w-64 p-2 max-h-[70vh] overflow-y-auto">
           <p className="px-2 py-1 text-[11px] font-bold uppercase tracking-widest text-slate-400">Admin</p>
           <div className="grid gap-0.5">
-            {links.map(({ page, label, icon: Icon }) => (
+            {links.map(({ page, path, label, icon: Icon }) => (
               <Link
                 key={page}
-                to={createPageUrl(page)}
+                to={path || createPageUrl(page)}
                 className="flex items-center gap-2.5 px-2.5 py-2 rounded-md text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/10"
               >
                 <Icon className="w-4 h-4 text-primary shrink-0" />
