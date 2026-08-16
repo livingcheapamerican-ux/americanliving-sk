@@ -35,6 +35,7 @@ import { useLanguage } from "../components/LanguageContext";
 import TranslatedDescription from "../components/TranslatedDescription";
 import ShellInfoBox from "../components/ShellInfoBox";
 import DOMPurify from 'dompurify';
+import { prostoHouseTranslations } from "../components/translations/ProstoHouseTranslations";
 import Barn48InteractiveSection from "../components/3d/Barn48InteractiveSection";
 import ProstoHouseMarketing from "../components/ProstoHouseMarketing";
 import TicabhouseMarketing from "../components/TicabhouseMarketing";
