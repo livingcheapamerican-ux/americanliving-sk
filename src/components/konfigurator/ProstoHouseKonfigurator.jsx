@@ -1078,12 +1078,17 @@ Môžeš mi k tejto konfigurácii niečo odporučiť, vysvetliť zateplenie pre 
                 </div>
               </div>
               
-              {/* Galéria na záver */}
+              {/* Galéria a 3D Model na záver */}
               {effectiveDom && (
                 <div className="mb-12">
                   <BigSectionHeader title={t('sectionGalleryPlans')} description={t('sectionGalleryPlansDesc')} icon={Eye} />
                   <div className="bg-white dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 p-6 rounded-3xl backdrop-blur-md shadow-sm dark:shadow-none">
-                    <KonfiguratorGaleria dom={effectiveDom} facadeIdx={facadeIdx} interiorIdx={interiorIdx} />
+                    <KonfiguratorGaleria 
+                      dom={effectiveDom} 
+                      facadeIdx={facadeIdx} 
+                      interiorIdx={interiorIdx} 
+                      extensionLength={extensionIdx === 1 ? 1.2 : extensionIdx === 2 ? 2.4 : extensionIdx === 3 ? 3.6 : extensionIdx === 4 ? 4.8 : 0}
+                    />
                   </div>
                 </div>
               )}

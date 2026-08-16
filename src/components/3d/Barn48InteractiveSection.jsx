@@ -1,0 +1,134 @@
+import React, { useState } from 'react';
+import House3DViewer from './House3DViewer';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { 
+  Sparkles, 
+  Rotate3d, 
+  Layers, 
+  ArrowRight, 
+  CheckCircle2, 
+  ShieldCheck, 
+  Zap, 
+  Home,
+  Clock,
+  Euro
+} from 'lucide-react';
+import { createPageUrl } from '@/utils';
+import { Link } from 'react-router-dom';
+
+export default function Barn48InteractiveSection({ dom, className = '' }) {
+  const [activeConfig, setActiveConfig] = useState({
+    facade: 'standard',
+    extension: 0,
+    interior: 'wood',
+    totalLength: 9.6,
+    estimatedArea: 46
+  });
+
+  // Základná cena pre Barn 48
+  const basePrice = 21600;
+  
+  // Výpočet doplatku za predĺženie
+  const extensionPrices = {
+    0: 0,
+    1.2: 3300,
+    2.4: 6606,
+    3.6: 9900,
+    4.8: 15880
+  };
+
+  // Výpočet doplatku za omietku
+  const facadePrices = {
+    standard: 0,
+    wood: 0,
+    stucco: 4321
+  };
+
+  const currentPrice = basePrice + (extensionPrices[activeConfig.extension] || 0) + (facadePrices[activeConfig.facade] || 0);
+
+  return (
+    <div className={`w-full my-8 space-y-6 ${className}`}>
+      
+      {/* Hlavička sekcie */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-3xl bg-gradient-to-br from-slate-900 via-slate-850 to-slate-900 text-white border border-slate-800 shadow-2xl relative overflow-hidden">
+        <div className="absolute right-0 top-0 w-96 h-96 bg-red-500/10 rounded-full blur-3xl pointer-events-none" />
+        
+        <div className="relative z-10 space-y-1">
+          <div className="flex items-center gap-2">
+            <Badge className="bg-red-500 text-white font-black text-xs px-2.5 py-0.5">
+              NOVINKA • 3D SHOWROOM
+            </Badge>
+            <span className="text-xs text-slate-400 font-semibold flex items-center gap-1">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              Interaktívna 360° prehliadka
+            </span>
+          </div>
+          <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+            Barn House 48 (PH-008) v 3D
+          </h3>
+          <p className="text-sm text-slate-300 max-w-xl">
+            Vyskúšajte si v reálnom čase otáčanie, zmenu materiálu fasády, predĺženie modulov a nahliadnite do interiéru cez 3D odklopenie strechy.
+          </p>
+        </div>
+
+        {/* Live Cenovka v hlavičke */}
+        <div className="relative z-10 flex flex-col sm:items-end bg-white/10 backdrop-blur-md px-5 py-3 rounded-2xl border border-white/10 self-start sm:self-auto">
+          <span className="text-[11px] uppercase tracking-wider text-slate-300 font-bold">Orientačná cena modelu:</span>
+          <div className="text-2xl sm:text-3xl font-black text-white flex items-center gap-1">
+            <span>{currentPrice.toLocaleString('sk-SK')} €</span>
+            <span className="text-xs font-normal text-slate-300">s DPH</span>
+          </div>
+          <span className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1 mt-0.5">
+            <CheckCircle2 className="w-3 h-3" />
+            Vrátane hrubej stavby s izoláciou
+          </span>
+        </div>
+      </div>
+
+      {/* Samotný 3D Prehliadač */}
+      <House3DViewer
+        initialFacade={activeConfig.facade}
+        initialExtension={activeConfig.extension}
+        initialInterior={activeConfig.interior}
+        height="600px"
+        onConfigChange={(newCfg) => setActiveConfig(newCfg)}
+      />
+
+      {/* Rýchle výhody a preklik do konfigurátora */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="flex items-center gap-3.5 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/70 dark:border-white/5">
+          <div className="w-10 h-10 rounded-xl bg-red-500/10 text-red-500 flex items-center justify-center flex-shrink-0">
+            <Rotate3d className="w-5 h-5" />
+          </div>
+          <div>
+            <h5 className="font-bold text-sm text-slate-900 dark:text-white">360° Pohľad</h5>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Plná rotácia a detailný zoom</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3.5 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/70 dark:border-white/5">
+          <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center flex-shrink-0">
+            <Layers className="w-5 h-5" />
+          </div>
+          <div>
+            <h5 className="font-bold text-sm text-slate-900 dark:text-white">3 Typy Fasády</h5>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Antracit, Smrek a Murovka</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3.5 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/70 dark:border-white/5">
+          <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center flex-shrink-0">
+            <Zap className="w-5 h-5" />
+          </div>
+          <div>
+            <h5 className="font-bold text-sm text-slate-900 dark:text-white">Energetická trieda A0</h5>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Pripravené na celoročné bývanie</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  );
+}

@@ -35,7 +35,7 @@ import { useLanguage } from "../components/LanguageContext";
 import TranslatedDescription from "../components/TranslatedDescription";
 import ShellInfoBox from "../components/ShellInfoBox";
 import DOMPurify from 'dompurify';
-import { prostoHouseTranslations } from "../components/translations/ProstoHouseTranslations";
+import Barn48InteractiveSection from "../components/3d/Barn48InteractiveSection";
 import ProstoHouseMarketing from "../components/ProstoHouseMarketing";
 import TicabhouseMarketing from "../components/TicabhouseMarketing";
 import ExternalReviews from "../components/ExternalReviews";
@@ -682,6 +682,11 @@ export default function DetailDomu() {
                   language={language}
                 />
               </div>
+            )}
+
+            {/* 3D Interaktívny Showroom pre Barn 48 (PH-008) */}
+            {(dom.prosto_house_kod === "PH-008" || dom.id === "6916ec94c11aacdd15248f31" || dom.nazov?.toLowerCase().includes("barn 48") || dom.nazov?.toLowerCase().includes("ph-008")) && (
+              <Barn48InteractiveSection dom={dom} />
             )}
 
             {/* 2D a 3D Pôdorysy - hneď pod titulnou fotkou */}

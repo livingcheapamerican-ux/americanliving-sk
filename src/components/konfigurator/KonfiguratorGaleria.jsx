@@ -1,20 +1,24 @@
 import React, { useState, useMemo } from 'react';
-import { Image, Maximize2, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Image, Maximize2, X, ChevronLeft, ChevronRight, Rotate3d, Sparkles } from 'lucide-react';
+import House3DViewer from '../3d/House3DViewer';
 
 /**
- * Dynamická fotogaléria a pôdorysy pre konfigurátor.
+ * Dynamická fotogaléria, 3D model a pôdorysy pre konfigurátor.
  * Filtruje fotky podľa zvoleného štýlu fasády / interiéru.
- * Zobrazuje aj 2D/3D pôdorysy z entity Dom.
+ * Zobrazuje aj 2D/3D pôdorysy a interaktívny 3D model.
  */
-export default function KonfiguratorGaleria({ dom, facadeIdx, interiorIdx }) {
-  const [activeTab, setActiveTab] = useState('galeria');
+export default function KonfiguratorGaleria({ dom, facadeIdx, interiorIdx, extensionLength = 0 }) {
+  const isBarn48 = dom?.prosto_house_kod === 'PH-008' || dom?.nazov?.toLowerCase().includes('barn 48') || dom?.nazov?.toLowerCase().includes('ph-008');
+  const [activeTab, setActiveTab] = useState(isBarn48 ? '3d' : 'galeria');
   const [activeFilter, setActiveFilter] = useState('all');
   const [lightbox, setLightbox] = useState(null); // { images: [], index: 0 }
 
   // Určíme typ fasády podľa výberu
   const facadeType = facadeIdx === 1 ? 'exterier_murovka' : 'exterier_drevo_plech';
+  const facade3D = facadeIdx === 1 ? 'stucco' : 'standard';
   // Určíme typ interiéru podľa výberu
   const interiorType = interiorIdx === 2 ? 'interier_sadrokarton' : 'interier_drevo';
+  const interior3D = interiorIdx === 2 ? 'drywall' : 'wood';
 
   // Zozbierame fotky z dom.galerie (pomenované galérie)
   const galleries = useMemo(() => {
@@ -89,23 +93,52 @@ export default function KonfiguratorGaleria({ dom, facadeIdx, interiorIdx }) {
 
   return (
     <div className="space-y-3">
-      {/* Tabs: Galéria / Pôdorysy */}
-      <div className="flex gap-1 bg-gray-100 rounded-xl p-1">
+      {/* Tabs: 3D Model / Galéria / Pôdorysy */}
+      <div className="flex gap-1 bg-gray-100 dark:bg-slate-800 rounded-xl p-1">
+        {isBarn48 && (
+          <button
+            onClick={() => setActiveTab('3d')}
+            className={`flex-1 py-2 px-3 rounded-lg text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-1.5 ${
+              activeTab === '3d' 
+                ? 'bg-red-600 text-white shadow-md' 
+                : 'text-gray-600 dark:text-slate-300 hover:text-gray-900'
+            }`}
+          >
+            <Rotate3d className="w-4 h-4 text-amber-300 animate-pulse" />
+            <span>✨ 3D Model</span>
+          </button>
+        )}
         <button
           onClick={() => setActiveTab('galeria')}
-          className={`flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-all ${activeTab === 'galeria' ? 'bg-white shadow text-gray-900' : 'text-gray-500'}`}
+          className={`flex-1 py-2 px-3 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
+            activeTab === 'galeria' ? 'bg-white dark:bg-slate-700 shadow text-gray-900 dark:text-white' : 'text-gray-500 dark:text-slate-400'
+          }`}
         >
           📸 Fotogaléria
         </button>
         {podorysy.length > 0 && (
           <button
             onClick={() => setActiveTab('podorysy')}
-            className={`flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-all ${activeTab === 'podorysy' ? 'bg-white shadow text-gray-900' : 'text-gray-500'}`}
+            className={`flex-1 py-2 px-3 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
+              activeTab === 'podorysy' ? 'bg-white dark:bg-slate-700 shadow text-gray-900 dark:text-white' : 'text-gray-500 dark:text-slate-400'
+            }`}
           >
             📐 Pôdorysy
           </button>
         )}
       </div>
+
+      {activeTab === '3d' && isBarn48 && (
+        <div className="w-full">
+          <House3DViewer
+            initialFacade={facade3D}
+            initialExtension={extensionLength}
+            initialInterior={interior3D}
+            height="440px"
+            showControls={true}
+          />
+        </div>
+      )}
 
       {activeTab === 'galeria' && (
         <>
