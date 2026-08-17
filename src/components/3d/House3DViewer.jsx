@@ -330,11 +330,11 @@ export default function House3DViewer({
       const dimGroup = new THREE.Group();
       dimGroup.name = 'Dimensions3D';
 
-      const houseW = 4.5;
+      const houseW = 4.6;
       const porchD = 1.3;
-      const bodyL = 6.5 + extension;
-      const totalLen = bodyL + porchD;
-      const ridgeH = 4.4;
+      const bodyL = 6.7 + extension;
+      const totalLen = 8.0 + extension;
+      const ridgeH = 4.0;
 
       // Pomocná funkcia pre 3D textový odznak (Sprite)
       const createTextBadge = (text, bgColor = '#1e293b', textColor = '#ffffff') => {
@@ -367,7 +367,7 @@ export default function House3DViewer({
         return sprite;
       };
 
-      // 1. Kóta ŠÍRKY (Predné čelo: 4.5 m)
+      // 1. Kóta ŠÍRKY (Predné čelo: 4.6 m)
       const wLineMat = new THREE.LineBasicMaterial({ color: 0x2563eb, linewidth: 3 });
       const wPoints = [
         new THREE.Vector3(-houseW / 2, 0.15, totalLen / 2 + 0.8),
@@ -376,11 +376,11 @@ export default function House3DViewer({
       const wLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(wPoints), wLineMat);
       dimGroup.add(wLine);
 
-      const wBadge = createTextBadge('↔ Šírka: 4,5 m', '#2563eb');
+      const wBadge = createTextBadge('↔ Šírka: 4,6 m', '#2563eb');
       wBadge.position.set(0, 0.6, totalLen / 2 + 0.8);
       dimGroup.add(wBadge);
 
-      // 2. Kóta OBYTNEJ ČASTI (Bočná strana: 6.5 m + extension)
+      // 2. Kóta OBYTNEJ ČASTI (Bočná strana: 6.7 m + extension)
       const lenLineMat = new THREE.LineBasicMaterial({ color: 0xdc2626, linewidth: 3 });
       const lenPoints = [
         new THREE.Vector3(-houseW / 2 - 0.7, 0.15, -totalLen / 2),
@@ -406,7 +406,7 @@ export default function House3DViewer({
       porchBadge.position.set(-houseW / 2 - 0.8, 0.6, totalLen / 2 - porchD / 2);
       dimGroup.add(porchBadge);
 
-      // 4. Kóta VÝŠKY HREBEŇA (4.4 m)
+      // 4. Kóta VÝŠKY HREBEŇA (4.0 m)
       const hLineMat = new THREE.LineBasicMaterial({ color: 0x059669, linewidth: 3 });
       const hPoints = [
         new THREE.Vector3(houseW / 2 + 0.6, 0, totalLen / 2 + 0.1),
@@ -415,7 +415,7 @@ export default function House3DViewer({
       const hLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(hPoints), hLineMat);
       dimGroup.add(hLine);
 
-      const hBadge = createTextBadge(`↕ Výška: ${ridgeH} m`, '#059669');
+      const hBadge = createTextBadge(`↕ Výška: ${ridgeH.toFixed(1)} m`, '#059669');
       hBadge.position.set(houseW / 2 + 1.2, ridgeH / 2, totalLen / 2 + 0.1);
       dimGroup.add(hBadge);
 
@@ -431,26 +431,28 @@ export default function House3DViewer({
     const controls = controlsRef.current;
     if (!camera || !controls) return;
 
-    controls.target.set(0, 1.6, 0);
+    controls.target.set(0, 1.4, 0);
 
-    const totalLen = 9.6 + extension;
+    const totalLen = 8.0 + extension;
 
     switch (view) {
       case 'front':
-        camera.position.set(0, 2.2, totalLen / 2 + 9.5);
+        camera.position.set(0, 2.0, totalLen / 2 + 7.5);
         break;
       case 'side':
-        camera.position.set(-14, 2.8, 0);
+        camera.position.set(-13, 2.6, 0);
         break;
       case 'top':
-        camera.position.set(0, 22, 0.1);
+        camera.position.set(0, 18, 0.1);
         break;
-      case 'terrace':
-        camera.position.set(0, 1.2, totalLen / 2 + 4.5);
+      case 'interior':
+        // Kamera vo vnútri obývačky s výhľadom na kuchyňu a mezonet
+        controls.target.set(0, 1.6, -1.8);
+        camera.position.set(0, 1.5, 2.2);
         break;
       case 'perspective':
       default:
-        camera.position.set(13, 7, 16);
+        camera.position.set(12, 6.5, 14);
         break;
     }
     controls.update();
@@ -611,6 +613,15 @@ export default function House3DViewer({
           className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-left ${activeCameraView === 'top' ? 'bg-red-500 text-white shadow-md' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
         >
           Pôdorys zhora
+        </button>
+        <button
+          onClick={() => {
+            setRoofCutaway(roofCutaway > 0 ? 0 : 1);
+            setCameraView('interior');
+          }}
+          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-left flex items-center gap-1.5 ${activeCameraView === 'interior' ? 'bg-amber-500 text-white shadow-md' : 'text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/40'}`}
+        >
+          <span>🛋️ Interiér</span>
         </button>
       </div>
 
