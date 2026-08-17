@@ -489,8 +489,8 @@ export default function House3DViewer({
   return (
     <div 
       ref={containerRef}
-      className={`relative w-full rounded-3xl overflow-hidden shadow-2xl border border-slate-200/80 dark:border-white/10 bg-slate-100 dark:bg-slate-950 select-none ${className}`}
-      style={{ height: isFullscreen ? '100vh' : height }}
+      className={`relative w-full rounded-3xl overflow-hidden shadow-2xl border border-slate-200/80 dark:border-white/10 bg-slate-100 dark:bg-slate-950 select-none h-[520px] md:h-[650px] ${className}`}
+      style={isFullscreen ? { height: '100vh' } : {}}
     >
       {/* 3D WebGL Plátno */}
       <canvas 

@@ -516,7 +516,7 @@ export default function DetailDomu() {
     : 'https://americanliving.sk/detail-domu';
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden max-w-full font-['Outfit']">
+    <div className="min-h-screen bg-background text-foreground overflow-x-hidden max-w-full font-['Outfit'] pt-16 sm:pt-20">
       <Helmet>
         <link rel="canonical" href={canonicalUrl} />
         {productSchemaData && (

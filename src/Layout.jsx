@@ -179,6 +179,16 @@ function LayoutContent({ children }) {
   const isActive = (path) => location.pathname === path;
   const isAdmin = user?.role === 'admin' || user?.super_admin === true;
 
+  const pathnameLower = location.pathname.toLowerCase();
+  const isKonfiguratorPage = pathnameLower.includes('konfigurator') ||
+                             pathnameLower.includes('detail-domu') ||
+                             pathnameLower.includes('ph00') ||
+                             pathnameLower.includes('ticabhouse') ||
+                             pathnameLower.includes('flat-double') ||
+                             pathnameLower.includes('lyon') ||
+                             pathnameLower.includes('3d') ||
+                             pathnameLower.includes('showroom');
+
   const navItems = [
     { name: t('home') || "Domov", path: createPageUrl("Domov"), icon: Home },
     { name: t('catalog') || "Katalóg domov", path: createPageUrl("Katalog"), icon: Grid3x3 },
@@ -741,23 +751,25 @@ function LayoutContent({ children }) {
         </div>
       </footer>
 
-      {/* Mobile Sticky Bottom Bar */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-950/90 backdrop-blur-lg border-t border-white/10 p-2.5 flex items-center gap-2 shadow-2xl">
-        <a 
-          href="tel:+421948111222" 
-          className="flex-1 flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs border border-white/10"
-        >
-          <Phone className="w-4 h-4 text-red-500" />
-          <span>Volať</span>
-        </a>
-        <Link 
-          to={createPageUrl("StiahniteSiNasKatalog")} 
-          className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold py-2.5 px-4 rounded-xl text-xs shadow-lg"
-        >
-          <Download className="w-4 h-4" />
-          <span>Stiahnuť cenník</span>
-        </Link>
-      </div>
+      {/* Mobile Sticky Bottom Bar (zobrazuje sa iba na bežných stránkach, nie v konfigurátoroch / 3D showroome) */}
+      {!isKonfiguratorPage && (
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-950/90 backdrop-blur-lg border-t border-white/10 p-2.5 flex items-center gap-2 shadow-2xl">
+          <a 
+            href="tel:+421948111222" 
+            className="flex-1 flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs border border-white/10"
+          >
+            <Phone className="w-4 h-4 text-red-500" />
+            <span>Volať</span>
+          </a>
+          <Link 
+            to={createPageUrl("StiahniteSiNasKatalog")} 
+            className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold py-2.5 px-4 rounded-xl text-xs shadow-lg"
+          >
+            <Download className="w-4 h-4" />
+            <span>Stiahnuť cenník</span>
+          </Link>
+        </div>
+      )}
 
       <CookieConsentBanner />
       <SessionRecorder />
