@@ -307,14 +307,14 @@ export function createBarn48Model({
   });
 
   const glassMat = new THREE.MeshPhysicalMaterial({
-    color: isNight ? 0xffeaaf : 0xa6d1f0,
-    transmission: 0.92,
-    opacity: 0.3,
+    color: isNight ? 0xffeaaf : 0xecf4fb,
+    transmission: 0.96,
+    opacity: 0.2,
     transparent: true,
     roughness: 0.02,
-    metalness: 0.1,
-    ior: 1.52,
-    reflectivity: 0.9
+    metalness: 0.05,
+    ior: 1.45,
+    reflectivity: 0.6
   });
 
   const bathroomTileMat = new THREE.MeshStandardMaterial({
@@ -1573,17 +1573,32 @@ export function createBarn48Model({
 
   rootGroup.add(roofGroup);
 
-  // ── 9. SVETLÁ A AMBIENT (TEPLÉ DENNÉ SLNKO PODĽA FOTIEK) ───────────────────────
+  // ── 9. SVETLÁ A INTERIÉROVÉ OSVETLENIE (ABY BOLO CEZ OKNÁ VIDIEŤ VNÚTRO) ───────────────────────
+  
+  // Hlavné ambientné svetlo v obývačke
+  const mainIntLight = new THREE.PointLight(0xfff3db, isNight ? 3.0 : 1.8, 14, 1.2);
+  mainIntLight.position.set(0, 2.3, 0);
+  rootGroup.add(mainIntLight);
 
-  if (isNight || isSunset) {
-    const pLight = new THREE.PointLight(0xffaa44, isNight ? 2.5 : 1.2, 8, 1.5);
-    pLight.position.set(0, 2.1, glassZ + 0.65);
-    rootGroup.add(pLight);
+  // Osvetlenie v zadnej spálni 1 (hneď za oknom)
+  const bedLight = new THREE.PointLight(0xfff6e8, isNight ? 2.4 : 1.6, 7, 1.2);
+  bedLight.position.set(-1.05, 1.9, -halfL + 1.2);
+  rootGroup.add(bedLight);
 
-    const intLight = new THREE.PointLight(0xffd588, isNight ? 3.0 : 1.5, 12, 1.8);
-    intLight.position.set(0, 2.0, 0);
-    rootGroup.add(intLight);
-  }
+  // Osvetlenie v kúpeľni
+  const bathLight = new THREE.PointLight(0xfff6e8, isNight ? 2.2 : 1.5, 6, 1.2);
+  bathLight.position.set(0.95, 1.9, -halfL + 1.0);
+  rootGroup.add(bathLight);
+
+  // Osvetlenie v podkroví (loft)
+  const loftLight = new THREE.PointLight(0xfff6e8, isNight ? 2.4 : 1.5, 6, 1.2);
+  loftLight.position.set(0, wallHeight + 1.0, -halfL + 1.1);
+  rootGroup.add(loftLight);
+
+  // Svetlo na prednej terase / verande
+  const porchLight = new THREE.PointLight(0xffaa44, isNight ? 2.5 : 1.1, 8, 1.5);
+  porchLight.position.set(0, 2.1, glassZ + 0.65);
+  rootGroup.add(porchLight);
 
   return rootGroup;
 }
