@@ -1092,9 +1092,9 @@ export function createBarn48Model({
 
   interiorGroup.add(chandelier);
 
-  // SVETLOSIVÁ PREŠÍVANÁ L-SEDAČKA (Z fotky 4)
+  // SVETLOSIVÁ PREŠÍVANÁ L-SEDAČKA (Z fotky 4) - prisunutá úplne k stene spálne do rohu čo najďalej od predného presklenia
   const sofaGroup = new THREE.Group();
-  sofaGroup.position.set(-halfW + 1.15, 0.08, livingCenterZ + 0.2);
+  sofaGroup.position.set(-halfW + 1.05, 0.08, livingStart + 0.55);
 
   const sLegGeo = new THREE.CylinderGeometry(0.02, 0.015, 0.12, 12);
   const legPositions = [
@@ -1154,7 +1154,7 @@ export function createBarn48Model({
 
   // DREVENÝ KONFERENČNÝ STOLÍK (Z fotky 4)
   const tableGroup = new THREE.Group();
-  tableGroup.position.set(-halfW + 1.25, 0.08, livingCenterZ + 0.55);
+  tableGroup.position.set(-halfW + 1.25, 0.08, livingStart + 1.15);
 
   const tTop = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.05, 0.55), woodMat);
   tTop.position.set(0, 0.38, 0);
@@ -1174,7 +1174,7 @@ export function createBarn48Model({
 
   // NÁSTENNÁ ČIERNA KLIMATIZÁCIA (Z fotky 4 na ľavej stene)
   const acUnit = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.28, 0.75), kitchenBlackMat);
-  acUnit.position.set(-halfW + 0.22, wallHeight - 0.3, livingCenterZ - 0.2);
+  acUnit.position.set(-halfW + 0.22, wallHeight - 0.3, livingStart + 0.85);
   interiorGroup.add(acUnit);
 
   rootGroup.add(interiorGroup);
