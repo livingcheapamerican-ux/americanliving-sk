@@ -1092,15 +1092,15 @@ export function createBarn48Model({
 
   interiorGroup.add(chandelier);
 
-  // SVETLOSIVÁ PREŠÍVANÁ L-SEDAČKA (Z fotky 4) - prisunutá úplne k stene spálne do rohu čo najďalej od predného presklenia
+  // SVETLOSIVÁ PREŠÍVANÁ L-SEDAČKA (Z fotky 4) - zadné operadlo opreté priamo o stenu spálne (pri rebríku)
   const sofaGroup = new THREE.Group();
-  sofaGroup.position.set(-halfW + 1.05, 0.08, livingStart + 0.55);
+  sofaGroup.position.set(-halfW + 1.1, 0.08, livingStart + 0.55);
 
   const sLegGeo = new THREE.CylinderGeometry(0.02, 0.015, 0.12, 12);
   const legPositions = [
-    [-0.8, 0.06, -0.4], [0.8, 0.06, -0.4],
-    [-0.8, 0.06, 1.4], [-0.1, 0.06, 1.4],
-    [0.8, 0.06, 0.4]
+    [-0.9, 0.06, -0.38], [0.9, 0.06, -0.38],
+    [-0.9, 0.06, 1.2], [-0.2, 0.06, 1.2],
+    [0.9, 0.06, 0.38]
   ];
   legPositions.forEach(pos => {
     const leg = new THREE.Mesh(sLegGeo, kitchenBlackMat);
@@ -1108,45 +1108,49 @@ export function createBarn48Model({
     sofaGroup.add(leg);
   });
 
-  const sofaBase = new THREE.Mesh(new THREE.BoxGeometry(1.85, 0.15, 0.95), sofaFabricMat);
+  // Hlavná základňa sedačky rovnobežná so stenou spálne
+  const sofaBase = new THREE.Mesh(new THREE.BoxGeometry(2.05, 0.15, 0.95), sofaFabricMat);
   sofaBase.position.set(0, 0.2, 0);
   sofaBase.castShadow = true;
   sofaGroup.add(sofaBase);
 
+  // L-časť (chaise) pozdĺž ľavej obvodovej steny
   const sofaChaiseBase = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.15, 1.1), sofaFabricMat);
-  sofaChaiseBase.position.set(-0.475, 0.2, 0.95);
+  sofaChaiseBase.position.set(-0.575, 0.2, 0.95);
   sofaChaiseBase.castShadow = true;
   sofaGroup.add(sofaChaiseBase);
 
-  // Prešívané sedáky (tufted blocks z fotky 4)
-  const seat1 = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.18, 0.85), sofaFabricMat);
+  // Prešívané sedáky
+  const seat1 = new THREE.Mesh(new THREE.BoxGeometry(1.05, 0.18, 0.85), sofaFabricMat);
   seat1.position.set(0.45, 0.34, 0);
   seat1.castShadow = true;
   sofaGroup.add(seat1);
 
-  const seatChaise = new THREE.Mesh(new THREE.BoxGeometry(0.86, 0.18, 1.75), sofaFabricMat);
-  seatChaise.position.set(-0.475, 0.34, 0.45);
+  const seatChaise = new THREE.Mesh(new THREE.BoxGeometry(0.86, 0.18, 1.8), sofaFabricMat);
+  seatChaise.position.set(-0.575, 0.34, 0.45);
   seatChaise.castShadow = true;
   sofaGroup.add(seatChaise);
 
-  const sofaBack = new THREE.Mesh(new THREE.BoxGeometry(1.85, 0.48, 0.22), sofaFabricMat);
-  sofaBack.position.set(0, 0.52, -0.38);
+  // ZADNÉ HLAVNÉ OPERADLO OPRETÉ PRIAMO O STENU SPÁLNE (livingStart)
+  const sofaBack = new THREE.Mesh(new THREE.BoxGeometry(2.05, 0.52, 0.22), sofaFabricMat);
+  sofaBack.position.set(0, 0.54, -0.42);
   sofaBack.castShadow = true;
   sofaGroup.add(sofaBack);
 
-  const sofaSideBack = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.42, 1.9), sofaFabricMat);
-  sofaSideBack.position.set(-0.85, 0.48, 0.45);
+  // Bočné operadlo pozdĺž ľavej steny
+  const sofaSideBack = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.45, 2.0), sofaFabricMat);
+  sofaSideBack.position.set(-0.95, 0.5, 0.45);
   sofaSideBack.castShadow = true;
   sofaGroup.add(sofaSideBack);
 
   // Vankúšiky
   const pillow1 = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.35, 0.12), pillowMustardMat);
-  pillow1.position.set(0.4, 0.52, -0.22);
+  pillow1.position.set(0.4, 0.54, -0.25);
   pillow1.rotation.set(-0.15, 0.1, 0.1);
   sofaGroup.add(pillow1);
 
   const pillow2 = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.35, 0.12), pillowCharcoalMat);
-  pillow2.position.set(-0.68, 0.52, 0.8);
+  pillow2.position.set(-0.78, 0.54, 0.8);
   pillow2.rotation.set(0.1, 0.25, -0.15);
   sofaGroup.add(pillow2);
 
@@ -1154,14 +1158,13 @@ export function createBarn48Model({
 
   // DREVENÝ KONFERENČNÝ STOLÍK (Z fotky 4)
   const tableGroup = new THREE.Group();
-  tableGroup.position.set(-halfW + 1.25, 0.08, livingStart + 1.15);
+  tableGroup.position.set(-halfW + 1.25, 0.08, livingStart + 1.25);
 
   const tTop = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.05, 0.55), woodMat);
   tTop.position.set(0, 0.38, 0);
   tTop.castShadow = true;
   tableGroup.add(tTop);
 
-  // Drevené doskové nohy (z fotky 4)
   const tLegL = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.35, 0.45), woodMat);
   tLegL.position.set(-0.38, 0.18, 0);
   tableGroup.add(tLegL);
