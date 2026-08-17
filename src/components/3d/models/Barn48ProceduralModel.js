@@ -526,16 +526,29 @@ export function createBarn48Model({
   sideWinGroup.add(sGlass);
   bodyGroup.add(sideWinGroup);
 
-  // Bočné okno pre 2. spálňu pri +3.9m
+  // Bočné klasické obdĺžnikové okno pre 2. spálňu pri +3.9m
   if (extension >= 3.9 && extraBedroom) {
     const sideWin2Group = new THREE.Group();
-    sideWin2Group.position.set(-halfW - 0.01, wallHeight / 2, partitionZ + 1.25);
-    const sCasing2 = new THREE.Mesh(new THREE.BoxGeometry(0.04, 1.85, 0.75), woodMat);
+    sideWin2Group.position.set(-halfW - 0.01, 1.25, partitionZ + 1.2);
+
+    const sCasing2 = new THREE.Mesh(new THREE.BoxGeometry(0.05, 1.05, 1.35), woodMat);
     sideWin2Group.add(sCasing2);
-    const sFrame2 = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1.7, 0.55), frameMat);
+
+    const sFrame2 = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.95, 1.25), frameMat);
     sideWin2Group.add(sFrame2);
-    const sGlass2 = new THREE.Mesh(new THREE.BoxGeometry(0.04, 1.6, 0.45), glassMat);
+
+    const sGlass2 = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.85, 1.15), glassMat);
     sideWin2Group.add(sGlass2);
+
+    // Stredový zvislý stĺpik rámu
+    const sMullion2 = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.85, 0.05), frameMat);
+    sideWin2Group.add(sMullion2);
+
+    // Parapet
+    const sSill2 = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.04, 1.35), frameMat);
+    sSill2.position.set(0, -0.48, 0);
+    sideWin2Group.add(sSill2);
+
     bodyGroup.add(sideWin2Group);
   }
 
@@ -848,36 +861,95 @@ export function createBarn48Model({
     const bed2Group = new THREE.Group();
     bed2Group.name = 'Extra_Bedroom_2';
 
+    // Predná deliaca stena 2. spálne smerom do obývačky
     const bed2FrontWall = new THREE.Mesh(new THREE.BoxGeometry(halfW - 0.2, wallHeight, 0.1), interiorWallMat);
     bed2FrontWall.position.set(-halfW / 2 + 0.1, wallHeight / 2, extraBedRoomEnd);
     bed2FrontWall.castShadow = true;
     bed2Group.add(bed2FrontWall);
 
-    const bed2SideWall = new THREE.Mesh(new THREE.BoxGeometry(0.1, wallHeight, extraBedRoomLen), interiorWallMat);
-    bed2SideWall.position.set(0, wallHeight / 2, partitionZ + extraBedRoomLen / 2);
-    bed2SideWall.castShadow = true;
-    bed2Group.add(bed2SideWall);
+    // Bočná stena 2. spálne smerom do chodby / ku kuchynskej linke s dverným otvorom
+    const wallPart1Len = 1.35;
+    const doorW = 0.85;
+    const doorH = 2.0;
+    const wallPart2Len = extraBedRoomLen - wallPart1Len - doorW; // ~0.2 m
 
+    // Plná stena pred dverami
+    const bed2SideWall1 = new THREE.Mesh(new THREE.BoxGeometry(0.1, wallHeight, wallPart1Len), interiorWallMat);
+    bed2SideWall1.position.set(0, wallHeight / 2, partitionZ + wallPart1Len / 2);
+    bed2SideWall1.castShadow = true;
+    bed2Group.add(bed2SideWall1);
+
+    // Preklad nad dverami
+    const lintelH = wallHeight - doorH;
+    const bed2Lintel = new THREE.Mesh(new THREE.BoxGeometry(0.1, lintelH, doorW), interiorWallMat);
+    bed2Lintel.position.set(0, doorH + lintelH / 2, partitionZ + wallPart1Len + doorW / 2);
+    bed2Group.add(bed2Lintel);
+
+    // Úzky stĺpik za dverami pri rohu
+    if (wallPart2Len > 0.05) {
+      const bed2SideWall2 = new THREE.Mesh(new THREE.BoxGeometry(0.1, wallHeight, wallPart2Len), interiorWallMat);
+      bed2SideWall2.position.set(0, wallHeight / 2, extraBedRoomEnd - wallPart2Len / 2);
+      bed2SideWall2.castShadow = true;
+      bed2Group.add(bed2SideWall2);
+    }
+
+    // Zárubňa a vstupné dvere do 2. spálne zo strany kuchyne/chodby
+    const doorCenterZ = partitionZ + wallPart1Len + doorW / 2;
+    const doorFrameGroup = new THREE.Group();
+    doorFrameGroup.position.set(0, 0, doorCenterZ);
+
+    const dFrameL = new THREE.Mesh(new THREE.BoxGeometry(0.12, doorH, 0.05), frameMat);
+    dFrameL.position.set(0, doorH / 2, -doorW / 2 + 0.025);
+    doorFrameGroup.add(dFrameL);
+
+    const dFrameR = new THREE.Mesh(new THREE.BoxGeometry(0.12, doorH, 0.05), frameMat);
+    dFrameR.position.set(0, doorH / 2, doorW / 2 - 0.025);
+    doorFrameGroup.add(dFrameR);
+
+    const dFrameTop = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.05, doorW), frameMat);
+    dFrameTop.position.set(0, doorH - 0.025, 0);
+    doorFrameGroup.add(dFrameTop);
+
+    // Krídlo dverí (jemne pootvorené do spálne)
+    const doorLeaf = new THREE.Mesh(new THREE.BoxGeometry(0.04, doorH - 0.06, doorW - 0.08), woodMat);
+    doorLeaf.position.set(-0.15, doorH / 2, 0);
+    doorLeaf.rotation.y = 0.35; // Pootvorené dvere
+    doorLeaf.castShadow = true;
+    doorFrameGroup.add(doorLeaf);
+
+    // Kľučka dverí
+    const doorHandle = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.03, 0.14), kitchenBlackMat);
+    doorHandle.position.set(-0.15, 1.0, -0.28);
+    doorFrameGroup.add(doorHandle);
+
+    bed2Group.add(doorFrameGroup);
+
+    // Vybavenie 2. spálne: posteľ, nočný stolík, písací stôl a stolička
     const bed2CenterZ = partitionZ + 1.2;
     const singleBed = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.35, 2.0), woodMat);
     singleBed.position.set(-halfW + 0.65, 0.26, bed2CenterZ);
     singleBed.castShadow = true;
     bed2Group.add(singleBed);
 
+    const singleHead = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.4, 0.08), headboardSlateBlueMat);
+    singleHead.position.set(-halfW + 0.65, 0.46, partitionZ + 0.24);
+    singleHead.castShadow = true;
+    bed2Group.add(singleHead);
+
     const singleMattress = new THREE.Mesh(new THREE.BoxGeometry(0.92, 0.2, 1.92), duvetBlueMat);
     singleMattress.position.set(-halfW + 0.65, 0.44, bed2CenterZ);
     bed2Group.add(singleMattress);
 
     const singlePillow = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.12, 0.35), duvetMat);
-    singlePillow.position.set(-halfW + 0.65, 0.56, bed2CenterZ - 0.65);
+    singlePillow.position.set(-halfW + 0.65, 0.56, partitionZ + 0.4);
     bed2Group.add(singlePillow);
 
-    const desk = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.75, 0.5), woodMat);
-    desk.position.set(-0.6, 0.45, partitionZ + 0.4);
+    const desk = new THREE.Mesh(new THREE.BoxGeometry(0.85, 0.75, 0.5), woodMat);
+    desk.position.set(-0.55, 0.45, partitionZ + 0.45);
     bed2Group.add(desk);
 
     const chair = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.45, 0.4), kitchenBlackMat);
-    chair.position.set(-0.6, 0.3, partitionZ + 0.85);
+    chair.position.set(-0.55, 0.3, partitionZ + 0.85);
     bed2Group.add(chair);
 
     interiorGroup.add(bed2Group);
