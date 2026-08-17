@@ -1330,8 +1330,8 @@ export function createBarn48Model({
       const openDoorGroup = new THREE.Group();
       openDoorGroup.position.set(-glassHalf + bayW * 2 + bayW, 0, 0); // Pánt na pravej strane poľa 3
 
-      // Otvorené krídlo vytočené o 65 stupňov smerom von
-      openDoorGroup.rotation.y = -1.15;
+      // Otvorené krídlo vytočené o 65 stupňov smerom VON NA TERASU (z fotky 1)
+      openDoorGroup.rotation.y = 1.15;
 
       const doorLeaf = new THREE.Mesh(new THREE.BoxGeometry(bayW - 0.06, doorH - 0.08, 0.06), frameMat);
       doorLeaf.position.set(-(bayW - 0.06) / 2, doorH / 2, 0);
