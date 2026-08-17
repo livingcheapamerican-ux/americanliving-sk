@@ -652,27 +652,32 @@ export function createBarn48Model({
   bedRoomGroup.add(roldorGroup);
   interiorGroup.add(bedRoomGroup);
 
-  // 2. DELIACA PRIEČKA MEDZI SPÁLŇOU A KÚPEĽŇOU
-  const centerPartitionGroup = new THREE.Group();
-  centerPartitionGroup.position.set(0, wallHeight / 2, rearZoneCenterZ);
+  // 2. DELIACA PRIEČKA MEDZI SPÁLŇOU 1 A KÚPEĽŇOU
+  // Od zadnej steny po čelo kúpeľne (dĺžka 2.6m)
+  const bathZoneLen = 2.6; // Kúpeľňa skrátená o 1.0m (z 3.6m na 2.6m) pre vytvorenie samostatnej vstupnej chodbičky
+  const bathPartitionZ = -halfL + bathZoneLen;
+  const bathZoneCenterZ = -halfL + bathZoneLen / 2;
 
-  const pBedSide = new THREE.Mesh(new THREE.BoxGeometry(0.05, wallHeight, rearZoneLen), interiorWallMat);
+  const centerPartitionGroup = new THREE.Group();
+  centerPartitionGroup.position.set(0, wallHeight / 2, bathZoneCenterZ);
+
+  const pBedSide = new THREE.Mesh(new THREE.BoxGeometry(0.05, wallHeight, bathZoneLen), interiorWallMat);
   pBedSide.position.set(-0.025, 0, 0);
   centerPartitionGroup.add(pBedSide);
 
-  const pBathSide = new THREE.Mesh(new THREE.BoxGeometry(0.03, wallHeight, rearZoneLen), bathroomTileMat);
+  const pBathSide = new THREE.Mesh(new THREE.BoxGeometry(0.03, wallHeight, bathZoneLen), bathroomTileMat);
   pBathSide.position.set(0.025, 0, 0);
   centerPartitionGroup.add(pBathSide);
 
   interiorGroup.add(centerPartitionGroup);
 
-  // 3. FIXNÁ KÚPEĽŇA (Fixná dĺžka, nepredlžuje sa)
+  // 3. KÚPEĽŇA (Dĺžka 2.6m, nepredlžuje sa)
   const bathGroup = new THREE.Group();
-  bathGroup.position.set(1.15, 0.08, rearZoneCenterZ);
+  bathGroup.position.set(1.15, 0.08, bathZoneCenterZ);
 
   // Walk-in sprchový kút
   const showerGroup = new THREE.Group();
-  showerGroup.position.set(0, 0, -rearZoneLen / 2 + 0.6);
+  showerGroup.position.set(0, 0, -bathZoneLen / 2 + 0.55);
 
   const showerTray = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.04, 0.95), darkTileMat);
   showerTray.position.set(-0.55, 0.02, 0);
@@ -702,7 +707,7 @@ export function createBarn48Model({
 
   // Umývadlová zostava
   const vanityGroup = new THREE.Group();
-  vanityGroup.position.set(0.65, 0, 0.45);
+  vanityGroup.position.set(0.65, 0, 0.4);
 
   const vanity = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.55, 0.75), woodMat);
   vanity.position.set(0, 0.52, 0);
@@ -734,7 +739,7 @@ export function createBarn48Model({
 
   // Závesné WC & Bojler
   const wcGroup = new THREE.Group();
-  wcGroup.position.set(0.65, 0, -0.65);
+  wcGroup.position.set(0.65, 0, -0.45);
 
   const geberitBox = new THREE.Mesh(new THREE.BoxGeometry(0.25, 1.1, 0.6), bathroomTileMat);
   geberitBox.position.set(0.35, 0.55, 0);
@@ -757,68 +762,104 @@ export function createBarn48Model({
   bathGroup.add(wcGroup);
   interiorGroup.add(bathGroup);
 
-  // Zistenie stavu 2. spálne pre umiestnenie rebríka a dispozície
-  const is2ndBedroomActive = extension >= 3.9 && extraBedroom;
-  const extraBedRoomLen = 2.4;
-  const extraBedRoomEnd = partitionZ + extraBedRoomLen;
+  // Čelná stena kúpeľne (posunutá o 1m k zadnej stene) so vstupnými dverami do kúpeľne
+  const bathFrontWall = new THREE.Group();
+  bathFrontWall.position.set(0, 0, bathPartitionZ);
 
-  // 4. HLAVNÁ PRIEČKA MEDZI SPÁLŇOU 1/KÚPEĽŇOU A OBÝVAČKOU SO VSTUPNÝMI DVERAMI DO SPÁLNE 1
-  // Stena za Roldorom
-  const partLeftOuter = new THREE.Mesh(new THREE.BoxGeometry(1.35, wallHeight, 0.1), interiorWallMat);
-  partLeftOuter.position.set(-halfW + 0.675, wallHeight / 2, partitionZ);
-  partLeftOuter.castShadow = true;
-  interiorGroup.add(partLeftOuter);
+  const bathWallRight = new THREE.Mesh(new THREE.BoxGeometry(halfW - 1.05, wallHeight, 0.08), interiorWallMat);
+  bathWallRight.position.set(halfW - (halfW - 1.05) / 2 - 0.1, wallHeight / 2, 0);
+  bathFrontWall.add(bathWallRight);
 
-  // Preklad nad dverami do spálne 1
-  const b1DoorW = 0.85;
-  const b1DoorH = 2.0;
-  const b1DoorCenter = -halfW + 1.35 + b1DoorW / 2; // ~ -0.525
-  const b1LintelH = wallHeight - b1DoorH;
-  const b1Lintel = new THREE.Mesh(new THREE.BoxGeometry(b1DoorW, b1LintelH, 0.1), interiorWallMat);
-  b1Lintel.position.set(b1DoorCenter, b1DoorH + b1LintelH / 2, partitionZ);
-  interiorGroup.add(b1Lintel);
+  // Dvere do kúpeľne
+  const bathDoorW = 0.75;
+  const bathDoorH = 1.98;
+  const bathDoorCenter = 0.5;
 
-  // Úzky stĺpik priečky medzi dverami spálne 1 a deliacou stenou kúpeľne
-  const b1PostW = Math.max(0.05, -b1DoorCenter - b1DoorW / 2);
-  if (b1PostW > 0.02) {
-    const b1Post = new THREE.Mesh(new THREE.BoxGeometry(b1PostW, wallHeight, 0.1), interiorWallMat);
-    b1Post.position.set(-b1PostW / 2, wallHeight / 2, partitionZ);
-    interiorGroup.add(b1Post);
-  }
+  const bLintelH = wallHeight - bathDoorH;
+  const bLintel = new THREE.Mesh(new THREE.BoxGeometry(bathDoorW, bLintelH, 0.08), interiorWallMat);
+  bLintel.position.set(bathDoorCenter, bathDoorH + bLintelH / 2, 0);
+  bathFrontWall.add(bLintel);
 
-  // Vstupné dvere do Spálne 1
+  const bathDoorGroup = new THREE.Group();
+  bathDoorGroup.position.set(bathDoorCenter, 0, 0);
+
+  const bathFrameL = new THREE.Mesh(new THREE.BoxGeometry(0.04, bathDoorH, 0.1), frameMat);
+  bathFrameL.position.set(-bathDoorW / 2 + 0.02, bathDoorH / 2, 0);
+  bathDoorGroup.add(bathFrameL);
+
+  const bathFrameR = new THREE.Mesh(new THREE.BoxGeometry(0.04, bathDoorH, 0.1), frameMat);
+  bathFrameR.position.set(bathDoorW / 2 - 0.02, bathDoorH / 2, 0);
+  bathDoorGroup.add(bathFrameR);
+
+  const bathFrameTop = new THREE.Mesh(new THREE.BoxGeometry(bathDoorW, 0.04, 0.1), frameMat);
+  bathFrameTop.position.set(0, bathDoorH - 0.02, 0);
+  bathDoorGroup.add(bathFrameTop);
+
+  const bathDoorLeaf = new THREE.Mesh(new THREE.BoxGeometry(bathDoorW - 0.06, bathDoorH - 0.04, 0.04), woodMat);
+  bathDoorLeaf.position.set(0, bathDoorH / 2, -0.1);
+  bathDoorLeaf.rotation.y = -0.25;
+  bathDoorGroup.add(bathDoorLeaf);
+
+  const bathHandle = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.03, 0.12), kitchenBlackMat);
+  bathHandle.position.set(-bathDoorW / 2 + 0.15, 1.0, 0.05);
+  bathDoorGroup.add(bathHandle);
+
+  bathFrontWall.add(bathDoorGroup);
+  interiorGroup.add(bathFrontWall);
+
+  // 4. SAMOSTATNÁ VSTUPNÁ CHODBIČKA & DVERE DO SPÁLNE 1 ZO STRANY CHODBY (pri x = 0)
+  // Pozdĺžna stena pri x=0 medzi Spálňou 1 a vytvorenou vstupnou chodbičkou (z in [bathPartitionZ, partitionZ])
+  const corridorNicheLen = partitionZ - bathPartitionZ; // 1.0 m
   const b1DoorGroup = new THREE.Group();
-  b1DoorGroup.position.set(b1DoorCenter, 0, partitionZ);
+  const b1DoorZ = (bathPartitionZ + partitionZ) / 2;
+  b1DoorGroup.position.set(0, 0, b1DoorZ);
 
-  const b1FrameL = new THREE.Mesh(new THREE.BoxGeometry(0.05, b1DoorH, 0.12), frameMat);
-  b1FrameL.position.set(-b1DoorW / 2 + 0.025, b1DoorH / 2, 0);
+  const b1DoorW = 0.82;
+  const b1DoorH = 1.98;
+  const b1LintelH = wallHeight - b1DoorH;
+
+  // Preklad nad dverami do Spálne 1 pri x=0
+  const b1Lintel = new THREE.Mesh(new THREE.BoxGeometry(0.08, b1LintelH, b1DoorW), interiorWallMat);
+  b1Lintel.position.set(0, b1DoorH + b1LintelH / 2, 0);
+  b1DoorGroup.add(b1Lintel);
+
+  // Bočné stĺpiky zárubne pri x=0
+  const b1FrameL = new THREE.Mesh(new THREE.BoxGeometry(0.1, b1DoorH, 0.04), frameMat);
+  b1FrameL.position.set(0, b1DoorH / 2, -b1DoorW / 2 + 0.02);
   b1DoorGroup.add(b1FrameL);
 
-  const b1FrameR = new THREE.Mesh(new THREE.BoxGeometry(0.05, b1DoorH, 0.12), frameMat);
-  b1FrameR.position.set(b1DoorW / 2 - 0.025, b1DoorH / 2, 0);
+  const b1FrameR = new THREE.Mesh(new THREE.BoxGeometry(0.1, b1DoorH, 0.04), frameMat);
+  b1FrameR.position.set(0, b1DoorH / 2, b1DoorW / 2 - 0.02);
   b1DoorGroup.add(b1FrameR);
 
-  const b1FrameTop = new THREE.Mesh(new THREE.BoxGeometry(b1DoorW, 0.05, 0.12), frameMat);
-  b1FrameTop.position.set(0, b1DoorH - 0.025, 0);
+  const b1FrameTop = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.04, b1DoorW), frameMat);
+  b1FrameTop.position.set(0, b1DoorH - 0.02, 0);
   b1DoorGroup.add(b1FrameTop);
 
-  const b1DoorLeaf = new THREE.Mesh(new THREE.BoxGeometry(b1DoorW - 0.08, b1DoorH - 0.06, 0.04), woodMat);
-  b1DoorLeaf.position.set(0, b1DoorH / 2, -0.15);
-  b1DoorLeaf.rotation.y = 0.3; // Pootvorené do spálne
+  // Krídlo dverí do Spálne 1 (otvorené do spálne)
+  const b1DoorLeaf = new THREE.Mesh(new THREE.BoxGeometry(0.04, b1DoorH - 0.04, b1DoorW - 0.06), woodMat);
+  b1DoorLeaf.position.set(-0.15, b1DoorH / 2, 0);
+  b1DoorLeaf.rotation.y = 0.35; // Pootvorené do spálne
   b1DoorLeaf.castShadow = true;
   b1DoorGroup.add(b1DoorLeaf);
 
   const b1DoorHandle = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.03, 0.12), kitchenBlackMat);
-  b1DoorHandle.position.set(b1DoorW / 2 - 0.18, 1.0, -0.15);
+  b1DoorHandle.position.set(-0.15, 1.0, -0.22);
   b1DoorGroup.add(b1DoorHandle);
 
   interiorGroup.add(b1DoorGroup);
 
-  // Pravá strana priečky (kúpeľňa)
-  const partRight = new THREE.Mesh(new THREE.BoxGeometry(1.2, wallHeight, 0.1), interiorWallMat);
-  partRight.position.set(halfW - 0.7, wallHeight / 2, partitionZ);
-  partRight.castShadow = true;
-  interiorGroup.add(partRight);
+  // 5. PLNÁ DELIACA PRIEČKA SPÁLNE 1 (pri z = partitionZ, x in [-halfW, 0])
+  // Táto stena je PLNÁ BEZ DVERÍ, oddeľuje Spálňu 1 od 2. spálne (alebo obývačky)
+  const b1SolidFrontWall = new THREE.Mesh(new THREE.BoxGeometry(halfW - 0.2, wallHeight, 0.1), interiorWallMat);
+  b1SolidFrontWall.position.set(-halfW / 2 + 0.1, wallHeight / 2, partitionZ);
+  b1SolidFrontWall.castShadow = true;
+  interiorGroup.add(b1SolidFrontWall);
+
+  // Zistenie stavu 2. spálne pre umiestnenie rebríka a dispozície
+  const is2ndBedroomActive = extension >= 3.9 && extraBedroom;
+  const extraBedRoomLen = 2.4;
+  const extraBedRoomEnd = partitionZ + extraBedRoomLen;
 
   // Rebrík z prírodného dreva (z fotky 4)
   // V prípade pridania 2. spálne sa presunie medzi novú spálňu a gauč
