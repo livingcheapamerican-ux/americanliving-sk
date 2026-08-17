@@ -325,34 +325,99 @@ export default function House3DViewer({
       houseContainer.add(barnModel);
     }
 
-    // Pridanie 3D kót / Rozmerových vodiacich čiar
+    // Pridanie 3D kót / Rozmerových vodiacich čiar a textových štítkov
     if (showDimensions) {
       const dimGroup = new THREE.Group();
       dimGroup.name = 'Dimensions3D';
 
-      const totalLen = 9.6 + extension;
-      const houseW = 4.8;
-      const houseH = 4.6;
+      const houseW = 4.5;
+      const porchD = 1.3;
+      const bodyL = 6.5 + extension;
+      const totalLen = bodyL + porchD;
+      const ridgeH = 4.4;
 
-      // Kóta dĺžky (pozdlžna strana)
-      const lenLineMat = new THREE.LineBasicMaterial({ color: 0xef4444, linewidth: 2 });
-      const lenPoints = [
-        new THREE.Vector3(-houseW / 2 - 0.6, 0, -totalLen / 2),
-        new THREE.Vector3(-houseW / 2 - 0.6, 0, totalLen / 2)
+      // Pomocná funkcia pre 3D textový odznak (Sprite)
+      const createTextBadge = (text, bgColor = '#1e293b', textColor = '#ffffff') => {
+        const canvas = document.createElement('canvas');
+        canvas.width = 380;
+        canvas.height = 100;
+        const ctx = canvas.getContext('2d');
+
+        // Zaoblený obdĺžnik (Pill badge)
+        ctx.fillStyle = bgColor;
+        ctx.beginPath();
+        ctx.roundRect(10, 10, 360, 80, 24);
+        ctx.fill();
+
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+        ctx.stroke();
+
+        // Text
+        ctx.fillStyle = textColor;
+        ctx.font = 'bold 36px Outfit, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(text, 190, 50);
+
+        const tex = new THREE.CanvasTexture(canvas);
+        const spriteMat = new THREE.SpriteMaterial({ map: tex, depthTest: false });
+        const sprite = new THREE.Sprite(spriteMat);
+        sprite.scale.set(2.4, 0.65, 1.0);
+        return sprite;
+      };
+
+      // 1. Kóta ŠÍRKY (Predné čelo: 4.5 m)
+      const wLineMat = new THREE.LineBasicMaterial({ color: 0x2563eb, linewidth: 3 });
+      const wPoints = [
+        new THREE.Vector3(-houseW / 2, 0.15, totalLen / 2 + 0.8),
+        new THREE.Vector3(houseW / 2, 0.15, totalLen / 2 + 0.8)
       ];
-      const lenGeo = new THREE.BufferGeometry().setFromPoints(lenPoints);
-      const lenLine = new THREE.Line(lenGeo, lenLineMat);
+      const wLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(wPoints), wLineMat);
+      dimGroup.add(wLine);
+
+      const wBadge = createTextBadge('↔ Šírka: 4,5 m', '#2563eb');
+      wBadge.position.set(0, 0.6, totalLen / 2 + 0.8);
+      dimGroup.add(wBadge);
+
+      // 2. Kóta OBYTNEJ ČASTI (Bočná strana: 6.5 m + extension)
+      const lenLineMat = new THREE.LineBasicMaterial({ color: 0xdc2626, linewidth: 3 });
+      const lenPoints = [
+        new THREE.Vector3(-houseW / 2 - 0.7, 0.15, -totalLen / 2),
+        new THREE.Vector3(-houseW / 2 - 0.7, 0.15, totalLen / 2 - porchD)
+      ];
+      const lenLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(lenPoints), lenLineMat);
       dimGroup.add(lenLine);
 
-      // Kóta šírky (predná strana)
-      const wLineMat = new THREE.LineBasicMaterial({ color: 0x3b82f6, linewidth: 2 });
-      const wPoints = [
-        new THREE.Vector3(-houseW / 2, 0, totalLen / 2 + 0.6),
-        new THREE.Vector3(houseW / 2, 0, totalLen / 2 + 0.6)
+      const lenBadge = createTextBadge(`⤢ Obytná časť: ${bodyL.toFixed(1)} m`, '#dc2626');
+      lenBadge.position.set(-houseW / 2 - 0.8, 0.6, (-totalLen / 2 + totalLen / 2 - porchD) / 2);
+      dimGroup.add(lenBadge);
+
+      // 3. Kóta KRYTEJ TERASY (Bočná strana: 1.3 m)
+      const porchLineMat = new THREE.LineBasicMaterial({ color: 0xd97706, linewidth: 3 });
+      const porchPoints = [
+        new THREE.Vector3(-houseW / 2 - 0.7, 0.15, totalLen / 2 - porchD),
+        new THREE.Vector3(-houseW / 2 - 0.7, 0.15, totalLen / 2)
       ];
-      const wGeo = new THREE.BufferGeometry().setFromPoints(wPoints);
-      const wLine = new THREE.Line(wGeo, wLineMat);
-      dimGroup.add(wLine);
+      const porchLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(porchPoints), porchLineMat);
+      dimGroup.add(porchLine);
+
+      const porchBadge = createTextBadge('⤢ Terasa: 1,3 m', '#d97706');
+      porchBadge.position.set(-houseW / 2 - 0.8, 0.6, totalLen / 2 - porchD / 2);
+      dimGroup.add(porchBadge);
+
+      // 4. Kóta VÝŠKY HREBEŇA (4.4 m)
+      const hLineMat = new THREE.LineBasicMaterial({ color: 0x059669, linewidth: 3 });
+      const hPoints = [
+        new THREE.Vector3(houseW / 2 + 0.6, 0, totalLen / 2 + 0.1),
+        new THREE.Vector3(houseW / 2 + 0.6, ridgeH, totalLen / 2 + 0.1)
+      ];
+      const hLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(hPoints), hLineMat);
+      dimGroup.add(hLine);
+
+      const hBadge = createTextBadge(`↕ Výška: ${ridgeH} m`, '#059669');
+      hBadge.position.set(houseW / 2 + 1.2, ridgeH / 2, totalLen / 2 + 0.1);
+      dimGroup.add(hBadge);
 
       houseContainer.add(dimGroup);
     }
@@ -568,8 +633,8 @@ export default function House3DViewer({
                   : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-transparent hover:border-slate-300'
               }`}
             >
-              <div className="w-3 h-3 rounded-full bg-[#22252a] border border-amber-500" />
-              Antracit + Drevo
+              <div className="w-3 h-3 rounded-full bg-[#3e454c] border border-amber-500" />
+              Sivý plech + Drevo
             </button>
 
             <button
@@ -610,10 +675,10 @@ export default function House3DViewer({
             <span className="text-xs font-black text-slate-800 dark:text-white px-2">Dĺžka:</span>
             <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl gap-1">
               {[
-                { val: 0, label: 'Základ (9.6m)' },
-                { val: 1.2, label: '+1.2m' },
-                { val: 2.4, label: '+2.4m' },
-                { val: 3.6, label: '+3.6m' }
+                { val: 0, label: 'Základ (6.5m+1.3m)' },
+                { val: 1.3, label: '+1.3m' },
+                { val: 2.6, label: '+2.6m' },
+                { val: 3.9, label: '+3.9m' }
               ].map((opt) => (
                 <button
                   key={opt.val}

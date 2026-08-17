@@ -2,19 +2,20 @@ import * as THREE from 'three';
 
 /**
  * Fotorealistický 3D Model pre Barn House 48 (PH-008)
- * Presne namodelovaný podľa reálnych výrobných fotografií:
- * - Zapustený predný portál (krytá terasa s hĺbkou 1.2 m s celodreveným škandinávskym obkladom)
- * - 4-dielna spodná sklenená stena s otváracími terasovými dverami a kovaním
- * - Trojdielne štítové presklenie kopírujúce 45° sedlovú strechu
- * - Vyvýšené stĺpové základy (drevené pätky + oceľové zemné skrutky a zavetrovanie)
- * - Pozdĺžne drážkovaná terasa zo severskej borovice
- * - Čierny nerezový komín na pravej strane strechy
- * - PBR materiály s vysokým detailom (antracitový falcovaný plech, škandinávsky smrek, prémiové sklo)
+ * Presné rozmery a špecifikácia:
+ * - Šírka domu: 4.5 m
+ * - Základná dĺžka obytného modulu: 6.5 m (predĺženia o +1.3 m: 7.8m, 9.1m, 10.4m)
+ * - Hĺbka zapusteného portálu / krytej terasy: 1.3 m
+ * - Celková dĺžka strechy a korpusu: 7.8 m (6.5m obytná časť + 1.3m terasa)
+ * - Výška po odkvap: 2.8 m, Výška po hrebeň: 4.4 m
+ * - Architektonický sivý falcovaný plech (RAL 7016 / RAL 7024) s jemnou zrnitou štruktúrou
+ * - Realistické drevené lamely zo škandinávskeho smreku s textúrou vlákien
+ * - 3D interaktívne kóty a rozmerové štítky
  */
 
 export function createBarn48Model({
-  facade = 'standard', // 'standard' (antracit+drevo), 'wood' (celodrevo), 'stucco' (biela omietka)
-  extension = 0,       // 0, 1.2, 2.4, 3.6, 4.8 m
+  facade = 'standard', // 'standard' (sivý plech+drevo), 'wood' (celodrevo), 'stucco' (biela omietka)
+  extension = 0,       // 0, 1.3, 2.6, 3.9 m
   roofCutaway = 0,     // 0.0 až 1.0 (odklopenie strechy pre zobrazenie interiéru)
   timeOfDay = 'day',   // 'day', 'sunset', 'night'
   interiorType = 'wood' // 'wood', 'drywall'
@@ -22,50 +23,74 @@ export function createBarn48Model({
   const rootGroup = new THREE.Group();
   rootGroup.name = 'Barn48_Photorealistic_House';
 
-  const width = 4.8;
-  const wallHeight = 2.8;
-  const ridgeHeight = 4.65;
-  const gableHeight = ridgeHeight - wallHeight; // 1.85m
-  const porchDepth = 1.25; // Hĺbka zapusteného predného portálu
-  const length = 9.6 + extension;
-  const halfW = width / 2;
-  const halfL = length / 2;
-  const glassZ = halfL - porchDepth; // Pozícia sklenenej steny
+  const width = 4.5;
+  const wallHeight = 2.75;
+  const ridgeHeight = 4.4;
+  const gableHeight = ridgeHeight - wallHeight; // 1.65m
+  const porchDepth = 1.3; // Zapustená krytá terasa presne 1.3m
+  const houseBodyLength = 6.5 + extension; // Obytná časť: 6.5m základ + predĺženia
+  const totalLength = houseBodyLength + porchDepth; // 7.8m základ celkom
+  
+  const halfW = width / 2; // 2.25m
+  const halfL = totalLength / 2; // 3.9m
+  const glassZ = halfL - porchDepth; // Z-súradnica sklenenej steny
 
   const isNight = timeOfDay === 'night';
   const isSunset = timeOfDay === 'sunset';
 
-  // ── 1. PROCEDURÁLNE PBR TEXTÚRY A MATERIÁLY ────────────────────────────────────
+  // ── 1. PROCEDURÁLNE PBR TEXTÚRY S VYSOKÝM DETAILOM ─────────────────────────────
 
-  // Vytvorenie procedurálnej textúry dreva (plank normal/bump efekt)
-  const createWoodTexture = (baseHex, isDark = false) => {
+  // Generátor fotorealistickej textúry dreva s lamelami a letokruhmi
+  const createWoodTexture = () => {
     const canvas = document.createElement('canvas');
-    canvas.width = 512;
-    canvas.height = 512;
+    canvas.width = 1024;
+    canvas.height = 1024;
     const ctx = canvas.getContext('2d');
-    
-    // Základná farba dreva
-    ctx.fillStyle = baseHex;
-    ctx.fillRect(0, 0, 512, 512);
 
-    // Zvislé lamely a letokruhy dreva
-    const plankWidth = 32;
-    for (let x = 0; x < 512; x += plankWidth) {
-      ctx.strokeStyle = isDark ? 'rgba(40,25,15,0.4)' : 'rgba(120,80,40,0.35)';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, 512);
-      ctx.stroke();
+    // Podkladová farba dreva
+    ctx.fillStyle = '#d1985a';
+    ctx.fillRect(0, 0, 1024, 1024);
 
-      // Jemná štruktúra vlákien
-      for (let i = 0; i < 6; i++) {
-        ctx.strokeStyle = 'rgba(0,0,0,0.04)';
-        ctx.lineWidth = 1;
+    // Jednotlivé zvislé dosky (šírka dosky ~ 64px)
+    const boardW = 64;
+    for (let x = 0; x < 1024; x += boardW) {
+      // Jemná zmena odtieňa každej dosky pre prirodzenosť
+      const shadeJitter = (Math.random() - 0.5) * 25;
+      const r = Math.min(255, Math.max(0, 215 + shadeJitter));
+      const g = Math.min(255, Math.max(0, 155 + shadeJitter * 0.8));
+      const b = Math.min(255, Math.max(0, 92 + shadeJitter * 0.6));
+      ctx.fillStyle = `rgb(${r},${g},${b})`;
+      ctx.fillRect(x, 0, boardW, 1024);
+
+      // Tmavá drážka medzi doskami
+      ctx.fillStyle = 'rgba(60, 35, 15, 0.45)';
+      ctx.fillRect(x, 0, 3, 1024);
+      ctx.fillStyle = 'rgba(255, 230, 190, 0.2)';
+      ctx.fillRect(x + 3, 0, 1, 1024);
+
+      // Vlákna dreva (Wood grain)
+      for (let i = 0; i < 12; i++) {
+        ctx.strokeStyle = 'rgba(90, 50, 20, 0.05)';
+        ctx.lineWidth = 1 + Math.random();
         ctx.beginPath();
-        ctx.moveTo(x + i * 5 + Math.random() * 2, 0);
-        ctx.lineTo(x + i * 5 + Math.random() * 2, 512);
+        const startX = x + Math.random() * boardW;
+        ctx.moveTo(startX, 0);
+        ctx.bezierCurveTo(
+          startX + (Math.random() - 0.5) * 10, 340,
+          startX + (Math.random() - 0.5) * 10, 680,
+          startX + (Math.random() - 0.5) * 6, 1024
+        );
         ctx.stroke();
+      }
+
+      // Hrkčky v dreve (Knots)
+      if (Math.random() > 0.6) {
+        const knotY = Math.random() * 900 + 50;
+        const knotX = x + boardW / 2 + (Math.random() - 0.5) * 20;
+        ctx.fillStyle = 'rgba(75, 40, 15, 0.35)';
+        ctx.beginPath();
+        ctx.ellipse(knotX, knotY, 6, 14, (Math.random() - 0.5) * 0.4, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
 
@@ -75,202 +100,231 @@ export function createBarn48Model({
     return texture;
   };
 
-  // Textúra terasových dosiek s drážkami
+  // Textúra terasových ryhovaných dosiek
   const createDeckTexture = () => {
     const canvas = document.createElement('canvas');
-    canvas.width = 256;
-    canvas.height = 512;
+    canvas.width = 512;
+    canvas.height = 1024;
     const ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#b87c44';
-    ctx.fillRect(0, 0, 256, 512);
 
-    // Pozdĺžne ryhy terasy
-    for (let x = 0; x < 256; x += 16) {
-      ctx.fillStyle = '#8f5828';
-      ctx.fillRect(x, 0, 3, 512);
-      ctx.fillStyle = '#d49b5c';
-      ctx.fillRect(x + 3, 0, 1, 512);
+    ctx.fillStyle = '#b7793d';
+    ctx.fillRect(0, 0, 512, 1024);
+
+    const plankWidth = 32;
+    for (let x = 0; x < 512; x += plankWidth) {
+      const tint = (Math.random() - 0.5) * 18;
+      ctx.fillStyle = `rgb(${185 + tint}, ${122 + tint * 0.8}, ${62 + tint * 0.5})`;
+      ctx.fillRect(x, 0, plankWidth, 1024);
+
+      // Mikro-drážky (ryhovanie terasy)
+      for (let g = 4; g < plankWidth - 4; g += 6) {
+        ctx.fillStyle = 'rgba(70, 35, 10, 0.3)';
+        ctx.fillRect(x + g, 0, 2, 1024);
+        ctx.fillStyle = 'rgba(255, 220, 170, 0.15)';
+        ctx.fillRect(x + g + 2, 0, 1, 1024);
+      }
+
+      // Hlboká medzera medzi doskami
+      ctx.fillStyle = 'rgba(40, 20, 5, 0.6)';
+      ctx.fillRect(x, 0, 3, 1024);
     }
+
     const texture = new THREE.CanvasTexture(canvas);
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(4, 8);
+    texture.repeat.set(3, 6);
     return texture;
   };
 
-  const woodTexture = createWoodTexture('#cf9556');
-  const deckTexture = createDeckTexture();
+  // Textúra práškového sivého plechu (RAL 7016)
+  const createMetalNormalTexture = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 256;
+    canvas.height = 256;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = 'rgb(128, 128, 255)'; // Neutrálna modrá normal mapa
+    ctx.fillRect(0, 0, 256, 256);
 
-  // PBR Materiály
+    // Mikro šum pre matný lakovaný povrch
+    const imgData = ctx.getImageData(0, 0, 256, 256);
+    for (let i = 0; i < imgData.data.length; i += 4) {
+      const noise = (Math.random() - 0.5) * 12;
+      imgData.data[i] = Math.min(255, Math.max(0, 128 + noise));
+      imgData.data[i + 1] = Math.min(255, Math.max(0, 128 + noise));
+      imgData.data[i + 2] = 255;
+    }
+    ctx.putImageData(imgData, 0, 0);
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    return texture;
+  };
+
+  const woodTexture = createWoodTexture();
+  const deckTexture = createDeckTexture();
+  const metalNormal = createMetalNormalTexture();
+
+  // PBR MATERIÁLY
+  
+  // Sivý architektonický plech (RAL 7016 Antracitovo sivá - zosvetlená na žiadosť používateľa)
+  const greyMetalMat = new THREE.MeshStandardMaterial({
+    color: 0x3e454c, // Príjemná moderná architektonická sivá (namiesto čiernej)
+    roughness: 0.45,
+    metalness: 0.55,
+    normalMap: metalNormal,
+    normalScale: new THREE.Vector2(0.15, 0.15),
+    name: 'ArchitecturalGreyMetal'
+  });
+
+  // Škandinávsky smrek
   const woodMat = new THREE.MeshStandardMaterial({
     map: woodTexture,
-    color: 0xdca468,
-    roughness: 0.65,
-    metalness: 0.05,
+    color: 0xe6b074,
+    roughness: 0.55,
+    metalness: 0.02,
     name: 'NordicSpruce'
   });
 
-  const porchWoodMat = new THREE.MeshStandardMaterial({
-    map: woodTexture,
-    color: 0xe0a66a,
-    roughness: 0.6,
-    metalness: 0.02,
-    name: 'PorchSpruce'
-  });
-
-  const anthraciteMat = new THREE.MeshStandardMaterial({
-    color: 0x1f2328,
-    roughness: 0.38,
-    metalness: 0.65,
-    name: 'AnthraciteSeam'
-  });
-
-  const frameMat = new THREE.MeshStandardMaterial({
-    color: 0x1b1d21,
-    roughness: 0.28,
-    metalness: 0.85,
-    name: 'AluFrame'
-  });
-
-  const stuccoMat = new THREE.MeshStandardMaterial({
-    color: 0xf6f5f0,
-    roughness: 0.94,
-    metalness: 0.01,
-    name: 'WhiteStucco'
-  });
-
-  const glassMat = new THREE.MeshPhysicalMaterial({
-    color: isNight ? 0xfff0cc : 0x90c4e8,
-    transmission: 0.92,
-    opacity: 0.35,
-    transparent: true,
-    roughness: 0.04,
-    metalness: 0.1,
-    ior: 1.52,
-    reflectivity: 0.8,
-    name: 'Glass'
-  });
-
+  // Terasové dosky
   const deckMat = new THREE.MeshStandardMaterial({
     map: deckTexture,
-    color: 0xb57b42,
-    roughness: 0.72,
-    metalness: 0.05,
+    color: 0xc68a4c,
+    roughness: 0.65,
+    metalness: 0.02,
     name: 'TerraceDecking'
   });
 
-  const foundationWoodMat = new THREE.MeshStandardMaterial({
-    map: woodTexture,
-    color: 0x966030,
-    roughness: 0.85,
-    name: 'FoundationPosts'
+  // Biela omietka
+  const stuccoMat = new THREE.MeshStandardMaterial({
+    color: 0xf5f3ee,
+    roughness: 0.95,
+    metalness: 0.02,
+    name: 'WhiteStucco'
   });
 
-  const steelMat = new THREE.MeshStandardMaterial({
-    color: 0x4a4f55,
-    roughness: 0.45,
-    metalness: 0.85,
-    name: 'GalvanizedSteel'
+  // Hliníkové antracitové rámy okien a dverí (RAL 7016)
+  const frameMat = new THREE.MeshStandardMaterial({
+    color: 0x2d3238,
+    roughness: 0.35,
+    metalness: 0.75,
+    name: 'AluFrame'
   });
 
+  // Prémiové reflexné sklo s prirodzeným odrazom
+  const glassMat = new THREE.MeshPhysicalMaterial({
+    color: isNight ? 0xffeaaf : 0xaad4f5,
+    transmission: 0.88,
+    opacity: 0.38,
+    transparent: true,
+    roughness: 0.03,
+    metalness: 0.15,
+    ior: 1.52,
+    reflectivity: 0.85,
+    name: 'ArchitecturalGlass'
+  });
+
+  // Interiérové materiály
   const interiorWallMat = new THREE.MeshStandardMaterial({
-    color: interiorType === 'wood' ? 0xdfba8c : 0xf4f1eb,
-    roughness: 0.85,
-    name: 'InteriorWall'
+    color: interiorType === 'wood' ? 0xe2be92 : 0xf6f3eb,
+    roughness: 0.85
   });
 
   const interiorFloorMat = new THREE.MeshStandardMaterial({
-    color: 0xc8985c,
-    roughness: 0.6,
-    name: 'OSB_Floor'
+    color: 0xd4a366,
+    roughness: 0.55
   });
 
-  // Výber fasády
-  const outerWallMat = facade === 'wood' ? woodMat : (facade === 'stucco' ? stuccoMat : anthraciteMat);
-  const roofMat = anthraciteMat;
+  // Priradenie fasády
+  const outerWallMat = facade === 'wood' ? woodMat : (facade === 'stucco' ? stuccoMat : greyMetalMat);
+  const roofMat = greyMetalMat;
 
-  // ── 2. ZÁKLADY, VYVÝŠENÉ STĹPIKY A TERASA ─────────────────────────────────────
+  // ── 2. ZEMNÝ PODKLAD & VYVÝŠENÉ ZÁKLADY (PODĽA FOTKY 1) ────────────────────────
 
-  const foundationGroup = new THREE.Group();
-  foundationGroup.name = 'Foundation_And_Terrace';
+  const siteGroup = new THREE.Group();
+  siteGroup.name = 'Site_And_Foundation';
 
-  const groundClearance = 0.85; // Svetlá výška nad terénom
-  const totalDeckLength = 4.2; // Predĺženie terasy pred dom
+  // Prírodný terén / Štrkové lôžko
+  const groundGeo = new THREE.CylinderGeometry(14, 14, 0.3, 32);
+  const groundMat = new THREE.MeshStandardMaterial({
+    color: 0x5a5448, // Štrkovo-piesčitá zemina
+    roughness: 0.98,
+    metalness: 0.0
+  });
+  const ground = new THREE.Mesh(groundGeo, groundMat);
+  ground.position.set(0, -1.0, 0);
+  ground.receiveShadow = true;
+  siteGroup.add(ground);
 
-  // Masívne drevené stĺpy základov (viditeľné na fotke 1)
+  // Masívne drevené základové stĺpy (usadenie na zemných skrutkách)
+  const postHeight = 0.85;
   const postWidth = 0.32;
-  const postHeight = groundClearance;
   const postGeo = new THREE.BoxGeometry(postWidth, postHeight, postWidth);
+  const postMat = new THREE.MeshStandardMaterial({ map: woodTexture, color: 0xa87038, roughness: 0.8 });
 
-  const postPositionsX = [-halfW + 0.3, -halfW / 3, halfW / 3, halfW - 0.3];
-  const postPositionsZ = [halfL + totalDeckLength - 0.3, halfL + 0.4, 0, -halfL + 0.4];
+  const postPositionsX = [-halfW + 0.25, -halfW / 3, halfW / 3, halfW - 0.25];
+  const postPositionsZ = [halfL + 2.4, halfL, 0, -halfL + 0.4];
 
   postPositionsZ.forEach(pz => {
     postPositionsX.forEach(px => {
-      // Drevený hranol
-      const post = new THREE.Mesh(postGeo, foundationWoodMat);
+      // Drevený stĺp
+      const post = new THREE.Mesh(postGeo, postMat);
       post.position.set(px, -postHeight / 2, pz);
       post.castShadow = true;
       post.receiveShadow = true;
-      foundationGroup.add(post);
+      siteGroup.add(post);
 
-      // Oceľová zemná skrutka / pätka pod stĺpom
-      const screwGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.4, 12);
-      const screw = new THREE.Mesh(screwGeo, steelMat);
-      screw.position.set(px, -postHeight - 0.15, pz);
-      foundationGroup.add(screw);
+      // Pozinkovaná zemná pätka
+      const screwGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.35, 12);
+      const screwMat = new THREE.MeshStandardMaterial({ color: 0x7c858e, metalness: 0.9, roughness: 0.3 });
+      const screw = new THREE.Mesh(screwGeo, screwMat);
+      screw.position.set(px, -postHeight - 0.12, pz);
+      siteGroup.add(screw);
     });
   });
 
-  // Oceľové zavetrovanie (diagonálne tiahla pod terasou)
-  const braceMat = steelMat;
-  for (let i = 0; i < postPositionsX.length - 1; i++) {
-    const p1 = new THREE.Vector3(postPositionsX[i], -0.1, halfL + totalDeckLength - 0.3);
-    const p2 = new THREE.Vector3(postPositionsX[i + 1], -groundClearance + 0.1, halfL + 0.4);
-    const braceGeo = new THREE.CylinderGeometry(0.015, 0.015, p1.distanceTo(p2), 8);
-    const brace = new THREE.Mesh(braceGeo, braceMat);
-    brace.position.copy(p1.clone().add(p2).multiplyScalar(0.5));
-    brace.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), p2.clone().sub(p1).normalize());
-    foundationGroup.add(brace);
-  }
+  rootGroup.add(siteGroup);
 
-  // Drevená pochôdzna terasa (začína od skla glassZ a siaha dopredu)
-  const deckLength = (halfL + totalDeckLength) - glassZ;
-  const deckCenterZ = glassZ + deckLength / 2;
-  const deckWidth = width + 0.2;
+  // ── 3. TERASA S POZDĹŽNYMI DOSKAMI (ŠÍRKA 4.5M, DĹŽKA 1.3M KRYTÁ + 2.5M VONKAJŠIA) ─
 
-  const deckBoardGeo = new THREE.BoxGeometry(deckWidth, 0.06, deckLength);
-  const deckMesh = new THREE.Mesh(deckBoardGeo, deckMat);
+  const terraceGroup = new THREE.Group();
+  terraceGroup.name = 'Terrace';
+
+  const outdoorDeckLength = 2.6; // Vonkajšia terasa pred portálom
+  const totalDeckLength = porchDepth + outdoorDeckLength; // 1.3m + 2.6m = 3.9m
+  const deckCenterZ = glassZ + totalDeckLength / 2;
+
+  const deckGeo = new THREE.BoxGeometry(width, 0.06, totalDeckLength);
+  const deckMesh = new THREE.Mesh(deckGeo, deckMat);
   deckMesh.position.set(0, 0.03, deckCenterZ);
   deckMesh.receiveShadow = true;
   deckMesh.castShadow = true;
-  foundationGroup.add(deckMesh);
+  terraceGroup.add(deckMesh);
 
-  // Čelná obvodová zvislá lišta terasy (Fascia apron - viditeľná na fotke 1)
-  const terraceApronGeo = new THREE.BoxGeometry(deckWidth + 0.04, 0.45, 0.05);
-  const terraceApron = new THREE.Mesh(terraceApronGeo, foundationWoodMat);
-  terraceApron.position.set(0, -0.2, halfL + totalDeckLength);
-  terraceApron.castShadow = true;
-  foundationGroup.add(terraceApron);
+  // Čelná doska terasy (Apron)
+  const apronGeo = new THREE.BoxGeometry(width + 0.02, 0.42, 0.05);
+  const apron = new THREE.Mesh(apronGeo, postMat);
+  apron.position.set(0, -0.18, halfL + outdoorDeckLength);
+  apron.castShadow = true;
+  terraceGroup.add(apron);
 
-  rootGroup.add(foundationGroup);
+  rootGroup.add(terraceGroup);
 
-  // ── 3. HLAVNÝ KORPUS DOMU & INTERIÉR ──────────────────────────────────────────
+  // ── 4. KORPUS DOMU & INTERIÉR (OBYTNÁ ČASŤ 6.5M + PREDĹŽENIA) ─────────────────
 
-  const houseGroup = new THREE.Group();
-  houseGroup.name = 'HouseBody';
+  const houseBody = new THREE.Group();
+  houseBody.name = 'HouseBody';
 
-  const interiorLength = glassZ - (-halfL);
   const interiorCenterZ = (glassZ + (-halfL)) / 2;
 
-  // Vnútorná podlaha (OSB / Drevo)
-  const floorGeo = new THREE.BoxGeometry(width - 0.4, 0.08, interiorLength - 0.2);
+  // Interiérová podlaha
+  const floorGeo = new THREE.BoxGeometry(width - 0.36, 0.08, houseBodyLength - 0.1);
   const floor = new THREE.Mesh(floorGeo, interiorFloorMat);
   floor.position.set(0, 0.04, interiorCenterZ);
   floor.receiveShadow = true;
-  houseGroup.add(floor);
+  houseBody.add(floor);
 
-  // Zadná stena
+  // Zadná plná stena so sedlovým štítom
   const backWallShape = new THREE.Shape();
   backWallShape.moveTo(-halfW, 0);
   backWallShape.lineTo(halfW, 0);
@@ -279,307 +333,267 @@ export function createBarn48Model({
   backWallShape.lineTo(-halfW, wallHeight);
   backWallShape.closePath();
 
-  const backWallGeo = new THREE.ExtrudeGeometry(backWallShape, { depth: 0.2, bevelEnabled: false });
+  const backWallGeo = new THREE.ExtrudeGeometry(backWallShape, { depth: 0.22, bevelEnabled: false });
   const backWall = new THREE.Mesh(backWallGeo, outerWallMat);
   backWall.position.set(0, 0, -halfL);
   backWall.castShadow = true;
   backWall.receiveShadow = true;
-  houseGroup.add(backWall);
+  houseBody.add(backWall);
 
-  // Bočné steny (plné po dĺžke domu)
-  const sideWallGeo = new THREE.BoxGeometry(0.25, wallHeight, length);
+  // Bočné steny (plná dĺžka vrátane portálu 7.8m + extension)
+  const sideWallGeo = new THREE.BoxGeometry(0.22, wallHeight, totalLength);
   
   const leftWall = new THREE.Mesh(sideWallGeo, outerWallMat);
-  leftWall.position.set(-halfW + 0.125, wallHeight / 2, 0);
+  leftWall.position.set(-halfW + 0.11, wallHeight / 2, 0);
   leftWall.castShadow = true;
   leftWall.receiveShadow = true;
-  houseGroup.add(leftWall);
+  houseBody.add(leftWall);
 
   const rightWall = new THREE.Mesh(sideWallGeo, outerWallMat);
-  rightWall.position.set(halfW - 0.125, wallHeight / 2, 0);
+  rightWall.position.set(halfW - 0.11, wallHeight / 2, 0);
   rightWall.castShadow = true;
   rightWall.receiveShadow = true;
-  houseGroup.add(rightWall);
+  houseBody.add(rightWall);
 
-  // Falce na antracitových stenách
+  // Zvislé falce na sivom plechu
   if (facade === 'standard') {
-    const seamCount = Math.floor(length / 0.5);
+    const seamCount = Math.floor(totalLength / 0.48);
     for (let i = 0; i <= seamCount; i++) {
-      const z = -halfL + (i * length) / seamCount;
-      const seamGeo = new THREE.BoxGeometry(0.03, wallHeight, 0.02);
+      const z = -halfL + (i * totalLength) / seamCount;
+      const seamGeo = new THREE.BoxGeometry(0.025, wallHeight, 0.025);
       const seamL = new THREE.Mesh(seamGeo, frameMat);
       seamL.position.set(-halfW - 0.01, wallHeight / 2, z);
-      houseGroup.add(seamL);
+      houseBody.add(seamL);
 
       const seamR = new THREE.Mesh(seamGeo, frameMat);
       seamR.position.set(halfW + 0.01, wallHeight / 2, z);
-      houseGroup.add(seamR);
+      houseBody.add(seamR);
     }
   }
 
-  // Interiérové priečky a loft (mezanín)
-  const loftLength = 3.2;
-  const loftGeo = new THREE.BoxGeometry(width - 0.5, 0.12, loftLength);
+  // Interiérový loft / mezanín
+  const loftLength = 2.8;
+  const loftGeo = new THREE.BoxGeometry(width - 0.44, 0.12, loftLength);
   const loft = new THREE.Mesh(loftGeo, woodMat);
-  loft.position.set(0, 2.3, -halfL + loftLength / 2 + 0.2);
+  loft.position.set(0, 2.2, -halfL + loftLength / 2 + 0.2);
   loft.castShadow = true;
   loft.receiveShadow = true;
-  houseGroup.add(loft);
+  houseBody.add(loft);
 
-  // Kúpeľňová priečka pod loftom
-  const bathWallGeo = new THREE.BoxGeometry(1.6, 2.3, 0.1);
-  const bathWall = new THREE.Mesh(bathWallGeo, interiorWallMat);
-  bathWall.position.set(halfW - 1.0, 1.15, -halfL + 2.4);
-  houseGroup.add(bathWall);
+  rootGroup.add(houseBody);
 
-  rootGroup.add(houseGroup);
-
-  // ── 4. ZAPUSTENÝ DREVENÝ PREDNÝ PORTÁL (PO PODĽA FOTIEK 1 & 2) ───────────────────
+  // ── 5. ZAPUSTENÝ DREVENÝ PORTÁL (KRYTÁ TERASA 1.3M Z FOTIEK) ───────────────────
 
   const porchGroup = new THREE.Group();
-  porchGroup.name = 'Recessed_Porch';
+  porchGroup.name = 'Recessed_1.3m_Porch';
 
   const porchCenterZ = glassZ + porchDepth / 2;
-
-  // Vnútorný drevený obklad ľavej steny portálu
-  const porchWallGeo = new THREE.BoxGeometry(0.04, wallHeight, porchDepth);
-  const porchWallL = new THREE.Mesh(porchWallGeo, porchWoodMat);
-  porchWallL.position.set(-halfW + 0.25, wallHeight / 2, porchCenterZ);
-  porchWallL.receiveShadow = true;
-  porchGroup.add(porchWallL);
-
-  // Vnútorný drevený obklad pravej steny portálu
-  const porchWallR = new THREE.Mesh(porchWallGeo, porchWoodMat);
-  porchWallR.position.set(halfW - 0.25, wallHeight / 2, porchCenterZ);
-  porchWallR.receiveShadow = true;
-  porchGroup.add(porchWallR);
-
-  // Šikmý drevený podhľad portálu (ľavá a pravá strana sedlovej strechy)
   const slopeAngle = Math.atan2(gableHeight, halfW);
   const rafterLen = Math.sqrt(halfW * halfW + gableHeight * gableHeight);
 
-  const ceilingGeo = new THREE.BoxGeometry(rafterLen - 0.1, 0.04, porchDepth);
-  
-  const ceilingL = new THREE.Mesh(ceilingGeo, porchWoodMat);
-  ceilingL.position.set(-halfW / 2 + 0.1, wallHeight + gableHeight / 2 - 0.05, porchCenterZ);
-  ceilingL.rotation.z = slopeAngle;
-  ceilingL.receiveShadow = true;
-  porchGroup.add(ceilingL);
+  // Ľavý vnútorný drevený obklad portálu
+  const pWallGeo = new THREE.BoxGeometry(0.04, wallHeight, porchDepth);
+  const pWallL = new THREE.Mesh(pWallGeo, woodMat);
+  pWallL.position.set(-halfW + 0.22, wallHeight / 2, porchCenterZ);
+  pWallL.receiveShadow = true;
+  porchGroup.add(pWallL);
 
-  const ceilingR = new THREE.Mesh(ceilingGeo, porchWoodMat);
-  ceilingR.position.set(halfW / 2 - 0.1, wallHeight + gableHeight / 2 - 0.05, porchCenterZ);
-  ceilingR.rotation.z = -slopeAngle;
-  ceilingR.receiveShadow = true;
-  porchGroup.add(ceilingR);
+  // Pravý vnútorný drevený obklad portálu
+  const pWallR = new THREE.Mesh(pWallGeo, woodMat);
+  pWallR.position.set(halfW - 0.22, wallHeight / 2, porchCenterZ);
+  pWallR.receiveShadow = true;
+  porchGroup.add(pWallR);
 
-  // Čelné skosené štítové lemovanie portálu (hrúbka rámu 0.35m z Photo 1)
-  const portalFasciaGeo = new THREE.BoxGeometry(rafterLen + 0.1, 0.32, 0.06);
+  // Drevený podhľad portálu (ľavá a pravá šikmina strechy)
+  const ceilingGeo = new THREE.BoxGeometry(rafterLen - 0.12, 0.04, porchDepth);
   
-  const fasciaL = new THREE.Mesh(portalFasciaGeo, porchWoodMat);
+  const ceilL = new THREE.Mesh(ceilingGeo, woodMat);
+  ceilL.position.set(-halfW / 2 + 0.08, wallHeight + gableHeight / 2 - 0.04, porchCenterZ);
+  ceilL.rotation.z = slopeAngle;
+  ceilL.receiveShadow = true;
+  porchGroup.add(ceilL);
+
+  const ceilR = new THREE.Mesh(ceilingGeo, woodMat);
+  ceilR.position.set(halfW / 2 - 0.08, wallHeight + gableHeight / 2 - 0.04, porchCenterZ);
+  ceilR.rotation.z = -slopeAngle;
+  ceilR.receiveShadow = true;
+  porchGroup.add(ceilR);
+
+  // Čelné drevené lemovanie štítu (Fascia miter z Photo 1)
+  const fasciaGeo = new THREE.BoxGeometry(rafterLen + 0.08, 0.32, 0.05);
+  
+  const fasciaL = new THREE.Mesh(fasciaGeo, woodMat);
   fasciaL.position.set(-halfW / 2, wallHeight + gableHeight / 2, halfL + 0.02);
   fasciaL.rotation.z = slopeAngle;
   fasciaL.castShadow = true;
   porchGroup.add(fasciaL);
 
-  const fasciaR = new THREE.Mesh(portalFasciaGeo, porchWoodMat);
+  const fasciaR = new THREE.Mesh(fasciaGeo, woodMat);
   fasciaR.position.set(halfW / 2, wallHeight + gableHeight / 2, halfL + 0.02);
   fasciaR.rotation.z = -slopeAngle;
   fasciaR.castShadow = true;
   porchGroup.add(fasciaR);
 
-  // Vertikálne stĺpové obloženie čela
-  const verticalFrontGeo = new THREE.BoxGeometry(0.35, wallHeight, 0.06);
-  const vertL = new THREE.Mesh(verticalFrontGeo, porchWoodMat);
-  vertL.position.set(-halfW + 0.175, wallHeight / 2, halfL + 0.02);
-  vertL.castShadow = true;
-  porchGroup.add(vertL);
+  // Čelné zvislé stĺpiky
+  const frontPostGeo = new THREE.BoxGeometry(0.32, wallHeight, 0.05);
+  const frontPostL = new THREE.Mesh(frontPostGeo, woodMat);
+  frontPostL.position.set(-halfW + 0.16, wallHeight / 2, halfL + 0.02);
+  frontPostL.castShadow = true;
+  porchGroup.add(frontPostL);
 
-  const vertR = new THREE.Mesh(verticalFrontGeo, porchWoodMat);
-  vertR.position.set(halfW - 0.175, wallHeight / 2, halfL + 0.02);
-  vertR.castShadow = true;
-  porchGroup.add(vertR);
+  const frontPostR = new THREE.Mesh(frontPostGeo, woodMat);
+  frontPostR.position.set(halfW - 0.16, wallHeight / 2, halfL + 0.02);
+  frontPostR.castShadow = true;
+  porchGroup.add(frontPostR);
 
   rootGroup.add(porchGroup);
 
-  // ── 5. ZAPUSTENÁ PREDNÁ SKLENENÁ STENA (4-DIELNA + ŠTÍT Z PHOTO 2) ───────────────
+  // ── 6. PREDNÁ SKLENENÁ STENA V ZAPUSTENÍ (PHOTO 2) ─────────────────────────────
 
   const glassFacadeGroup = new THREE.Group();
-  glassFacadeGroup.name = 'Recessed_Glass_Facade';
+  glassFacadeGroup.name = 'Glass_Facade';
   glassFacadeGroup.position.set(0, 0, glassZ);
 
-  const glassWidth = width - 0.5; // Svetlá šírka medzi stenami = 4.3m
-  const glassHalfW = glassWidth / 2;
-  const doorHeight = 2.15; // Výška spodných dverí
+  const glassW = width - 0.44; // 4.06m
+  const glassHalf = glassW / 2;
+  const doorH = 2.15;
 
-  // Spodný nosný prah a obvodové rámy
-  const subFrameGeo = new THREE.BoxGeometry(glassWidth + 0.04, 0.08, 0.12);
-  const bottomThreshold = new THREE.Mesh(subFrameGeo, frameMat);
-  bottomThreshold.position.set(0, 0.04, 0);
-  glassFacadeGroup.add(bottomThreshold);
-
-  // Masívny horizontálny priečnik (Transom beam vo výške 2.15m)
-  const transomGeo = new THREE.BoxGeometry(glassWidth + 0.04, 0.1, 0.14);
+  // Masívny priečnik nad dverami (Transom beam)
+  const transomGeo = new THREE.BoxGeometry(glassW + 0.04, 0.1, 0.12);
   const transom = new THREE.Mesh(transomGeo, frameMat);
-  transom.position.set(0, doorHeight, 0);
+  transom.position.set(0, doorH, 0);
   transom.castShadow = true;
   glassFacadeGroup.add(transom);
 
-  // 4 Spodné sklenené polia (2 pevné okná + 2 dverné krídla)
-  const bayWidth = glassWidth / 4; // ~1.075m
+  // 4 Spodné sklenené panely (2 fixné + 2 dverné krídla)
+  const bayW = glassW / 4;
   for (let i = 0; i < 4; i++) {
-    const bayX = -glassHalfW + bayWidth * i + bayWidth / 2;
-    
-    // Rám okolo každého poľa
-    const bayFrameGeo = new THREE.BoxGeometry(bayWidth - 0.04, doorHeight - 0.1, 0.08);
-    // Sklenená výplň
-    const paneGeo = new THREE.BoxGeometry(bayWidth - 0.1, doorHeight - 0.16, 0.02);
-    const glassPane = new THREE.Mesh(paneGeo, glassMat);
-    glassPane.position.set(bayX, doorHeight / 2, 0);
-    glassPane.castShadow = true;
-    glassFacadeGroup.add(glassPane);
+    const bx = -glassHalf + bayW * i + bayW / 2;
 
-    // Rámy dverí
-    const frameBorder = new THREE.Mesh(bayFrameGeo, frameMat);
-    frameBorder.position.set(bayX, doorHeight / 2, 0);
-    // Vytvorenie dutého rámu cez tenké profily
-    const vertMullionGeo = new THREE.BoxGeometry(0.06, doorHeight, 0.1);
-    const vertMullion = new THREE.Mesh(vertMullionGeo, frameMat);
-    vertMullion.position.set(-glassHalfW + bayWidth * i, doorHeight / 2, 0);
-    vertMullion.castShadow = true;
-    glassFacadeGroup.add(vertMullion);
+    const paneGeo = new THREE.BoxGeometry(bayW - 0.08, doorH - 0.14, 0.02);
+    const pane = new THREE.Mesh(paneGeo, glassMat);
+    pane.position.set(bx, doorH / 2, 0);
+    pane.castShadow = true;
+    glassFacadeGroup.add(pane);
 
-    // Kľučka na dverách (3. pole zľava ako na fotke 2)
+    const mGeo = new THREE.BoxGeometry(0.06, doorH, 0.08);
+    const mMesh = new THREE.Mesh(mGeo, frameMat);
+    mMesh.position.set(-glassHalf + bayW * i, doorH / 2, 0);
+    glassFacadeGroup.add(mMesh);
+
+    // Kľučka na dverách
     if (i === 2) {
-      const handleGeo = new THREE.BoxGeometry(0.03, 0.18, 0.08);
+      const handleGeo = new THREE.BoxGeometry(0.03, 0.18, 0.07);
       const handle = new THREE.Mesh(handleGeo, frameMat);
-      handle.position.set(bayX + bayWidth / 2 - 0.08, 1.05, 0.05);
+      handle.position.set(bx + bayW / 2 - 0.08, 1.05, 0.04);
       glassFacadeGroup.add(handle);
     }
   }
   // Pravý krajný profil
-  const endMullionGeo = new THREE.BoxGeometry(0.06, doorHeight, 0.1);
-  const endMullion = new THREE.Mesh(endMullionGeo, frameMat);
-  endMullion.position.set(glassHalfW, doorHeight / 2, 0);
-  glassFacadeGroup.add(endMullion);
+  const lastMullion = new THREE.Mesh(new THREE.BoxGeometry(0.06, doorH, 0.08), frameMat);
+  lastMullion.position.set(glassHalf, doorH / 2, 0);
+  glassFacadeGroup.add(lastMullion);
 
-  // Vrchné trojuholníkové štítové presklenie (Centrálny trojuholník + 2 bočné lichobežníky)
-  const upperGableH = ridgeHeight - doorHeight - 0.05;
-  const gableCenterShape = new THREE.Shape();
-  gableCenterShape.moveTo(-glassHalfW * 0.45, 0);
-  gableCenterShape.lineTo(glassHalfW * 0.45, 0);
-  gableCenterShape.lineTo(0, upperGableH);
-  gableCenterShape.closePath();
+  // Vrchné trojuholníkové presklenie (Centrálny trojuholník + bočné lichobežníky)
+  const topGableH = ridgeHeight - doorH - 0.05;
+  const centerTriShape = new THREE.Shape();
+  centerTriShape.moveTo(-glassHalf * 0.44, 0);
+  centerTriShape.lineTo(glassHalf * 0.44, 0);
+  centerTriShape.lineTo(0, topGableH);
+  centerTriShape.closePath();
 
-  const gableCenterGeo = new THREE.ShapeGeometry(gableCenterShape);
-  const gableCenterGlass = new THREE.Mesh(gableCenterGeo, glassMat);
-  gableCenterGlass.position.set(0, doorHeight + 0.05, 0);
-  glassFacadeGroup.add(gableCenterGlass);
+  const centerTriGeo = new THREE.ShapeGeometry(centerTriShape);
+  const centerTri = new THREE.Mesh(centerTriGeo, glassMat);
+  centerTri.position.set(0, doorH + 0.05, 0);
+  glassFacadeGroup.add(centerTri);
 
-  // Bočné lichobežníkové sklá
-  const leftTrapezoidShape = new THREE.Shape();
-  leftTrapezoidShape.moveTo(-glassHalfW + 0.05, 0);
-  leftTrapezoidShape.lineTo(-glassHalfW * 0.48, 0);
-  leftTrapezoidShape.lineTo(-glassHalfW * 0.48, upperGableH * 0.52);
-  leftTrapezoidShape.lineTo(-glassHalfW + 0.05, (wallHeight - doorHeight));
-  leftTrapezoidShape.closePath();
+  // Bočné lichobežníky
+  const leftTrapShape = new THREE.Shape();
+  leftTrapShape.moveTo(-glassHalf + 0.04, 0);
+  leftTrapShape.lineTo(-glassHalf * 0.48, 0);
+  leftTrapShape.lineTo(-glassHalf * 0.48, topGableH * 0.5);
+  leftTrapShape.lineTo(-glassHalf + 0.04, wallHeight - doorH);
+  leftTrapShape.closePath();
 
-  const leftGableGeo = new THREE.ShapeGeometry(leftTrapezoidShape);
-  const leftGableGlass = new THREE.Mesh(leftGableGeo, glassMat);
-  leftGableGlass.position.set(0, doorHeight + 0.05, 0);
-  glassFacadeGroup.add(leftGableGlass);
+  const leftTrap = new THREE.Mesh(new THREE.ShapeGeometry(leftTrapShape), glassMat);
+  leftTrap.position.set(0, doorH + 0.05, 0);
+  glassFacadeGroup.add(leftTrap);
 
-  const rightTrapezoidShape = new THREE.Shape();
-  rightTrapezoidShape.moveTo(glassHalfW * 0.48, 0);
-  rightTrapezoidShape.lineTo(glassHalfW - 0.05, 0);
-  rightTrapezoidShape.lineTo(glassHalfW - 0.05, (wallHeight - doorHeight));
-  rightTrapezoidShape.lineTo(glassHalfW * 0.48, upperGableH * 0.52);
-  rightTrapezoidShape.closePath();
+  const rightTrapShape = new THREE.Shape();
+  rightTrapShape.moveTo(glassHalf * 0.48, 0);
+  rightTrapShape.lineTo(glassHalf - 0.04, 0);
+  rightTrapShape.lineTo(glassHalf - 0.04, wallHeight - doorH);
+  rightTrapShape.lineTo(glassHalf * 0.48, topGableH * 0.5);
+  rightTrapShape.closePath();
 
-  const rightGableGeo = new THREE.ShapeGeometry(rightTrapezoidShape);
-  const rightGableGlass = new THREE.Mesh(rightGableGeo, glassMat);
-  rightGableGlass.position.set(0, doorHeight + 0.05, 0);
-  glassFacadeGroup.add(rightGableGlass);
-
-  // Zvislé deliace stĺpiky v štíte
-  const gableMullionGeo = new THREE.BoxGeometry(0.06, upperGableH * 0.6, 0.1);
-  const gMullionL = new THREE.Mesh(gableMullionGeo, frameMat);
-  gMullionL.position.set(-glassHalfW * 0.46, doorHeight + upperGableH * 0.3, 0);
-  glassFacadeGroup.add(gMullionL);
-
-  const gMullionR = new THREE.Mesh(gableMullionGeo, frameMat);
-  gMullionR.position.set(glassHalfW * 0.46, doorHeight + upperGableH * 0.3, 0);
-  glassFacadeGroup.add(gMullionR);
+  const rightTrap = new THREE.Mesh(new THREE.ShapeGeometry(rightTrapShape), glassMat);
+  rightTrap.position.set(0, doorH + 0.05, 0);
+  glassFacadeGroup.add(rightTrap);
 
   rootGroup.add(glassFacadeGroup);
 
-  // ── 6. SEDLOVÁ STRECHA S FALCAMI A KOMÍNOM ────────────────────────────────────
+  // ── 7. SEDLOVÁ STRECHA (SIVÝ FALCOVANÝ PLECH RAL 7016 + KOMÍN) ─────────────────
 
   const roofGroup = new THREE.Group();
-  roofGroup.name = 'RoofStructure';
+  roofGroup.name = 'Roof_Structure';
 
-  const roofLength = length + 0.08;
-  const roofSlopeWidth = rafterLen + 0.12;
+  const roofLen = totalLength + 0.06;
+  const slopeW = rafterLen + 0.12;
 
-  // Ľavé strešné krídlo
-  const roofLeftGeo = new THREE.BoxGeometry(roofSlopeWidth, 0.15, roofLength);
-  const roofLeft = new THREE.Mesh(roofLeftGeo, roofMat);
-  roofLeft.position.set(-halfW / 2, wallHeight + gableHeight / 2 + 0.05, 0);
-  roofLeft.rotation.z = slopeAngle;
-  roofLeft.castShadow = true;
-  roofLeft.receiveShadow = true;
-  roofGroup.add(roofLeft);
+  // Ľavé krídlo strechy
+  const roofLGeo = new THREE.BoxGeometry(slopeW, 0.14, roofLen);
+  const roofL = new THREE.Mesh(roofLGeo, roofMat);
+  roofL.position.set(-halfW / 2, wallHeight + gableHeight / 2 + 0.05, 0);
+  roofL.rotation.z = slopeAngle;
+  roofL.castShadow = true;
+  roofL.receiveShadow = true;
+  roofGroup.add(roofL);
 
-  // Pravé strešné krídlo
-  const roofRightGeo = new THREE.BoxGeometry(roofSlopeWidth, 0.15, roofLength);
-  const roofRight = new THREE.Mesh(roofRightGeo, roofMat);
-  roofRight.position.set(halfW / 2, wallHeight + gableHeight / 2 + 0.05, 0);
-  roofRight.rotation.z = -slopeAngle;
-  roofRight.castShadow = true;
-  roofRight.receiveShadow = true;
-  roofGroup.add(roofRight);
+  // Pravé krídlo strechy
+  const roofRGeo = new THREE.BoxGeometry(slopeW, 0.14, roofLen);
+  const roofR = new THREE.Mesh(roofRGeo, roofMat);
+  roofR.position.set(halfW / 2, wallHeight + gableHeight / 2 + 0.05, 0);
+  roofR.rotation.z = -slopeAngle;
+  roofR.castShadow = true;
+  roofR.receiveShadow = true;
+  roofGroup.add(roofR);
 
-  // Hrebenáč (Ridge cap)
-  const ridgeCapGeo = new THREE.BoxGeometry(0.24, 0.08, roofLength);
+  // Hrebenáč
+  const ridgeCapGeo = new THREE.BoxGeometry(0.22, 0.06, roofLen);
   const ridgeCap = new THREE.Mesh(ridgeCapGeo, frameMat);
-  ridgeCap.position.set(0, ridgeHeight + 0.08, 0);
+  ridgeCap.position.set(0, ridgeHeight + 0.06, 0);
   ridgeCap.castShadow = true;
   roofGroup.add(ridgeCap);
 
-  // Falce na streche
-  const roofSeamCount = Math.floor(roofLength / 0.5);
-  for (let i = 0; i <= roofSeamCount; i++) {
-    const z = -halfL + (i * roofLength) / roofSeamCount;
-    
-    const seamL = new THREE.Mesh(new THREE.BoxGeometry(roofSlopeWidth, 0.03, 0.02), frameMat);
-    seamL.position.set(-halfW / 2, wallHeight + gableHeight / 2 + 0.13, z);
+  // Strešné falce
+  const roofSeams = Math.floor(roofLen / 0.48);
+  for (let i = 0; i <= roofSeams; i++) {
+    const z = -halfL + (i * roofLen) / roofSeams;
+    const seamL = new THREE.Mesh(new THREE.BoxGeometry(slopeW, 0.025, 0.02), frameMat);
+    seamL.position.set(-halfW / 2, wallHeight + gableHeight / 2 + 0.12, z);
     seamL.rotation.z = slopeAngle;
     roofGroup.add(seamL);
 
-    const seamR = new THREE.Mesh(new THREE.BoxGeometry(roofSlopeWidth, 0.03, 0.02), frameMat);
-    seamR.position.set(halfW / 2, wallHeight + gableHeight / 2 + 0.13, z);
+    const seamR = new THREE.Mesh(new THREE.BoxGeometry(slopeW, 0.025, 0.02), frameMat);
+    seamR.position.set(halfW / 2, wallHeight + gableHeight / 2 + 0.12, z);
     seamR.rotation.z = -slopeAngle;
     roofGroup.add(seamR);
   }
 
-  // Čierny nerezový komín (viditeľný na fotke 1 na pravej strane strechy)
-  const chimneyGroup = new THREE.Group();
-  chimneyGroup.name = 'Chimney';
-  chimneyGroup.position.set(1.5, 3.8, halfL - 2.8);
+  // Nerezový čierny komín na pravej strane strechy (z fotky 1)
+  const chimney = new THREE.Group();
+  chimney.position.set(1.4, 3.7, halfL - 2.5);
 
-  const flueGeo = new THREE.CylinderGeometry(0.12, 0.12, 1.4, 16);
-  const flue = new THREE.Mesh(flueGeo, frameMat);
+  const flue = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 1.4, 16), frameMat);
   flue.castShadow = true;
-  chimneyGroup.add(flue);
+  chimney.add(flue);
 
-  // Strieška komína (Cap)
-  const capGeo = new THREE.ConeGeometry(0.22, 0.12, 16);
-  const cap = new THREE.Mesh(capGeo, frameMat);
+  const cap = new THREE.Mesh(new THREE.ConeGeometry(0.2, 0.1, 16), frameMat);
   cap.position.set(0, 0.75, 0);
-  chimneyGroup.add(cap);
+  chimney.add(cap);
 
-  roofGroup.add(chimneyGroup);
+  roofGroup.add(chimney);
 
-  // Exploded View / Odklopenie strechy
   if (roofCutaway > 0) {
     roofGroup.position.y += roofCutaway * 3.5;
     roofGroup.position.z -= roofCutaway * 1.5;
@@ -587,18 +601,16 @@ export function createBarn48Model({
 
   rootGroup.add(roofGroup);
 
-  // ── 7. OSVETLENIE A AMBIENT (Nočný a západový režim) ──────────────────────────
+  // ── 8. SVETLÁ A AMBIENT ────────────────────────────────────────────────────────
 
   if (isNight || isSunset) {
-    // Teplé svetlo z vnútra portálu osvetľujúce terasu
-    const porchLight = new THREE.PointLight(0xffaa44, isNight ? 2.5 : 1.2, 8, 1.5);
-    porchLight.position.set(0, 2.5, glassZ + 0.6);
-    rootGroup.add(porchLight);
+    const pLight = new THREE.PointLight(0xffaa44, isNight ? 2.5 : 1.2, 8, 1.5);
+    pLight.position.set(0, 2.4, glassZ + 0.65);
+    rootGroup.add(pLight);
 
-    // Teplé interiérové svetlo
-    const interiorLight = new THREE.PointLight(0xffd588, isNight ? 3.0 : 1.5, 12, 1.8);
-    interiorLight.position.set(0, 2.2, 0);
-    rootGroup.add(interiorLight);
+    const intLight = new THREE.PointLight(0xffd588, isNight ? 3.0 : 1.5, 12, 1.8);
+    intLight.position.set(0, 2.2, 0);
+    rootGroup.add(intLight);
   }
 
   return rootGroup;

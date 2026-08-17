@@ -32,8 +32,8 @@ export default function Konfigurator3D() {
     facade: 'standard',
     extension: 0,
     interior: 'wood',
-    totalLength: 9.6,
-    estimatedArea: 46
+    totalLength: 7.8,
+    estimatedArea: 35
   });
 
   const [formData, setFormData] = useState({
@@ -49,7 +49,7 @@ export default function Konfigurator3D() {
 
   // Cenník Barn 48
   const basePrice = 21600;
-  const extensionPrices = { 0: 0, 1.2: 3300, 2.4: 6606, 3.6: 9900, 4.8: 15880 };
+  const extensionPrices = { 0: 0, 1.3: 3300, 2.6: 6606, 3.9: 9900 };
   const facadePrices = { standard: 0, wood: 0, stucco: 4321 };
   const interiorPrices = { wood: 6150, drywall: 7073 };
 
@@ -182,7 +182,7 @@ export default function Konfigurator3D() {
                     Barn 48 (PH-008)
                   </Badge>
                   <span className="text-xs text-slate-400">
-                    Rozmery: 4.8m × {(9.6 + config.extension).toFixed(1)}m
+                    Rozmery: 4.5m × {(7.8 + config.extension).toFixed(1)}m (Obytná časť: {(6.5 + config.extension).toFixed(1)}m + Terasa: 1.3m)
                   </span>
                 </div>
 

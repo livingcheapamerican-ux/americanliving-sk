@@ -23,20 +23,19 @@ export default function Barn48InteractiveSection({ dom, className = '' }) {
     facade: 'standard',
     extension: 0,
     interior: 'wood',
-    totalLength: 9.6,
-    estimatedArea: 46
+    totalLength: 7.8,
+    estimatedArea: 35
   });
 
   // Základná cena pre Barn 48
   const basePrice = 21600;
   
-  // Výpočet doplatku za predĺženie
+  // Výpočet doplatku za predĺženie o +1.3 m
   const extensionPrices = {
     0: 0,
-    1.2: 3300,
-    2.4: 6606,
-    3.6: 9900,
-    4.8: 15880
+    1.3: 3300,
+    2.6: 6606,
+    3.9: 9900
   };
 
   // Výpočet doplatku za omietku
