@@ -850,9 +850,9 @@ export function createBarn48Model({
   interiorGroup.add(b1DoorGroup);
 
   // 5. PLNÁ DELIACA PRIEČKA SPÁLNE 1 (pri z = partitionZ, x in [-halfW, 0])
-  // Táto stena je PLNÁ BEZ DVERÍ, oddeľuje Spálňu 1 od 2. spálne (alebo obývačky)
-  const b1SolidFrontWall = new THREE.Mesh(new THREE.BoxGeometry(halfW - 0.2, wallHeight, 0.1), interiorWallMat);
-  b1SolidFrontWall.position.set(-halfW / 2 + 0.1, wallHeight / 2, partitionZ);
+  // Táto stena je ÚPLNE PLNÁ BEZ DVERÍ, oddeľuje Spálňu 1 od obývačky / 2. spálne
+  const b1SolidFrontWall = new THREE.Mesh(new THREE.BoxGeometry(halfW, wallHeight, 0.1), interiorWallMat);
+  b1SolidFrontWall.position.set(-halfW / 2, wallHeight / 2, partitionZ);
   b1SolidFrontWall.castShadow = true;
   interiorGroup.add(b1SolidFrontWall);
 
