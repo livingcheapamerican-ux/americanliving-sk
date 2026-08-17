@@ -53,6 +53,7 @@ export default function House3DViewer({
   const [facade, setFacade] = useState(initialFacade);
   const [extension, setExtension] = useState(initialExtension);
   const [interior, setInterior] = useState(initialInterior);
+  const [extraBedroom, setExtraBedroom] = useState(false);
   const [roofCutaway, setRoofCutaway] = useState(0); // 0 = zatvorená, 1 = odklopená
   const [timeOfDay, setTimeOfDay] = useState('day'); // 'day', 'sunset', 'night'
   const [showDimensions, setShowDimensions] = useState(true);
@@ -71,17 +72,18 @@ export default function House3DViewer({
   }, [initialExtension]);
 
   // Notifikácia rodičovského komponentu o zmene
-  const notifyChange = useCallback((newFacade, newExt, newInt) => {
+  const notifyChange = useCallback((newFacade, newExt, newInt, newExtraBed) => {
     if (onConfigChange) {
       onConfigChange({
         facade: newFacade ?? facade,
         extension: newExt ?? extension,
         interior: newInt ?? interior,
-        totalLength: 9.6 + (newExt ?? extension),
-        estimatedArea: Math.round(4.8 * (9.6 + (newExt ?? extension)))
+        extraBedroom: newExtraBed ?? extraBedroom,
+        totalLength: 8.0 + (newExt ?? extension),
+        estimatedArea: Math.round(4.6 * (8.0 + (newExt ?? extension)))
       });
     }
-  }, [facade, extension, interior, onConfigChange]);
+  }, [facade, extension, interior, extraBedroom, onConfigChange]);
 
   // ── 1. INICIALIZÁCIA SCÉNY THREE.JS ──────────────────────────────────────────
 
@@ -307,7 +309,8 @@ export default function House3DViewer({
             extension,
             roofCutaway,
             timeOfDay,
-            interiorType: interior
+            interiorType: interior,
+            extraBedroom
           });
           houseContainer.add(barnModel);
           setIsLoading(false);
@@ -320,7 +323,8 @@ export default function House3DViewer({
         extension,
         roofCutaway,
         timeOfDay,
-        interiorType: interior
+        interiorType: interior,
+        extraBedroom
       });
       houseContainer.add(barnModel);
     }
@@ -421,7 +425,7 @@ export default function House3DViewer({
 
       houseContainer.add(dimGroup);
     }
-  }, [facade, extension, roofCutaway, timeOfDay, interior, showDimensions]);
+  }, [facade, extension, roofCutaway, timeOfDay, interior, showDimensions, extraBedroom]);
 
   // ── 4. KAMEROVÉ PREDNASTAVENIA ────────────────────────────────────────────────
 
@@ -467,7 +471,7 @@ export default function House3DViewer({
     try {
       const dataUrl = renderer.domElement.toDataURL('image/png');
       const link = document.createElement('a');
-      link.download = `Barn48_3D_Konfiguracia_${facade}_${9.6 + extension}m.png`;
+      link.download = `Barn48_3D_Konfiguracia_${facade}_${8.0 + extension}m.png`;
       link.href = dataUrl;
       link.click();
       toast.success('3D vizualizácia bola úspešne stiahnutá!');
@@ -477,8 +481,8 @@ export default function House3DViewer({
   };
 
   // Prepočet celkovej plochy a rozmerov
-  const currentLength = (9.6 + extension).toFixed(1);
-  const currentArea = Math.round(4.8 * (9.6 + extension));
+  const currentLength = (8.0 + extension).toFixed(1);
+  const currentArea = Math.round(4.6 * (8.0 + extension));
 
   return (
     <div 
@@ -730,7 +734,9 @@ export default function House3DViewer({
                   key={opt.val}
                   onClick={() => {
                     setExtension(opt.val);
-                    notifyChange(facade, opt.val, interior);
+                    const nextExtra = opt.val >= 3.9 ? extraBedroom : false;
+                    if (opt.val < 3.9) setExtraBedroom(false);
+                    notifyChange(facade, opt.val, interior, nextExtra);
                   }}
                   className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
                     extension === opt.val
@@ -759,6 +765,28 @@ export default function House3DViewer({
               <span>{roofCutaway > 0 ? 'Zatvoriť strechu' : 'Dispozícia (3D)'}</span>
             </button>
           </div>
+
+          {/* Možnosť pridania 2. Spálne pri maximálnom predĺžení (+3.9 m) */}
+          {extension >= 3.9 && (
+            <div className="flex items-center gap-1.5 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl p-2 rounded-2xl border border-red-500/40 shadow-xl pointer-events-auto">
+              <span className="text-xs font-black text-slate-800 dark:text-white px-1">Dispozícia pri +3.9m:</span>
+              <button
+                onClick={() => {
+                  const nextVal = !extraBedroom;
+                  setExtraBedroom(nextVal);
+                  notifyChange(facade, extension, interior, nextVal);
+                }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all border ${
+                  extraBedroom
+                    ? 'bg-red-500 text-white border-red-600 shadow-md'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-transparent hover:border-slate-300'
+                }`}
+                title="Pridať 2. spálňu so spoločnou stenou k pôvodnej spálni"
+              >
+                <span>{extraBedroom ? '🛏️ +1 Spálňa navyše (Aktívna)' : '🛋️ Veľká obývačka'}</span>
+              </button>
+            </div>
+          )}
         </div>
       )}
 

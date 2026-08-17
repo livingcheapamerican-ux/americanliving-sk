@@ -4,36 +4,24 @@ import * as THREE from 'three';
  * Plne fotorealistický architektonický 3D Model pre Barn House 48 (PH-008)
  * Presne namodelovaný podľa architektonického výkresu a reálnych fotografií:
  * - Rozmery: Šírka 4.6 m, Celková dĺžka 8.0 m (obytná časť 6.7 m + krytá terasa 1.3 m)
- * - Výšky: Výška po odkvap 2.1 m, Výška po hrebeň 4.0 m (štít 1.9 m)
- * - Farba plechu: Svetlosivá architektonická platina / zinok (RAL 7035 / RAL 7038)
- * - Zadná stena:
- *    • Exteriér: Celodrevený smrekový obklad s 3 plne vyrezanými priechodnými oknami
- *    • Interiér: Reaguje na voľbu materiálu (Tatranský profil / Biely sadrokartón)
- * - SPÁLŇA:
- *    • Manželská posteľ prisunutá priamo k zadnej stene pod veľké okno
- *    • Mäkká perina, vankúše, nočný stolík s lampičkou
- *    • Vstavaná skriňa ROLDOR pozdĺž spoločnej steny s obývačkou
- *    • Priečka s obývačkou a kúpeľňou má zvolený obklad (Tatranský profil / Sadrokartón)
- * - KÚPEĽŇA:
- *    • Walk-in sprchový kút s čírym sklom, čiernou batériou a sprchovou vaničkou
- *    • Drevená umývadlová skrinka s bielym keramickým umývadlom, batériou a zrkadlom
- *    • Závesné WC Geberit a vertikálny bojler na stene
- * - OBÝVAČKA & KUCHYŇA:
- *    • Prémiová látková L-sedačka s vankúšikmi a nožičkami
- *    • Dizajnový konferenčný stolík s rastlinkou a časopisom
- *    • Moderný LED závesný luster (halo kruh) v krove
- *    • Kompletná šalviová linka s indukciou, šikmým digestorom, drezom, rúrou a TV
- *    • 4 priečne drevené klieštiny v rovnakej výške (2.85 m)
- * - MEZONET:
- *    • Podlaha sa predlžuje s domom a pri 3D odkrytí sa nadvihne
+ * - PREDLŽOVANIE DOMU:
+ *    • Kúpeľňa, spálňa a mezonet majú PEVNÚ dĺžku 2.8 m a NEPREDLŽUJÚ SA
+ *    • Predlžuje sa výlučne obývačková časť (z 3.9 m až na 7.8 m pri +3.9 m)
+ *    • Kuchynská linka zostáva fixne ukotvená na svojom pôvodnom mieste pri priečke
+ *    • Pri predĺžení o +3.9 m je možnosť pridať 2. SPÁLŇU so spoločnou stenou s pôvodnou spálňou
+ * - Zadná stena: Celodrevený smrekový obklad s 3 priechodnými oknami (mezonet, kúpeľňa, spálňa)
+ * - Spálňa 1: Manželská posteľ prisunutá pod zadné okno, perina, vankúše, Roldor skriňa
+ * - Kúpeľňa: Walk-in sprcha s čírym sklom, drevená skrinka s umývadlom a zrkadlom, závesné WC, bojler
+ * - Klieštiny: Priečne drevené trámy v krove v rovnakej výške (2.85 m)
  */
 
 export function createBarn48Model({
-  facade = 'standard', // 'standard' (svetlosivý plech+drevo), 'wood' (celodrevo), 'stucco' (biela omietka)
-  extension = 0,       // 0, 1.3, 2.6, 3.9 m
-  roofCutaway = 0,     // 0.0 (zatvorená) až 1.0 (odklopená strecha a mezonet)
-  timeOfDay = 'day',   // 'day', 'sunset', 'night'
-  interiorType = 'wood' // 'wood' (Tatranský profil), 'drywall' (Biely sadrokartón)
+  facade = 'standard',    // 'standard' (svetlosivý plech+drevo), 'wood' (celodrevo), 'stucco' (biela omietka)
+  extension = 0,          // 0, 1.3, 2.6, 3.9 m
+  roofCutaway = 0,        // 0.0 (zatvorená) až 1.0 (odklopená strecha a mezonet)
+  timeOfDay = 'day',      // 'day', 'sunset', 'night'
+  interiorType = 'wood',  // 'wood' (Tatranský profil), 'drywall' (Biely sadrokartón)
+  extraBedroom = false    // pri extension === 3.9m umožní pridať 2. spálňu v obývačkovej časti
 }) {
   const rootGroup = new THREE.Group();
   rootGroup.name = 'Barn48_Full_Architectural_Model';
@@ -48,15 +36,20 @@ export function createBarn48Model({
   const houseBodyLength = totalLength - porchDepth; // 6.7 m základ
 
   const halfW = width / 2; // 2.3 m
-  const halfL = totalLength / 2; // 4.0 m
-  const glassZ = halfL - porchDepth; // 2.7 m (Pozícia prednej sklenenej steny)
+  const halfL = totalLength / 2;
+  const glassZ = halfL - porchDepth; // Pozícia prednej sklenenej steny
+
+  // PEVNÁ ZADNÁ ZÓNA (Spálňa + Kúpeľňa + Mezonet majú vždy fixne 2.8 m)
+  const rearZoneLen = 2.8;
+  const partitionZ = -halfL + rearZoneLen;
+  const rearZoneCenterZ = -halfL + rearZoneLen / 2;
 
   const isNight = timeOfDay === 'night';
   const isSunset = timeOfDay === 'sunset';
 
   // ── 1. PROCEDURÁLNE TEXTÚRY A PBR MATERIÁLY ────────────────────────────────────
 
-  // Textúra Tatranského profilu (Škandinávsky smrek s jemnými škárami a hrčkami)
+  // Textúra Tatranského profilu (Škandinávsky smrek)
   const createPineTexture = () => {
     const canvas = document.createElement('canvas');
     canvas.width = 1024;
@@ -104,7 +97,7 @@ export function createBarn48Model({
     return tex;
   };
 
-  // Textúra Bieleho sadrokartónu (jemná omietková stierka)
+  // Textúra Bieleho sadrokartónu
   const createDrywallTexture = () => {
     const canvas = document.createElement('canvas');
     canvas.width = 512;
@@ -266,6 +259,11 @@ export function createBarn48Model({
   const duvetMat = new THREE.MeshStandardMaterial({
     color: 0xf0f3f6,
     roughness: 0.92
+  });
+
+  const duvetBlueMat = new THREE.MeshStandardMaterial({
+    color: 0x9fb5c8,
+    roughness: 0.9
   });
 
   const headboardMat = new THREE.MeshStandardMaterial({
@@ -448,7 +446,7 @@ export function createBarn48Model({
   rightWallInt.position.set(halfW - 0.12, wallHeight / 2, interiorCenterZ);
   bodyGroup.add(rightWallInt);
 
-  // Bočné vertikálne okno s dreveným rámom
+  // Bočné okno v spálni 1
   const sideWinGroup = new THREE.Group();
   sideWinGroup.position.set(-halfW - 0.01, wallHeight / 2, -halfL + 1.8);
   const sCasing = new THREE.Mesh(new THREE.BoxGeometry(0.04, 1.85, 0.75), woodMat);
@@ -458,6 +456,19 @@ export function createBarn48Model({
   const sGlass = new THREE.Mesh(new THREE.BoxGeometry(0.04, 1.6, 0.45), glassMat);
   sideWinGroup.add(sGlass);
   bodyGroup.add(sideWinGroup);
+
+  // Ak je zapnutá 2. spálňa pri +3.9m, pridáme bočné okno aj pre 2. spálňu
+  if (extension >= 3.9 && extraBedroom) {
+    const sideWin2Group = new THREE.Group();
+    sideWin2Group.position.set(-halfW - 0.01, wallHeight / 2, partitionZ + 1.25);
+    const sCasing2 = new THREE.Mesh(new THREE.BoxGeometry(0.04, 1.85, 0.75), woodMat);
+    sideWin2Group.add(sCasing2);
+    const sFrame2 = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1.7, 0.55), frameMat);
+    sideWin2Group.add(sFrame2);
+    const sGlass2 = new THREE.Mesh(new THREE.BoxGeometry(0.04, 1.6, 0.45), glassMat);
+    sideWin2Group.add(sGlass2);
+    bodyGroup.add(sideWin2Group);
+  }
 
   // Zvislé falce na bočných plechových stenách
   if (facade === 'standard') {
@@ -480,201 +491,191 @@ export function createBarn48Model({
 
   rootGroup.add(bodyGroup);
 
-  // ── 4. KOMPLETNÝ DETAILNÝ INTERIÉR (OBÝVAČKA, KUCHYŇA, SPÁLŇA, KÚPEĽŇA) ──────────
+  // ── 4. KOMPLETNÝ INTERIÉR (SPÁLŇA 1, KÚPEĽŇA, KUCHYŇA, OBÝVAČKA, VOLITEĽNÁ SPÁLŇA 2) ──
 
   const interiorGroup = new THREE.Group();
   interiorGroup.name = 'Detailed_Interior';
 
-  const partitionZ = -1.2;
-  const rearZoneLen = partitionZ - (-halfL);
-  const rearZoneCenterZ = (-halfL + partitionZ) / 2;
+  // 1. FIXNÁ SPÁLŇA 1 NA PRÍZEMÍ (2.8m dlhá, nepredlžuje sa)
+  const bedRoomGroup = new THREE.Group();
 
-  // 1. STROPNÉ KLIEŠTINY (PRESNE 4 TRÁMY VEDĽA SEBA V ROVNAKEJ VÝŠKE y = 2.85 m)
-  const beamY = 2.85;
-  const beamWidth = 2.60;
-  const beamGeo = new THREE.BoxGeometry(beamWidth, 0.12, 0.12);
+  // Manželská posteľ pod zadným oknom
+  const bedGroup = new THREE.Group();
+  bedGroup.position.set(-1.05, 0.08, -halfL + 1.08);
 
-  const mainBeamZPositions = [0.2, 0.8, 1.4, 2.0];
-  mainBeamZPositions.forEach(bz => {
-    const beam = new THREE.Mesh(beamGeo, woodMat);
-    beam.position.set(0, beamY, bz);
-    beam.castShadow = true;
-    interiorGroup.add(beam);
-  });
+  const bedFrame = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.35, 2.05), woodMat);
+  bedFrame.position.set(0, 0.18, 0);
+  bedFrame.castShadow = true;
+  bedGroup.add(bedFrame);
 
-  // Moderný kruhový LED závesný luster (z fotky 3)
-  const chandelier = new THREE.Group();
-  chandelier.position.set(0, 2.7, 1.2);
-  const ring1 = new THREE.Mesh(new THREE.TorusGeometry(0.35, 0.015, 16, 32), new THREE.MeshBasicMaterial({ color: 0xfff0d0 }));
-  ring1.rotation.x = Math.PI / 2;
-  chandelier.add(ring1);
-  const ring2 = new THREE.Mesh(new THREE.TorusGeometry(0.22, 0.012, 16, 32), new THREE.MeshBasicMaterial({ color: 0xfff0d0 }));
-  ring2.rotation.x = Math.PI / 2;
-  ring2.position.set(0, -0.15, 0);
-  chandelier.add(ring2);
-  interiorGroup.add(chandelier);
+  const headboard = new THREE.Mesh(new THREE.BoxGeometry(1.64, 0.72, 0.08), headboardMat);
+  headboard.position.set(0, 0.52, -0.98);
+  headboard.castShadow = true;
+  bedGroup.add(headboard);
 
-  // 2. ROHOVÁ SEDAČKA V OBÝVAČKE (Zaoblená, s vankúšikmi a štýlovými nožičkami)
-  const sofaGroup = new THREE.Group();
-  sofaGroup.position.set(-halfW + 1.15, 0.08, 0.8);
+  const mattress = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.22, 1.95), duvetMat);
+  mattress.position.set(0, 0.38, 0);
+  bedGroup.add(mattress);
 
-  // Nožičky sedačky
-  const sLegGeo = new THREE.CylinderGeometry(0.02, 0.015, 0.12, 12);
-  const legPositions = [
-    [-0.8, 0.06, -0.4], [0.8, 0.06, -0.4],
-    [-0.8, 0.06, 1.4], [-0.1, 0.06, 1.4],
-    [0.8, 0.06, 0.4]
-  ];
-  legPositions.forEach(pos => {
-    const leg = new THREE.Mesh(sLegGeo, kitchenBlackMat);
-    leg.position.set(pos[0], pos[1], pos[2]);
-    sofaGroup.add(leg);
-  });
+  const duvet = new THREE.Mesh(new THREE.BoxGeometry(1.52, 0.1, 1.3), duvetMat);
+  duvet.position.set(0, 0.48, 0.28);
+  bedGroup.add(duvet);
 
-  // Základňa sedačky
-  const sofaBase = new THREE.Mesh(new THREE.BoxGeometry(1.85, 0.15, 0.95), sofaFabricMat);
-  sofaBase.position.set(0, 0.2, 0);
-  sofaBase.castShadow = true;
-  sofaGroup.add(sofaBase);
+  const pillowBed1 = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.12, 0.35), duvetMat);
+  pillowBed1.position.set(-0.38, 0.52, -0.65);
+  pillowBed1.rotation.x = -0.15;
+  bedGroup.add(pillowBed1);
 
-  const sofaChaiseBase = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.15, 1.1), sofaFabricMat);
-  sofaChaiseBase.position.set(-0.475, 0.2, 0.95);
-  sofaChaiseBase.castShadow = true;
-  sofaGroup.add(sofaChaiseBase);
+  const pillowBed2 = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.12, 0.35), duvetMat);
+  pillowBed2.position.set(0.38, 0.52, -0.65);
+  pillowBed2.rotation.x = -0.15;
+  bedGroup.add(pillowBed2);
 
-  // Mäkké sedáky
-  const seat1 = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.18, 0.85), sofaFabricMat);
-  seat1.position.set(0.45, 0.34, 0);
-  seat1.castShadow = true;
-  sofaGroup.add(seat1);
+  const nightstand = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.45, 0.4), woodMat);
+  nightstand.position.set(-0.95, 0.22, -0.7);
+  nightstand.castShadow = true;
+  bedGroup.add(nightstand);
 
-  const seatChaise = new THREE.Mesh(new THREE.BoxGeometry(0.86, 0.18, 1.75), sofaFabricMat);
-  seatChaise.position.set(-0.475, 0.34, 0.45);
-  seatChaise.castShadow = true;
-  sofaGroup.add(seatChaise);
+  const lampBase = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.06, 0.03, 16), kitchenBlackMat);
+  lampBase.position.set(-0.95, 0.46, -0.7);
+  bedGroup.add(lampBase);
 
-  // Operadlo sedačky
-  const sofaBack = new THREE.Mesh(new THREE.BoxGeometry(1.85, 0.48, 0.22), sofaFabricMat);
-  sofaBack.position.set(0, 0.52, -0.38);
-  sofaBack.castShadow = true;
-  sofaGroup.add(sofaBack);
+  const lampShade = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.14, 16), ceramicWhiteMat);
+  lampShade.position.set(-0.95, 0.58, -0.7);
+  bedGroup.add(lampShade);
 
-  const sofaSideBack = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.42, 1.9), sofaFabricMat);
-  sofaSideBack.position.set(-0.85, 0.48, 0.45);
-  sofaSideBack.castShadow = true;
-  sofaGroup.add(sofaSideBack);
+  bedRoomGroup.add(bedGroup);
 
-  // Dekoratívne vankúšiky (Mustard yellow + Charcoal)
-  const pillow1 = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.35, 0.12), pillowMustardMat);
-  pillow1.position.set(0.4, 0.52, -0.22);
-  pillow1.rotation.set(-0.15, 0.1, 0.1);
-  sofaGroup.add(pillow1);
+  // Vstavaná skriňa Roldor pri spoločnej priečke
+  const roldorGroup = new THREE.Group();
+  roldorGroup.position.set(-halfW / 2 + 0.1, 0.08, partitionZ - 0.3);
 
-  const pillow2 = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.35, 0.12), pillowCharcoalMat);
-  pillow2.position.set(-0.68, 0.52, 0.8);
-  pillow2.rotation.set(0.1, 0.25, -0.15);
-  sofaGroup.add(pillow2);
+  const roldorBody = new THREE.Mesh(new THREE.BoxGeometry(halfW - 0.4, wallHeight - 0.15, 0.55), woodMat);
+  roldorBody.position.set(0, wallHeight / 2 - 0.075, 0);
+  roldorBody.castShadow = true;
+  roldorGroup.add(roldorBody);
 
-  interiorGroup.add(sofaGroup);
+  const roldorDoor1 = new THREE.Mesh(new THREE.BoxGeometry((halfW - 0.4) / 2 - 0.02, wallHeight - 0.2, 0.03), mirrorMat);
+  roldorDoor1.position.set(-((halfW - 0.4) / 4), wallHeight / 2 - 0.075, 0.28);
+  roldorGroup.add(roldorDoor1);
 
-  // Konferenčný stolík s drevenou doskou a detailmi
-  const tableGroup = new THREE.Group();
-  tableGroup.position.set(-halfW + 1.25, 0.08, 1.15);
+  const roldorDoor2 = new THREE.Mesh(new THREE.BoxGeometry((halfW - 0.4) / 2 - 0.02, wallHeight - 0.2, 0.03), woodMat);
+  roldorDoor2.position.set(((halfW - 0.4) / 4), wallHeight / 2 - 0.075, 0.26);
+  roldorGroup.add(roldorDoor2);
 
-  const tTop = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.05, 0.55), woodMat);
-  tTop.position.set(0, 0.38, 0);
-  tTop.castShadow = true;
-  tableGroup.add(tTop);
+  const roldorRail = new THREE.Mesh(new THREE.BoxGeometry(halfW - 0.38, 0.04, 0.06), frameMat);
+  roldorRail.position.set(0, wallHeight - 0.14, 0.27);
+  roldorGroup.add(roldorRail);
 
-  // Kovové nohy stolíka
-  const tLegPositions = [[-0.4, 0.19, -0.22], [0.4, 0.19, -0.22], [-0.4, 0.19, 0.22], [0.4, 0.19, 0.22]];
-  tLegPositions.forEach(p => {
-    const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.38, 12), kitchenBlackMat);
-    leg.position.set(p[0], p[1], p[2]);
-    tableGroup.add(leg);
-  });
+  bedRoomGroup.add(roldorGroup);
+  interiorGroup.add(bedRoomGroup);
 
-  // Kvetináčik so zeleným sukulentom
-  const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.04, 0.07, 16), ceramicWhiteMat);
-  pot.position.set(-0.2, 0.44, 0);
-  tableGroup.add(pot);
+  // 2. DELIACA PRIEČKA MEDZI SPÁLŇOU A KÚPEĽŇOU
+  const centerPartitionGroup = new THREE.Group();
+  centerPartitionGroup.position.set(0, wallHeight / 2, rearZoneCenterZ);
 
-  const plant = new THREE.Mesh(new THREE.SphereGeometry(0.055, 12, 12), plantMat);
-  plant.position.set(-0.2, 0.49, 0);
-  tableGroup.add(plant);
+  const pBedSide = new THREE.Mesh(new THREE.BoxGeometry(0.05, wallHeight, rearZoneLen), interiorWallMat);
+  pBedSide.position.set(-0.025, 0, 0);
+  centerPartitionGroup.add(pBedSide);
 
-  // Časopis / Kniha na stolíku
-  const book = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.015, 0.24), frameMat);
-  book.position.set(0.18, 0.41, 0.05);
-  book.rotation.y = 0.3;
-  tableGroup.add(book);
+  const pBathSide = new THREE.Mesh(new THREE.BoxGeometry(0.03, wallHeight, rearZoneLen), bathroomTileMat);
+  pBathSide.position.set(0.025, 0, 0);
+  centerPartitionGroup.add(pBathSide);
 
-  interiorGroup.add(tableGroup);
+  interiorGroup.add(centerPartitionGroup);
 
-  // Nástenná klimatizácia
-  const acUnit = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.28, 0.75), kitchenBlackMat);
-  acUnit.position.set(-halfW + 0.28, wallHeight - 0.3, 1.4);
-  interiorGroup.add(acUnit);
+  // 3. FIXNÁ KÚPEĽŇA (2.8m dlhá, nepredlžuje sa)
+  const bathGroup = new THREE.Group();
+  bathGroup.position.set(1.15, 0.08, rearZoneCenterZ);
 
-  // 3. KUCHYNSKÁ LINKA (Šalviovo-zelená so spotrebičmi)
-  const kitchenGroup = new THREE.Group();
-  kitchenGroup.position.set(halfW - 0.45, 0.08, 0.6);
+  // Walk-in sprchový kút
+  const showerGroup = new THREE.Group();
+  showerGroup.position.set(0, 0, -rearZoneLen / 2 + 0.6);
 
-  const kCabinets = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.85, 2.6), kitchenCabinetMat);
-  kCabinets.position.set(0, 0.425, 0);
-  kCabinets.castShadow = true;
-  kitchenGroup.add(kCabinets);
+  const showerTray = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.04, 0.95), darkTileMat);
+  showerTray.position.set(-0.55, 0.02, 0);
+  showerGroup.add(showerTray);
 
-  const kTop = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.05, 2.62), kitchenTopMat);
-  kTop.position.set(0, 0.875, 0);
-  kTop.castShadow = true;
-  kitchenGroup.add(kTop);
+  const showerGlass = new THREE.Mesh(new THREE.BoxGeometry(0.02, 1.95, 0.95), glassMat);
+  showerGlass.position.set(-0.08, 0.98, 0);
+  showerGroup.add(showerGlass);
 
-  const hob = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.02, 0.55), kitchenBlackMat);
-  hob.position.set(0, 0.905, -0.3);
-  kitchenGroup.add(hob);
+  const showerProfile = new THREE.Mesh(new THREE.BoxGeometry(0.04, 1.95, 0.04), kitchenBlackMat);
+  showerProfile.position.set(-0.08, 0.98, -0.46);
+  showerGroup.add(showerProfile);
 
-  const hood = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.45, 0.55), kitchenBlackMat);
-  hood.position.set(-0.1, 1.65, -0.3);
-  hood.rotation.z = -0.3;
-  kitchenGroup.add(hood);
+  const showerBar = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.03, 0.03), kitchenBlackMat);
+  showerBar.position.set(-0.55, 1.95, 0);
+  showerGroup.add(showerBar);
 
-  // Drez s elegantnou batériou
-  const sink = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.03, 0.5), kitchenBlackMat);
-  sink.position.set(0, 0.905, 0.4);
-  kitchenGroup.add(sink);
+  const showerCol = new THREE.Mesh(new THREE.BoxGeometry(0.04, 1.3, 0.04), kitchenBlackMat);
+  showerCol.position.set(-0.85, 1.2, 0);
+  showerGroup.add(showerCol);
 
-  const faucet = new THREE.Mesh(new THREE.TorusGeometry(0.07, 0.012, 12, 24, Math.PI), kitchenBlackMat);
-  faucet.position.set(0.18, 1.02, 0.4);
-  faucet.rotation.y = Math.PI / 2;
-  kitchenGroup.add(faucet);
+  const showerHead = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.02, 16), kitchenBlackMat);
+  showerHead.position.set(-0.7, 1.85, 0);
+  showerGroup.add(showerHead);
 
-  // Vysoká skriňa s rúrou
-  const tallUnit = new THREE.Mesh(new THREE.BoxGeometry(0.65, 1.9, 0.65), kitchenCabinetMat);
-  tallUnit.position.set(0, 0.95, 1.4);
-  tallUnit.castShadow = true;
-  kitchenGroup.add(tallUnit);
+  bathGroup.add(showerGroup);
 
-  const oven = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.55, 0.58), kitchenBlackMat);
-  oven.position.set(-0.02, 1.15, 1.4);
-  kitchenGroup.add(oven);
+  // Umývadlová zostava
+  const vanityGroup = new THREE.Group();
+  vanityGroup.position.set(0.65, 0, 0.45);
 
-  const ovenHandle = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.02, 0.45), ceramicWhiteMat);
-  ovenHandle.position.set(-0.33, 1.35, 1.4);
-  kitchenGroup.add(ovenHandle);
+  const vanity = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.55, 0.75), woodMat);
+  vanity.position.set(0, 0.52, 0);
+  vanity.castShadow = true;
+  vanityGroup.add(vanity);
 
-  const upperCabinet = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.55, 0.9), kitchenCabinetMat);
-  upperCabinet.position.set(-0.12, 1.75, 0.45);
-  kitchenGroup.add(upperCabinet);
+  const basin = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.12, 0.65), ceramicWhiteMat);
+  basin.position.set(0, 0.85, 0);
+  basin.castShadow = true;
+  vanityGroup.add(basin);
 
-  // Nástenná TV s tenkým rámom
-  const tv = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.75, 1.25), kitchenBlackMat);
-  tv.position.set(-0.25, 1.4, -0.7);
-  kitchenGroup.add(tv);
+  const basinTap = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.22, 0.04), kitchenBlackMat);
+  basinTap.position.set(0.18, 0.98, 0);
+  vanityGroup.add(basinTap);
 
-  interiorGroup.add(kitchenGroup);
+  const basinSpout = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.03, 0.03), kitchenBlackMat);
+  basinSpout.position.set(0.12, 1.08, 0);
+  vanityGroup.add(basinSpout);
 
-  // 4. HLAVNÁ PRIEČKA MEDZI OBÝVAČKOU A SPÁLŇOU/KÚPEĽŇOU
+  const mirror = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.8, 0.65), mirrorMat);
+  mirror.position.set(0.45, 1.45, 0);
+  vanityGroup.add(mirror);
+
+  const mirrorFrame = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.84, 0.69), kitchenBlackMat);
+  mirrorFrame.position.set(0.46, 1.45, 0);
+  vanityGroup.add(mirrorFrame);
+
+  bathGroup.add(vanityGroup);
+
+  // Závesné WC & Bojler
+  const wcGroup = new THREE.Group();
+  wcGroup.position.set(0.65, 0, -0.65);
+
+  const geberitBox = new THREE.Mesh(new THREE.BoxGeometry(0.25, 1.1, 0.6), bathroomTileMat);
+  geberitBox.position.set(0.35, 0.55, 0);
+  wcGroup.add(geberitBox);
+
+  const flushPlate = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.15, 0.22), frameMat);
+  flushPlate.position.set(0.22, 0.95, 0);
+  wcGroup.add(flushPlate);
+
+  const toilet = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.38, 0.5), ceramicWhiteMat);
+  toilet.position.set(0.05, 0.38, 0);
+  toilet.castShadow = true;
+  wcGroup.add(toilet);
+
+  const boiler = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.75, 24), ceramicWhiteMat);
+  boiler.position.set(0.35, 1.6, 0);
+  boiler.castShadow = true;
+  wcGroup.add(boiler);
+
+  bathGroup.add(wcGroup);
+  interiorGroup.add(bathGroup);
+
+  // 4. HLAVNÁ PRIEČKA MEDZI SPÁLŇOU/KÚPEĽŇOU A OBÝVAČKOU
   const partLeft = new THREE.Mesh(new THREE.BoxGeometry(halfW - 0.2, wallHeight, 0.1), interiorWallMat);
   partLeft.position.set(-halfW / 2 + 0.1, wallHeight / 2, partitionZ);
   partLeft.castShadow = true;
@@ -706,221 +707,246 @@ export function createBarn48Model({
   }
   interiorGroup.add(ladderGroup);
 
-  // 5. SPÁLŇA NA PRÍZEMÍ (POSTEĽ PRISUNUTÁ PRIAMO K ZADNEJ STENE POD OKNO + ROLDOR)
-  const bedRoomGroup = new THREE.Group();
+  // 5. KUCHYNSKÁ LINKA (Fixne ukotvená pri priečke na pravej strane - NEPOSÚVA SA A NEPREDLŽUJE!)
+  const kitchenGroup = new THREE.Group();
+  // Kuchynská linka začína priamo pred kúpeľňovou priečkou (partitionZ + 1.35m)
+  kitchenGroup.position.set(halfW - 0.45, 0.08, partitionZ + 1.35);
 
-  // MANŽELSKÁ POSTEĽ POD ZADNÝM OKNOM
-  const bedGroup = new THREE.Group();
-  // Zadná stena je v -halfL. Posteľ prisunieme priamo k zadnej stene pod okno (-1.05m):
-  bedGroup.position.set(-1.05, 0.08, -halfL + 1.08);
+  const kCabinets = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.85, 2.5), kitchenCabinetMat);
+  kCabinets.position.set(0, 0.425, 0);
+  kCabinets.castShadow = true;
+  kitchenGroup.add(kCabinets);
 
-  // Drevený rám postele
-  const bedFrame = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.35, 2.05), woodMat);
-  bedFrame.position.set(0, 0.18, 0);
-  bedFrame.castShadow = true;
-  bedGroup.add(bedFrame);
+  const kTop = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.05, 2.52), kitchenTopMat);
+  kTop.position.set(0, 0.875, 0);
+  kTop.castShadow = true;
+  kitchenGroup.add(kTop);
 
-  // Čelo postele prisunuté k zadnej stene priamo pod okno
-  const headboard = new THREE.Mesh(new THREE.BoxGeometry(1.64, 0.72, 0.08), headboardMat);
-  headboard.position.set(0, 0.52, -0.98);
-  headboard.castShadow = true;
-  bedGroup.add(headboard);
+  const hob = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.02, 0.55), kitchenBlackMat);
+  hob.position.set(0, 0.905, 0.3);
+  kitchenGroup.add(hob);
 
-  // Pohodlný matrac
-  const mattress = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.22, 1.95), duvetMat);
-  mattress.position.set(0, 0.38, 0);
-  bedGroup.add(mattress);
+  const hood = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.45, 0.55), kitchenBlackMat);
+  hood.position.set(-0.1, 1.65, 0.3);
+  hood.rotation.z = -0.3;
+  kitchenGroup.add(hood);
 
-  // Mäkká biela perina so záhybom
-  const duvet = new THREE.Mesh(new THREE.BoxGeometry(1.52, 0.1, 1.3), duvetMat);
-  duvet.position.set(0, 0.48, 0.28);
-  bedGroup.add(duvet);
+  const sink = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.03, 0.5), kitchenBlackMat);
+  sink.position.set(0, 0.905, -0.4);
+  kitchenGroup.add(sink);
 
-  // 2 vankúše
-  const pillowBed1 = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.12, 0.35), duvetMat);
-  pillowBed1.position.set(-0.38, 0.52, -0.65);
-  pillowBed1.rotation.x = -0.15;
-  bedGroup.add(pillowBed1);
+  const faucet = new THREE.Mesh(new THREE.TorusGeometry(0.07, 0.012, 12, 24, Math.PI), kitchenBlackMat);
+  faucet.position.set(0.18, 1.02, -0.4);
+  faucet.rotation.y = Math.PI / 2;
+  kitchenGroup.add(faucet);
 
-  const pillowBed2 = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.12, 0.35), duvetMat);
-  pillowBed2.position.set(0.38, 0.52, -0.65);
-  pillowBed2.rotation.x = -0.15;
-  bedGroup.add(pillowBed2);
+  const tallUnit = new THREE.Mesh(new THREE.BoxGeometry(0.65, 1.9, 0.65), kitchenCabinetMat);
+  tallUnit.position.set(0, 0.95, -0.925);
+  tallUnit.castShadow = true;
+  kitchenGroup.add(tallUnit);
 
-  // Nočný stolík s lampičkou
-  const nightstand = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.45, 0.4), woodMat);
-  nightstand.position.set(-0.95, 0.22, -0.7);
-  nightstand.castShadow = true;
-  bedGroup.add(nightstand);
+  const oven = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.55, 0.58), kitchenBlackMat);
+  oven.position.set(-0.02, 1.15, -0.925);
+  kitchenGroup.add(oven);
 
-  const lampBase = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.06, 0.03, 16), kitchenBlackMat);
-  lampBase.position.set(-0.95, 0.46, -0.7);
-  bedGroup.add(lampBase);
+  const ovenHandle = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.02, 0.45), ceramicWhiteMat);
+  ovenHandle.position.set(-0.33, 1.35, -0.925);
+  kitchenGroup.add(ovenHandle);
 
-  const lampShade = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.14, 16), ceramicWhiteMat);
-  lampShade.position.set(-0.95, 0.58, -0.7);
-  bedGroup.add(lampShade);
+  const upperCabinet = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.55, 0.9), kitchenCabinetMat);
+  upperCabinet.position.set(-0.12, 1.75, -0.4);
+  kitchenGroup.add(upperCabinet);
 
-  bedRoomGroup.add(bedGroup);
+  const tv = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.75, 1.25), kitchenBlackMat);
+  tv.position.set(-0.25, 1.4, 1.4);
+  kitchenGroup.add(tv);
 
-  // VSTAVANÁ SKRIŇA (ROLDOR) POZDĹŽ SPOLOČNEJ STENY S OBÝVAČKOU
-  const roldorGroup = new THREE.Group();
-  roldorGroup.position.set(-halfW / 2 + 0.1, 0.08, partitionZ - 0.3);
+  interiorGroup.add(kitchenGroup);
 
-  // Korpus skrine
-  const roldorBody = new THREE.Mesh(new THREE.BoxGeometry(halfW - 0.4, wallHeight - 0.15, 0.55), woodMat);
-  roldorBody.position.set(0, wallHeight / 2 - 0.075, 0);
-  roldorBody.castShadow = true;
-  roldorGroup.add(roldorBody);
+  // 6. MOŽNOSŤ 2. SPÁLNE (PRI PREDĹŽENÍ O +3.9 m, ZDIEĽA SPOLOČNÚ STENU SO SPÁLŇOU 1)
+  const is2ndBedroomActive = extension >= 3.9 && extraBedroom;
+  const extraBedRoomLen = 2.4;
+  const extraBedRoomEnd = partitionZ + extraBedRoomLen;
 
-  // Posuvné dvere Roldor (kombinácia dreva a zrkadla s čiernym profilom)
-  const roldorDoor1 = new THREE.Mesh(new THREE.BoxGeometry((halfW - 0.4) / 2 - 0.02, wallHeight - 0.2, 0.03), mirrorMat);
-  roldorDoor1.position.set(-((halfW - 0.4) / 4), wallHeight / 2 - 0.075, 0.28);
-  roldorGroup.add(roldorDoor1);
+  if (is2ndBedroomActive) {
+    const bed2Group = new THREE.Group();
+    bed2Group.name = 'Extra_Bedroom_2';
 
-  const roldorDoor2 = new THREE.Mesh(new THREE.BoxGeometry((halfW - 0.4) / 2 - 0.02, wallHeight - 0.2, 0.03), woodMat);
-  roldorDoor2.position.set(((halfW - 0.4) / 4), wallHeight / 2 - 0.075, 0.26);
-  roldorGroup.add(roldorDoor2);
+    // Predná priečka 2. spálne oddeľujúca ju od zvyšku obývačky
+    const bed2FrontWall = new THREE.Mesh(new THREE.BoxGeometry(halfW - 0.2, wallHeight, 0.1), interiorWallMat);
+    bed2FrontWall.position.set(-halfW / 2 + 0.1, wallHeight / 2, extraBedRoomEnd);
+    bed2FrontWall.castShadow = true;
+    bed2Group.add(bed2FrontWall);
 
-  // Vodiaca lišta
-  const roldorRail = new THREE.Mesh(new THREE.BoxGeometry(halfW - 0.38, 0.04, 0.06), frameMat);
-  roldorRail.position.set(0, wallHeight - 0.14, 0.27);
-  roldorGroup.add(roldorRail);
+    // Pozdĺžna chodbičková stena oddeľujúca 2. spálňu od kuchyne/chodby
+    const bed2SideWall = new THREE.Mesh(new THREE.BoxGeometry(0.1, wallHeight, extraBedRoomLen), interiorWallMat);
+    bed2SideWall.position.set(0, wallHeight / 2, partitionZ + extraBedRoomLen / 2);
+    bed2SideWall.castShadow = true;
+    bed2Group.add(bed2SideWall);
 
-  bedRoomGroup.add(roldorGroup);
-  interiorGroup.add(bedRoomGroup);
+    // Posteľ v 2. spálni (Samostatné lôžko / Twin bed)
+    const bed2CenterZ = partitionZ + 1.2;
+    const singleBed = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.35, 2.0), woodMat);
+    singleBed.position.set(-halfW + 0.65, 0.26, bed2CenterZ);
+    singleBed.castShadow = true;
+    bed2Group.add(singleBed);
 
-  // 6. DELIACA PRIEČKA MEDZI SPÁLŇOU A KÚPEĽŇOU
-  const centerPartitionGroup = new THREE.Group();
-  centerPartitionGroup.position.set(0, wallHeight / 2, rearZoneCenterZ);
+    const singleMattress = new THREE.Mesh(new THREE.BoxGeometry(0.92, 0.2, 1.92), duvetBlueMat);
+    singleMattress.position.set(-halfW + 0.65, 0.44, bed2CenterZ);
+    bed2Group.add(singleMattress);
 
-  // Priečka orientovaná do spálne (má zvolený materiál Tatranský profil / Biely sadrokartón!)
-  const pBedSide = new THREE.Mesh(new THREE.BoxGeometry(0.05, wallHeight, rearZoneLen), interiorWallMat);
-  pBedSide.position.set(-0.025, 0, 0);
-  centerPartitionGroup.add(pBedSide);
+    const singlePillow = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.12, 0.35), duvetMat);
+    singlePillow.position.set(-halfW + 0.65, 0.56, bed2CenterZ - 0.65);
+    bed2Group.add(singlePillow);
 
-  // Priečka orientovaná do kúpeľne (sivý obklad)
-  const pBathSide = new THREE.Mesh(new THREE.BoxGeometry(0.03, wallHeight, rearZoneLen), bathroomTileMat);
-  pBathSide.position.set(0.025, 0, 0);
-  centerPartitionGroup.add(pBathSide);
+    // Písací stolík so stoličkou v 2. spálni
+    const desk = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.75, 0.5), woodMat);
+    desk.position.set(-0.6, 0.45, partitionZ + 0.4);
+    bed2Group.add(desk);
 
-  interiorGroup.add(centerPartitionGroup);
+    const chair = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.45, 0.4), kitchenBlackMat);
+    chair.position.set(-0.6, 0.3, partitionZ + 0.85);
+    bed2Group.add(chair);
 
-  // 7. KOMPLETNÁ KÚPEĽŇA (WALK-IN SPRCHOVÝ KÚT, UMÝVADLO, WC, BOJLER)
-  const bathGroup = new THREE.Group();
-  bathGroup.position.set(1.15, 0.08, rearZoneCenterZ);
+    interiorGroup.add(bed2Group);
+  }
 
-  // 1. WALK-IN SPRCHOVÝ KÚT
-  const showerGroup = new THREE.Group();
-  showerGroup.position.set(0, 0, -rearZoneLen / 2 + 0.6);
+  // 7. OBÝVACIA ČASŤ (PREDLŽUJE SA S DOMOM)
+  const livingStart = is2ndBedroomActive ? extraBedRoomEnd : partitionZ;
+  const livingEnd = glassZ - 0.3;
+  const livingCenterZ = (livingStart + livingEnd) / 2;
 
-  // Sprchová vanička (bridlica)
-  const showerTray = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.04, 0.95), darkTileMat);
-  showerTray.position.set(-0.55, 0.02, 0);
-  showerGroup.add(showerTray);
+  // Stropné klieštiny v obývačke
+  const beamY = 2.85;
+  const beamWidth = 2.60;
+  const beamGeo = new THREE.BoxGeometry(beamWidth, 0.12, 0.12);
 
-  // Číra sklenená zástena sprchy
-  const showerGlass = new THREE.Mesh(new THREE.BoxGeometry(0.02, 1.95, 0.95), glassMat);
-  showerGlass.position.set(-0.08, 0.98, 0);
-  showerGroup.add(showerGlass);
+  const livingSpan = livingEnd - livingStart;
+  const beamCount = Math.max(4, Math.floor(livingSpan / 0.85));
+  for (let i = 0; i < beamCount; i++) {
+    const bz = livingStart + 0.4 + (i * (livingSpan - 0.8)) / (beamCount - 1);
+    const beam = new THREE.Mesh(beamGeo, woodMat);
+    beam.position.set(0, beamY, bz);
+    beam.castShadow = true;
+    interiorGroup.add(beam);
+  }
 
-  // Čierny profil a stabilizačné rameno sprchy
-  const showerProfile = new THREE.Mesh(new THREE.BoxGeometry(0.04, 1.95, 0.04), kitchenBlackMat);
-  showerProfile.position.set(-0.08, 0.98, -0.46);
-  showerGroup.add(showerProfile);
+  // Moderný kruhový LED závesný luster v obývačke
+  const chandelier = new THREE.Group();
+  chandelier.position.set(0, 2.7, livingCenterZ);
+  const ring1 = new THREE.Mesh(new THREE.TorusGeometry(0.35, 0.015, 16, 32), new THREE.MeshBasicMaterial({ color: 0xfff0d0 }));
+  ring1.rotation.x = Math.PI / 2;
+  chandelier.add(ring1);
+  const ring2 = new THREE.Mesh(new THREE.TorusGeometry(0.22, 0.012, 16, 32), new THREE.MeshBasicMaterial({ color: 0xfff0d0 }));
+  ring2.rotation.x = Math.PI / 2;
+  ring2.position.set(0, -0.15, 0);
+  chandelier.add(ring2);
+  interiorGroup.add(chandelier);
 
-  const showerBar = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.03, 0.03), kitchenBlackMat);
-  showerBar.position.set(-0.55, 1.95, 0);
-  showerGroup.add(showerBar);
+  // Rohová sedačka v obývačke
+  const sofaGroup = new THREE.Group();
+  sofaGroup.position.set(-halfW + 1.15, 0.08, livingCenterZ + 0.2);
 
-  // Čierna sprchová batéria a hlavová dažďová sprcha
-  const showerCol = new THREE.Mesh(new THREE.BoxGeometry(0.04, 1.3, 0.04), kitchenBlackMat);
-  showerCol.position.set(-0.85, 1.2, 0);
-  showerGroup.add(showerCol);
+  const sLegGeo = new THREE.CylinderGeometry(0.02, 0.015, 0.12, 12);
+  const legPositions = [
+    [-0.8, 0.06, -0.4], [0.8, 0.06, -0.4],
+    [-0.8, 0.06, 1.4], [-0.1, 0.06, 1.4],
+    [0.8, 0.06, 0.4]
+  ];
+  legPositions.forEach(pos => {
+    const leg = new THREE.Mesh(sLegGeo, kitchenBlackMat);
+    leg.position.set(pos[0], pos[1], pos[2]);
+    sofaGroup.add(leg);
+  });
 
-  const showerHead = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.02, 16), kitchenBlackMat);
-  showerHead.position.set(-0.7, 1.85, 0);
-  showerGroup.add(showerHead);
+  const sofaBase = new THREE.Mesh(new THREE.BoxGeometry(1.85, 0.15, 0.95), sofaFabricMat);
+  sofaBase.position.set(0, 0.2, 0);
+  sofaBase.castShadow = true;
+  sofaGroup.add(sofaBase);
 
-  bathGroup.add(showerGroup);
+  const sofaChaiseBase = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.15, 1.1), sofaFabricMat);
+  sofaChaiseBase.position.set(-0.475, 0.2, 0.95);
+  sofaChaiseBase.castShadow = true;
+  sofaGroup.add(sofaChaiseBase);
 
-  // 2. UMÝVADLOVÁ ZOSTAVA (Skrinka, keramické umývadlo, batéria, zrkadlo)
-  const vanityGroup = new THREE.Group();
-  vanityGroup.position.set(0.65, 0, 0.45);
+  const seat1 = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.18, 0.85), sofaFabricMat);
+  seat1.position.set(0.45, 0.34, 0);
+  seat1.castShadow = true;
+  sofaGroup.add(seat1);
 
-  // Drevená závesná skrinka s 2 zásuvkami
-  const vanity = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.55, 0.75), woodMat);
-  vanity.position.set(0, 0.52, 0);
-  vanity.castShadow = true;
-  vanityGroup.add(vanity);
+  const seatChaise = new THREE.Mesh(new THREE.BoxGeometry(0.86, 0.18, 1.75), sofaFabricMat);
+  seatChaise.position.set(-0.475, 0.34, 0.45);
+  seatChaise.castShadow = true;
+  sofaGroup.add(seatChaise);
 
-  // Keramické biele umývadlo
-  const basin = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.12, 0.65), ceramicWhiteMat);
-  basin.position.set(0, 0.85, 0);
-  basin.castShadow = true;
-  vanityGroup.add(basin);
+  const sofaBack = new THREE.Mesh(new THREE.BoxGeometry(1.85, 0.48, 0.22), sofaFabricMat);
+  sofaBack.position.set(0, 0.52, -0.38);
+  sofaBack.castShadow = true;
+  sofaGroup.add(sofaBack);
 
-  // Čierna stojanková batéria
-  const basinTap = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.22, 0.04), kitchenBlackMat);
-  basinTap.position.set(0.18, 0.98, 0);
-  vanityGroup.add(basinTap);
+  const sofaSideBack = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.42, 1.9), sofaFabricMat);
+  sofaSideBack.position.set(-0.85, 0.48, 0.45);
+  sofaSideBack.castShadow = true;
+  sofaGroup.add(sofaSideBack);
 
-  const basinSpout = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.03, 0.03), kitchenBlackMat);
-  basinSpout.position.set(0.12, 1.08, 0);
-  vanityGroup.add(basinSpout);
+  const pillow1 = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.35, 0.12), pillowMustardMat);
+  pillow1.position.set(0.4, 0.52, -0.22);
+  pillow1.rotation.set(-0.15, 0.1, 0.1);
+  sofaGroup.add(pillow1);
 
-  // Veľké zrkadlo s LED podsvietením
-  const mirror = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.8, 0.65), mirrorMat);
-  mirror.position.set(0.45, 1.45, 0);
-  vanityGroup.add(mirror);
+  const pillow2 = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.35, 0.12), pillowCharcoalMat);
+  pillow2.position.set(-0.68, 0.52, 0.8);
+  pillow2.rotation.set(0.1, 0.25, -0.15);
+  sofaGroup.add(pillow2);
 
-  const mirrorFrame = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.84, 0.69), kitchenBlackMat);
-  mirrorFrame.position.set(0.46, 1.45, 0);
-  vanityGroup.add(mirrorFrame);
+  interiorGroup.add(sofaGroup);
 
-  bathGroup.add(vanityGroup);
+  // Konferenčný stolík
+  const tableGroup = new THREE.Group();
+  tableGroup.position.set(-halfW + 1.25, 0.08, livingCenterZ + 0.55);
 
-  // 3. ZÁVESNÉ WC & BOJLER
-  const wcGroup = new THREE.Group();
-  wcGroup.position.set(0.65, 0, -0.65);
+  const tTop = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.05, 0.55), woodMat);
+  tTop.position.set(0, 0.38, 0);
+  tTop.castShadow = true;
+  tableGroup.add(tTop);
 
-  // Podomietkový modul s tlačidlom
-  const geberitBox = new THREE.Mesh(new THREE.BoxGeometry(0.25, 1.1, 0.6), bathroomTileMat);
-  geberitBox.position.set(0.35, 0.55, 0);
-  wcGroup.add(geberitBox);
+  const tLegPositions = [[-0.4, 0.19, -0.22], [0.4, 0.19, -0.22], [-0.4, 0.19, 0.22], [0.4, 0.19, 0.22]];
+  tLegPositions.forEach(p => {
+    const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.38, 12), kitchenBlackMat);
+    leg.position.set(p[0], p[1], p[2]);
+    tableGroup.add(leg);
+  });
 
-  const flushPlate = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.15, 0.22), frameMat);
-  flushPlate.position.set(0.22, 0.95, 0);
-  wcGroup.add(flushPlate);
+  const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.04, 0.07, 16), ceramicWhiteMat);
+  pot.position.set(-0.2, 0.44, 0);
+  tableGroup.add(pot);
 
-  // Závesná WC misa
-  const toilet = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.38, 0.5), ceramicWhiteMat);
-  toilet.position.set(0.05, 0.38, 0);
-  toilet.castShadow = true;
-  wcGroup.add(toilet);
+  const plant = new THREE.Mesh(new THREE.SphereGeometry(0.055, 12, 12), plantMat);
+  plant.position.set(-0.2, 0.49, 0);
+  tableGroup.add(plant);
 
-  // Vertikálny bojler na stene
-  const boiler = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.75, 24), ceramicWhiteMat);
-  boiler.position.set(0.35, 1.6, 0);
-  boiler.castShadow = true;
-  wcGroup.add(boiler);
+  const book = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.015, 0.24), frameMat);
+  book.position.set(0.18, 0.41, 0.05);
+  book.rotation.y = 0.3;
+  tableGroup.add(book);
 
-  bathGroup.add(wcGroup);
-  interiorGroup.add(bathGroup);
+  interiorGroup.add(tableGroup);
+
+  // Nástenná klimatizácia
+  const acUnit = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.28, 0.75), kitchenBlackMat);
+  acUnit.position.set(-halfW + 0.28, wallHeight - 0.3, livingCenterZ);
+  interiorGroup.add(acUnit);
 
   rootGroup.add(interiorGroup);
 
-  // ── 5. HORNÝ MEZONET (PREDLŽUJE SA S DOMOM A NADVIHUJE SA PRI ODKRYTÍ STRECHY) ──
+  // ── 5. FIXNÝ HORNÝ MEZONET (2.8 m DĹŽKA, NEPREDLŽUJE SA, NADVIHUJE SA PRI ODKRYTÍ) ──
 
   const loftGroup = new THREE.Group();
   loftGroup.name = 'Loft_Mezzanine';
 
-  const loftLength = partitionZ - (-halfL);
-  const loftCenterZ = (-halfL + partitionZ) / 2;
-
-  // Podlaha mezonetu
-  const loftFloor = new THREE.Mesh(new THREE.BoxGeometry(width - 0.36, 0.12, loftLength), woodMat);
-  loftFloor.position.set(0, wallHeight + 0.06, loftCenterZ);
+  // Podlaha mezonetu (vždy presne nad zadnou zónou 2.8 m)
+  const loftFloor = new THREE.Mesh(new THREE.BoxGeometry(width - 0.36, 0.12, rearZoneLen), woodMat);
+  loftFloor.position.set(0, wallHeight + 0.06, rearZoneCenterZ);
   loftFloor.castShadow = true;
   loftFloor.receiveShadow = true;
   loftGroup.add(loftFloor);
@@ -929,24 +955,22 @@ export function createBarn48Model({
   const loftBedGeo = new THREE.BoxGeometry(1.0, 0.35, 1.9);
   const loftMattressGeo = new THREE.BoxGeometry(0.92, 0.18, 1.82);
 
-  // Ľavá posteľ
   const bed1Frame = new THREE.Mesh(loftBedGeo, woodMat);
-  bed1Frame.position.set(-1.25, wallHeight + 0.28, loftCenterZ);
+  bed1Frame.position.set(-1.25, wallHeight + 0.28, rearZoneCenterZ);
   bed1Frame.castShadow = true;
   loftGroup.add(bed1Frame);
 
   const bed1Mat = new THREE.Mesh(loftMattressGeo, duvetMat);
-  bed1Mat.position.set(-1.25, wallHeight + 0.45, loftCenterZ);
+  bed1Mat.position.set(-1.25, wallHeight + 0.45, rearZoneCenterZ);
   loftGroup.add(bed1Mat);
 
-  // Pravá posteľ
   const bed2Frame = new THREE.Mesh(loftBedGeo, woodMat);
-  bed2Frame.position.set(1.25, wallHeight + 0.28, loftCenterZ);
+  bed2Frame.position.set(1.25, wallHeight + 0.28, rearZoneCenterZ);
   bed2Frame.castShadow = true;
   loftGroup.add(bed2Frame);
 
   const bed2Mat = new THREE.Mesh(loftMattressGeo, duvetMat);
-  bed2Mat.position.set(1.25, wallHeight + 0.45, loftCenterZ);
+  bed2Mat.position.set(1.25, wallHeight + 0.45, rearZoneCenterZ);
   loftGroup.add(bed2Mat);
 
   // Pri odklopení strechy sa mezonet tiež nadvihne
