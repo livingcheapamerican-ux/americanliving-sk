@@ -14,7 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowRight, Filter, Home, CheckCircle, Search, ArrowUpDown, Plus, Square, LayoutGrid, Trash2, Eye, EyeOff, Grid3x3, Zap, Hammer, Caravan, Building2, TreePine, Fence, Boxes, Euro, Phone, Package } from "lucide-react";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "../components/LanguageContext";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Info, Gift } from "lucide-react";
@@ -24,6 +24,7 @@ import DomCard from "../components/katalog/DomCard";
 import DomCardSkeleton from "../components/katalog/DomCardSkeleton";
 import FilterSection from "../components/katalog/FilterSection";
 import ActiveFilterChips from "../components/katalog/ActiveFilterChips";
+import CatalogFilterPanel from "../components/katalog/CatalogFilterPanel";
 import CompareBar from "../components/katalog/CompareBar";
 import { SlidersHorizontal, X, ChevronDown } from "lucide-react";
 
@@ -457,7 +458,7 @@ export default function Katalog() {
 
       <div className="container mx-auto px-2 sm:px-4 py-6 sm:py-12 max-w-full overflow-hidden">
         {/* Tabs pre kategórie */}
-        <Tabs value={kategoriaFilter} onValueChange={setKategoriaFilter} className="mb-4 sm:mb-6">
+        <Tabs value={kategoriaFilter} onValueChange={setKategoriaFilter} className="mb-3 sm:mb-4">
           <TabsList className={`grid w-full max-w-xl mx-auto h-10 sm:h-12 bg-card border border-border rounded-full p-1 shadow-xl ${canManage ? 'grid-cols-4' : 'grid-cols-3'}`}>
             <TabsTrigger value="vsetky" className="catalog-tab text-xs sm:text-sm rounded-full transition-all duration-300">{t('all')} ({verejneDomy.length})</TabsTrigger>
             <TabsTrigger value="rodinne_domy" className="catalog-tab text-xs sm:text-sm rounded-full transition-all duration-300">{t('familyHouses')} ({rodinneDomy.length})</TabsTrigger>
@@ -468,383 +469,274 @@ export default function Katalog() {
           </TabsList>
         </Tabs>
 
+        {/* MOBILNÁ A DESKTOPOVÁ RÝCHLA LIŠTA FILTROV (Scrollable Quick Filter Bar) */}
+        <div className="mb-4 sm:mb-6 overflow-x-auto no-scrollbar flex items-center gap-2 py-1 px-1">
+          {/* Tlačidlo na otvorenie kompletných filtrov */}
+          <button
+            onClick={() => setMobileFiltersOpen(true)}
+            className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-primary text-white font-black text-xs shadow-md shrink-0 hover:bg-primary/90 transition-transform active:scale-95"
+          >
+            <SlidersHorizontal className="w-3.5 h-3.5" />
+            <span>{t('filters')}</span>
+            {activeChips.length > 0 && (
+              <span className="w-5 h-5 rounded-full bg-white text-primary flex items-center justify-center text-[10px] font-black">
+                {activeChips.length}
+              </span>
+            )}
+          </button>
+
+          {/* Rýchle filtre: Výrobcovia */}
+          {vyrobcovia.map((v) => {
+            const isSelected = vyrobcaFilter.includes(v);
+            return (
+              <button
+                key={v}
+                onClick={() => {
+                  if (isSelected) {
+                    setVyrobcaFilter(vyrobcaFilter.filter((x) => x !== v));
+                  } else {
+                    setVyrobcaFilter([...vyrobcaFilter, v]);
+                  }
+                }}
+                className={`px-3 py-1.5 rounded-full text-xs font-bold shrink-0 border transition-all ${
+                  isSelected
+                    ? 'bg-red-500/10 border-red-500 text-red-600 dark:text-red-400 font-black'
+                    : 'bg-card border-border text-muted-foreground hover:text-foreground hover:border-border-hover'
+                }`}
+              >
+                {isSelected ? `✓ ${v}` : v}
+              </button>
+            );
+          })}
+
+          {/* Rýchle filtre: Typy */}
+          {[
+            { val: "modularny", label: t('modularType') },
+            { val: "montovany", label: t('prefabType') },
+            { val: "mobilny", label: t('mobileType') }
+          ].map((tp) => {
+            const isSelected = typFilter.includes(tp.val);
+            return (
+              <button
+                key={tp.val}
+                onClick={() => {
+                  if (isSelected) {
+                    setTypFilter(typFilter.filter((x) => x !== tp.val));
+                  } else {
+                    setTypFilter([...typFilter, tp.val]);
+                  }
+                }}
+                className={`px-3 py-1.5 rounded-full text-xs font-bold shrink-0 border transition-all ${
+                  isSelected
+                    ? 'bg-amber-500/10 border-amber-500 text-amber-600 dark:text-amber-400 font-black'
+                    : 'bg-card border-border text-muted-foreground hover:text-foreground hover:border-border-hover'
+                }`}
+              >
+                {isSelected ? `✓ ${tp.label}` : tp.label}
+              </button>
+            );
+          })}
+
+          {/* Rýchle cenové filtre */}
+          {[35000, 60000, 100000].map((cenaMax) => {
+            const isSelected = cenoveRozpatie[1] === cenaMax;
+            return (
+              <button
+                key={cenaMax}
+                onClick={() => setCenoveRozpatie([0, isSelected ? 300000 : cenaMax])}
+                className={`px-3 py-1.5 rounded-full text-xs font-bold shrink-0 border transition-all ${
+                  isSelected
+                    ? 'bg-emerald-500/10 border-emerald-500 text-emerald-600 dark:text-emerald-400 font-black'
+                    : 'bg-card border-border text-muted-foreground hover:text-foreground hover:border-border-hover'
+                }`}
+              >
+                {isSelected ? `✓ do ${cenaMax.toLocaleString('sk-SK')} €` : `do ${(cenaMax / 1000).toFixed(0)}k €`}
+              </button>
+            );
+          })}
+
+          {/* Rýchle filtre podľa izieb */}
+          {[2, 3].map((izby) => {
+            const isSelected = pocetIziebFilter.includes(izby);
+            return (
+              <button
+                key={izby}
+                onClick={() => {
+                  if (isSelected) {
+                    setPocetIziebFilter(pocetIziebFilter.filter((x) => x !== izby));
+                  } else {
+                    setPocetIziebFilter([...pocetIziebFilter, izby]);
+                  }
+                }}
+                className={`px-3 py-1.5 rounded-full text-xs font-bold shrink-0 border transition-all ${
+                  isSelected
+                    ? 'bg-blue-500/10 border-blue-500 text-blue-600 dark:text-blue-400 font-black'
+                    : 'bg-card border-border text-muted-foreground hover:text-foreground hover:border-border-hover'
+                }`}
+              >
+                {isSelected ? `✓ ${izby} ${t('roomsFilter')}` : `${izby}+ izby`}
+              </button>
+            );
+          })}
+
+          {/* Reset button ak sú filtre aktívne */}
+          {activeChips.length > 0 && (
+            <button
+              onClick={resetFilters}
+              className="px-3 py-1.5 rounded-full text-xs font-bold shrink-0 text-muted-foreground hover:text-red-500 underline underline-offset-2"
+            >
+              {t('reset')}
+            </button>
+          )}
+        </div>
+
+        {/* MOBILNÝ SLIDE-OVER DRAWER / MODÁL FILTROV */}
+        <AnimatePresence>
+          {mobileFiltersOpen && (
+            <div className="fixed inset-0 z-50 lg:hidden flex flex-col justify-end">
+              {/* Tmavý backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setMobileFiltersOpen(false)}
+                className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+              />
+
+              {/* Obsah zásuvky */}
+              <motion.div
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                exit={{ y: "100%" }}
+                transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                className="relative bg-card border-t border-border rounded-t-3xl shadow-2xl max-h-[85vh] flex flex-col z-10 overflow-hidden"
+              >
+                {/* Hlavička modálu */}
+                <div className="flex items-center justify-between px-5 py-4 border-b border-border bg-card">
+                  <div className="flex items-center gap-2">
+                    <SlidersHorizontal className="w-5 h-5 text-primary" />
+                    <h3 className="font-black text-base text-foreground">
+                      {t('filters')} {activeChips.length > 0 && `(${activeChips.length})`}
+                    </h3>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {activeChips.length > 0 && (
+                      <button
+                        onClick={resetFilters}
+                        className="text-xs font-bold text-muted-foreground hover:text-foreground underline underline-offset-2 mr-2"
+                      >
+                        {t('reset')}
+                      </button>
+                    )}
+                    <button
+                      onClick={() => setMobileFiltersOpen(false)}
+                      className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Rolovateľný obsah filtrov */}
+                <div className="p-5 overflow-y-auto max-h-[calc(85vh-130px)]">
+                  <CatalogFilterPanel
+                    t={t}
+                    hladanieInput={hladanieInput}
+                    setHladanieInput={setHladanieInput}
+                    vyrobcovia={vyrobcovia}
+                    vyrobcaFilter={vyrobcaFilter}
+                    setVyrobcaFilter={setVyrobcaFilter}
+                    typFilter={typFilter}
+                    setTypFilter={setTypFilter}
+                    cenoveRozpatie={cenoveRozpatie}
+                    setCenoveRozpatie={setCenoveRozpatie}
+                    pocetIziebFilter={pocetIziebFilter}
+                    setPocetIziebFilter={setPocetIziebFilter}
+                    moduloveDomyFilter={moduloveDomyFilter}
+                    setModuloveDomyFilter={setModuloveDomyFilter}
+                    pocetModulovFilter={pocetModulovFilter}
+                    setPocetModulovFilter={setPocetModulovFilter}
+                    domy={domy}
+                    plocharozsah={plocharozsah}
+                    setPlocharozsah={setPlocharozsah}
+                    uzitkovaRozsah={uzitkovaRozsah}
+                    setUzitkovaRozsah={setUzitkovaRozsah}
+                    showAdvancedFilters={showAdvancedFilters}
+                    setShowAdvancedFilters={setShowAdvancedFilters}
+                    energyCert={energyCert}
+                    setEnergyCert={setEnergyCert}
+                    resetFilters={resetFilters}
+                    totalCount={zoradeneDomy.length}
+                    publicCount={verejneDomy.length}
+                    isMobile={true}
+                    onCloseMobile={() => setMobileFiltersOpen(false)}
+                  />
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
+
+        {/* PLÁVAJÚCE TLAČIDLO FILTROV NA MOBILE (FAB) */}
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 lg:hidden">
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setMobileFiltersOpen(true)}
+            className="flex items-center gap-2 px-5 py-3 rounded-full bg-slate-900/90 dark:bg-white/95 text-white dark:text-slate-950 font-black text-xs sm:text-sm shadow-2xl backdrop-blur-xl border border-white/20 dark:border-slate-800"
+          >
+            <SlidersHorizontal className="w-4 h-4 text-red-500" />
+            <span>{t('filters')}{activeChips.length > 0 ? ` (${activeChips.length})` : ''}</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
+            <span className="text-slate-400 dark:text-slate-500 font-normal">{zoradeneDomy.length} domov</span>
+          </motion.button>
+        </div>
+
         <div className="flex flex-col lg:flex-row gap-3 sm:gap-6 w-full max-w-full overflow-hidden">
-          {/* Filters Sidebar */}
+          {/* Filters Desktop Sidebar */}
           <motion.aside
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
-            className="lg:w-72 flex-shrink-0 relative w-full">
-            {/* Mobilné tlačidlo na otvorenie filtrov */}
-            <Button
-              variant="outline"
-              onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
-              className="lg:hidden w-full justify-between h-11 mb-2 bg-card font-bold"
-            >
-              <span className="flex items-center gap-2">
-                <SlidersHorizontal className="w-4 h-4 text-primary" />
-                {t('filters')}{activeChips.length > 0 ? ` (${activeChips.length})` : ''}
-              </span>
-              {mobileFiltersOpen ? <X className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-            </Button>
-
-            <Card className={`${mobileFiltersOpen ? 'block' : 'hidden'} lg:block p-3 sm:p-5 lg:sticky lg:top-24 shadow-xl bg-card border-border max-w-full overflow-hidden relative z-10`}>
-              <div className="hidden lg:flex items-center gap-2 mb-3 sm:mb-4">
-                <Filter className="w-4 h-4 text-primary" />
-                <h2 className="text-base sm:text-lg font-bold text-foreground">{t('filters')}</h2>
-              </div>
-
-              <div className="space-y-3 sm:space-y-4">
-                {/* Vyhľadávanie */}
-                <div>
-                  <label className="block text-xs font-semibold text-muted-foreground mb-1 flex items-center gap-1">
-                    <Search className="w-3 h-3 text-muted-foreground" />
-                    {t('search')}
-                  </label>
-                  <div className="relative">
-                    <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 w-3 h-3 text-gray-400" />
-                    <Input
-                      placeholder={t('namePlaceholder')}
-                      value={hladanieInput}
-                      onChange={(e) => setHladanieInput(e.target.value)}
-                      className="pl-7 h-9 text-sm bg-background border-border text-foreground" />
-
-                  </div>
-                </div>
-
-                {/* Výrobca */}
-                <FilterSection title={t('manufacturer')} icon={Home} iconClass="text-red-500" badge={vyrobcaFilter.length}>
-                  <div className="grid grid-cols-1 gap-1.5">
-                    {vyrobcovia.map((v) => (
-                      <button
-                        key={v}
-                        onClick={() => {
-                          if (vyrobcaFilter.includes(v)) {
-                            setVyrobcaFilter(vyrobcaFilter.filter((x) => x !== v));
-                          } else {
-                            setVyrobcaFilter([...vyrobcaFilter, v]);
-                          }
-                        }}
-                        className={`p-2 rounded-lg border transition-all text-left ${
-                          vyrobcaFilter.includes(v)
-                            ? 'bg-primary/10 border-primary text-primary dark:bg-red-500/20 dark:border-red-500 dark:text-red-400 font-bold'
-                            : 'bg-background border-border text-muted-foreground hover:border-border-hover hover:text-foreground hover:bg-muted/50'
-                        }`}
-                      >
-                        <div className="flex items-center gap-2">
-                          <Home className={`w-3.5 h-3.5 ${vyrobcaFilter.includes(v) ? 'text-primary dark:text-red-400' : 'text-muted-foreground'}`} />
-                          <span className="text-xs">{v}</span>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </FilterSection>
-
-                {/* Typ domu */}
-                <FilterSection title={t('type')} icon={LayoutGrid} iconClass="text-amber-500" badge={typFilter.length}>
-                  <div className="grid grid-cols-1 gap-1.5">
-                    {[
-                      { value: "modularny", label: t('modularType'), icon: LayoutGrid, color: "amber" },
-                      { value: "montovany", label: t('prefabType'), icon: Hammer, color: "orange" },
-                      { value: "mobilny", label: t('mobileType'), icon: Caravan, color: "teal" }
-                    ].map((typ) => {
-                      const Icon = typ.icon;
-                      const isSelected = typFilter.includes(typ.value);
-                      return (
-                        <button
-                          key={typ.value}
-                          onClick={() => {
-                            if (isSelected) {
-                              setTypFilter(typFilter.filter((x) => x !== typ.value));
-                            } else {
-                              setTypFilter([...typFilter, typ.value]);
-                            }
-                          }}
-                          className={`p-2 rounded-lg border transition-all text-left ${
-                            isSelected
-                              ? `bg-${typ.color}-500/20 border-${typ.color}-500 text-${typ.color}-500 dark:text-${typ.color}-400 font-bold`
-                              : 'bg-background border-border text-muted-foreground hover:border-border-hover hover:text-foreground hover:bg-muted/50'
-                          }`}
-                        >
-                          <div className="flex items-center gap-2">
-                            <Icon className={`w-3.5 h-3.5 ${isSelected ? `text-${typ.color}-600 dark:text-${typ.color}-400` : 'text-muted-foreground'}`} />
-                            <span className="text-xs">{typ.label}</span>
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </FilterSection>
-
-                {/* Cenové rozpätie */}
-                <div className="bg-background border border-emerald-500/30 rounded-lg p-3">
-                  <label className="block text-xs font-semibold text-muted-foreground mb-2 flex items-center gap-1">
-                    <Euro className="w-3 h-3 text-emerald-500" />
-                    {t('priceRange')}
-                  </label>
-                  <div className="mb-3">
-                    <label className="text-[10px] text-muted-foreground mb-1 block">{t('maximum')}: {cenoveRozpatie[1].toLocaleString('sk-SK')} €</label>
-                    <Input
-                      type="number"
-                      min={0}
-                      max={300000}
-                      step={5000}
-                      value={cenoveRozpatie[1]}
-                      onChange={(e) => setCenoveRozpatie([0, Number(e.target.value)])}
-                      className="h-7 text-xs bg-background border-border text-foreground"
-                    />
-                    </div>
-                    <Slider
-                    min={0}
-                    max={300000}
-                    step={5000}
-                    value={[cenoveRozpatie[1]]}
-                    onValueChange={([val]) => setCenoveRozpatie([0, val])}
-                    className="mt-1"
-                    />
-                    <div className="flex justify-between text-[10px] text-muted-foreground/80 mt-1">
-                    <span>0 €</span>
-                    <span>300 000 €</span>
-                    </div>
-                </div>
-
-                {/* Počet izieb */}
-                <div>
-                  <label className="block text-xs font-semibold text-muted-foreground mb-2 flex items-center gap-1">
-                    <Grid3x3 className="w-3 h-3 text-blue-500" />
-                    {t('roomsFilter')}
-                  </label>
-                  <div className="grid grid-cols-3 gap-1.5">
-                    {Array.isArray(domy) && [...new Set(domy.filter(d => d.pocet_izieb).map(d => d.pocet_izieb))].sort((a, b) => a - b).map((izby) => {
-                      const isSelected = pocetIziebFilter.includes(izby);
-                      return (
-                        <button
-                          key={izby}
-                          onClick={() => {
-                            if (isSelected) {
-                              setPocetIziebFilter(pocetIziebFilter.filter((x) => x !== izby));
-                            } else {
-                              setPocetIziebFilter([...pocetIziebFilter, izby]);
-                            }
-                          }}
-                          className={`p-2 rounded-lg border transition-all ${
-                            isSelected
-                              ? 'bg-blue-500/10 border-blue-500 text-blue-600 dark:text-blue-400 font-bold'
-                              : 'bg-background border-border text-muted-foreground hover:border-border-hover hover:text-foreground hover:bg-muted/50'
-                          }`}
-                        >
-                          <div className="flex flex-col items-center gap-0.5">
-                            <Grid3x3 className={`w-3.5 h-3.5 ${isSelected ? 'text-blue-500 dark:text-blue-400' : 'text-muted-foreground'}`} />
-                            <span className="text-xs font-bold">{izby}</span>
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Modulové domy - Ticabhouse filter */}
-                <div className="bg-background border border-primary/30 dark:border-red-500/30 rounded-lg p-3">
-                  <label className="block text-xs font-semibold text-muted-foreground mb-2 flex items-center gap-1">
-                    <Boxes className="w-3 h-3 text-red-500" />
-                    {t('modularHomesFilter')}
-                  </label>
-                  <div className="grid grid-cols-1 gap-1.5">
-                    {[
-                      { value: 'all', label: t('all'), icon: Boxes },
-                      { value: '1modul', label: t('oneModularHouses'), icon: Home },
-                      { value: 'viacmodulov', label: t('multiModularHouses'), icon: Building2 }
-                    ].map((opt) => {
-                      const Icon = opt.icon;
-                      const isSelected = moduloveDomyFilter === opt.value;
-                      return (
-                        <button
-                          key={opt.value}
-                          onClick={() => setModuloveDomyFilter(opt.value)}
-                          className={`p-2 rounded-lg border transition-all text-left ${
-                            isSelected
-                              ? 'bg-primary/10 border-primary text-primary dark:bg-red-500/20 dark:border-red-500 dark:text-red-400 font-bold'
-                              : 'bg-background border-border text-muted-foreground hover:border-border-hover hover:text-foreground hover:bg-muted/50'
-                          }`}
-                        >
-                          <div className="flex items-center gap-2">
-                            <Icon className={`w-3.5 h-3.5 ${isSelected ? 'text-primary dark:text-red-400' : 'text-muted-foreground'}`} />
-                            <span className="text-xs">{opt.label}</span>
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Počet modulov - zobrazí sa len pre modulárne domy */}
-                {typFilter.includes("modularny") && !vyrobcaFilter.includes("Ticab house") && (
-                  <div className="bg-background border border-primary/30 dark:border-red-500/30 rounded-lg p-3">
-                    <label className="block text-xs font-semibold text-muted-foreground mb-2 flex items-center gap-1">
-                      <Boxes className="w-3 h-3 text-red-500" />
-                      {t('numberOfModules')}
-                    </label>
-                    <p className="text-[10px] text-muted-foreground mb-2">{t('modulesSelectionDesc')}</p>
-                    <div className="grid grid-cols-3 gap-1.5">
-                      {Array.isArray(domy) && [...new Set(domy.filter(d => d.pocet_modulov && d.vyrobca === "Ticab house").map(d => d.pocet_modulov))].sort((a, b) => a - b).map((moduly) => {
-                        const isSelected = pocetModulovFilter.includes(moduly);
-                        return (
-                          <button
-                            key={moduly}
-                            onClick={() => {
-                              if (isSelected) {
-                                setPocetModulovFilter(pocetModulovFilter.filter((x) => x !== moduly));
-                              } else {
-                                setPocetModulovFilter([...pocetModulovFilter, moduly]);
-                              }
-                            }}
-                            className={`p-2 rounded-lg border transition-all ${
-                              isSelected
-                                ? 'bg-primary/10 border-primary text-primary dark:bg-red-500/20 dark:border-red-500 dark:text-red-400 font-bold'
-                                : 'bg-background border-border text-muted-foreground hover:border-border-hover hover:text-foreground hover:bg-muted/50'
-                            }`}
-                          >
-                            <div className="flex flex-col items-center gap-0.5">
-                              <Boxes className={`w-3.5 h-3.5 ${isSelected ? 'text-primary dark:text-red-400' : 'text-muted-foreground'}`} />
-                              <span className="text-xs font-bold">{moduly}</span>
-                            </div>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-
-                {/* Zastavaná plocha */}
-                <div className="bg-blue-500/10 dark:bg-blue-950/20 border border-blue-200/50 dark:border-blue-800/30 rounded-lg p-3">
-                  <label className="block text-xs font-semibold text-foreground mb-2 flex items-center gap-1">
-                    <Square className="w-3 h-3 text-blue-600 dark:text-blue-400" />
-                    {t('builtAreaFilter')}
-                  </label>
-                  <div className="mb-3">
-                    <label className="text-[10px] text-muted-foreground mb-1 block">{t('maximum')}: {plocharozsah[1]} m²</label>
-                    <Input
-                      type="number"
-                      min={0}
-                      max={500}
-                      step={5}
-                      value={plocharozsah[1]}
-                      onChange={(e) => setPlocharozsah([0, Number(e.target.value)])}
-                      className="h-7 text-xs bg-background border-border text-foreground"
-                      />
-                  </div>
-                  <Slider
-                    min={0}
-                    max={500}
-                    step={5}
-                    value={[plocharozsah[1]]}
-                    onValueChange={([val]) => setPlocharozsah([0, val])}
-                    className="mt-1"
-                  />
-                  <div className="flex justify-between text-[10px] text-muted-foreground mt-1">
-                    <span>0 m²</span>
-                    <span>500 m²</span>
-                  </div>
-                  </div>
-
-                  {/* Úžitková plocha */}
-                  <div className="hidden sm:block bg-purple-500/10 dark:bg-purple-950/20 border border-purple-200/50 dark:border-purple-800/30 rounded-lg p-3">
-                  <label className="block text-xs font-semibold text-foreground mb-2 flex items-center gap-1">
-                    <Square className="w-3 h-3 text-purple-600 dark:text-purple-400" />
-                    {t('usableAreaFilter')}
-                  </label>
-                  <div className="mb-3">
-                    <label className="text-[10px] text-muted-foreground mb-1 block">{t('maximum')}: {uzitkovaRozsah[1]} m²</label>
-                    <Input
-                      type="number"
-                      min={0}
-                      max={500}
-                      step={5}
-                      value={uzitkovaRozsah[1]}
-                      onChange={(e) => setUzitkovaRozsah([0, Number(e.target.value)])}
-                      className="h-7 text-xs bg-background border-border text-foreground"
-                      />
-                  </div>
-                  <Slider
-                    min={0}
-                    max={500}
-                    step={5}
-                    value={[uzitkovaRozsah[1]]}
-                    onValueChange={([val]) => setUzitkovaRozsah([0, val])}
-                    className="mt-1"
-                  />
-                  <div className="flex justify-between text-[10px] text-muted-foreground mt-1">
-                    <span>0 m²</span>
-                    <span>500 m²</span>
-                  </div>
-                  </div>
-
-                {/* Pokročilé filtre */}
-                {showAdvancedFilters && (
-                  <div className="pt-3 border-t space-y-3">
-                    <div className="bg-emerald-500/10 dark:bg-emerald-950/20 border border-emerald-200/50 dark:border-emerald-800/30 rounded-lg p-3">
-                      <label className="block text-xs font-semibold text-foreground mb-2 flex items-center gap-1">
-                        <Zap className="w-3 h-3 text-green-600 dark:text-emerald-400" />
-                        {t('energyClassFilter')}
-                      </label>
-                      <Select value={energyCert} onValueChange={setEnergyCert}>
-                        <SelectTrigger className="h-7 text-xs">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="all">{t('all')}</SelectItem>
-                          <SelectItem value="a0">{t('energyClassA0')}</SelectItem>
-                          <SelectItem value="no">{t('energyClassNone')}</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                )}
-
-                {/* Toggle pre pokročilé */}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="w-full text-xs h-7"
-                  onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-                >
-                  {showAdvancedFilters ? `− ${t('lessFilters')}` : `+ ${t('advancedFilters')}`}
-                </Button>
-
-                {/* Reset */}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full text-xs h-7"
-                  onClick={() => {
-                    setKategoriaFilter("vsetky");
-                    setVyrobcaFilter([]);
-                    setTypFilter([]);
-                    setPlocharozsah([0, 500]);
-                    setUzitkovaRozsah([0, 500]);
-                    setHladanie("");
-                    setHladanieInput("");
-                    setCenoveRozpatie([0, 300000]);
-                    setPocetIziebFilter([]);
-                    setPocetModulovFilter([]);
-                    setModuloveDomyFilter('all');
-                    setZoradenie("poradie");
-                    setEnergyCert('all');
-                  }}>
-                  {t('reset')}
-                </Button>
-              </div>
-
-              {/* Stats */}
-              <div className="mt-3 pt-3 border-t">
-                <p className="text-xs text-muted-foreground">
-                  <span className="font-bold text-primary">{zoradeneDomy.length}</span> {t('outOf')} {verejneDomy.length} {t('houses')}
-                </p>
-              </div>
+            className="hidden lg:block lg:w-72 flex-shrink-0 relative">
+            <Card className="p-4 sm:p-5 lg:sticky lg:top-24 shadow-xl bg-card border-border max-w-full overflow-hidden">
+              <CatalogFilterPanel
+                t={t}
+                hladanieInput={hladanieInput}
+                setHladanieInput={setHladanieInput}
+                vyrobcovia={vyrobcovia}
+                vyrobcaFilter={vyrobcaFilter}
+                setVyrobcaFilter={setVyrobcaFilter}
+                typFilter={typFilter}
+                setTypFilter={setTypFilter}
+                cenoveRozpatie={cenoveRozpatie}
+                setCenoveRozpatie={setCenoveRozpatie}
+                pocetIziebFilter={pocetIziebFilter}
+                setPocetIziebFilter={setPocetIziebFilter}
+                moduloveDomyFilter={moduloveDomyFilter}
+                setModuloveDomyFilter={setModuloveDomyFilter}
+                pocetModulovFilter={pocetModulovFilter}
+                setPocetModulovFilter={setPocetModulovFilter}
+                domy={domy}
+                plocharozsah={plocharozsah}
+                setPlocharozsah={setPlocharozsah}
+                uzitkovaRozsah={uzitkovaRozsah}
+                setUzitkovaRozsah={setUzitkovaRozsah}
+                showAdvancedFilters={showAdvancedFilters}
+                setShowAdvancedFilters={setShowAdvancedFilters}
+                energyCert={energyCert}
+                setEnergyCert={setEnergyCert}
+                resetFilters={resetFilters}
+                totalCount={zoradeneDomy.length}
+                publicCount={verejneDomy.length}
+                isMobile={false}
+              />
             </Card>
           </motion.aside>
 
           {/* Domy Grid */}
           <div className="flex-grow w-full max-w-full overflow-hidden">
+            {/* Aktívne filtre */}
+            <ActiveFilterChips chips={activeChips} onClearAll={resetFilters} t={t} />
+
             {/* Lišta nad výsledkami: počet, dizajn fotiek, zoradenie */}
             <Card className="mb-4 p-2 sm:p-3 bg-card border-border shadow-sm">
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
