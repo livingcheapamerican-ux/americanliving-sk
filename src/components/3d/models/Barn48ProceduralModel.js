@@ -457,13 +457,43 @@ export function createBarn48Model({
   backWallInt.position.set(0, 0, -halfL);
   bodyGroup.add(backWallInt);
 
-  // 3 Okná na zadnej stene
+  // Helper pre tvorbu realistického dutého rámu okna s priehľadným sklom
+  const createHollowWindow = (w, h, depth, borderThick, fMat, gMat, mullion = false) => {
+    const group = new THREE.Group();
+    // Priehľadná sklenená tabuľa
+    const pane = new THREE.Mesh(new THREE.BoxGeometry(w - borderThick * 2, h - borderThick * 2, 0.015), gMat);
+    group.add(pane);
+
+    // 4 obvodové lišty rámu (hore, dole, vľavo, vpravo)
+    const topBar = new THREE.Mesh(new THREE.BoxGeometry(w, borderThick, depth), fMat);
+    topBar.position.set(0, (h - borderThick) / 2, 0);
+    group.add(topBar);
+
+    const botBar = new THREE.Mesh(new THREE.BoxGeometry(w, borderThick, depth), fMat);
+    botBar.position.set(0, -(h - borderThick) / 2, 0);
+    group.add(botBar);
+
+    const leftBar = new THREE.Mesh(new THREE.BoxGeometry(borderThick, h - borderThick * 2, depth), fMat);
+    leftBar.position.set(-(w - borderThick) / 2, 0, 0);
+    group.add(leftBar);
+
+    const rightBar = new THREE.Mesh(new THREE.BoxGeometry(borderThick, h - borderThick * 2, depth), fMat);
+    rightBar.position.set((w - borderThick) / 2, 0, 0);
+    group.add(rightBar);
+
+    if (mullion) {
+      const mul = new THREE.Mesh(new THREE.BoxGeometry(borderThick * 0.9, h - borderThick * 2, depth * 1.02), fMat);
+      group.add(mul);
+    }
+
+    return group;
+  };
+
+  // 3 Okná na zadnej stene (s dutým rámom a plne priehľadným sklom)
   const backLoftWinGroup = new THREE.Group();
   backLoftWinGroup.position.set(0, wallHeight + 0.95, -halfL - 0.04);
-  const bLoftPane = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.75, 0.04), glassMat);
-  backLoftWinGroup.add(bLoftPane);
-  const bLoftFrame = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.85, 0.16), frameMat);
-  backLoftWinGroup.add(bLoftFrame);
+  const loftWin = createHollowWindow(0.65, 0.85, 0.14, 0.05, frameMat, glassMat);
+  backLoftWinGroup.add(loftWin);
   const bLoftSill = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.04, 0.2), frameMat);
   bLoftSill.position.set(0, -0.44, -0.04);
   backLoftWinGroup.add(bLoftSill);
@@ -471,10 +501,8 @@ export function createBarn48Model({
 
   const backBathWinGroup = new THREE.Group();
   backBathWinGroup.position.set(0.95, 1.25, -halfL - 0.04);
-  const bBathPane = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.95, 0.04), glassMat);
-  backBathWinGroup.add(bBathPane);
-  const bBathFrame = new THREE.Mesh(new THREE.BoxGeometry(0.75, 1.05, 0.16), frameMat);
-  backBathWinGroup.add(bBathFrame);
+  const bathWin = createHollowWindow(0.75, 1.05, 0.14, 0.05, frameMat, glassMat);
+  backBathWinGroup.add(bathWin);
   const bBathSill = new THREE.Mesh(new THREE.BoxGeometry(0.82, 0.04, 0.2), frameMat);
   bBathSill.position.set(0, -0.54, -0.04);
   backBathWinGroup.add(bBathSill);
@@ -482,12 +510,8 @@ export function createBarn48Model({
 
   const backBedWinGroup = new THREE.Group();
   backBedWinGroup.position.set(-1.05, 1.25, -halfL - 0.04);
-  const bBedPane = new THREE.Mesh(new THREE.BoxGeometry(1.35, 0.95, 0.04), glassMat);
-  backBedWinGroup.add(bBedPane);
-  const bBedFrame = new THREE.Mesh(new THREE.BoxGeometry(1.45, 1.05, 0.16), frameMat);
-  backBedWinGroup.add(bBedFrame);
-  const bBedMullion = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.95, 0.18), frameMat);
-  backBedWinGroup.add(bBedMullion);
+  const bedWin = createHollowWindow(1.45, 1.05, 0.14, 0.05, frameMat, glassMat, true);
+  backBedWinGroup.add(bedWin);
   const bBedSill = new THREE.Mesh(new THREE.BoxGeometry(1.52, 0.04, 0.2), frameMat);
   bBedSill.position.set(0, -0.54, -0.04);
   backBedWinGroup.add(bBedSill);
@@ -515,14 +539,22 @@ export function createBarn48Model({
   rightWallInt.position.set(halfW - 0.12, wallHeight / 2, interiorCenterZ);
   bodyGroup.add(rightWallInt);
 
-  // Bočné okno v spálni 1
+  // Bočné okno v spálni 1 (dutý rám s priehľadným sklom)
   const sideWinGroup = new THREE.Group();
   sideWinGroup.position.set(-halfW - 0.01, wallHeight / 2, -halfL + 1.8);
-  const sCasing = new THREE.Mesh(new THREE.BoxGeometry(0.04, 1.85, 0.75), woodMat);
-  sideWinGroup.add(sCasing);
-  const sFrame = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1.7, 0.55), frameMat);
-  sideWinGroup.add(sFrame);
-  const sGlass = new THREE.Mesh(new THREE.BoxGeometry(0.04, 1.6, 0.45), glassMat);
+  const sTop = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.06, 0.55), frameMat);
+  sTop.position.set(0, 0.82, 0);
+  sideWinGroup.add(sTop);
+  const sBot = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.06, 0.55), frameMat);
+  sBot.position.set(0, -0.82, 0);
+  sideWinGroup.add(sBot);
+  const sLeft = new THREE.Mesh(new THREE.BoxGeometry(0.08, 1.58, 0.06), frameMat);
+  sLeft.position.set(0, 0, -0.245);
+  sideWinGroup.add(sLeft);
+  const sRight = new THREE.Mesh(new THREE.BoxGeometry(0.08, 1.58, 0.06), frameMat);
+  sRight.position.set(0, 0, 0.245);
+  sideWinGroup.add(sRight);
+  const sGlass = new THREE.Mesh(new THREE.BoxGeometry(0.02, 1.58, 0.43), glassMat);
   sideWinGroup.add(sGlass);
   bodyGroup.add(sideWinGroup);
 
