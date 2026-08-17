@@ -516,7 +516,7 @@ export default function DetailDomu() {
     : 'https://americanliving.sk/detail-domu';
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden max-w-full font-['Outfit'] pt-16 sm:pt-20">
+    <div className="min-h-screen bg-background text-foreground overflow-x-hidden max-w-full font-['Outfit']">
       <Helmet>
         <link rel="canonical" href={canonicalUrl} />
         {productSchemaData && (
@@ -611,15 +611,6 @@ export default function DetailDomu() {
         </div>
       </div>
 
-      {/* 3D Interaktívny Showroom na celú šírku stránky pre Barn 48 (PH-008) */}
-      {(dom.prosto_house_kod === "PH-008" || dom.id === "6916ec94c11aacdd15248f31" || dom.nazov?.toLowerCase().includes("barn 48") || dom.nazov?.toLowerCase().includes("ph-008")) && (
-        <div className="w-full bg-slate-900/40 dark:bg-slate-950/70 border-b border-slate-200 dark:border-slate-800/80 py-8">
-          <div className="container mx-auto px-2 sm:px-4 max-w-7xl">
-            <Barn48InteractiveSection dom={dom} />
-          </div>
-        </div>
-      )}
-
       <div className="container mx-auto px-4 py-8 max-w-full overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 w-full max-w-full">
           {/* Ľavý stĺpec - Špecifikácie */}
@@ -692,6 +683,11 @@ export default function DetailDomu() {
                   language={language}
                 />
               </div>
+            )}
+
+            {/* 3D Interaktívny Showroom pre Barn 48 (PH-008) */}
+            {(dom.prosto_house_kod === "PH-008" || dom.id === "6916ec94c11aacdd15248f31" || dom.nazov?.toLowerCase().includes("barn 48") || dom.nazov?.toLowerCase().includes("ph-008")) && (
+              <Barn48InteractiveSection dom={dom} />
             )}
 
             {/* 2D a 3D Pôdorysy - hneď pod titulnou fotkou */}
