@@ -456,7 +456,7 @@ export default function Katalog() {
           </div>
         </div>
 
-      <div className="container mx-auto px-2 sm:px-4 py-6 sm:py-12 max-w-full overflow-hidden">
+      <div className="container mx-auto px-2 sm:px-4 pt-4 pb-28 sm:py-12 max-w-full overflow-hidden">
         {/* Tabs pre kategórie */}
         <Tabs value={kategoriaFilter} onValueChange={setKategoriaFilter} className="mb-3 sm:mb-4">
           <TabsList className={`grid w-full max-w-xl mx-auto h-10 sm:h-12 bg-card border border-border rounded-full p-1 shadow-xl ${canManage ? 'grid-cols-4' : 'grid-cols-3'}`}>
@@ -677,8 +677,8 @@ export default function Katalog() {
           )}
         </AnimatePresence>
 
-        {/* PLÁVAJÚCE TLAČIDLO FILTROV NA MOBILE (FAB) */}
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 lg:hidden">
+        {/* PLÁVAJÚCE TLAČIDLO FILTROV NA MOBILE (FAB - Bezpečne nad spodnou lištou) */}
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-40 lg:hidden">
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={() => setMobileFiltersOpen(true)}
