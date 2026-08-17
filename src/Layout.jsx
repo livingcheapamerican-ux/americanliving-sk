@@ -764,7 +764,7 @@ function LayoutContent({ children }) {
 
       {/* Floating Admin & Session Recorder Bar */}
       {isAdmin && (
-        <div className="fixed top-24 right-4 z-[99] flex flex-col items-end gap-2">
+        <div className="fixed top-24 right-4 z-[99] hidden md:flex flex-col items-end gap-2">
           <Link
             to={createPageUrl("AdminAnalyzaSessions")}
             className="inline-flex items-center gap-2 bg-slate-900/95 hover:bg-slate-800 border border-slate-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold shadow-2xl backdrop-blur-md transition-all group"

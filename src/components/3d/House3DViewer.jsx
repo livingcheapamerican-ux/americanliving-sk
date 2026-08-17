@@ -61,6 +61,8 @@ export default function House3DViewer({
   const [activeCameraView, setActiveCameraView] = useState('perspective');
   const [isRotatingAuto, setIsRotatingAuto] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [mobileActiveTab, setMobileActiveTab] = useState(null); // 'facade' | 'interior' | 'length' | null
+  const [showMobileViews, setShowMobileViews] = useState(false);
 
   // Synchronizácia z propsov
   useEffect(() => {
@@ -505,76 +507,133 @@ export default function House3DViewer({
       )}
 
       {/* HORNÝ HUD PANEL (Názov, Plocha, Režim Dňa & Tlačidlá) */}
-      <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none z-20">
+      <div className="absolute top-3 md:top-4 left-3 md:left-4 right-3 md:right-4 flex items-center justify-between pointer-events-none z-20">
         
-        {/* Info Box o dome */}
-        <div className="flex items-center gap-3 bg-white/85 dark:bg-slate-900/85 backdrop-blur-xl px-4 py-2.5 rounded-2xl border border-slate-200/60 dark:border-white/10 shadow-lg pointer-events-auto">
-          <div className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse" />
+        {/* Info Box o dome (Desktop & Mobile) */}
+        <div className="flex items-center gap-2 md:gap-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl px-2.5 md:px-4 py-1.5 md:py-2.5 rounded-xl md:rounded-2xl border border-slate-200/60 dark:border-white/10 shadow-lg pointer-events-auto">
+          <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
           <div>
-            <div className="flex items-center gap-2">
-              <span className="font-black text-slate-900 dark:text-white text-sm">Barn 48 (PH-008)</span>
-              <Badge className="bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20 text-[10px] py-0 px-2 font-black">
+            <div className="flex items-center gap-1.5 md:gap-2">
+              <span className="font-black text-slate-900 dark:text-white text-xs md:text-sm">Barn 48</span>
+              <Badge className="bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20 text-[9px] md:text-[10px] py-0 px-1.5 md:px-2 font-black">
                 3D LIVE
               </Badge>
             </div>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-              Rozmery: 4.8m × {currentLength}m • Úžitková plocha: <strong>~{currentArea} m²</strong>
+            <p className="text-[10px] md:text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+              4.8m × {currentLength}m • <strong>~{currentArea} m²</strong>
             </p>
           </div>
         </div>
 
+        {/* Mobilný výber pohľadu (Iba mobil) */}
+        <div className="relative flex md:hidden pointer-events-auto ml-1">
+          <button
+            onClick={() => setShowMobileViews(!showMobileViews)}
+            className="flex items-center gap-1 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl px-2.5 py-2 rounded-xl border border-slate-200/60 dark:border-white/10 shadow-lg text-xs font-bold text-slate-800 dark:text-white"
+          >
+            <Eye className="w-3.5 h-3.5 text-red-500" />
+            <span className="text-[11px] font-bold">
+              {activeCameraView === 'perspective' && '3D Orbit'}
+              {activeCameraView === 'front' && 'Štít'}
+              {activeCameraView === 'side' && 'Bok'}
+              {activeCameraView === 'top' && 'Pôdorys'}
+              {activeCameraView === 'interior' && 'Interiér'}
+            </span>
+            <span className="text-[9px] text-slate-400">▾</span>
+          </button>
+
+          {showMobileViews && (
+            <div className="absolute top-full left-0 mt-1.5 flex flex-col gap-1 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl p-1.5 rounded-xl border border-slate-200/80 dark:border-white/10 shadow-2xl z-30 min-w-[130px]">
+              <button
+                onClick={() => { setCameraView('perspective'); setShowMobileViews(false); }}
+                className={`px-2.5 py-1.5 rounded-lg text-xs font-bold text-left ${activeCameraView === 'perspective' ? 'bg-red-500 text-white' : 'text-slate-700 dark:text-slate-300'}`}
+              >
+                3D Orbit
+              </button>
+              <button
+                onClick={() => { setCameraView('front'); setShowMobileViews(false); }}
+                className={`px-2.5 py-1.5 rounded-lg text-xs font-bold text-left ${activeCameraView === 'front' ? 'bg-red-500 text-white' : 'text-slate-700 dark:text-slate-300'}`}
+              >
+                Štít / Terasa
+              </button>
+              <button
+                onClick={() => { setCameraView('side'); setShowMobileViews(false); }}
+                className={`px-2.5 py-1.5 rounded-lg text-xs font-bold text-left ${activeCameraView === 'side' ? 'bg-red-500 text-white' : 'text-slate-700 dark:text-slate-300'}`}
+              >
+                Bočná stena
+              </button>
+              <button
+                onClick={() => { setCameraView('top'); setShowMobileViews(false); }}
+                className={`px-2.5 py-1.5 rounded-lg text-xs font-bold text-left ${activeCameraView === 'top' ? 'bg-red-500 text-white' : 'text-slate-700 dark:text-slate-300'}`}
+              >
+                Pôdorys zhora
+              </button>
+              <button
+                onClick={() => {
+                  setRoofCutaway(roofCutaway > 0 ? 0 : 1);
+                  setCameraView('interior');
+                  setShowMobileViews(false);
+                }}
+                className={`px-2.5 py-1.5 rounded-lg text-xs font-bold text-left flex items-center gap-1 ${activeCameraView === 'interior' ? 'bg-amber-500 text-white' : 'text-amber-600 dark:text-amber-400'}`}
+              >
+                🛋️ Interiér
+              </button>
+            </div>
+          )}
+        </div>
+
         {/* Rýchle ovládanie (Deň/Noc, Auto-rotácia, Screenshot, Fullscreen) */}
-        <div className="flex items-center gap-2 bg-white/85 dark:bg-slate-900/85 backdrop-blur-xl p-1.5 rounded-2xl border border-slate-200/60 dark:border-white/10 shadow-lg pointer-events-auto">
+        <div className="flex items-center gap-1 md:gap-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl p-1 md:p-1.5 rounded-xl md:rounded-2xl border border-slate-200/60 dark:border-white/10 shadow-lg pointer-events-auto">
           
           {/* Čas dňa */}
-          <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl gap-1">
+          <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-0.5 md:p-1 rounded-lg md:rounded-xl gap-0.5 md:gap-1">
             <button
               onClick={() => setTimeOfDay('day')}
-              className={`p-1.5 rounded-lg transition-all ${timeOfDay === 'day' ? 'bg-white dark:bg-slate-700 text-amber-500 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+              className={`p-1 md:p-1.5 rounded-md md:rounded-lg transition-all ${timeOfDay === 'day' ? 'bg-white dark:bg-slate-700 text-amber-500 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
               title="Denné svetlo"
             >
-              <Sun className="w-4 h-4" />
+              <Sun className="w-3.5 h-3.5 md:w-4 md:h-4" />
             </button>
             <button
               onClick={() => setTimeOfDay('sunset')}
-              className={`p-1.5 rounded-lg transition-all ${timeOfDay === 'sunset' ? 'bg-white dark:bg-slate-700 text-orange-500 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+              className={`p-1 md:p-1.5 rounded-md md:rounded-lg transition-all ${timeOfDay === 'sunset' ? 'bg-white dark:bg-slate-700 text-orange-500 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
               title="Západ slnka (Golden Hour)"
             >
-              <Sunset className="w-4 h-4" />
+              <Sunset className="w-3.5 h-3.5 md:w-4 md:h-4" />
             </button>
             <button
               onClick={() => setTimeOfDay('night')}
-              className={`p-1.5 rounded-lg transition-all ${timeOfDay === 'night' ? 'bg-white dark:bg-slate-700 text-indigo-400 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+              className={`p-1 md:p-1.5 rounded-md md:rounded-lg transition-all ${timeOfDay === 'night' ? 'bg-white dark:bg-slate-700 text-indigo-400 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
               title="Nočný režim s osvetlením"
             >
-              <Moon className="w-4 h-4" />
+              <Moon className="w-3.5 h-3.5 md:w-4 md:h-4" />
             </button>
           </div>
 
-          <div className="w-[1px] h-6 bg-slate-200 dark:bg-white/10" />
+          <div className="hidden md:block w-[1px] h-6 bg-slate-200 dark:bg-white/10" />
 
           {/* Auto-rotácia */}
           <button
             onClick={() => setIsRotatingAuto(!isRotatingAuto)}
-            className={`p-2 rounded-xl transition-all ${isRotatingAuto ? 'bg-red-500 text-white shadow-md' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+            className={`p-1.5 md:p-2 rounded-lg md:rounded-xl transition-all ${isRotatingAuto ? 'bg-red-500 text-white shadow-md' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
             title="Automatické otáčanie"
           >
-            <Rotate3d className={`w-4 h-4 ${isRotatingAuto ? 'animate-spin' : ''}`} />
+            <Rotate3d className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isRotatingAuto ? 'animate-spin' : ''}`} />
           </button>
 
-          {/* Kóty */}
+          {/* Kóty (Desktop) */}
           <button
             onClick={() => setShowDimensions(!showDimensions)}
-            className={`p-2 rounded-xl transition-all ${showDimensions ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+            className={`hidden md:block p-2 rounded-xl transition-all ${showDimensions ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
             title="Zobraziť 3D rozmery"
           >
             <Ruler className="w-4 h-4" />
           </button>
 
-          {/* Screenshot */}
+          {/* Screenshot (Desktop) */}
           <button
             onClick={takeScreenshot}
-            className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
+            className="hidden md:block p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
             title="Stiahnuť 3D obrázok"
           >
             <Camera className="w-4 h-4" />
@@ -583,16 +642,16 @@ export default function House3DViewer({
           {/* Fullscreen */}
           <button
             onClick={() => setIsFullscreen(!isFullscreen)}
-            className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
+            className="p-1.5 md:p-2 rounded-lg md:rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
             title={isFullscreen ? 'Zmenšiť' : 'Celá obrazovka'}
           >
-            {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+            {isFullscreen ? <Minimize2 className="w-3.5 h-3.5 md:w-4 md:h-4" /> : <Maximize2 className="w-3.5 h-3.5 md:w-4 md:h-4" />}
           </button>
         </div>
       </div>
 
-      {/* ĽAVÝ PANEL: KAMEROVÉ UHOLOVÉ PREDVOĽBY */}
-      <div className="absolute left-4 top-24 flex flex-col gap-1.5 bg-white/85 dark:bg-slate-900/85 backdrop-blur-xl p-1.5 rounded-2xl border border-slate-200/60 dark:border-white/10 shadow-lg pointer-events-auto z-20">
+      {/* ĽAVÝ PANEL: KAMEROVÉ UHOLOVÉ PREDVOĽBY (DESKTOP) */}
+      <div className="hidden md:flex absolute left-4 top-24 flex-col gap-1.5 bg-white/85 dark:bg-slate-900/85 backdrop-blur-xl p-1.5 rounded-2xl border border-slate-200/60 dark:border-white/10 shadow-lg pointer-events-auto z-20">
         <span className="text-[9px] font-black uppercase tracking-wider text-slate-400 px-2 py-0.5 text-center">Pohľad</span>
         <button
           onClick={() => setCameraView('perspective')}
@@ -629,9 +688,9 @@ export default function House3DViewer({
         </button>
       </div>
 
-      {/* DOLNÝ INTERAKTÍVNY KONFIGURÁČNÝ PANEL */}
+      {/* ── DOLNÝ KONFIGURAČNÝ PANEL (DESKTOP) ── */}
       {showControls && (
-        <div className="absolute bottom-4 left-4 right-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 pointer-events-none z-20">
+        <div className="hidden md:flex absolute bottom-4 left-4 right-4 items-center justify-between gap-3 pointer-events-none z-20">
           
           {/* Výber materiálu fasády */}
           <div className="flex flex-wrap items-center gap-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl p-2 rounded-2xl border border-slate-200/60 dark:border-white/10 shadow-xl pointer-events-auto">
@@ -683,7 +742,7 @@ export default function House3DViewer({
             </button>
           </div>
 
-          {/* Výber materiálu stien interiéru (Tatranský profil vs Biely sadrokartón) */}
+          {/* Výber materiálu stien interiéru */}
           <div className="flex flex-wrap items-center gap-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl p-2 rounded-2xl border border-slate-200/60 dark:border-white/10 shadow-xl pointer-events-auto">
             <span className="text-xs font-black text-slate-800 dark:text-white px-2">Interiér:</span>
             
@@ -721,7 +780,6 @@ export default function House3DViewer({
           {/* Predĺženie domu & Exploded View */}
           <div className="flex items-center gap-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl p-2 rounded-2xl border border-slate-200/60 dark:border-white/10 shadow-xl pointer-events-auto">
             
-            {/* Predĺženie */}
             <span className="text-xs font-black text-slate-800 dark:text-white px-2">Dĺžka:</span>
             <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl gap-1">
               {[
@@ -751,7 +809,7 @@ export default function House3DViewer({
 
             <div className="w-[1px] h-6 bg-slate-200 dark:bg-white/10 mx-1" />
 
-            {/* Cutaway / Odklopenie strechy pre pohľad na interiér */}
+            {/* Cutaway / Odklopenie strechy */}
             <button
               onClick={() => setRoofCutaway(roofCutaway === 0 ? 1 : 0)}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all border ${
@@ -766,7 +824,7 @@ export default function House3DViewer({
             </button>
           </div>
 
-          {/* Možnosť pridania 2. Spálne pri maximálnom predĺžení (+3.9 m) */}
+          {/* Možnosť pridania 2. Spálne pri +3.9 m */}
           {extension >= 3.9 && (
             <div className="flex items-center gap-1.5 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl p-2 rounded-2xl border border-red-500/40 shadow-xl pointer-events-auto">
               <span className="text-xs font-black text-slate-800 dark:text-white px-1">Dispozícia pri +3.9m:</span>
@@ -790,8 +848,178 @@ export default function House3DViewer({
         </div>
       )}
 
-      {/* Mini Návod / Tip v pravom hornom rohu pri prvom vstupe */}
-      <div className="absolute bottom-16 md:bottom-20 right-4 pointer-events-none z-10 opacity-70 hover:opacity-100 transition-opacity">
+      {/* ── ELEGANTNÝ KOMPAKTNÝ DOCK (IBA MOBIL) ── */}
+      {showControls && (
+        <div className="flex md:hidden absolute bottom-3 left-3 right-3 flex-col gap-2 pointer-events-none z-20">
+          
+          {/* Sub-panel pre zvolenú kategóriu */}
+          <AnimatePresence>
+            {mobileActiveTab === 'facade' && (
+              <motion.div 
+                initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                className="flex items-center justify-between gap-1.5 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl p-1.5 rounded-2xl border border-slate-200/80 dark:border-white/10 shadow-2xl pointer-events-auto"
+              >
+                <button
+                  onClick={() => { setFacade('standard'); notifyChange('standard', extension, interior); }}
+                  className={`flex-1 flex items-center justify-center gap-1 py-1.5 px-1 rounded-xl text-[10px] font-bold transition-all border ${
+                    facade === 'standard' ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 border-transparent shadow-sm' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-transparent'
+                  }`}
+                >
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#828b96]" />
+                  <span>Plech+Drevo</span>
+                </button>
+                <button
+                  onClick={() => { setFacade('wood'); notifyChange('wood', extension, interior); }}
+                  className={`flex-1 flex items-center justify-center gap-1 py-1.5 px-1 rounded-xl text-[10px] font-bold transition-all border ${
+                    facade === 'wood' ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 border-transparent shadow-sm' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-transparent'
+                  }`}
+                >
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#d8a164]" />
+                  <span>Drevo</span>
+                </button>
+                <button
+                  onClick={() => { setFacade('stucco'); notifyChange('stucco', extension, interior); }}
+                  className={`flex-1 flex items-center justify-center gap-1 py-1.5 px-1 rounded-xl text-[10px] font-bold transition-all border ${
+                    facade === 'stucco' ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 border-transparent shadow-sm' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-transparent'
+                  }`}
+                >
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#f5f3ee] border border-slate-300" />
+                  <span>Omietka</span>
+                </button>
+              </motion.div>
+            )}
+
+            {mobileActiveTab === 'interior' && (
+              <motion.div 
+                initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                className="flex items-center justify-between gap-1.5 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl p-1.5 rounded-2xl border border-slate-200/80 dark:border-white/10 shadow-2xl pointer-events-auto"
+              >
+                <button
+                  onClick={() => { setInterior('wood'); notifyChange(facade, extension, 'wood'); }}
+                  className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl text-[11px] font-bold transition-all border ${
+                    interior !== 'drywall' ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 border-transparent shadow-sm' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-transparent'
+                  }`}
+                >
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#deb887]" />
+                  <span>Tatranský profil</span>
+                </button>
+                <button
+                  onClick={() => { setInterior('drywall'); notifyChange(facade, extension, 'drywall'); }}
+                  className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl text-[11px] font-bold transition-all border ${
+                    interior === 'drywall' ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 border-transparent shadow-sm' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-transparent'
+                  }`}
+                >
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#f8f9fa] border border-slate-300" />
+                  <span>Sadrokartón</span>
+                </button>
+              </motion.div>
+            )}
+
+            {mobileActiveTab === 'length' && (
+              <motion.div 
+                initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                className="flex flex-col gap-1.5 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl p-2 rounded-2xl border border-slate-200/80 dark:border-white/10 shadow-2xl pointer-events-auto"
+              >
+                <div className="flex items-center justify-between gap-1">
+                  {[
+                    { val: 0, label: 'Základ' },
+                    { val: 1.3, label: '+1.3m' },
+                    { val: 2.6, label: '+2.6m' },
+                    { val: 3.9, label: '+3.9m' }
+                  ].map((opt) => (
+                    <button
+                      key={opt.val}
+                      onClick={() => {
+                        setExtension(opt.val);
+                        const nextExtra = opt.val >= 3.9 ? extraBedroom : false;
+                        if (opt.val < 3.9) setExtraBedroom(false);
+                        notifyChange(facade, opt.val, interior, nextExtra);
+                      }}
+                      className={`flex-1 py-1.5 rounded-xl text-[11px] font-bold transition-all ${
+                        extension === opt.val
+                          ? 'bg-red-500 text-white shadow-sm'
+                          : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+
+                {extension >= 3.9 && (
+                  <button
+                    onClick={() => {
+                      const nextVal = !extraBedroom;
+                      setExtraBedroom(nextVal);
+                      notifyChange(facade, extension, interior, nextVal);
+                    }}
+                    className={`w-full py-1.5 px-2 rounded-xl text-[11px] font-bold transition-all border flex items-center justify-center gap-1.5 ${
+                      extraBedroom
+                        ? 'bg-red-500 text-white border-red-600 shadow-sm'
+                        : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-white/10'
+                    }`}
+                  >
+                    <span>{extraBedroom ? '🛏️ +1 Spálňa navyše (Aktívna)' : '🛋️ Veľká obývačka (Kliknite pre +1 Spálňu)'}</span>
+                  </button>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Hlavný mobilný dok s kategóriami */}
+          <div className="flex items-center justify-between gap-1 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl p-1 rounded-2xl border border-slate-200/80 dark:border-white/10 shadow-2xl pointer-events-auto">
+            <button
+              onClick={() => setMobileActiveTab(mobileActiveTab === 'facade' ? null : 'facade')}
+              className={`flex-1 flex items-center justify-center gap-1 py-2 px-1 rounded-xl text-[11px] font-black transition-all ${
+                mobileActiveTab === 'facade' ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-sm' : 'text-slate-700 dark:text-slate-300'
+              }`}
+            >
+              <span>🎨 Fasáda</span>
+            </button>
+
+            <button
+              onClick={() => setMobileActiveTab(mobileActiveTab === 'interior' ? null : 'interior')}
+              className={`flex-1 flex items-center justify-center gap-1 py-2 px-1 rounded-xl text-[11px] font-black transition-all ${
+                mobileActiveTab === 'interior' ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-sm' : 'text-slate-700 dark:text-slate-300'
+              }`}
+            >
+              <span>🪵 Interiér</span>
+            </button>
+
+            <button
+              onClick={() => setMobileActiveTab(mobileActiveTab === 'length' ? null : 'length')}
+              className={`flex-1 flex items-center justify-center gap-1 py-2 px-1 rounded-xl text-[11px] font-black transition-all ${
+                mobileActiveTab === 'length' ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-sm' : 'text-slate-700 dark:text-slate-300'
+              }`}
+            >
+              <span>📏 {extension > 0 ? `+${extension}m` : 'Dĺžka'}</span>
+            </button>
+
+            <button
+              onClick={() => {
+                const nextVal = roofCutaway > 0 ? 0 : 1;
+                setRoofCutaway(nextVal);
+                if (nextVal > 0) setCameraView('interior');
+              }}
+              className={`flex-1 flex items-center justify-center gap-1 py-2 px-1 rounded-xl text-[11px] font-black transition-all ${
+                roofCutaway > 0 ? 'bg-amber-500 text-white shadow-sm' : 'bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400'
+              }`}
+            >
+              <Layers className="w-3.5 h-3.5" />
+              <span>{roofCutaway > 0 ? 'Zatvoriť' : '3D'}</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Mini Návod / Tip v pravom dolnom rohu (Iba Desktop) */}
+      <div className="hidden md:block absolute bottom-20 right-4 pointer-events-none z-10 opacity-70 hover:opacity-100 transition-opacity">
         <div className="bg-black/50 backdrop-blur-md text-white text-[10px] px-3 py-1.5 rounded-full flex items-center gap-2">
           <span>🖱️ Ťahaním otáčate • Kolieskom približujete</span>
         </div>

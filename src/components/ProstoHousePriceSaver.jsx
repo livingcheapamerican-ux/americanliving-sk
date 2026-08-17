@@ -40,7 +40,7 @@ export default function ProstoHousePriceSaver({ isAdmin, customPrices, domId, ho
   };
 
   return (
-    <div className="fixed bottom-24 right-6 z-40 animate-in slide-in-from-right duration-300">
+    <div className="fixed bottom-24 right-6 z-40 hidden md:block animate-in slide-in-from-right duration-300">
       <Button
         onClick={savePrices}
         disabled={isSaving || Object.keys(customPrices).length === 0}
