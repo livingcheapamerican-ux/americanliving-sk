@@ -679,6 +679,41 @@ export default function House3DViewer({
             </button>
           </div>
 
+          {/* Výber materiálu stien interiéru (Tatranský profil vs Biely sadrokartón) */}
+          <div className="flex flex-wrap items-center gap-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl p-2 rounded-2xl border border-slate-200/60 dark:border-white/10 shadow-xl pointer-events-auto">
+            <span className="text-xs font-black text-slate-800 dark:text-white px-2">Interiér:</span>
+            
+            <button
+              onClick={() => {
+                setInterior('wood');
+                notifyChange(facade, extension, 'wood');
+              }}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all border ${
+                interior !== 'drywall'
+                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 border-transparent shadow-md'
+                  : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-transparent hover:border-slate-300'
+              }`}
+            >
+              <div className="w-3 h-3 rounded-full bg-[#deb887] border border-amber-600" />
+              Tatranský profil
+            </button>
+
+            <button
+              onClick={() => {
+                setInterior('drywall');
+                notifyChange(facade, extension, 'drywall');
+              }}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all border ${
+                interior === 'drywall'
+                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 border-transparent shadow-md'
+                  : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-transparent hover:border-slate-300'
+              }`}
+            >
+              <div className="w-3 h-3 rounded-full bg-[#f8f9fa] border border-slate-400" />
+              Biely sadrokartón
+            </button>
+          </div>
+
           {/* Predĺženie domu & Exploded View */}
           <div className="flex items-center gap-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl p-2 rounded-2xl border border-slate-200/60 dark:border-white/10 shadow-xl pointer-events-auto">
             
