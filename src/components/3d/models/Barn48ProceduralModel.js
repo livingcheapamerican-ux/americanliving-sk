@@ -304,24 +304,22 @@ export function createBarn48Model({
   }
 
   // Drevené štítové lemovanie (Fascia)
-  const fasciaLGeo = new THREE.BoxGeometry(0.12, 0.16, 0.2);
   const fasciaAngle = Math.atan2(gableHeight, halfW);
-  const fasciaLen = Math.sqrt(halfW * halfW + gableHeight * gableHeight);
+  const fasciaLen = Math.sqrt(halfW * halfW + gableHeight * gableHeight) + 0.1;
   
-  const fasciaBoardGeo = new THREE.BoxGeometry(0.12, 0.22, fasciaLen + 0.1);
+  const fasciaBoardGeo = new THREE.BoxGeometry(fasciaLen, 0.12, 0.12);
+  
   // Ľavé rameno štítu
   const fasciaLeft = new THREE.Mesh(fasciaBoardGeo, gableWallMat);
-  fasciaLeft.position.set(-halfW / 2, wallHeight + gableHeight / 2, halfL);
-  fasciaLeft.rotation.x = Math.PI / 2;
-  fasciaLeft.rotation.y = fasciaAngle;
+  fasciaLeft.position.set(-halfW / 2, wallHeight + gableHeight / 2, halfL + 0.04);
+  fasciaLeft.rotation.z = fasciaAngle;
   fasciaLeft.castShadow = true;
   frontFacadeGroup.add(fasciaLeft);
 
   // Pravé rameno štítu
   const fasciaRight = new THREE.Mesh(fasciaBoardGeo, gableWallMat);
-  fasciaRight.position.set(halfW / 2, wallHeight + gableHeight / 2, halfL);
-  fasciaRight.rotation.x = Math.PI / 2;
-  fasciaRight.rotation.y = -fasciaAngle;
+  fasciaRight.position.set(halfW / 2, wallHeight + gableHeight / 2, halfL + 0.04);
+  fasciaRight.rotation.z = -fasciaAngle;
   fasciaRight.castShadow = true;
   frontFacadeGroup.add(fasciaRight);
 

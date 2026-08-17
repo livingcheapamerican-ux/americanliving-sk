@@ -89,6 +89,7 @@ export default function Barn48InteractiveSection({ dom, className = '' }) {
 
       {/* Samotný 3D Prehliadač */}
       <House3DViewer
+        modelUrl={dom?.model_3d_url || null}
         initialFacade={activeConfig.facade}
         initialExtension={activeConfig.extension}
         initialInterior={activeConfig.interior}

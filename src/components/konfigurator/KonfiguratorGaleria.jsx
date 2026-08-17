@@ -131,6 +131,7 @@ export default function KonfiguratorGaleria({ dom, facadeIdx, interiorIdx, exten
       {activeTab === '3d' && isBarn48 && (
         <div className="w-full">
           <House3DViewer
+            modelUrl={dom?.model_3d_url || null}
             initialFacade={facade3D}
             initialExtension={extensionLength}
             initialInterior={interior3D}

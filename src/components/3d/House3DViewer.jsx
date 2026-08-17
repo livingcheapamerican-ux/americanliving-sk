@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { createBarn48Model } from './models/Barn48ProceduralModel';
 import { 
   Rotate3d, 
@@ -17,7 +19,8 @@ import {
   Info,
   ChevronRight,
   Check,
-  RefreshCw
+  RefreshCw,
+  Box
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -25,6 +28,7 @@ import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 
 export default function House3DViewer({
+  modelUrl = null,            // URL na nahraný fotorealistický .glb súbor
   initialFacade = 'standard', // 'standard', 'wood', 'stucco'
   initialExtension = 0,       // 0, 1.2, 2.4, 3.6, 4.8
   initialInterior = 'wood',   // 'wood', 'drywall'
@@ -273,16 +277,53 @@ export default function House3DViewer({
       houseContainer.remove(obj);
     }
 
-    // Vygenerovanie nového modelu Barn 48 s aktuálnymi parametrami
-    const barnModel = createBarn48Model({
-      facade,
-      extension,
-      roofCutaway,
-      timeOfDay,
-      interiorType: interior
-    });
+    if (modelUrl) {
+      // Načítanie fotorealistického .glb súboru
+      setIsLoading(true);
+      const loader = new GLTFLoader();
+      const dracoLoader = new DRACOLoader();
+      dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
+      loader.setDRACOLoader(dracoLoader);
 
-    houseContainer.add(barnModel);
+      loader.load(
+        modelUrl,
+        (gltf) => {
+          const model = gltf.scene;
+          model.traverse((child) => {
+            if (child.isMesh) {
+              child.castShadow = true;
+              child.receiveShadow = true;
+            }
+          });
+          houseContainer.add(model);
+          setIsLoading(false);
+        },
+        undefined,
+        (err) => {
+          console.error('Chyba načítania .glb:', err);
+          // Fallback na procedurálny model
+          const barnModel = createBarn48Model({
+            facade,
+            extension,
+            roofCutaway,
+            timeOfDay,
+            interiorType: interior
+          });
+          houseContainer.add(barnModel);
+          setIsLoading(false);
+        }
+      );
+    } else {
+      // Vygenerovanie nového modelu Barn 48 s aktuálnymi parametrami
+      const barnModel = createBarn48Model({
+        facade,
+        extension,
+        roofCutaway,
+        timeOfDay,
+        interiorType: interior
+      });
+      houseContainer.add(barnModel);
+    }
 
     // Pridanie 3D kót / Rozmerových vodiacich čiar
     if (showDimensions) {

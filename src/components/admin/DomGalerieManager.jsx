@@ -19,10 +19,13 @@ import {
   Home,
   Layers,
   Grid3x3,
-  CheckCircle
+  CheckCircle,
+  Box,
+  Rotate3d
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import House3DViewer from "@/components/3d/House3DViewer";
 
 const GALERIA_TYPY = [
   { value: "exterier_murovka", label: "Exteriér - Murovka (biela omietka)", icon: "🏡" },
@@ -35,6 +38,7 @@ export default function DomGalerieManager({ dom, onUpdate }) {
   const [galerie, setGalerie] = useState(dom.galerie || []);
   const [podorys2D, setPodorys2D] = useState(dom.podorys_2d || "");
   const [podorys3D, setPodorys3D] = useState(dom.podorys_3d || "");
+  const [model3D, setModel3D] = useState(dom.model_3d_url || "");
   const [zakladnaKonfiguracia, setZakladnaKonfiguracia] = useState(dom.zakladna_konfiguracia_obrazok || "");
   const [hlavnyObrazok, setHlavnyObrazok] = useState(dom.hlavny_obrazok || "");
   const [uploadedPhotos, setUploadedPhotos] = useState([]);
@@ -68,6 +72,7 @@ export default function DomGalerieManager({ dom, onUpdate }) {
     // Only include fields if they have valid URLs, otherwise don't update them
     if (podorys2D) dataToSave.podorys_2d = podorys2D;
     if (podorys3D) dataToSave.podorys_3d = podorys3D;
+    if (model3D) dataToSave.model_3d_url = model3D;
     if (zakladnaKonfiguracia) dataToSave.zakladna_konfiguracia_obrazok = zakladnaKonfiguracia;
     if (hlavnyObrazok) dataToSave.hlavny_obrazok = hlavnyObrazok;
     
@@ -198,7 +203,7 @@ export default function DomGalerieManager({ dom, onUpdate }) {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className={`grid w-full mb-6 ${showZakladnaKonfiguracia ? 'grid-cols-4' : 'grid-cols-3'}`}>
+        <TabsList className={`grid w-full mb-6 ${showZakladnaKonfiguracia ? 'grid-cols-5' : 'grid-cols-4'}`}>
           <TabsTrigger value="titulna" className="flex items-center gap-2">
             <ImageIcon className="w-4 h-4" />
             Titulná fotka
@@ -210,6 +215,10 @@ export default function DomGalerieManager({ dom, onUpdate }) {
           <TabsTrigger value="podorysy" className="flex items-center gap-2">
             <Grid3x3 className="w-4 h-4" />
             Pôdorysy
+          </TabsTrigger>
+          <TabsTrigger value="model3d" className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-bold">
+            <Box className="w-4 h-4 text-indigo-500" />
+            3D Model (.glb)
           </TabsTrigger>
           {showZakladnaKonfiguracia && (
             <TabsTrigger value="zakladna" className="flex items-center gap-2">
@@ -613,6 +622,91 @@ export default function DomGalerieManager({ dom, onUpdate }) {
             </Card>
           </TabsContent>
         )}
+
+        {/* ── 3D MODEL TAB ────────────────────────────────────────── */}
+        <TabsContent value="model3d" className="space-y-4">
+          <Card className="p-4 sm:p-6 border border-indigo-200 bg-indigo-50/20 rounded-2xl">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="font-bold text-base text-gray-900 flex items-center gap-2">
+                  <Box className="w-5 h-5 text-indigo-600" />
+                  Fotorealistický 3D Model Domu (.glb / .gltf)
+                </h3>
+                <p className="text-xs text-gray-600 mt-1">
+                  Nahrajte hotový 3D súbor domu vyexportovaný z Blenderu / CAD / AI (formát .glb alebo .gltf s textúrami).
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <Label className="text-xs font-semibold text-gray-700">URL 3D Modelu (.glb)</Label>
+                <div className="flex gap-2 mt-1">
+                  <Input
+                    placeholder="https://.../model.glb"
+                    value={model3D}
+                    onChange={(e) => setModel3D(e.target.value)}
+                    className="text-xs font-mono bg-white"
+                  />
+                  <input
+                    type="file"
+                    accept=".glb,.gltf"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setUploading(true);
+                        base44.integrations.Core.UploadFile({ file })
+                          .then(res => {
+                            setModel3D(res.file_url);
+                            toast.success("3D Model .glb bol úspešne nahratý!");
+                          })
+                          .catch(err => toast.error(`Chyba pri nahrávaní: ${err.message}`))
+                          .finally(() => setUploading(false));
+                      }
+                    }}
+                    className="hidden"
+                    id="model-3d-upload"
+                    disabled={uploading}
+                  />
+                  <label htmlFor="model-3d-upload">
+                    <Button type="button" variant="default" asChild disabled={uploading} className="bg-indigo-600 hover:bg-indigo-700 cursor-pointer">
+                      <span>
+                        {uploading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}
+                        Nahrať .glb
+                      </span>
+                    </Button>
+                  </label>
+                </div>
+              </div>
+
+              {/* Živý 3D Náhľad nahraného modelu */}
+              <div className="mt-4 pt-4 border-t border-indigo-100">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-bold text-gray-700">Interaktívny 3D Náhľad:</span>
+                  {model3D && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setModel3D("")}
+                      className="text-xs text-red-600 hover:text-red-700 h-7"
+                    >
+                      Odstrániť 3D model
+                    </Button>
+                  )}
+                </div>
+
+                <div className="rounded-xl overflow-hidden border border-gray-200 shadow-inner bg-slate-900">
+                  <House3DViewer
+                    modelUrl={model3D || null}
+                    height="380px"
+                    showControls={true}
+                  />
+                </div>
+              </div>
+            </div>
+          </Card>
+        </TabsContent>
       </Tabs>
     </Card>
   );
