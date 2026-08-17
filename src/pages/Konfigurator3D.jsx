@@ -98,7 +98,7 @@ export default function Konfigurator3D() {
         <meta name="description" content="Nakonfigurujte si svoj vysnívaný modulárny Barn House 48 v reálnom čase v 3D. 360° rotácia, materiály fasády a okamžitá kalkulácia ceny." />
       </Helmet>
 
-      <div className="container mx-auto max-w-7xl">
+      <div className="container mx-auto max-w-[1600px] px-2 sm:px-4">
         
         {/* Hlavička */}
         <div className="text-center max-w-3xl mx-auto mb-10 space-y-3">
@@ -124,7 +124,7 @@ export default function Konfigurator3D() {
                 initialFacade={config.facade}
                 initialExtension={config.extension}
                 initialInterior={config.interior}
-                height="620px"
+                height="680px"
                 onConfigChange={(newCfg) => setConfig(newCfg)}
               />
             </div>

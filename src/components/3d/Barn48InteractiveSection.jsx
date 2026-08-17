@@ -92,7 +92,7 @@ export default function Barn48InteractiveSection({ dom, className = '' }) {
         initialFacade={activeConfig.facade}
         initialExtension={activeConfig.extension}
         initialInterior={activeConfig.interior}
-        height="600px"
+        height="680px"
         onConfigChange={(newCfg) => setActiveConfig(newCfg)}
       />
 
