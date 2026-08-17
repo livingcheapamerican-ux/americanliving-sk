@@ -179,15 +179,23 @@ function LayoutContent({ children }) {
   const isActive = (path) => location.pathname === path;
   const isAdmin = user?.role === 'admin' || user?.super_admin === true;
 
-  const pathnameLower = location.pathname.toLowerCase();
+  const pathnameLower = (location.pathname || '').toLowerCase();
+  const searchLower = (location.search || '').toLowerCase();
   const isKonfiguratorPage = pathnameLower.includes('konfigurator') ||
-                             pathnameLower.includes('detail-domu') ||
+                             pathnameLower.includes('detail') ||
                              pathnameLower.includes('ph00') ||
-                             pathnameLower.includes('ticabhouse') ||
-                             pathnameLower.includes('flat-double') ||
+                             pathnameLower.includes('ph-00') ||
+                             pathnameLower.includes('ticab') ||
+                             pathnameLower.includes('flat') ||
                              pathnameLower.includes('lyon') ||
                              pathnameLower.includes('3d') ||
-                             pathnameLower.includes('showroom');
+                             pathnameLower.includes('showroom') ||
+                             pathnameLower.includes('kalkulacka') ||
+                             pathnameLower.includes('moja-ponuka') ||
+                             pathnameLower.includes('mojaponuka') ||
+                             pathnameLower.includes('admin') ||
+                             searchLower.includes('slug=') ||
+                             searchLower.includes('id=');
 
   const navItems = [
     { name: t('home') || "Domov", path: createPageUrl("Domov"), icon: Home },
