@@ -633,8 +633,8 @@ export default function House3DViewer({
                   : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-transparent hover:border-slate-300'
               }`}
             >
-              <div className="w-3 h-3 rounded-full bg-[#3e454c] border border-amber-500" />
-              Sivý plech + Drevo
+              <div className="w-3 h-3 rounded-full bg-[#586069] border border-amber-500" />
+              Svetlosivý plech + Drevo
             </button>
 
             <button

@@ -167,14 +167,14 @@ export function createBarn48Model({
 
   // PBR MATERIÁLY
   
-  // Sivý architektonický plech (RAL 7016 Antracitovo sivá - zosvetlená na žiadosť používateľa)
+  // Svetlejší sivý architektonický plech (RAL 7037 / RAL 7031 Sivá bridlica / Zinok)
   const greyMetalMat = new THREE.MeshStandardMaterial({
-    color: 0x3e454c, // Príjemná moderná architektonická sivá (namiesto čiernej)
-    roughness: 0.45,
-    metalness: 0.55,
+    color: 0x586069, // Svetlejšia moderná architektonická sivá
+    roughness: 0.42,
+    metalness: 0.58,
     normalMap: metalNormal,
     normalScale: new THREE.Vector2(0.15, 0.15),
-    name: 'ArchitecturalGreyMetal'
+    name: 'ArchitecturalLightGreyMetal'
   });
 
   // Škandinávsky smrek
@@ -203,9 +203,9 @@ export function createBarn48Model({
     name: 'WhiteStucco'
   });
 
-  // Hliníkové antracitové rámy okien a dverí (RAL 7016)
+  // Hliníkové rámy okien a dverí (Sivá)
   const frameMat = new THREE.MeshStandardMaterial({
-    color: 0x2d3238,
+    color: 0x3d434a,
     roughness: 0.35,
     metalness: 0.75,
     name: 'AluFrame'
