@@ -1,0 +1,77 @@
+pipeline:
+  name: American Living SK Architecture & 3D Configurator Flow
+  identifier: AmericanLivingSK_Pipeline
+  projectIdentifier: american_living_sk
+  orgIdentifier: default
+  tags:
+    environment: mac-local
+    platform: base44
+    engine: appmap-harness
+  stages:
+    - stage:
+        name: Code Detection & Environment Verification
+        identifier: EnvVerification
+        type: CI
+        spec:
+          cloneCodebase: true
+          platform:
+            os: macOS
+            arch: Arm64
+          execution:
+            steps:
+              - step:
+                  name: Detect CLI & Workspace
+                  identifier: DetectCLI
+                  type: Run
+                  spec:
+                    command: |
+                      echo "Verifying local environment..."
+                      node -v
+                      git status
+
+    - stage:
+        name: Code Flow & Architecture Mapping
+        identifier: AppMapArchitectureVisualizer
+        type: CI
+        spec:
+          execution:
+            steps:
+              - step:
+                  name: Generate AppMap Flow Diagrams
+                  identifier: AppMapGen
+                  type: Run
+                  spec:
+                    command: |
+                      npx appmap status || true
+
+    - stage:
+        name: Base44 & GitHub Event Listener
+        identifier: WebhookSyncStage
+        type: CI
+        spec:
+          execution:
+            steps:
+              - step:
+                  name: Base44 Commit & Sync Verification
+                  identifier: Base44Sync
+                  type: Run
+                  spec:
+                    command: |
+                      echo "Synchronizing American Living SK commits"
+                      git log -n 5 --oneline
+
+    - stage:
+        name: Local Harness Visualizer Dashboard
+        identifier: VisualizerDashboard
+        type: Deployment
+        spec:
+          deploymentType: Native
+          execution:
+            steps:
+              - step:
+                  name: Serve Process Architecture Dashboard
+                  identifier: ServeDashboard
+                  type: Run
+                  spec:
+                    command: |
+                      node .harness/server.js
